@@ -1,0 +1,254 @@
+<!--
+Copyright 2010 (c) Xeno Innovations, Inc.
+Created Date:  2010-11-07
+
+Description:
+  This file documents the outline of the installation process and requirements
+-->
+
+<html>
+  <head>
+    <title>pmTrack Admin Overview</title>
+  </head>
+<body>
+
+  <div>
+    <h1>xiPMT - Project Management and Tracking System</h1>
+    <p>
+      This page outlines the project
+    </p>
+  </div>
+
+  <div>
+    <h1>Section 1 - Database</h1>
+    
+    <h2>Project Database Tables:</h2>
+
+    <h3>Database Connector</h3>
+    <div style="padding-left: 15px;">
+      <table>
+        <tr><td>host:</td>      <td>xipmtadmin.db.6216100.hostedresource.com</td></tr>
+        <tr><td>database:</td>  <td>xipmtadmin</td></tr>
+        <tr><td>user:</td>      <td>xipmtadmin</td></tr>
+        <tr><td>pass:</td>      <td>PMT4dm1n</td></tr>
+      </table>
+    </div>
+
+
+    <h3>xiPMT Tables</h3>
+    <ul>
+      <li>xi_product</li>
+      <li>xi_product_version</li>
+      <li>xi_customer</li>
+      <li>xi_customer_mmt1</li>
+      <li>xi_customer_product</li>
+      <li>xi_registered_license</li>
+      <li>pmt_user</li>
+      <li>pmt_user_product_priv</li>
+      <li>pmt_group</li>
+      <li>pmt_group_priv</li>
+      <li>s_group_permission</li>
+    </ul>
+
+    
+    <h3>Project Tables</h3>
+    <ul>
+      <!-- ** Maybe in 2.0 **   <li>proj_user_internal</li> -->
+      <!-- ** Maybe in 2.0 **   <li>proj_version</li>       -->
+      <li>proj_component</li>
+      <li>component_version</li>
+      <li>proj_milestone</li>
+      <li>report</li>
+      <li>wiki</li>
+      <li>s_proj_enum</li>
+      <li>auth_cookie</li>
+      <li>ticket</li>
+      <li>ticket_update</li>
+      <li>ticket_attachment</li>
+      <li>bug</li>
+      <li>bug_update</li>
+      <li>bug_attachment</li>
+      <li>svn_repo</li>
+      <li>svn_revision</li>
+      <li>task</li>
+      <li>task_update</li>
+      <li>task_attachment</li>
+    </ul>
+
+
+    
+    <h2>Task Path-Flow</h2>
+
+    <div style="padding-left: 15px;">
+
+      <b>Tech Request</b>
+      <ol>
+        <li><b>[New]</b></li>
+        <li>Assigned</li>
+        <li>In Progress</li>
+        <li>Completed</li>
+        <li>(Review-Mgmt)</li>
+        <li><b>[Closed]</b></li>
+      </ol>
+
+      <b>Purchase Orders</b>
+      <ol>
+        <li><b>[New]</b></li>
+        <li>Mgmt-Pending-Approv</li>
+        <li>PO-...</li>
+        <li><b>[Closed]</b></li>
+      </ol>
+      
+      <b>Custom Report</b>
+      <ol>
+        <li><b>[New]</b></li>
+        <li>...</li>
+        <li><b>[Closed]</b></li>
+      </ol>
+
+    </div>
+
+
+    <h2>Types of Enumerations (s_proj_enum)</h2>
+    <div style="padding-left: 15px;">
+      <h3>Type of ticket being created (ticket_type):</h3>
+      <div style="padding-left: 15px;">
+        <table>
+          <tr>
+            <td><b>Priority</b></td>
+            <td><b>Name</b></td>
+            <td><b>Description</b></td>
+          </tr>
+          <tr><td>1</td>  <td>Defect</td>      <td></td></tr>
+          <tr><td>2</td>  <td>Enhancement</td> <td></td></tr>
+          <tr><td>3</td>  <td>Task</td>        <td>Task Request</td></tr>
+        </table>
+      </div>
+
+
+      <h3>Ticket Resolutions (resolution):</h3>
+      <div style="padding-left: 15px;">
+        <table>
+          <tr>
+            <td><b>Priority</b></td>
+            <td><b>Name</b></td>
+            <td><b>Description</b></td>
+          </tr>
+          <tr><td>1</td>   <td>Fixed</td>   <td></td></tr>
+          <tr><td>2</td>   <td>Completed</td>   <td></td></tr>
+          <tr><td>3</td>   <td>Next-Release</td>   <td></td></tr>
+          <tr><td>4</td>   <td>Duplicate</td>   <td></td></tr>
+          <tr><td>5</td>   <td>Invalid</td>   <td></td></tr>
+          <tr><td>6</td>   <td>Unable to Reproduce</td>   <td></td></tr>
+        </table>
+      </div>
+
+
+      <h3>Ticket and Bug Priority Levels (priority):</h3>
+      <div style="padding-left: 15px;">
+        <table>
+          <tr>
+            <td><b>Priority</b></td>
+            <td><b>Name</b></td>
+            <td><b>Description</b></td>
+          </tr>
+          <tr><td>1</td>   <td>Trivial</td>   <td></td></tr>
+          <tr><td>2</td>   <td>Minor</td>   <td></td></tr>
+          <tr><td>3</td>   <td>Major</td>   <td></td></tr>
+          <tr><td>4</td>   <td>Critical</td>   <td></td></tr>
+          <tr><td>5</td>   <td>Blocker</td>   <td></td></tr>
+        </table>
+      </div>
+
+
+      <h3>Ticket Status (ticket_status):</h3>
+      <div style="padding-left: 15px;">
+        <table>
+          <tr>
+            <td><b>Priority</b></td>
+            <td><b>Name</b></td>
+            <td><b>Description</b></td>
+          </tr>
+          <tr><td>10</td>   <td>Open</td>             <td>New/Unassigned</td></tr>
+          <tr><td>11</td>   <td>Reopened</td>         <td></td></tr>
+          <tr><td>20</td>   <td>Assigned</td>         <td>Owned</td></tr>
+          <tr><td>21</td>   <td>Pending</td>          <td></td></tr>
+          <tr><td>22</td>   <td>Researching</td>      <td></td></tr>
+          <tr><td>50</td>   <td>Invalid</td>          <td></td></tr>
+          <tr><td>51</td>   <td>Closed</td>           <td>Closed</td></tr>
+          <tr><td>52</td>   <td>Closed-Duplicate</td> <td>Another issue already exists for this (customer)</td></tr>
+          <tr><td>53</td>   <td>Closed-Bug</td>       <td></td></tr>
+          <tr><td>54</td>   <td>Closed-Canceled</td> <td></td></tr>
+        </table>
+      </div>
+
+
+      <h3>Bug Status (bug_status):</h3>
+      <div style="padding-left: 15px;">
+        <table>
+          <tr>
+            <td><b>Priority</b></td>
+            <td><b>Name</b></td>
+            <td><b>Description</b></td>
+          </tr>
+          <tr><td>1</td>   <td>Submitted</td>   <td></td></tr>
+          <tr><td>2</td>   <td>Accepted</td>   <td></td></tr>
+          <tr><td>3</td>   <td>Dev-Unverified</td>   <td></td></tr>
+          <tr><td>4</td>   <td>Dev-Investigation</td>   <td></td></tr>
+          <tr><td>5</td>   <td>Dev-In Progress</td>   <td></td></tr>
+          <tr><td>6</td>   <td>Dev-Restesting</td>   <td></td></tr>
+          <tr><td>7</td>   <td>Closed</td>   <td></td></tr>
+          <tr><td>8</td>   <td>Closed-Deferred</td>   <td></td></tr>
+          <tr><td>9</td>   <td>Closed-Rejected</td>   <td></td></tr>
+        </table>
+      </div>
+
+
+      <h3>Task Type (task_type):</h3>
+      <div style="padding-left: 15px;">
+        <table>
+          <tr>
+            <td><b>Priority</b></td>
+            <td><b>Name</b></td>
+            <td><b>Description</b></td>
+          </tr>
+          <tr><td>1</td>   <td>TechRequest</td>    <td>Technical Request></td></tr>
+          <tr><td>2</td>   <td>Purchase Order</td> <td>Purchased Equipment></td></tr>
+          <tr><td>3</td>   <td>Custom Report</td>  <td>Custom Report (Software, Other)></td></tr>
+          <tr><td>4</td>   <td>SQL Task</td>       <td>Custom SQL (misc)></td></tr>
+          <tr><td>5</td>   <td>Upgrade</td>        <td>Upgrade customer></td></tr>
+          <tr><td>6</td>   <td>HotFix</td>         <td>Manual Hotfix></td></tr>
+          <tr><td>7</td>   <td>Other</td>          <td>Other :: Provide Description></td></tr>
+        </table>
+      </div>
+
+
+      <h3>Task Status (task_status):</h3>
+      <div style="padding-left: 15px;">
+        <table>
+          <tr>
+            <td><b>Priority</b></td>
+            <td><b>Name</b></td>
+            <td><b>Description</b></td>
+          </tr>
+          <tr><td>10</td>   <td>New</td>                  <td><i>Submitted (unassigned)</i></td></tr>
+          <tr><td>11</td>   <td>Mgmt-Pending-Approv</td>  <td><i>Pending Management Approv</i></td></tr>
+          <tr><td>30</td>   <td>PO-Approv</td>            <td><i>In Progress :: Purchase Order Approved</i></td></tr>
+          <tr><td>31</td>   <td>PO-Shipped</td>           <td><i>In Progress :: Purchase Order Shipped</i></td></tr>
+          <tr><td>32</td>   <td>Task-Assigned</td>        <td><i>In Progress :: TR Assigned</i></td></tr>
+          <tr><td>33</td>   <td>Task-In Progress</td>     <td><i>In Progress :: TR In-Progress</i></td></tr>
+          <tr><td>40</td>   <td>Completed</td>            <td><i>Task completed, waiting managment verfication</i></td></tr>
+          <tr><td>41</td>   <td>Review-Pending</td>       <td><i>Task completed, waiting review verfication</i></td></tr>
+          <tr><td>42</td>   <td>Review-Mgmt</td>          <td><i>Task completed, waiting review verfication</i></td></tr>
+          <tr><td>50</td>   <td>Closed</td>               <td><i>Closed :: General</i></td></tr>
+          <tr><td>51</td>   <td>Closed-Declined</td>      <td><i>Closed :: Never worked on</i></td></tr>
+        </table>
+      </div>
+
+    </div>
+
+  </div>
+
+  
+</body>
+</html>

@@ -1,0 +1,270 @@
+/************************************************************
+ * Copyright 2010 (C) Xeno Innovations, Inc.
+ * ALL RIGHTS RESERVED
+ * Created: Oct 30, 2010, 4:47:51 AM
+ * Author:  Damian J. Suess
+ *
+ * Description:
+ *   Style for Admin Page
+ *   Syntax recommendation http://www.w3.org/TR/REC-CSS2/
+ *
+ * Change Log:
+ *  [2010-1029] - Initial Creation
+ **************************************************************/
+
+/* Content */
+
+/* 2 Columns */
+/*
+div.container {display: block; width: 960px; margin: 0 auto ;padding: 0;}
+div.left {float: left; width: 550px;}
+*/
+
+/* body section - make it fancy */
+span.section{background:#dee7ec;border:1px solid #8CACBB;border-bottom:#dee7ec 1px solid;color:#436976;font:110% Bold;margin:0px 0.5em 0em 0.8em;padding:0em 2em;white-space:nowrap;}
+div.sectionTop{background:#dee7ec;padding:0.4em;margin:0em;}
+div.section{border:1px solid #8CACBB;margin:0em 0em 2em 0em;background-color:white;background-repeat:repeat-y;background-position:right;}
+div.row{padding:0.5em;}
+
+
+
+
+/* 3 Columns */
+div.container {display: block; width: 800px; margin: 0 auto ;padding: 0;}
+div.boxleft {float: left; width: 800px;}
+
+/* Auto Adjust */
+/*
+  div.container {display: block; width: 100%; margin: 0 auto ;padding: 0;}
+  div.left {float: left; width: 100%;}
+*/
+
+div.boxleft div.feature
+{ht
+  display: inline;
+  width: 200px; margin:0 60px 30px 0;
+  float: left; font-size: 12px; line-height: 16px;
+  font-family: Verdana, Arial, Helvetica, sans-serif;}
+
+/* div.left h3 {width: 180px; height: 45px; display: block; text-indent: -99999px; margin-bottom: 10px;} */
+div.boxleft h3 {width: 180px; height: 45px; display: block; margin-bottom: 10px;}
+
+div.boxleft h3.feature-1 {background: url(images2/content-features-1.gif) no-repeat;}
+div.boxleft h3.feature-2 {background: url(images2/content-features-2.gif) no-repeat;}
+div.boxleft h3.feature-3 {background: url(images2/content-features-3.gif) no-repeat;}
+div.boxleft h3.feature-4 {background: url(images2/content-features-4.gif) no-repeat;}
+div.boxleft h3.feature-5 {background: url(images2/content-features-5.gif) no-repeat;}
+div.boxleft h3.feature-6 {background: url(images2/content-features-6.gif) no-repeat;}
+
+div.boxleft div.boxlast {margin-bottom: 0;}
+div.boxleft a {cursor: pointer;}
+
+
+div.main {width: 100%; padding: 0; }
+
+
+/* ================= */
+
+/* body { background: #fff; color: #000; margin: 10px; padding: 0; } */
+
+body {
+  margin: 0px;
+	background: #999999;
+  background-image: url(img/bg_gradient.png);
+  background-repeat: repeat-x;
+  background-color: #999999;
+  color: #181818;
+  /* background: #999999 url(Gradient.axd?Orientation=Vertical&Length=1000&StartColor=FFFFFF&FinishColor=999999) repeat-x; */
+}
+
+body, th, td {
+ font: normal 13px Verdana,Arial,'Bitstream Vera Sans',Helvetica,sans-serif;
+}
+
+h1, h2, h3, h4 {
+ font-family: Arial,Verdana,'Bitstream Vera Sans',Helvetica,sans-serif;
+ font-weight: bold;
+ letter-spacing: -0.018em;
+ page-break-after: avoid;
+}
+h1 { font-size: 19px; margin: .15em 1em 0.5em 0 }
+h2 { font-size: 16px }
+h3 { font-size: 14px }
+hr { border: none;  border-top: 1px solid #ccb; margin: 2em 0 }
+address { font-style: normal }
+img { border: none }
+
+.underline { text-decoration: underline }
+ol.loweralpha { list-style-type: lower-alpha }
+ol.upperalpha { list-style-type: upper-alpha }
+ol.lowerroman { list-style-type: lower-roman }
+ol.upperroman { list-style-type: upper-roman }
+ol.arabic     { list-style-type: decimal }
+
+
+/* Header */
+#header
+{
+  height: 90px;
+}
+#header hr { display: none }
+#header h1 { margin: 1.5em 0 -1.5em; }
+#header img { border: none;  margin: 0 0 -3em;}
+#header :link, #header :visited, #header :link:hover, #header :visited:hover {
+ background: transparent;
+ color: #555;
+ margin-bottom: 2px;
+ border: none;
+}
+#header h1 :link:hover, #header h1 :visited:hover { color: #000000 }
+
+/* Quick search */
+#search {
+ clear: both;
+ font-size: 10px;
+ height: 2.2em;
+ margin: 0 0 1em;
+ text-align: right;
+}
+#search input { font-size: 10px }
+#search label { display: none }
+
+/* Navigation */
+.nav h2, .nav hr { display: none }
+.nav ul { font-size: 10px; list-style: none; margin: 0; text-align: right }
+.nav li {
+ border-right: 1px solid #d7d7d7;
+ display: inline;
+ padding: 0 .75em;
+ white-space: nowrap;
+}
+.nav li.last { border-right: none }
+
+/* Main navigation bar */
+#mainnav {
+ /*background: #f7f7f7 url("img/topbar_gradient.png") 0 0;*/
+ border: 1px solid #000;
+ font: normal 10px verdana,'Bitstream Vera Sans',helvetica,arial,sans-serif;
+ margin: .66em 0 .33em;
+ padding: .2em 0;
+/* 
+  box-shadow: 0 .5em 1.5em #eee;
+  border-radius: .5em;*/
+}
+#mainnav li {
+ border-right: none;
+ padding: .25em 0
+}
+#mainnav :link, #mainnav :visited {
+ background: url("img/dots.gif") 0 0 no-repeat;
+ border-right: 1px solid #fff;
+ border-bottom: none;
+ border-left: 1px solid #555;
+ color: #000;
+ padding: .2em 20px;
+}
+* html #mainnav :link, * html #mainnav :visited { background-position: 1px 0 }
+#mainnav :link:hover, #mainnav :visited:hover {
+ background-color: #ccc;
+ border-right: 1px solid #ddd;
+}
+#mainnav .active :link, #mainnav .active :visited {
+ background: #333 url("img/topbar_gradient2.png") 0 0 repeat-x;
+ border-top: none;
+ border-right: 1px solid #000;
+ color: #eee;
+ font-weight: bold;
+}
+#mainnav .active :link:hover, #mainnav .active :visited:hover {
+ border-right: 1px solid #000;
+}
+
+/* Link styles */
+:link, :visited {
+ text-decoration: none;
+ color: #b00;
+ border-bottom: 1px dotted #bbb;
+}
+:link:hover, :visited:hover { background-color: #eee; color: #555 }
+h1 :link, h1 :visited ,h2 :link, h2 :visited, h3 :link, h3 :visited,
+h4 :link, h4 :visited, h5 :link, h5 :visited, h6 :link, h6 :visited {
+ color: inherit;
+}
+
+
+/* Forms */
+input, textarea, select { margin: 2px }
+input, select { vertical-align: middle }
+input[type=button], input[type=submit], input[type=reset] {
+ background: #eee;
+ color: #222;
+ border: 1px outset #ccc;
+ padding: .1em .5em;
+}
+input[type=button]:hover, input[type=submit]:hover, input[type=reset]:hover {
+ background: #ccb;
+}
+input[type=button][disabled], input[type=submit][disabled],
+input[type=reset][disabled] {
+ background: #f6f6f6;
+ border-style: solid;
+ color: #999;
+}
+input[type=text],input[type=password], input.textwidget, textarea { border: 1px solid #d7d7d7 }
+input[type=text], input[type=password], input.textwidget { padding: .25em .5em }
+input[type=text]:focus, input[type=password]:focus, input.textwidget:focus, textarea:focus {
+ border: 1px solid #886;
+}
+option { border-bottom: 1px dotted #d7d7d7 }
+fieldset { border: 1px solid #d7d7d7; padding: .5em; margin: 1em 0 }
+form p.hint, form span.hint { color: #666; font-size: 85%; font-style: italic; margin: .5em 0;
+  padding-left: 1em;
+}
+fieldset.iefix {
+  background: transparent;
+  border: none;
+  padding: 0;
+  margin: 0;
+}
+* html fieldset.iefix { width: 98% }
+fieldset.iefix p { margin: 0 }
+legend { color: #999; padding: 0 .25em; font-size: 90%; font-weight: bold }
+label.disabled { color: #d7d7d7 }
+.buttons { margin: .5em .5em .5em 0 }
+.buttons form, .buttons form div { display: inline }
+.buttons input { margin: 1em .5em .1em 0 }
+.inlinebuttons input {
+ font-size: 70%;
+ border-width: 1px;
+ border-style: dotted;
+ margin: 0 .1em;
+ padding: 0.1em;
+ background: none;
+}
+
+/* Footer */
+#footer {
+  clear: both;
+  color: #000000;              /* #bbb */
+  font-size: 10px;
+  border-top: 1px solid;
+  height: 31px;
+  padding: .25em 0;
+}
+#footer :link, #footer :visited { color: #6666ff; }    /* #bbb */
+#footer hr { display: none }
+#footer #tracpowered { border: 0; float: left }
+#footer #tracpowered:hover { background: transparent }
+#footer p { margin: 0 }
+#footer p.left {
+  float: left;
+  margin-left: 1em;
+  padding: 0 1em;
+  border-left: 1px solid #d7d7d7;
+  border-right: 1px solid #d7d7d7;
+}
+#footer p.right {
+  float: right;
+  text-align: right;
+}
+

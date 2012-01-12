@@ -1,0 +1,125 @@
+Copyright 2011 (C) Xeno Innovations, Inc.
+File Name:     PMT v1.0 URL Pages and Navigation
+Created by:    Damian J. Suess
+Created Date:  2011-0201
+
+This simple document will describe the various sub-pages on the website
+and will give insite as to how .HTACCESS  and PHP should be written to
+handle the structure.
+
+[ Table of Contents ]
+  Sections
+  1.0 ---------- General Pages
+  1.1 ---------- Project Page
+  1.2 ---------- Product Page
+  1.3 ---------- Inventory Page
+
+  2.0 ---------- Administration
+  2.1 ---------- User Editor
+  2.1.1 -------- User Permissions
+  2.2 ---------- Customer Listing (View/Edit)
+  2.2.1 -------- Customer Contacts (View/Edit)
+  2.2.2 -------- Customer Products (View/Edit)
+  
+
+=====================
+==[               ]==
+==[  Section 1.0  ]==
+==[  Main Page    ]==
+==[               ]==
+=====================
+  
+
+Title                   Sample URL                                Description
+-----                   ----------                                -----------
+Main Page               https://pmt.com/                          Main PMT Dashboard
+
+Project Page            https://pmt.com/proj/TestProj             
+
+Product Page            https://pmt.com/product/xRehab            Short desciption page       (wiki style)
+Product Inventory       https://pmt.com/product/xRehab?inv        Inventory Page              (admin, managers only)
+
+Customer Listing        https://pmt.com/customer/                 List of customers           (admin, managers only)
+Customer Info           https://pmt.com/customer/243              Show Customer info and contacts
+Custoemr Info Edit      https://pmt.com/customer/243?edit         Edit Customer information   (addr, contacts, products, etc)
+Customer Products       https://pmt.com/custoemr/243/products     List of Customer ID:243's products
+
+User Listing            https://pmt.com/user/                     List all Users
+User Page               https://pmt.com/user/fuct                 User page                   (general desc, stats, msg, etc)
+User Edit               https://pmt.com/user/fuct?edit            Edit this user
+
+
+
+=====================
+==[               ]==
+==[  Section 1.1  ]==
+==[  Project Page ]==
+==[               ]==
+=====================
+
+
+Title                       Sample URL                                                Description
+-----                       ----------                                                -----------
+Project Listing             https://pmt.com/proj/                                     List all available projects to you
+Project Page                https://pmt.com/proj/TestProj                             Main Wiki Page
+Project Wiki Page           https://pmt.com/proj/TestProj/wiki                        Same as Main Page
+Project Wiki Test Page      https://pmt.com/proj/TestProj/wiki/about                  Sample Wiki Page
+
+Project Ticket New          https://pmt.com/proj/TestProj/ticket                      Create new ticket
+Project Ticket View/Edit    https://pmt.com/proj/TestProj/ticket/2                    Show ticket       (edit if has permissions)
+Project Bug New             https://pmt.com/proj/TestProj/bug                         Create new Bug Report
+Project Bug View/Edit       https://pmt.com/proj/TestProj/bug/55                      Show Bug Report   (edit if has permissions)
+Project Task New            https://pmt.com/proj/TestProj/task                        Create new Task   (Technical Request)
+Project Task View/Edit      https://pmt.com/proj/TestProj/task/99                     Show Task         (edit if has permissions)
+
+Project Roadmap             https://pmt.com/proj/TestProj/roadmap                     List of active Milestones and Tickets for each
+Project Roadmap Active      https://pmt.com/proj/TestProj/roadmap/active              Show only Active Milestones (default)
+Project Roadmap Show All    https://pmt.com/proj/TestProj/roadmap/all                 Show all Milestones
+Project Roadmap Finished    https://pmt.com/proj/TestProj/roadmap/finished            Show all completed Milesones
+
+Project Milestone (def)     https://pmt.com/proj/TestProj/roadmap                     (that is correct)
+Project Milestone           https://pmt.com/proj/TestProj/milestone/3.0               Milestone Name, Description/Goals, Activity Chart (tickets, bugs, etc)
+
+Project Report              https://pmt.com/proj/TestProj/report                      List of all reports
+Project Report View         https://pmt.com/proj/TestProj/report/2                    Execute Report ID #2 (report.rpt_id = 2)
+Project Report Edit         https://pmt.com/proj/TestProj/report/2?edit               Edit Report ID #2
+
+Project Timeline            https://pmt.com/proj/TestProj/timeline                    Code Check-In History (SVN, GIT)
+Project Source Code         https://pmt.com/proj/TestProj/source                      Main Repo
+Project Source Code pth     https://pmt.com/proj/TestProj/source/trunk                Sample Path
+Project Source Code rev     https://pmt.com/proj/TestProj/source/trunk/x.txt?rev=45   Show Revision (Not Until 2.0)
+
+
+    Sample SVN Properties
+    Property pmtticket:label set to Ticket
+    Property pmtticket:logregex set to (?:ticket: *|#)(\d+) *(?:, *(\d+))*
+    Property pmtticket:number set to true
+    Property pmtticket:url set to https://support.xenoinc.org/pmt/ticket/%BUGID%
+
+
+=====================
+==[               ]==
+==[  Section 1.1  ]==
+==[  Product Page ]==
+==[               ]==
+=====================
+
+The product page is a general listing of the available products available to
+your customers.  This is different from "Projects" in the sense that Projects
+are internal items to be managed by your employees.  Where as your customers
+should be creating Tickets for the Product list.
+
+Also Products are used to track what your customers have purchased (and their
+serial numbers) as well as how many.  "Product Inventory" is also manageable.
+
+
+
+=====================
+==[               ]==
+==[  Section 1.1  ]==
+==[  Product Page ]==
+==[               ]==
+=====================
+
+
+

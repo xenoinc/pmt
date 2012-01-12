@@ -1,0 +1,50 @@
+Copyright 2011 (C) Xeno Innovations, Inc.
+File Name:     PMT Timeline and Milestones
+Created by:    Damian J. Suess
+Created Date:  2011-0201
+
+
+Milesstones and Timeline
+========================
+
+
+Milestone 1 - Ground work
+-------------------------
+- Basic UI
+- Able to create Projects
+- Able to create Milestones
+- Able to create Tickets
+- Able to view Ticket
+- Raw Wiki (text only)
+
+
+Milestone 2 - Little further
+----------------------------
+- Finish creation of Tickets, Bugs, Tasks
+- TBT :: Updates
+- TBT :: s_prod_enum
+- Create Customers
+- User Logins
+
+
+Milestone 3 - Alpha
+-------------------
+- Wiki (Basic encoding)
+- PMT Online Documentation / Help
+- TBT Attachments
+- User / Group permissoins (s_group_permissions)
+- View simple reports (Open & Closed TBT)
+
+Milestone 4 - RC 1 (beta)
+------------------
+- Dashboard
+- View Subversion
+- 
+
+
+Milestone 5
+------------
+- Subversion Revision Difference
+- 
+
+

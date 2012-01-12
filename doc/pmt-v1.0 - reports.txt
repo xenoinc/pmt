@@ -1,0 +1,22 @@
+Copyright 2011 Xeno Innovations, Inc.
+Created Date:  2011-0201 (Chi Tho, Vietnam TMZ)
+Creaed By:     Damian J. Suess
+Document Name: List of PMT Reports
+
+* TBT = "Tickets, Bugs and Tasks"
+
+Notes:
+Reports will be created using a mix of PHP and xSTL
+
+Reports
+=======
+- List of users      - by organization / group
+- My Tickets         - Open & Closed; Sort by ticket ID
+- Group Tickets      - for managers
+- All Tickets        - for admin purposes; done at project level
+- Project Status     - Bugs, Tickets
+- Open Tasks         - User, Manager and Admin level
+- User Stats         - Single user Open/Closed TBT
+- Group Stats        - All Monthly or Yearly count of User's Open/Closed TBT
+- Milestone Status   - List of Tickets and Bugs for each Milestone in the Project
+

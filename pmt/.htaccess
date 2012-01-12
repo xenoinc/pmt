@@ -1,0 +1,43 @@
+# Redirect users back to main page if not me
+#
+#ErrorDocument 403 http://www.xenoinc.org/
+#Order deny,allow
+#Deny from all
+#Allow from 98.236.64.21
+
+#redirect tickets to php
+#needs worked on
+##RedirectMatch 301 ^/ticket/(*)$ http://localhost/test1/ticket.php?id=$1
+
+# Copyright 2010 (C) Xeno Innovations, Inc.
+# Damian J. Suess
+
+# Old way to hide, INDEX.PHP
+#RewriteEngine on
+#RewriteRule (.*) ./index.php/$1 [L]
+
+
+# Hide INDEX.PHP
+RewriteEngine on
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteRule ^(.+) index.php/$1 [L]
+
+####################################
+## OLD: page.com/?prog=555&ticket=2
+## NEW: /prog/555/ticket/2
+# Options +FollowSymLinks
+# RewriteEngine on
+# RewriteRule /prog/(.*)/ticket/(.*)\.php ?prog=$1&ticket=$2
+########
+## OLD: page.com/?prog=555&ticket=2
+## NEW: _prog_555_ticket_2
+# RewriteRule _prog_(.*)_ticket_(.*)\.php ?prog=$1&ticket=$2
+########
+## OLD: page.com/?pA=555&pB=2&pC=asdf
+## NEW: /pA/555/pB/2/pC/asdf
+# RewriteRule /pA/(.*)/pB/(.*)/pC/(.*)\.php ?pA=$1&pB=$2&pC=$3
+########
+
+
+

@@ -1,0 +1,125 @@
+﻿/*
+ * Copyright 2011 Xeno Innovations, Inc.
+ * 
+ * Author:    Damian J. Suess
+ * Created:   2011-11-27
+ * Updated:   2011-11-27
+ *
+ * Description:
+ * This file is a proposal for the feature list and also to assist
+ * in making the HTACCESS rules easier to define.
+ * 
+ * History:
+ * 2011-1127  * Initial Creation; outlining some of the topics
+ *
+ */
+
+http://wiki.xenoinc.org/index.php?title=.htaccess#RewriteRule
+
+
+Basic Links:
+[X] http://pmt/?wnd=login
+[ ] http://pmt/?wnd=main
+[ ] http://pmt/?wnd=product
+[/] http://pmt/?wnd=project  (project wiki, tickets, src-viewer, milestones)
+[ ] http://pmt/?wnd=customer
+[ ] http://pmt/?wnd=user
+[ ] http://pmt/?wnd=about
+
+
+##############################
+# Reroute Rules and Examples #
+##############################
+
+
+Login Page
+==========
+
+RAW:
+  http://pmt/?wnd=login&prev=full_raw_pth
+
+Example 1:
+  http://pmt/login/?wnd=main
+  * Simple Reroute to prev page (if provided)
+
+Example 2:
+  http://pmt/login/?wnd=project&proj=TestProj
+  * Complex reroute to special page
+
+
+
+Project Page
+=================
+
+General Project page contain the link to the main wiki page
+and a toolbar giving access to the project's resources and tools
+such as:
+  + Submit Tickets
+  + View Tickets
+  + View ALL Tickets
+  + Milestones
+  + Source Code
+
+
+
+
+
+Project - Wiki Page
+=================
+
+The project pages by default have their own wiki pages
+
+Raw:
+  http://pmt/?wnd=proj&param1=Test_Project_Space&param2=wiki
+
+
+Example 1 - "Wiki (Main)"
+  http://pmt/proj/Test_Project_Space/wiki/
+
+Example 2 - "Wiki Page"
+  http://pmt/proj/Test_Project_Space/wiki/PageName
+
+Example 3 - "Wiki Page (edit)"
+  http://pmt/proj/Test_Project_Space/wiki/PageName?action=edit
+
+
+RewriteRule ^proj/([^/]+)/wiki/([^/]+)  index.php/wnd=proj&param1=$1&param2=$2
+
+
+
+
+
+
+
+
+PMT Dashboard (Main Page)
+=========================
+
+
+
+
+Admin Management
+===============
+Amdin Management is VERY unique. Depending on access levels
+the user - such as an Admin - can perform the following tasks below.
+However, if you are not a privilaged user then you will not see this tab.
+
+
+  (AER = Add/Edit/Remove)
+  + AER Users
+    - Edit Project Managers (PMs) permissions   [IE: projects, users]
+    - Edit *other* Users permissions to projects, etc.
+  + AER Groups (and permissions)
+  + AER Customer Information (address)
+    - AER  Purchased Products                   [IE: IR Box, MMT, ROM, Software, Cables]
+    - AER  Product Ticketable Items             [IE: Software, MMT]
+    - AER  Billing History
+    - AER  Contacts (and priority lists)
+  + AER Products
+  + AER Projects
+  + Link Project to Product  ** Note: Customers can only see products. PMs See All
+  + 
+
+User Management
+================
+Personal user page to edit your user information and/or delete your own user.
