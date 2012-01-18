@@ -1,13 +1,16 @@
-Copyright 2011 (C) Xeno Innovations, Inc.
-File Name:     PMT v1.0 URL Pages and Navigation
-Created by:    Damian J. Suess
-Created Date:  2011-0201
+Copyright 2010-2012 (C) Xeno Innovations, Inc.
+File Name:      PMT v1.0 URL Pages and Navigation
+Created by:     Damian J. Suess
+Created:        2011-0201
+Updated:        2012-0128
+
 
 This simple document will describe the various sub-pages on the website
 and will give insite as to how .HTACCESS  and PHP should be written to
 handle the structure.
 
 [ Table of Contents ]
+
   Sections
   1.0 ---------- General Pages
   1.1 ---------- Project Page
@@ -36,17 +39,18 @@ Main Page               https://pmt.com/                          Main PMT Dashb
 
 Project Page            https://pmt.com/proj/TestProj             
 
-Product Page            https://pmt.com/product/xRehab            Short desciption page       (wiki style)
-Product Inventory       https://pmt.com/product/xRehab?inv        Inventory Page              (admin, managers only)
+Product Page            PMT/product/xRehab                        Short desciption page       (wiki style)
+Product Inventory       PMT/product/xRehab/inventory              Inventory Page              (admin, managers only)
+Product Inv Edit        PMT/product/xRehab/inventory&edit         Edit Inventory Page         (admin, managers only)
 
-Customer Listing        https://pmt.com/customer/                 List of customers           (admin, managers only)
-Customer Info           https://pmt.com/customer/243              Show Customer info and contacts
-Custoemr Info Edit      https://pmt.com/customer/243?edit         Edit Customer information   (addr, contacts, products, etc)
-Customer Products       https://pmt.com/custoemr/243/products     List of Customer ID:243's products
+Customer Listing        PMT/customer/                             List of customers           (admin, managers only)
+Customer Info           PMT/customer/243                          Show Customer info and contacts
+Custoemr Info Edit      PMT/customer/243&edit                     Edit Customer information   (addr, contacts, products, etc)
+Customer Products       PMT/custoemr/243/products                 List of Customer ID:243's products
 
-User Listing            https://pmt.com/user/                     List all Users
-User Page               https://pmt.com/user/fuct                 User page                   (general desc, stats, msg, etc)
-User Edit               https://pmt.com/user/fuct?edit            Edit this user
+User Listing            PMT/user/                                 List all Users
+User Page               PMT/user/fuct                             User page                   (general desc, stats, msg, etc)
+User Edit               PMT/user/fuct?edit                        Edit this user
 
 
 
@@ -66,18 +70,18 @@ Project Wiki Page           https://pmt.com/proj/TestProj/wiki                  
 Project Wiki Test Page      https://pmt.com/proj/TestProj/wiki/about                  Sample Wiki Page
 
 Project Ticket New          https://pmt.com/proj/TestProj/ticket                      Create new ticket
-Project Ticket View/Edit    https://pmt.com/proj/TestProj/ticket/2                    Show ticket       (edit if has permissions)
+Project Ticket View         https://pmt.com/proj/TestProj/ticket/2                    Show ticket       (edit if has permissions)
+Project Ticket Edit         https://pmt.com/proj/TestProj/ticket/2&edit               Ticket - Edit Main Details
+Project Ticket Edit         https://pmt.com/proj/TestProj/ticket/2&edit=11            Ticket - Edit Ticket Notes (Ticket: #2, Note_Id: 11)
 Project Bug New             https://pmt.com/proj/TestProj/bug                         Create new Bug Report
 Project Bug View/Edit       https://pmt.com/proj/TestProj/bug/55                      Show Bug Report   (edit if has permissions)
 Project Task New            https://pmt.com/proj/TestProj/task                        Create new Task   (Technical Request)
 Project Task View/Edit      https://pmt.com/proj/TestProj/task/99                     Show Task         (edit if has permissions)
 
-Project Roadmap             https://pmt.com/proj/TestProj/roadmap                     List of active Milestones and Tickets for each
-Project Roadmap Active      https://pmt.com/proj/TestProj/roadmap/active              Show only Active Milestones (default)
-Project Roadmap Show All    https://pmt.com/proj/TestProj/roadmap/all                 Show all Milestones
-Project Roadmap Finished    https://pmt.com/proj/TestProj/roadmap/finished            Show all completed Milesones
-
-Project Milestone (def)     https://pmt.com/proj/TestProj/roadmap                     (that is correct)
+Project Milestone           https://pmt.com/proj/TestProj/milestone                   List of active Milestones and Tickets for each
+Project Milestone Active    https://pmt.com/proj/TestProj/milestone&active            Show only Active Milestones (default)
+Project Milestone Show All  https://pmt.com/proj/TestProj/milestone&all               Show all Milestones
+Project Milestone Finished  https://pmt.com/proj/TestProj/milestone&finished          Show all completed Milesones
 Project Milestone           https://pmt.com/proj/TestProj/milestone/3.0               Milestone Name, Description/Goals, Activity Chart (tickets, bugs, etc)
 
 Project Report              https://pmt.com/proj/TestProj/report                      List of all reports
@@ -87,7 +91,7 @@ Project Report Edit         https://pmt.com/proj/TestProj/report/2?edit         
 Project Timeline            https://pmt.com/proj/TestProj/timeline                    Code Check-In History (SVN, GIT)
 Project Source Code         https://pmt.com/proj/TestProj/source                      Main Repo
 Project Source Code pth     https://pmt.com/proj/TestProj/source/trunk                Sample Path
-Project Source Code rev     https://pmt.com/proj/TestProj/source/trunk/x.txt?rev=45   Show Revision (Not Until 2.0)
+Project Source Code rev     https://pmt.com/proj/TestProj/source/trunk/x.txt&rev=45   Show Revision (Not Until 2.0)
 
 
     Sample SVN Properties

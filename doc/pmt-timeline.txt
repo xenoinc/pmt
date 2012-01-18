@@ -24,6 +24,7 @@ Milestone 2 - Little further
 - TBT :: Updates
 - TBT :: s_prod_enum
 - Create Customers
+- Create Products
 - User Logins
 
 

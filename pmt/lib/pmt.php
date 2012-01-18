@@ -22,6 +22,7 @@ require("config.php");
  * ii.  If cashed user verify in database and set PMT_LOGGED_ID
  */
 
+
 /* Step 2) Parse the URL path
  * Possible Paths:
  *  + /project/
@@ -29,6 +30,21 @@ require("config.php");
  *  + /custoemrs/
  */
 
+global $_product, $_user, $_customer;
+global $_project, $_prjwiki, $_prjTicket, $_prjBug, $prjTask, $_prjReport,
+                  $_prjRoadmap, $_prjMilestone, $_prjSource, $_prjTimeline;
 
+
+
+pmtGetURL();
+
+
+
+/// Parse the URL provided by browser so we can tell
+/// the system where to go.
+function pmtGetURL()
+{
+  
+}
 
 ?>
