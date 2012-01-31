@@ -14,8 +14,16 @@
  *
  */
 
-// Get database information
-require("config.php");
+if(!file_exists(PMT_PATH."lib/config.php"))
+{
+  header("Location: install/");
+}
+
+
+// Require the core PMT files
+//require(PMT_PATH."lib/common/pmt.user.php");  // User Class
+require(PMT_PATH."lib/common/pmt.db.php");      // Database Class
+require(PMT_PATH."lib/config.php");             // Configuration Script
 
 /* Step 1) Perform the following
  * i.   Check if a user is cached in cookie or not

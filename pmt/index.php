@@ -21,106 +21,107 @@
  *
  */
 
-// ** debugging
-print("<html><body>");
-
-
-print("<pre>");
-print_r($_GET);
-// print ($_SERVER['REQUEST_URI']);
-print("</pre><br><br>");
-
-
-
-
-/* Samples:
- * ####################################
- * # RewriteRule ^project/(.*)/ticket/(.*) index.php?project=$1&ticket=$2 [L]
- * # RewriteRule .* index.php
- * URL: "http://pmt/project/xRehab/ticket/2948"
-    Array
-    (
-        [project] => xRehab
-        [ticket] => 2948
-    )
- * URL: "http://pmt/?test=234"
-    Array
-    (
-        [test] => 234
-    )
- * 
- * 
- * ####################################
- * #RewriteRule ^(.*)$ index.php?PAGE=$1 [L,QSA]
- * URL: http://pmt/project/xRehab/ticket/2948
- * Returns:
-    Array
-    (
-        [PAGE] => project/xRehab/ticket/2948
-    )
- * #########################################
- * # RewriteRule ^project/(.*)/ticket/(.*) ?project=$1&ticket=$2 [L]
- * URL: http://pmt/project/xRehab/ticket/2948
- * Returns:
-    Array
-    (
-      [project] => xRehab
-      [ticket] => 2948
-    )
- */
-
-
-
-
-
-/*
-//print("<pre>");
-$url = (!empty($_SERVER['HTTPS'])) ? "https://".$_SERVER['SERVER_NAME'].$_SERVER['REQUEST_URI'] : "http://".$_SERVER['SERVER_NAME'].$_SERVER['REQUEST_URI'];
-print ("<pre>" . $url . "</pre>");
-print ("<HR>");
-
-print("<pre>");
-print_r(parse_url($url));
-print("</pre>");
-
-print ("<HR>");
-print("<pre>");
-print parse_url($url, PHP_URL_PATH);
-print("</pre>");
-*/
-
-
-
-print("</body></html>");
-
-exit;
-
+// Development Debug Mode
+define("DebugMode", false);
+define("DebugIndex", false);
 
 // Define absolute path
 define('PMT_PATH',str_replace(pathinfo(__FILE__,PATHINFO_BASENAME),'',__FILE__));
-// print("path: " . PMT_PATH);
 
-include_once "lib/pmt.php";
+if (DebugIndex == false)
+{
 
-
-/* OLD
-/// Login Libary
-include_once "lib/security.php";
-$class = new pmtSecurity();
-define("CLS_SECURITY", $class->isUserOffline());   // So we can access it inside of functions
-
-require "lib/http.php"; /// Render main page
-
-// In order of presidence
-// if (isset($_GET["wnd"]))
-$wnd = $_GET["wnd"];          // Show window
-$wiki = $_GET["wiki"];        // show wiki page
-$ticket = $_GET["ticket"];    // Display Ticket number
-
-define('PMT_PATH',str_replace(pathinfo(__FILE__,PATHINFO_BASENAME),'',__FILE__));
   // print("path: " . PMT_PATH);
-require('lib/config.php');  // Core libary
-*/
 
+  include_once "lib/pmt.php";
+
+
+  /* OLD
+  /// Login Libary
+  include_once "lib/security.php";
+  $class = new pmtSecurity();
+  define("CLS_SECURITY", $class->isUserOffline());   // So we can access it inside of functions
+
+  require "lib/http.php"; /// Render main page
+
+  // In order of presidence
+  // if (isset($_GET["wnd"]))
+  $wnd = $_GET["wnd"];          // Show window
+  $wiki = $_GET["wiki"];        // show wiki page
+  $ticket = $_GET["ticket"];    // Display Ticket number
+
+  define('PMT_PATH',str_replace(pathinfo(__FILE__,PATHINFO_BASENAME),'',__FILE__));
+    // print("path: " . PMT_PATH);
+  require('lib/config.php');  // Core libary
+  */
+
+}
+else
+{
+
+
+  // ** debugging
+  print("<html><body>");
+
+  print("<pre>");
+  print_r($_GET);
+  // print ($_SERVER['REQUEST_URI']);
+  print("</pre><br><br>");
+
+  /* Samples:
+  * ####################################
+  * # RewriteRule ^project/(.*)/ticket/(.*) index.php?project=$1&ticket=$2 [L]
+  * # RewriteRule .* index.php
+  * URL: "http://pmt/project/xRehab/ticket/2948"
+      Array
+      (
+          [project] => xRehab
+          [ticket] => 2948
+      )
+  * URL: "http://pmt/?test=234"
+      Array
+      (
+          [test] => 234
+      )
+  * 
+  * 
+  * ####################################
+  * #RewriteRule ^(.*)$ index.php?PAGE=$1 [L,QSA]
+  * URL: http://pmt/project/xRehab/ticket/2948
+  * Returns:
+      Array
+      (
+          [PAGE] => project/xRehab/ticket/2948
+      )
+  * #########################################
+  * # RewriteRule ^project/(.*)/ticket/(.*) ?project=$1&ticket=$2 [L]
+  * URL: http://pmt/project/xRehab/ticket/2948
+  * Returns:
+      Array
+      (
+        [project] => xRehab
+        [ticket] => 2948
+      )
+  */
+
+  /*
+    //print("<pre>");
+    $url = (!empty($_SERVER['HTTPS'])) ? "https://".$_SERVER['SERVER_NAME'].$_SERVER['REQUEST_URI'] : "http://".$_SERVER['SERVER_NAME'].$_SERVER['REQUEST_URI'];
+    print ("<pre>" . $url . "</pre>");
+    print ("<HR>");
+
+    print("<pre>");
+    print_r(parse_url($url));
+    print("</pre>");
+
+    print ("<HR>");
+    print("<pre>");
+    print parse_url($url, PHP_URL_PATH);
+    print("</pre>");
+  */
+
+  print("</body></html>");
+  
+}
 
 ?>

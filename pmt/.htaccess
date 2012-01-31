@@ -34,5 +34,16 @@ RewriteRule ^project/(.*) index.php?project=$1
 # Custom user rule
 RewriteRule ^user/(.*) index.php?user=$1
 
+###############################
+## Removed until a better HTAccess is created
+## for now, use direct connect.
+#
+# Installer
+#RewriteRule ^install /install/index.php
+###############################
+
+#
+## Removed 2012-01-30 - because installer breaks
+##
 # Final decision
-RewriteRule .* index.php
+#RewriteRule .* index.php

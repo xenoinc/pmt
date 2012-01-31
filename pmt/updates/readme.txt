@@ -1,4 +1,6 @@
-Copyright 2010 (C) Xeno Innovations, Inc.
+Copyright 2010-2012 (C) Xeno Innovations, Inc.
+
+*** DO NOT REMOVE THIS FOLDER ***
 
 This directory contains the default project space for all new projects.
 
