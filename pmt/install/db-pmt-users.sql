@@ -27,30 +27,30 @@
 */
 create table `USER`
 (
-  `User_Ndx`            INT NOT NULL AUTO_INCREMENT,    -- Internal ID
-  `User_Id`             VARCHAR(255) COLLATE utf8_unicode_ci NOT NULL,        -- user login name
+  `User_Id`             INT NOT NULL AUTO_INCREMENT,    -- Internal ID
+  `User_Name`           VARCHAR(255) COLLATE utf8_unicode_ci NOT NULL,        -- user login name
   `User_Pass`           VARCHAR(255) COLLATE utf8_unicode_ci NOT NULL,        -- encrypted user password
   `Name_First`          VARCHAR(75),        -- First Name
   `Name_Last`           VARCHAR(75),        -- Last Name
   `Name_Middle`         VARCHAR(75),        -- Middle Name
   `Name_Title`          VARCHAR(4),         -- Dr, Mr, Mrs, Ms
   `Name_Salu`           VARCHAR(4),         -- Sr, Jr, III, IV, Esq(uire)
-  `Phone1`              VARCHAR(16),         -- 111-222-333-4444 (country, area, .., ..)
-  `Phone2`              VARCHAR(16),         -- 111-222-333-4444 (country, area, .., ..)
-  `Email1`              VARCHAR(255) COLLATE utf8_unicode_ci NOT NULL,        --
-  `Email2`              VARCHAR(255) COLLATE utf8_unicode_ci NOT NULL,        --
+--`Phone1`              VARCHAR(16),         -- 111-222-333-4444 (country, area, .., ..)
+--`Phone2`              VARCHAR(16),         -- 111-222-333-4444 (country, area, .., ..)
+--`Email1`              VARCHAR(255) COLLATE utf8_unicode_ci NOT NULL,        --
+--`Email2`              VARCHAR(255) COLLATE utf8_unicode_ci NOT NULL,        --
 
   `Customer_Id`         VARCHAR(10),        -- Customer ID
-  `Work_Name`           VARCHAR(50),        -- Misc. If not linked to Customer table
-  `Work_Addr1`          VARCHAR(50),        -- ..
-  `Work_Addr2`          VARCHAR(50),        -- ..
-  `Work_City`           VARCHAR(25),        -- ..
-  `Work_State`          VARCHAR(25),        -- ..
-  `Work_Zip`            VARCHAR(20),        -- ..
-  `Work_Country`        VARCHAR(50),        -- ..
+--`Work_Name`           VARCHAR(255) COLLATE utf8_unicode_ci,        -- Misc. If not linked to Customer table
+--`Work_Addr1`          VARCHAR(255) COLLATE utf8_unicode_ci,        -- ..
+--`Work_Addr2`          VARCHAR(255) COLLATE utf8_unicode_ci,        -- ..
+--`Work_City`           VARCHAR(100) COLLATE utf8_unicode_ci,        -- ..
+--`Work_State`          VARCHAR(100) COLLATE utf8_unicode_ci,        -- ..
+--`Work_Zip`            VARCHAR(25) COLLATE utf8_unicode_ci,        -- ..
+--`Work_Country`        VARCHAR(100) COLLATE utf8_unicode_ci,        -- ..
 
   `Account_Active`      BOOLEAN,
-  `Termination_Dttm1`    DATETIME,           -- used for interns, etc
+  `Termination_Dttm1`   DATETIME,           -- used for interns, etc
   `Created_Dttm`        DATETIME,           -- when was user created
   `Password_Exp_Dttm`   DATETIME,           -- date of password expiration
 
@@ -60,13 +60,24 @@ create table `USER`
   primary key (`User_Ndx`)
 );
 
+/*
+  User Inforamtion Details
+  Purpose:
+    Contains the individual user data such as:
+    Phone(1,..), Address, Email, Birthday
+*/
 create table if not exists USER_INFO
 (
   `id`            bigint not null auto_increment,
-  `Phone`         varchar(50),
-  `Phone_Type`    varchar(10),          -- home, office, cell, business, fax
+  `User_Name`     VARCHAR(255) COLLATE utf8_unicode_ci NOT NULL,
+  `Detail_Data`   VARCHAR(255) COLLATE utf8_unicode_ci NOT NULL,
+  `Detail_Type`   VARCHAR(255) COLLATE utf8_unicode_ci NOT NULL
+--`Phone`         varchar(50),
+--`Phone_Type`    varchar(10),          -- home, office, cell, business, fax
   primary key (`id`)
 ) engine=InnoDb default charset=utf8 collate=utf_8_uicode_ci;
+
+
 
 /*
   User's project access level
@@ -74,11 +85,11 @@ create table if not exists USER_INFO
   Version 1.0
   Last Update:  2010-11-07
 */
-create table USER_PRODUCT_PRIV
+create table USER_PROJECT_PRIV
 (
-  user_id       VARCHAR(15) NOT NULL,   -- User ID from 'pmt_user'
-  product_id    INT NOT NULL,           -- Product ID
-  group_name    VARCHAR(20) NOT NULL    -- Name of the group priv
+  User_Name     VARCHAR(255) COLLATE utf8_unicode_ci NOT NULL,   -- User ID from 'pmt_user'
+  Project_Id    INT NOT NULL,           -- Product ID
+  Group_Name    VARCHAR(20) NOT NULL    -- Name of the group priv
 );
 
 

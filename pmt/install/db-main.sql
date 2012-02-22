@@ -37,10 +37,10 @@ create table PRODUCT
   Product_Description     BLOB,                                     --      Description of the product
   Category                VARCHAR(15),                              --      What type of product it is (Ex: "hardware", "software", etc.)
   Sub_Category            VARCHAR(15),                              --      Sub Category (Ex: "Muscle Evaluation", "Utility", "FTP-Client")
-  Version                 VARCHAR(15),                              --  +   Full version number (1.22.333.44444)
-  Versoin_Major           INTEGER DEFAULT 0,                        -- [*]  Major Version Number (Ex: 1)    [* Changed: VarChar to INT *]  
-  Version_Minor           INTEGER,                                  --  +   Minor number (22)
-  Version_Revision        VARCHAR(10) DEFAULT '',                   --  +   Revision Version Number (333.rc4)
+--Version                 VARCHAR(15),                              --  +   Full version number (1.22.333.44444)
+--Versoin_Major           INTEGER DEFAULT 0,                        -- [*]  Major Version Number (Ex: 1)    [* Changed: VarChar to INT *]  
+--Version_Minor           INTEGER,                                  --  +   Minor number (22)
+--Version_Revision        VARCHAR(10) DEFAULT '',                   --  +   Revision Version Number (333.rc4)
   Release_DTTM            DATETIME,                                 --      Product Go-Live
   Update_DTTM             DATETIME,                                 --      YYYYMMDD of last detail update
   Decommission_DTTM       DATETIME,                                 --      Date of product decommission (past, present, future)
@@ -54,15 +54,19 @@ create table PRODUCT
   Listing of updates to product (minor revisions).
   This will be used for GA Revisions made to a Branch copy
 */
-create table PRODUCT_VERSION_UPDATE
+--create table PRODUCT_VERSION_UPDATE
+--create table PRODUCT_UPDATE
+create table PRODUCT_VERSION
 (
   Version_Update_Id   INTEGER NOT NULL AUTO_INCREMENT,          -- +  Unique identifyer for update
   Product_Id          INTEGER,                                  -- +  xi_product.ProductId
-  Update_Dttm         DATETIME,                                 -- +  Date the revision was released
+  Release_Dttm        DATETIME,                                 -- +  Date the revision was released
+  Decommission_Dttm   DATETIME,
   Version             VARCHAR(15),                              -- +  Full version number (1.22.333.44444)
   Versoin_Major       INTEGER,                                  -- +  Major Version Number (1)
   Version_Minor       INTEGER,                                  -- +  Minor number (22)
-  Product_Revision    VARCHAR(10)                               -- +  Revision Version Number (333.rc4)
+  Product_Revision    VARCHAR(10),                               -- +  Revision Version Number (333.rc4)
+  Update_User_Name    VARCHAR(50)
 );
 
 -- Proposed restructure of customer table
@@ -93,38 +97,30 @@ CREATE TABLE CUSTOMER
 --custom4           VARCHAR(50)                 -- [-]
 );
 
-
-/*
-  Customer's Info used by Fdx-MMT v1.x
-*/
-CREATE TABLE CUSTOMER_MMT1
-(
-  Customer_Id         VARCHAR(10),            --    Unique Customer ID defined in 'xi_customer'
-  MMT1_Customer_Id    VARCHAR(10),            --    Fdx-MMT1 Customer ID [actually 8 chars]
-  MMT1_Mode_Id        SMALLINT                --    1="std"  2="line mode"
-  Licensed_To         VARCHAR(50),            -- +  Being used by specific person(s)  (Customer: UPMC; Licensed To: Dr SOnSO)
-  Custom1             VARCHAR(50),            -- +  Custom Info / Address Line 1
-  Custom2             VARCHAR(50),            -- +  Custom Info / Address Line 2  *Special Contact Name, etc.*
-  Custom3             VARCHAR(50),            -- +  Custom Info / Address Line 3
-  Custom4             VARCHAR(50)             -- +  Custom Info / Address Line 4
-);
-
-
 /*
   Listing of contacts for customer site
 */
 create table CUSTOMER_CONTACT
 (
-  Customer_Id         INTEGER,                -- +  Customer linked to
-  Name_Full           VARCHAR(50),            -- +  Full name of constact
-  Title               VARCHAR(25),            -- +  Position / Title
-  Phone_Number        VARCHAR(25),            -- +  Main phone
-  Phone_Number2       VARCHAR(25),            -- +  Alternate phone
-  Phone_Fax           VARCHAR(25),            -- +  Fax number
-  EMail               VARCHAR(50),            -- +  Email address
-  Main_Contact        BOOL                    -- +  Is this person a main contact
+  Customer_Contact_Id INTEGER NOT NULL AUTO_INCREMENT,
+  Customer_Id         INTEGER,                -- Customer linked to
+  Name_First          VARCHAR(50),            -- First name of contact
+  Name_Last           VARCHAR(50),            -- Surname
+  Title               VARCHAR(25),            -- Position / Title
+--Phone_Number        VARCHAR(25),            -- Main phone
+--Phone_Number2       VARCHAR(25),            -- Alternate phone
+--Phone_Fax           VARCHAR(25),            -- Fax number
+--EMail               VARCHAR(50),            -- Email address
+  Contact_Priority    INTEGER                 -- Is this person a main contact
 );
 
+create table CUSTOMER_CONTACT_DATA
+(
+  Customer_Contact_Id   INTEGER,
+  Detail_Data           VARCHAR(255) collate utf8_unicode_ci NOT NULL,
+  Detail_Type           VARCHAR(15)       -- Phone, Cell, Address, Fax, Email
+  Detail_Priority              INTEGER
+);
 
 -- Listing of customer products
 create table CUSTOMER_PRODUCT
@@ -149,8 +145,6 @@ create table CUSTOMER_PRODUCT
   Update_Rev          BOOLEAN                     --      Allowed to upgrade? #.#.x  def=1  ** Used by updater application
 );
 
-  
-
 
 /*
  Listing of product updates as per the customer
@@ -166,4 +160,22 @@ create table CUSTOMER_PRODUCT_UPDATE
 );
 
 
+/*
+  Registration infromation for customer product
+  Was previously "CUSTOMER_MMT1" used used as reg info for Fdx-MMT v1.x
+  
+*/
+CREATE TABLE CUSTOMER_PRODUCT_REGISTRATION
+(
+  Product_Reg_Id      INTEGER UNSIGNED NOT NULL AUTO_INCREMENT,
+  Customer_Id         VARCHAR(10),            --    Unique Customer ID defined in 'xi_customer'
+  MMT1_Customer_Id    VARCHAR(10),            --    Fdx-MMT1 Customer ID [actually 8 chars]
+  MMT1_Mode_Id        SMALLINT                --    1="std"  2="line mode"
+  Licensed_To         VARCHAR(50),            -- +  Being used by specific person(s)  (Customer: UPMC; Licensed To: Dr SOnSO)
+  Old_Custom1         VARCHAR(50),            -- +  Custom Info / Address Line 1
+  Old_Custom2         VARCHAR(50),            -- +  Custom Info / Address Line 2  *Special Contact Name, etc.*
+  Old_Custom3         VARCHAR(50),            -- +  Custom Info / Address Line 3
+  Old_Custom4         VARCHAR(50),            -- +  Custom Info / Address Line 4
+  PRIMARY KEY (Product_Reg_Id)
+);
 
