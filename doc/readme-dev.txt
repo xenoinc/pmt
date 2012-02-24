@@ -1,4 +1,29 @@
-Copyright (c) 2010 Xeno Innovations, Inc.
+Copyright (c) 2010-2012 Xeno Innovations, Inc.
+-----------------------------------------------
+
+Change Log:
+-----------
+
+
+2012-0224 [djs]
+  * Note, the project's folder structure has reciently changed as of
+    version 0.1 "nighthawk" (Concept-3). This will need to be changed.
+2012-0112 [djs]
+  * Created structure baised upon v0.1 "Concept-2"
+
+
+To Do:
+[ ] Update Folder Structure to v0.1 "Nighthawk"
+
+
+###################################
+
+PMT Project Pages
+-----------------
+Below is a list of pages were the project is hosted/tracked
+
+* https://www.ohloh.net/p/pmt
+
 
 Folder structure:
 -------------------

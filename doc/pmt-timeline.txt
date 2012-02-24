@@ -8,8 +8,8 @@ Milesstones and Timeline
 ========================
 
 
-Milestone 1 - Ground work
--------------------------
+Milestone 1 - "Ground work" - v0.1 - "Nighthawk"
+------------------------------------------------
 - Basic UI
 - Able to create Projects
 - Able to create Milestones
@@ -18,8 +18,8 @@ Milestone 1 - Ground work
 - Raw Wiki (text only)
 
 
-Milestone 2 - Little further
-----------------------------
+Milestone 2 - Little further - v0.2 - "Nighthawk"
+-------------------------------------------------
 - Finish creation of Tickets, Bugs, Tasks
 - TBT :: Updates
 - TBT :: s_prod_enum
@@ -28,7 +28,7 @@ Milestone 2 - Little further
 - User Logins
 
 
-Milestone 3 - Alpha
+Milestone 3 - Alpha - 
 -------------------
 - Wiki (Basic encoding)
 - PMT Online Documentation / Help
@@ -40,12 +40,12 @@ Milestone 4 - RC 1 (beta)
 ------------------
 - Dashboard
 - View Subversion
-- 
+- View Git
 
 
 Milestone 5
 ------------
 - Subversion Revision Difference
-- 
+- Git revision difference
 
 
