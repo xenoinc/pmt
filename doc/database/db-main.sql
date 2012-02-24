@@ -2,161 +2,180 @@
 ********************************************************************
 * Copyright 2010-2011 (C) Xeno Innovations, Inc.
 * ALL RIGHTS RESERVED
-* Author:        Damian J. Suess
+* Author:        
 * Document:      db-main.sql
-* Created Date:  Oct 31, 2010, 11:03:17 PM
-* Version:       0.1.8
+* Created Date:  Aug 25, 2011, 20:03:17
+* Version:       0.2.2
 * Description:
-*   Provides the basic layout of the database tables used by the system
+*   Proposal for new DB tables used by the system
+*
 * Change Log:
-* [2011-0825] * (djs) Fixed column type (there were errors)
-*             + (djs) Added xi_product.version_major
-*             - (djs) Removed pmt-user tables
-* [2010-1107] * (djs) Changed file name from 'db-struct' to 'db-main' to denote main XI/PMT tables
-*             * (djs) Split PMT Project tables to 'db-project.sql'
-* [2010-1104] + (djs) Added new tables
-* [2010-1031] * (djs) Initial creation
+* [2012-0131] - v0.2.2
+*             * (djs) Expanded Product_Name from 50 to 255.
+*             * (djs) Changed table name to all caps. Columns to Camel_Case
+*             * (djs) VarChar now uses:  utf8_unicode_ci
+* [2011-0829] - v0.0.1
+*             - (djs) Combined old table columns & added [+ add], [- rmv], [** modificaiton] respectively
+* [2011-0825] - (djs) Initial file creation
+* [2011-0811] - (djs) Initial proposal idea
 **********************************************************************/
 
-/*
-  To license software we will need the serial numbers of the following:
-    - Hardware S/N  (MMT [Dianomometer], ROM, )
-    - Package S/N   (Hardware, documentation, etc)
-*/
-
-
-/*
-  Available projects and descriptions Table
-  Version:      1.0
-  Last Update:  2010-11-05
-*/
-
-/* DROP TABLE IF EXISTS  xi_product;*/
-create table xi_product
+create table if not exists `PMT_SETTINGS`
 (
-  product_id          INTEGER UNSIGNED NOT NULL,             -- Custom Product ID Number
-  product_name        VARCHAR(50) NOT NULL,     -- Name of the product
-  product_desc        BLOB,                     -- Description of the product
-  category            VARCHAR(15),              -- What type of product it is (hardware, software, etc.)
-  sub_category        VARCHAR(15),  
-  version_major       VARCHAR(5),               -- Major Version  **see minor revisions below**
-  pmt_path            VARCHAR(256),             -- location in PMT
-  release_dttm        DATETIME,                 -- Product Go-Live
-  update_dttm         DATETIME,                 -- YYYYMMDD of last detail update
-  decommission_dttm   DATETIME,                 -- Date of product decommission (past, present, future)
-  changed_uid         INTEGER,                      -- User who made last update
-  allow_global_users  BOOLEAN DEFAULT FALSE     -- Allow the master list of users to view product
-);
-/* 01, Fdx-MMT, "blah ..", "1.4", */
+  `setting`     varchar(255) collate utf8_unicode_ci not null,
+  `value` longtext collate utf8_unicode_ci not null,
+  primary key (`setting`)
+) engine=InnoDB default charset=utf8 collate=utf8_unicode_ci;
 
-/*
-  Product Version
-  Available Project Versions
-  Version:      1.0
-  Last Update:  2010-11-13
-  :: List Versions:  SELECT version FROM xi_project_version WHERE project_name = '...' ORDER BY version
-*/
 
-/* DROP TABLE IF EXISTS  xi_product_version;*/
-CREATE TABLE xi_product_version
+-- Listing of products
+create table PRODUCT
 (
-  product_id          INTEGER UNSIGNED NOT NULL,
-  product_name        VARCHAR(50) NOT NULL DEFAULT '',     -- Project Name
-  version             VARCHAR(15),              -- (Branch/Tag) Version. I.E. "1.0", "1.2", "1.4.flex"
-  is_default          BOOLEAN,                  -- Should this be the default selection for Tickets/Bugs/etc (Default=0)
-  pmt_path            VARCHAR(256),             -- location in PMT
-  release_dttm        DATETIME,                 -- Product Go-Live (YYYYMMDD HH:MM:SS)
-  update_dttm         DATETIME,                 -- YYYYMMDD of last detail update
-  decommission_dttm   DATETIME,                 -- Date of product decommission (past, present, future)
-  changed_uid         VARCHAR(15),              -- User who made last update
-  allow_global_users  BOOLEAN DEFAULT FALSE,    -- Allow the master list of users to access view product version
-  description         BLOB                      -- Details on what's special about this version
+
+  Product_Id              INTEGER UNSIGNED NOT NULL PRIMARY KEY,    --      Product ID Number - Unique value for internal tracking
+  Product_Name            VARCHAR(255) collate utf8_unicode_ci NOT NULL,                     --      Short name of product (Ex: "MMT-IR")
+  Product_Description     BLOB,                                     --      Description of the product
+  Category                VARCHAR(15),                              --      What type of product it is (Ex: "hardware", "software", etc.)
+  Sub_Category            VARCHAR(15),                              --      Sub Category (Ex: "Muscle Evaluation", "Utility", "FTP-Client")
+--Version                 VARCHAR(15),                              --  +   Full version number (1.22.333.44444)
+--Versoin_Major           INTEGER DEFAULT 0,                        -- [*]  Major Version Number (Ex: 1)    [* Changed: VarChar to INT *]  
+--Version_Minor           INTEGER,                                  --  +   Minor number (22)
+--Version_Revision        VARCHAR(10) DEFAULT '',                   --  +   Revision Version Number (333.rc4)
+  Release_DTTM            DATETIME,                                 --      Product Go-Live
+  Update_DTTM             DATETIME,                                 --      YYYYMMDD of last detail update
+  Decommission_DTTM       DATETIME,                                 --      Date of product decommission (past, present, future)
+  Changed_UID             VARCHAR(15),                              -- [*]  UserId who made last update to this product information   [* INT to Varchar to match PMT-USERID *]
+  PMT_Allow_Global_Users  BOOLEAN DEFAULT FALSE,                    --      Used by PMT - Allow the master list of users to view product
+  PMT_Path                VARCHAR(256)                              --      Used by PMT - Location in PMT
 );
 
+/*
+  ** Probably reject addition **
+  Listing of updates to product (minor revisions).
+  This will be used for GA Revisions made to a Branch copy
+*/
+--create table PRODUCT_VERSION_UPDATE
+--create table PRODUCT_UPDATE
+create table PRODUCT_VERSION
+(
+  Version_Update_Id   INTEGER NOT NULL AUTO_INCREMENT,          -- +  Unique identifyer for update
+  Product_Id          INTEGER,                                  -- +  xi_product.ProductId
+  Release_Dttm        DATETIME,                                 -- +  Date the revision was released
+  Decommission_Dttm   DATETIME,
+  Version             VARCHAR(15),                              -- +  Full version number (1.22.333.44444)
+  Versoin_Major       INTEGER,                                  -- +  Major Version Number (1)
+  Version_Minor       INTEGER,                                  -- +  Minor number (22)
+  Product_Revision    VARCHAR(10),                               -- +  Revision Version Number (333.rc4)
+  Update_User_Name    VARCHAR(50)
+);
 
-
+-- Proposed restructure of customer table
+CREATE TABLE CUSTOMER
+(
+  Customer_Index    INTEGER UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,    -- Only used by internal indexing
+  Customer_Id       VARCHAR(10),                --      Custom Customer ID
+--Customer_Name     VARCHAR(256),               -- [*]  Full Customer Name  [* Changed column name *]
+  Name              VARCHAR(100),               -- [*]  Full Customer Name  [* Changed column name & size *]
+--LicensedTo        VARCHAR(50),                -- [-]  Being used by specific person(s)  (Customer: UPMC; Licensed To: Dr SOnSO)
+  Address1          VARCHAR(100),               --      PO Box 13543
+  Address2          VARCHAR(100) DEFAULT NULL,  -- [*]  Suite 23            [* MOD: added 'Default null' *]
+  City              VARCHAR(50),                --      Pittsburgh
+  State_Name        VARCHAR(50),                --      Pennsylvania
+  Zip_Code          VARCHAR(10),                --      15203-1234
+  Country           VARCHAR(50),                --      United States of America
+  Website           VARCHAR(256),               --      Customer's Website
+  Phone1            VARCHAR(25),                --      Main Phone "+001-412-111-0000 x1234.."
+  Phone2            VARCHAR(25) DEFAULT NULL,   --      Phone #2
+  Fax1              VARCHAR(25) DEFAULT NULL,   -- 
+  Update_Dttm       DATETIME,                   --  +   Date of updated information
+  Changed_Uid       VARCHAR(15),                --  +   UserId who made last update to this product information
+--Email1            VARCHAR(50),                -- [-]  Email Default       [* RMV:  See >> xi_customer_contact.MainContact *]
+--Email2            VARCHAR(50),                -- [-]  Email Backup        [* RMV:  See >> xi_customer_contact.MainContact *]
+--custom1           VARCHAR(50),                -- [-]  Custom Address Line 1, ...
+--custom2           VARCHAR(50),                -- [-]  Special Contact Name, etc.
+--custom3           VARCHAR(50),                -- [-]
+--custom4           VARCHAR(50)                 -- [-]
+);
 
 /*
-  Used with the customer sync table
-  Version 1.0
-  Last Update:  2010-11-06
+  Listing of contacts for customer site
 */
-CREATE TABLE xi_customer
+create table CUSTOMER_CONTACT
 (
-  customer_ndx_id   INTEGER UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,    -- Only used by internal indexing
-  customer_id       VARCHAR(10),                -- Custom Customer ID
-  customer_name     VARCHAR(256),               -- Full Customer Name
-  licensed_to       VARCHAR(50),                -- Being used by specific person(s)  (Customer: UPMC; Licensed To: Dr SOnSO)
-  address1          VARCHAR(100),               -- PO Box 13543
-  address2          VARCHAR(100),               -- Suite 23
-  addr_city         VARCHAR(50),                -- Pittsburgh
-  addr_state        VARCHAR(50),                -- Pennsylvania
-  addr_zip          VARCHAR(10),                -- 15203-1234
-  addr_country      VARCHAR(50),                -- United States of America
-  website           VARCHAR(256),               -- Customer's Website
-  phone1            VARCHAR(25),                -- "+001-412-111-0000 x1234.."
-  phone2            VARCHAR(25),                --
-  fax1              VARCHAR(25),                --
-  email1            VARCHAR(50),                -- Default Contact Email
-  email2            VARCHAR(50),                --
-  -- Added for Fdx-MMT 1.x compatibility
-  custom1           VARCHAR(50),                -- Custom Address Line 1, ...
-  custom2           VARCHAR(50),                -- Special Contact Name, etc.
-  custom3           VARCHAR(50),
-  custom4           VARCHAR(50)
+  Customer_Contact_Id INTEGER NOT NULL AUTO_INCREMENT,
+  Customer_Id         INTEGER,                -- Customer linked to
+  Name_First          VARCHAR(50),            -- First name of contact
+  Name_Last           VARCHAR(50),            -- Surname
+  Title               VARCHAR(25),            -- Position / Title
+--Phone_Number        VARCHAR(25),            -- Main phone
+--Phone_Number2       VARCHAR(25),            -- Alternate phone
+--Phone_Fax           VARCHAR(25),            -- Fax number
+--EMail               VARCHAR(50),            -- Email address
+  Contact_Priority    INTEGER                 -- Is this person a main contact
+);
+
+create table CUSTOMER_CONTACT_DATA
+(
+  Customer_Contact_Id   INTEGER,
+  Detail_Data           VARCHAR(255) collate utf8_unicode_ci NOT NULL,
+  Detail_Type           VARCHAR(15)       -- Phone, Cell, Address, Fax, Email
+  Detail_Priority              INTEGER
+);
+
+-- Listing of customer products
+create table CUSTOMER_PRODUCT
+(
+  CPID                INTEGER UNSIGNED NOT AUTO_INCREMENT NULL PRIMARY KEY,    -- ** Customer Product ID
+  Customer_Id         VARCHAR(10) NOT NULL,       --      CustomerId to link to
+  Product_Id          INTEGER,                    --      Product Identificaiton Number (xi_product.ProductId)
+
+--product_cost        FLOAT,                      --      (OLD)
+  Product_Cost        VARCHAR(10),                -- [*]  Sales price paid for product (ex: 3222111.00) [** Changed: FLOAT to VC(10) **]
+--paid_infull         INTEGER,                    -- [-]  Did they pay in full?  (* REMOVED *)
+  Paid_Ammount        VARCHAR(10),                --  +   Sum of payment paid to date
+  Payment_Plan        BOOLEAN,                    --      Are they on payment plan?   1=yes 0=no (see payment plan table)
+  Num_Licenses        INTEGER,                    --      How many licenses are they allowed?
+
+  Install_Dttm        DateTime,                   --      Date of installation
+  Last_Update_Dttm    DateTime,                   --      Last update of product version
+  
+  Update_Enabled      BOOLEAN,                    --      Allow customer to update this product  ** Used by updater application
+  Update_Major        BOOLEAN,                    --      Allowed to upgrade? x.x.x  def=0  ** Used by updater application
+  Update_Minor        BOOLEAN,                    --      Allowed to upgrade? #.x.x  def=0  ** Used by updater application
+  Update_Rev          BOOLEAN                     --      Allowed to upgrade? #.#.x  def=1  ** Used by updater application
 );
 
 
 /*
-  Customer's Fdx-MMT 1.0 Info
-  Version:     1.0.1
-  Last Update: 2010-11-13
+ Listing of product updates as per the customer
 */
-CREATE TABLE xi_customer_mmt1
+create table CUSTOMER_PRODUCT_UPDATE
 (
-  customer_id       VARCHAR(10),        -- Unique Customer ID defined in 'xi_customer'
-  mmt1_cid          VARCHAR(10),        -- Fdx-MMT1 Customer ID [actually 8 chars]
-  mmt1_id_mode      SMALLINT           -- 1="std"  2="line mode"
+  Customer_Id           INTEGER,                -- +  xi_customer.CustomerId
+  Product_Id            INTEGER,                -- +   
+  Changed_Uid           VARCHAR(15),            -- +  UserId who made last update to this product information
+  Update_Dttm           DATETIME,               -- +  Date of the update itself
+  New_Product_Version   VARCHAR(10),            -- +  
+  Installed_By          VARCHAR(15)             -- +  
 );
 
 
 /*
-  Keeps record of what products the customer purchased
-  Version 1.0.1
-  Last Update:  2010-11-10
- */
-create table xi_customer_product
-(
---cp_id           INTEGER UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,  -- Customer Product ID
-  customer_id     VARCHAR(10) NOT NULL,         -- Customer ID
-  product_id      INTEGER NOT NULL,                 -- Product ID
-  product_cost    FLOAT,                        -- Total Cost
-  paid_infull     INTEGER,                          -- Did they pay their full bill?
-  num_licenses    UNSIGNED INT,                 -- How many licenses are they allowed?
-  payment_plan    BOOLEAN,                      -- 1/0  are they on payment plan? 1=yes 0=no (see payment plan table)  *** Leasing Co  LOOK INTI THIS
-  update_enabled  BOOLEAN,                      -- Allow this customer to update this product
-  update_major    BOOLEAN,                      -- Allowed to upgrade? x.x.x  def=0
-  update_minor    BOOLEAN,                      -- Allowed to upgrade? #.x.x  def=0
-  update_rev      BOOLEAN                      -- Allowed to upgrade? #.#.x  def=1
-);
-
-
-/*
-  License Tracking Table
-  Version 1.0
-  Last Update:  2010-11-06
+  Registration infromation for customer product
+  Was previously "CUSTOMER_MMT1" used used as reg info for Fdx-MMT v1.x
+  
 */
-create table xi_registered_license
+CREATE TABLE CUSTOMER_PRODUCT_REGISTRATION
 (
-  regm_id         INTEGER UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
-  customer_id     VARCHAR(10),              -- Customer ID
-  product_id      INTEGER,                  -- Product ID Number
-  reg_dttm        DATETIME,                 -- When did they register their device
-  exp_dttm        DATETIME,                 -- Expiration date of this registeration (NULL)
-  machine_id      TEXT,                     -- MAC Address; OS; Version; etc.
-  reg_status      BOOLEAN,                  -- Are they registed?
-  revoke_status   BOOLEAN,                  -- Force revoke of registeration (XI Admin controls this)
-  revoke_reason   VARCHAR(50),              -- Why did XI, Inc. revoke this device?
-  allow_updates   BOOLEAN                   -- That machine is allowed updates (depends on customer / other)
+  Product_Reg_Id      INTEGER UNSIGNED NOT NULL AUTO_INCREMENT,
+  Customer_Id         VARCHAR(10),            --    Unique Customer ID defined in 'xi_customer'
+  MMT1_Customer_Id    VARCHAR(10),            --    Fdx-MMT1 Customer ID [actually 8 chars]
+  MMT1_Mode_Id        SMALLINT                --    1="std"  2="line mode"
+  Licensed_To         VARCHAR(50),            -- +  Being used by specific person(s)  (Customer: UPMC; Licensed To: Dr SOnSO)
+  Old_Custom1         VARCHAR(50),            -- +  Custom Info / Address Line 1
+  Old_Custom2         VARCHAR(50),            -- +  Custom Info / Address Line 2  *Special Contact Name, etc.*
+  Old_Custom3         VARCHAR(50),            -- +  Custom Info / Address Line 3
+  Old_Custom4         VARCHAR(50),            -- +  Custom Info / Address Line 4
+  PRIMARY KEY (Product_Reg_Id)
 );
 

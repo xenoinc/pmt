@@ -54,7 +54,8 @@ function CreateHeader($title, $step)
 	echo("  </head>\n");
 	echo("  <body>\n");
 	echo("    <div id='wrapper'>\n");
-	echo("      <h1>xiPMT " . aselect(0, explode(" - ", $title)) . "</h1>\n");
+	echo("      <h1>xiPMT Installation</h1>\n");
+	echo("      <h2>" . aselect(0, explode(" - ", $title)) . "</h2>\n");
 	echo("      <div id='page'>\n");
   
   echo($html);
@@ -65,8 +66,10 @@ function CreateHeader($title, $step)
  */
 function CreateFooter()
 {
+  global $pmt_version;
 	echo("      </div>\n");
 	echo("      <div id='footer'>\n");
+	//echo("        xiPMT v" . $pmt_version . " &copy; 20010-2012 Xeno Innovations\n");
 	echo("        xiPMT &copy; 20010-2012 Xeno Innovations\n");
 	echo("      </div>\n");
 	echo("    </div>\n");

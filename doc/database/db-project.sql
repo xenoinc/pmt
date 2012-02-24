@@ -40,6 +40,24 @@ CREATE TABLE proj_version
 );
 */
 
+CREATE TABLE PROJECT
+(
+  Project_Id INT NOT NULL AUTO_INCREMENT,
+  Project_Name VARCHAR(255) collate utf8_unicode_ci NOT NULL,
+  Project_Description VARCHAR(255) collate utf8_unicode_ci NOT NULL,
+  Created_Dttm DateTime,
+  Updated_User_Name VARCHAR(255) COLLATE utf8_unicode_ci NOT NULL,
+  primary key (`Project_Id`)
+) engine=InnoDb default charset=utf8 collate=utf_8_uicode_ci;;
+
+CREATE TABLE PROJECT_VERSION
+(
+  Product_Id  INTEGER NOT NULL,
+  Version_Number VARCHAR(15) NOT NULL,
+  Version_Code_Name VARCHAR(255) COLLATE utf8_unicode_ci NOT NULL,
+  Updated_User_Name VARCHAR(255) COLLATE utf8_unicode_ci NOT NULL,
+  -- Create Forgin Key
+) engine=InnoDb default charset=utf8 collate=utf_8_uicode_ci;;
 
 /*
   Project Components
@@ -47,7 +65,7 @@ CREATE TABLE proj_version
   Version 1.0
   Last Update:  2010-11-06
 */
-CREATE TABLE proj_component
+CREATE TABLE PROJECT_COMPONENT
 (
   component_name  VARCHAR(25),        -- Project Component Name (Core, DocuFAST, QuantiFAST, PIE, ALL, FlexDx, ..)
 --owner_name      VARCHAR(15),        -- Default Owner, NOTE: Next release, use table 'group_component' to list all compnts assigned to what group (used in reports/issue listing)
@@ -60,7 +78,7 @@ CREATE TABLE proj_component
   Version 1.0
   Last Update:  2010-11-06
 */
-CREATE TABLE component_version
+CREATE TABLE PROJECT_COMPONENT_VERSION
 (
   component_name  VARCHAR(20),
   ver_name        VARCHAR(10),
@@ -75,7 +93,7 @@ CREATE TABLE component_version
   Version 1.0
   Last Update:  2010-11-06
 */
-CREATE TABLE proj_milestone
+CREATE TABLE PROJECT_MILESTONE
 (
   mile_title      VARCHAR(50),    -- MMT v1.0, MMT v1.4, MMT 1.4.Flex, NextLevel
   due_date        DATETIME,       -- Project Due Date
@@ -94,7 +112,7 @@ CREATE TABLE proj_milestone
   Version 1.0
   Last Update:  2010-11-06
 */
-CREATE TABLE report
+CREATE TABLE REPORT
 (
   rpt_id        INT NOT NULL AUTO_INCREMENT,
   rpt_title     VARCHAR(20),        -- Name of the report
@@ -110,7 +128,7 @@ CREATE TABLE report
   Version: 1.0.3
   Last Update: 2010-11-13
 */
-CREATE TABLE wiki
+CREATE TABLE PROJECT_WIKI
 (
   page_id         INT(10) UNSIGNED NOT NULL AUTO_INCREMENT,
   page_title      VARCHAR(100),                             -- Page Title
@@ -124,7 +142,7 @@ CREATE TABLE wiki
   PRIMARY KEY ('page_id')
 --UNIQUE INDEX 'name_title'
 );
-INSERT INTO wiki (page_title, authr_uid, update_dttm, data_type, page_data) VALUES
+INSERT INTO PROJECT_WIKI (page_title, authr_uid, update_dttm, data_type, page_data) VALUES
   ('pmt_main', 'xi_pmt', '2010-11-07 00:00:00.000', 'wiki', '''''Welcome to your personal xiPMT Project Space''''');  -- ['''' = '']
 
 /*
@@ -139,7 +157,7 @@ INSERT INTO wiki (page_title, authr_uid, update_dttm, data_type, page_data) VALU
   Version 1.0
   Last Update:  2010-11-12
 */
-CREATE TABLE s_proj_enum
+CREATE TABLE S_PROJECT_ENUM
 (
   enum_type VARCHAR(15),           -- List Item Type  (ticket_type, resolution, priority)
   enum_name VARCHAR(20),           -- List Item Description
@@ -217,7 +235,7 @@ INSERT INTO s_proj_enum VALUES ('task_status',    'Closed-Declined',      '51');
 /* User Cookie info */
 -- Version 1.0
 -- Last Update:  2010-11-06
-CREATE TABLE auth_cookie
+CREATE TABLE AUTH_COOKIE
 (
   user_name       VARCHAR(15),                    -- PMT User Name
   user_ip         VARCHAR(15),                    -- User's IPv4
@@ -355,28 +373,6 @@ CREATE TABLE bug_attachment
   user_ip         VARCHAR(15)                     -- user's IPv4 (created/mod)
 );
 
-/*
- SVN Tables (keep local log for quick info)
-  ------------------------------------------
-  + svn_repos       db_ver, repo_dir, repo_ver
-  + svn_revision
-*/
-CREATE TABLE svn_repo
-(
---db_ver      VARCHAR(5),       -- Version of Subversion cor compatibility.  ex: 1.4  (not really needed)
-  repo_dir    VARCHAR(255),     -- where is it located  (svn:42d14667-55a7-4533-b801-018457db5143:/var/svn/fdx1)
-  repo_ver    UNSIGNED INT      -- Current HEAD version
-);
-CREATE TABLE svn_revision
-(
-  svn_rev       UNSIGNED INT,   -- Revision number
-  svn_path      VARCHAR(256),   -- Path to the project.  EX: "https://svn.xenoinc.org/project1"
-  node_type     VARCHAR(1),     -- (F)ile, (D)irectory
-  change_type   VARCHAR(1),     -- (A)dded, C, (D)elete, E, (M)odified
---base_path     VARCHAR(256),   -- Used to describe if/what it updated from (NOT IN BETA)
-  base_rev      UNSIGNED INT    -- Updated from revision, NULL=unknown/new
-);
-
 
 /* ***[ Task Tables - ToDo List / Tech Request ]****************** */
 /*
@@ -436,4 +432,31 @@ CREATE TABLE task_attachment
   user_name       VARCHAR(15),                    -- who uploaded it
   user_ip         VARCHAR(15)                     -- user's IPv4 (created/mod)
 );
+
+
+
+/*
+ SVN Tables (keep local log for quick info)
+  ------------------------------------------
+  + svn_repos       db_ver, repo_dir, repo_ver
+  + svn_revision
+*/
+/*
+CREATE TABLE PROJECT_SVN_REPO
+(
+--db_ver      VARCHAR(5),       -- Version of Subversion cor compatibility.  ex: 1.4  (not really needed)
+  repo_dir    VARCHAR(255),     -- where is it located  (svn:42d14667-55a7-4533-b801-018457db5143:/var/svn/fdx1)
+  repo_ver    UNSIGNED INT      -- Current HEAD version
+);
+CREATE TABLE PROJECT_SVN_REVISION
+(
+  svn_rev       UNSIGNED INT,   -- Revision number
+  svn_path      VARCHAR(256),   -- Path to the project.  EX: "https://svn.xenoinc.org/project1"
+  node_type     VARCHAR(1),     -- (F)ile, (D)irectory
+  change_type   VARCHAR(1),     -- (A)dded, C, (D)elete, E, (M)odified
+--base_path     VARCHAR(256),   -- Used to describe if/what it updated from (NOT IN BETA)
+  base_rev      UNSIGNED INT    -- Updated from revision, NULL=unknown/new
+);
+
+*/
 

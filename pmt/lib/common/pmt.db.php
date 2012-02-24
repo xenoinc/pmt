@@ -27,12 +27,12 @@ class Database {
    * @param string $pass
    * @param string $db
    */
-  public function __construct($server="", $user="", $pass="", $db="")
+  public function __construct($server="", $user="", $pass="", $dbName="")
   {
     if (!empty($server))
     {
       $this->Connect($server, $user, $pass);
-      $this->Select($db);
+      $this->Select($dbName);
     }
   }
   

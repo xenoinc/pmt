@@ -22,14 +22,14 @@
 
 create table if not exists `PMT_SETTINGS`
 (
-  `setting`     varchar(255) collate utf8_unicode_ci not null,
-  `value` longtext collate utf8_unicode_ci not null,
+  `setting` varchar(255) collate utf8_unicode_ci not null,
+  `value`   longtext collate utf8_unicode_ci not null,
   primary key (`setting`)
 ) engine=InnoDB default charset=utf8 collate=utf8_unicode_ci;
 
 
 -- Listing of products
-create table PRODUCT
+create table if not exists `PRODUCT`
 (
 
   Product_Id              INTEGER UNSIGNED NOT NULL PRIMARY KEY,    --      Product ID Number - Unique value for internal tracking

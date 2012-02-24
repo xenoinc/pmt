@@ -1,6 +1,7 @@
 <?php
 /**
- * Copyright 2010 (C) Xeno Innovations, Inc.
+ * pmTrack (xiPMT, xiPMTrack)
+ * Copyright 2010-2012 (C) Xeno Innovations, Inc.
  * ALL RIGHTS RESERVED
  * Author:        Damian J. Suess
  * Document:      config
@@ -10,17 +11,19 @@
  *   file as it will effect ALL of your sub-projects. Here you
  *   can set your Root-User, Database, Default Skin, etc.
  *
+ * To Do:
+ * [ ] Remove the DB Table Prefix and just use a static name?
+ * 
  * Change Log:
- * [2012-0130] - moved DB to 
- * [2010-1118] - Move config file to /lib/ dir & not root
+ * 2012-0224 [djs]
+ *  - removed 'require("version.php")' since is it no longer used
+ *  - removed Include of 'Subversion.php' since its set in 'pmt.php'
+ * 2012-0130 - moved DB variables to array
+ * 2010-1118 - Move config file to /lib/ dir & not root
  *
   ***********************************************************/
 
-require("version.php");   // Get PMT version
-
-// require(PMT_PATH."lib/subversion.php");
 // $pmt_defskin = "skin-std";       /* Not used yet */
-// $pmt_project = "";
 
 /**********************************************************
  * This is the MASTER root account for all of the projects.
@@ -47,7 +50,7 @@ $pmtConf = array(
 		"prefix"  => "pmt_"         // Table prefix
 	),
 	"general" => array(
-		"authorized_only" => false // Access for authorized users only
+		"authorized_only" => false  // Allow access to public or auth-only
 	)
 );
 

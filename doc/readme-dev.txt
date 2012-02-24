@@ -22,6 +22,7 @@ PMT Project Pages
 -----------------
 Below is a list of pages were the project is hosted/tracked
 
+* https://github.com/xenoinc/pmt
 * https://www.ohloh.net/p/pmt
 
 

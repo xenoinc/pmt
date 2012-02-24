@@ -1,6 +1,7 @@
 <?php
 /************************************************************
- * Copyright 2010 (C) Xeno Innovations, Inc.
+ * pmTrack (xiPMT, xiPMTrack)
+ * Copyright 2010-2012 (C) Xeno Innovations, Inc.
  * ALL RIGHTS RESERVED
  * Author:       Damian J. Suess
  * Document:     index
