@@ -3,13 +3,14 @@
 /* * **********************************************************
  * Copyright 2012 (C) Xeno Innovations, Inc.
  * ALL RIGHTS RESERVED
- * Author:       suessdam
+ * Author:       Damian J. Suess
  * Document:     pmt.db.php
  * Created Date: Jan 30, 2012
  * 
  * Description:
- *  
+ *  Database class
  *
+ * Status: Complete
  * Change Log:
  * 
  */
