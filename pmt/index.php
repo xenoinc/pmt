@@ -8,13 +8,13 @@
  * Created Date: Oct 31, 2010, 11:03:17 PM
  *
  * Description:
- * Core-Entry point.  If you access this directly you will be asked
- * to do the following (depending on system settings in main MySQL DB)
+ *  Core-Entry point.  If you access this directly you will be asked
+ *  to do the following (depending on system settings in main MySQL DB)
  *
- *   1) Select a project to view
- *   2) Login to the Admin Panel
- *   3) Login as a Customer
- *   4) Login as an Employee (Development, Management, Support, etc.)
+ *    1) Select a project to view
+ *    2) Login to the Admin Panel
+ *    3) Login as a Customer
+ *    4) Login as an Employee (Development, Management, Support, etc.)
  *
  * Change Log:
  * 2012-0112 - remvoed front page. we're using a dynamic generator

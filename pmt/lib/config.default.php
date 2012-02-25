@@ -47,7 +47,7 @@ $pmtConf = array(
 		"user"    => "root",        // Database username
 		"pass"    => "testing123",  // Database password
 		"dbname"  => "pmt",         // Database mame
-		"prefix"  => "pmt_"         // Table prefix
+		"prefix"  => "PMT_"         // Table prefix
 	),
 	"general" => array(
 		"authorized_only" => false  // Allow access to public or auth-only
