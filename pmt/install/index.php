@@ -91,6 +91,7 @@ switch ($step)
 
   /**
    * Database Setup and Testing
+   *  ** Future use AJAX and auto test **
    */
   case 2:
     if (IsInstalled())
@@ -235,13 +236,13 @@ switch ($step)
         </table>
 
         <h3>Administration Settings</h3>
-        <tabel class="inputForm">
+        <table class="inputForm">
           <tbody>
             <tr><td class="label">Username:</td><td><input type="text" name="admin[username]" /></td></tr>
             <tr><td class="label">Password:</td><td><input type="text" name="admin[password]" /></td></tr>
             <tr><td class="label">Email:</td>   <td><input type="text" name="admin[email]" />   </td></tr>
           </tbody>
-        </tabel>
+        </table>
         <div id="actions">
           <input type="submit" value="Next" />
         </div>
@@ -251,36 +252,32 @@ switch ($step)
     }
     elseif(isset($_POST["settings"]) && !count(@$arrErr))
     {
+      /**
+       * Verify that the information was correct
+       *  ** Future, skip this step! **
+       */
 
       CreateHeader("Step 3.b - Verify Settings");
 
       ?>
       <form action="index.php" method="post">
         <input type="hidden" name="step"      value="<?php print(step+1); ?>" />
-        <input type="hidden" name="db"        value="<?php print(step+1); ?>" />
-        <input type="hidden" name="settings"  value="<?php print(step+1); ?>" />
-        <input type="hidden" name="admin"     value="<?php print(step+1); ?>" />
+        <input type="hidden" name="db"        value="<?php print($_POST["db"]); ?>" />
+        <input type="hidden" name="settings"  value="<?php print(json_encode($_POST["settings"])); ?>" />
+        <input type="hidden" name="admin"     value="<?php print(json_encode($_POST["admin"])); ?>" />
 
         <h2>Administration Configuration</h2>
 
         <h3>xiPMT Settings</h3>
         <table class="inputForms">
-          <tr>
-            <td class="label">xiPMT Title</td>
-            <td><?php print($_POST["settings"]["title"]); ?></td>
-          </tr>
-          <tr>
-            <td class="label">Use Clean URI</td>
-            <td><?php print(@$_POST["settings"]["seo_url"] ? "Yes" : "No" ); ?></td>
-          </tr>
+          <tr><td class="label">xiPMT Title</td>  <td><?php print($_POST["settings"]["title"]); ?></td></tr>
+          <tr><td class="label">Use Clean URI</td><td><?php print(@$_POST["settings"]["seo_url"] ? "Yes" : "No" ); ?></td></tr>
         </table>
 
         <h3>Administration Settings</h3>
         <table class="inputForm">
-          <tr>
-            <td class="label"></td>
-            <td></td>
-          </tr>
+          <tr><td class="label">Username:</td><td><?php print($_POST["admin"]["username"]); ?></td></tr>
+          <tr><td class="label">Email:</td>   <td><?php print($_POST["admin"]["email"]); ?></td></tr>
         </table>
 
         <div id="actions">
@@ -304,6 +301,40 @@ switch ($step)
 
     break;
 
+  case 4:
+
+    CreateHeader("Step 4 - Installing Database");
+
+    // InstallPMT();
+
+    $dbase = json_decode($_POST["db"], true);
+    $settings = json_decode($_POST["settings"], true);
+    $admin = json_decode($_POST["admin"], true);
+
+    $db = new Database($dbase["server"], $dbase["user"], $dbase["pass"], $dbase["dbname"]);
+
+    // Extract SQL & put prefix on tables
+    $sqlPmtBrain = file_get_contents("pmt-db.sql");
+    $sqlPmtBrain = str_replace("PMT_", $dbase["prefix"], $sqlPmtBrain);
+    $query = explode(";", $sqlPmtBrain);
+
+    // Run the queries
+    foreach($query as $q)
+    {
+      if(!empty($q) && strlen($q) > 5)
+        $db->Query($q);
+    }
+
+    // Create default values
+    InsertDefaults($db, $dbase, $settings, $admin);
+
+    // Generate Config file
+    $buff = GenerateConfig($dbase);
+
+
+
+
+    break;
 
 
   /**
@@ -315,7 +346,7 @@ switch ($step)
     CreateHeader("Step UNKNOWN!");
     ?>
     <div>
-      Shouldn't be here.. error!
+      Should not be here.. error!
     </div>
     <?php
     break;
@@ -323,6 +354,7 @@ switch ($step)
 
 CreateFooter();
 
+/*
 function GenStep2Database()
 {
 ?>
@@ -357,4 +389,43 @@ function GenStep2Database()
       </form>
 <?php
 }
+*/
+
+
+/**
+ * Performed during Step 4 - Installation
+ */
+function InstallPMT()
+{
+
+}
+
+/**
+ * Insert the default database information
+ */
+function InsertDefaults(Database $db, $dbcfg, $settings, $admin)
+{
+  $pfx = $dbcfg["prefix"];
+
+  /*
+  // Plugin :: Textile
+  $db->Query( "INSERT INTO `".$pfx."PLUGINS` (`Name`, `Author`, `Website`, `Version`, `Enabled`, `Install_Sql`, `Uninstall_Sql`) VALUES " .
+              "('Textile Formatting', 'Jack', 'http://unknown/', '1.0', 1, '', '');");
+  $tmp =$db->Res
+          ("
+            global $textile;
+            if(!isset($textile)) {
+              require(PMT_PATH.'system/plugins/classTextile.php');
+              $textile = new Textile;
+            }
+            $text = $textile->TextileThis($text);"
+          );
+	$db->Query( "INSERT INTO `" . $dbconf['prefix'] . "plugin_code` (`plugin_id`, `title`, `hook`, `code`, `execorder`, `enabled`) VALUES ".
+              " (" . $db->InsertId() . ", 'formattext', 'function_formattext', '" . $tmp . "', 0, 1);");
+  */
+
+  //$db->Query("INSERT INTO ".$pfx."SETTINGS (`value`, `setting`) VALUES ('".$db->Res($settings["title"])."', 'title';" );
+  $db->Query("UPDATE ".$pfx."SETTINGS SET VALUE='".$db->Res($settings["title"])."' WHERE setting='title';" );
+}
+
 ?>
