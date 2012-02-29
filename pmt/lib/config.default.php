@@ -13,7 +13,7 @@
  *
  * To Do:
  * [ ] Remove the DB Table Prefix and just use a static name?
- * 
+ *
  * Change Log:
  * 2012-0224 [djs]
  *  - removed 'require("version.php")' since is it no longer used
@@ -46,7 +46,7 @@ $pmtConf = array(
 		"server"  => "localhost",   // Database server
 		"user"    => "root",        // Database username
 		"pass"    => "testing123",  // Database password
-		"dbname"  => "pmt",         // Database mame
+		"dbname"  => "pmt",         // Database name
 		"prefix"  => "PMT_"         // Table prefix
 	),
 	"general" => array(

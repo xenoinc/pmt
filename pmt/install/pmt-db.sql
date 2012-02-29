@@ -1,10 +1,10 @@
 /* ********************************************************************
  * Copyright 2010-2011 (C) Xeno Innovations, Inc.
  * ALL RIGHTS RESERVED
- * Author:        
+ * Author:
  * Document:      pmt-db.sql
  * Created Date:  Oct 31, 2010, 11:03:17 PM
- * Last Update:    
+ * Last Update:
  * Version:       0.2.2
  * Description:
  *   Proposal for new DB tables used by the system
@@ -35,7 +35,20 @@
 
 create table if not exists `PMT_SETTINGS`
 (
-  `setting` varchar(255) collate utf8_unicode_ci not null,
-  `value`   longtext collate utf8_unicode_ci not null,
+  `Setting` varchar(255) collate utf8_unicode_ci not null,
+  `Value`   longtext collate utf8_unicode_ci not null,
   primary key (`setting`)
 ) engine=InnoDB default charset=utf8 collate=utf8_unicode_ci;
+
+
+CREATE TABLE IF NOT EXISTS `PMT_USERS` (
+  `Id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `Username` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+  `Password` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+  `Name` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+  `Email` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+  `Group_Id` bigint(20) NOT NULL DEFAULT '2',
+  `Sesshash` varchar(255) COLLATE utf8_unicode_ci NOT NULL DEFAULT '0',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+

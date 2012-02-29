@@ -216,8 +216,8 @@ switch ($step)
 
       ?>
       <form action="index.php" method="post">
-        <input type="hidden" name="step" value="<?php ?>" />
-        <input type="hidden" name="db" value="<?php ?>" />
+        <input type="hidden" name="step" value="<?php print($step); ?>" />
+        <input type="hidden" name="db" value="<?php print($_POST["db"]); ?>" />
 
         <h2>Administration Configuration</h2>
 
@@ -261,7 +261,7 @@ switch ($step)
 
       ?>
       <form action="index.php" method="post">
-        <input type="hidden" name="step"      value="<?php print(step+1); ?>" />
+        <input type="hidden" name="step"      value="<?php print($step+1); ?>" />
         <input type="hidden" name="db"        value="<?php print($_POST["db"]); ?>" />
         <input type="hidden" name="settings"  value="<?php print(json_encode($_POST["settings"])); ?>" />
         <input type="hidden" name="admin"     value="<?php print(json_encode($_POST["admin"])); ?>" />
@@ -289,7 +289,7 @@ switch ($step)
     }
     else
     {
-      CreateHeader("Step 3.a - Admin Settings (err)");
+      CreateHeader("Step 3.c - Admin Settings (err)");
       ?>
       <form action="index.php" method="post">
         <div>
@@ -304,6 +304,11 @@ switch ($step)
   case 4:
 
     CreateHeader("Step 4 - Installing Database");
+    ?>
+    <div class="message">
+      Generating config file
+    </div>
+    <?php
 
     // InstallPMT();
 
@@ -326,12 +331,70 @@ switch ($step)
     }
 
     // Create default values
-    InsertDefaults($db, $dbase, $settings, $admin);
+    //InsertDefaults($db, $dbase, $settings, $admin);
+    // Simple settings
+    $db->Query("UPDATE".$dbase["prefix"]."SETTINGS SET Value='".$db->Res($settings["title"]) . "' WHERE Setting='title';" );
+    $db->Query("UPDATE".$dbase["prefix"]."SETTINGS SET Value='".$db->Res($settings["seo_url"]) . "' WHERE Setting='seo_url';" );
+
+    // Administration Account
+    $db->Query( "INSERT INTO ".$dbase["prefix"]."USERS (Username, Password, Name, Email, Group_Id, Sesshas) VALUES " .
+                "('". $db->Res($admin['username'])."', '".
+                      sha1($admin['password'])."', '".
+                      $db->Res($admin['username'])."', '".
+                      $db->Res($admin['email'])."', 1, '');");
 
     // Generate Config file
-    $buff = GenerateConfig($dbase);
+    //$buff = GenerateConfig($dbase);
+    $cfgPHP = array();
+    $cfgPHP[] ="<?php";
+    $cfgPHP[] ='';
+    $cfgPHP[] ="// Generated from Installer";
+    $cfgPHP[] ='$pmtConf = array(';
+    $cfgPHP[] ='  "db" => array(';
+    $cfgPHP[] ='    "server"  => "' . $dbase["server"] .'",   // Database Server';
+    $cfgPHP[] ='    "user"    => "' . $dbase["user"] . '",    // Database user';
+    $cfgPHP[] ='    "pass"    => "' . $dbase["pass"] . '",    // Database password';
+    $cfgPHP[] ='    "dbname"  => "' . $dbase["dbname"] . '",  // Database name';
+    $cfgPHP[] ='    "prefix"  => "' . $dbase["prefix"] . '"   // Table prefix';
+    $cfgPHP[] ='  ),';
+    $cfgPHP[] ='  "general" => array(';
+    $cfgPHP[] ='    "authorized_only" => false    // Allow access to public or auth-only';
+    $cfgPHP[] ='  )';
+    $cfgPHP[] =');';
+    $cfgPHP[] ='';
+    $cfgPHP[] ="?>";
+    $cfgPHP[] = implode(PHP_EOL, $cfgPHP);
 
+    if(!file_exists("../lib/config.php") && is_writable("../lib"))
+    {
+      $fHandle = fopen("../lib/config.php", "w+");
+      fwrite(fHandle, $cfgPHP);
+      ?>
+      <div align="center" class="message good">Installation Finished</div>
+      <div id="actions"><a href="../">xiPHP Main</a></div>
+      <?php
+      // Use this in the future
+      // print("<div id='actions'><a href='../user/" . $dbase['user'] . "'>Admin Control Panel</a></div>");
+    }
+    else
+    {
+      ?>
+      <div align="center" class="message error">
+        The config file ('/lib/config.php') was unable to be generated. Please make sure
+        that the folder has write permissions to complete this operation, otherwise create
+        this file manually from '/lib/config.default.php'.
+      </div>
+      <pre id="config_code">
+        <?php print(htmlentities($cfgPHP)); ?>
+      </pre>
+      <?php
+    }
 
+    ?>
+    <div class="message">
+      Complete
+    </div>
+    <?php
 
 
     break;
@@ -426,6 +489,7 @@ function InsertDefaults(Database $db, $dbcfg, $settings, $admin)
 
   //$db->Query("INSERT INTO ".$pfx."SETTINGS (`value`, `setting`) VALUES ('".$db->Res($settings["title"])."', 'title';" );
   $db->Query("UPDATE ".$pfx."SETTINGS SET VALUE='".$db->Res($settings["title"])."' WHERE setting='title';" );
+
 }
 
 ?>
