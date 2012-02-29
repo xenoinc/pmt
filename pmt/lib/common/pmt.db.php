@@ -6,20 +6,20 @@
  * Author:       Damian J. Suess
  * Document:     pmt.db.php
  * Created Date: Jan 30, 2012
- * 
+ *
  * Description:
  *  Database class
  *
  * Status: Complete
  * Change Log:
- * 
+ *
  */
 
 class Database {
-  private $conn = null;
+  private $_conn = null;
   private $last_query = null;
   private $query_count = 0;
-  
+
   /**
    * Constructor
    * @param string $server
@@ -35,7 +35,7 @@ class Database {
       $this->Select($dbName);
     }
   }
-  
+
   /**
    * Destructor
    */
@@ -43,38 +43,38 @@ class Database {
   {
     $this->close();
   }
-  
+
   /* **[ Public Members ]********************************** */
-  
+
   /**
    * Open Database Connection
    * @param string $server
    * @param string $user
-   * @param string $pass 
+   * @param string $pass
    */
   public function Connect($server, $user, $pass)
   {
-    $this->conn = mysql_connect($server, $user, $pass)
+    $this->_conn = mysql_connect($server, $user, $pass)
             or $this->halt();
   }
-  
+
   /**
-   * Close Database Connection 
+   * Close Database Connection
    */
   public function Close()
   {
-    mysql_close($this->conn);
+    mysql_close($this->_conn);
   }
-  
+
   /**
    * Select the database
-   * @param type $db 
+   * @param type $db
    */
   public function Select($db)
   {
-    mysql_select_db($db, $this->conn);
+    mysql_select_db($db, $this->_conn);
   }
-  
+
   /**
    * Query the command
    * @param string $query - Query to execute
@@ -82,12 +82,12 @@ class Database {
    */
   public function Query($query)
   {
-    $ret = mysql_query($query, $this->conn) or $this->halt($query);
+    $ret = mysql_query( $query, $this->_conn) or $this->halt($query);
     $this->last_query = $query;
     $this->query_count++;
     return $ret;
   }
-  
+
   /**
    * Reutrns array contained in fetched row
    * @param string $ret - SQL Result Array[]
@@ -98,7 +98,7 @@ class Database {
     $retArr = mysql_fetch_array($ret);
     return $retArr;
   }
-  
+
   /**
    * Escape the string
    * @deprecated
@@ -107,17 +107,17 @@ class Database {
   {
     return mysql_escape_string($string);
   }
-  
+
   /**
    * Escape string shortcut - quick way to perform escapestring
-   * 
+   *
    */
   public function es($string)
   {
     return $this->escapestring($string);
   }
-  
-	
+
+
   /**
    * Insert ID
    * Used to get the last inserted row ID.
@@ -142,7 +142,7 @@ class Database {
    */
   public function Res($string)
   {
-    return mysql_real_escape_string($string,$this->conn);
+    return mysql_real_escape_string($string,$this->_conn);
   }
 
   /**
@@ -155,28 +155,33 @@ class Database {
     return $this->FetchArray($this->Query($query));
   }
 
-  
-  
+
+
   /* **[ Privates Members ]********************************** */
 
   // Display error message
   private function halt($query=null)
   {
+
+    error("Database","#".$this->errNum().": ".$this->error()."<br />". ($query !== null ? $query : ''));
+
+    /*
     error("Database", "ErrNum[" . $this->errNum() . "]: " .
           $this->error() . "<br />" .
           ($query !== null ? $query : ""));
+    */
   }
-  
+
   // MySQL Error number
   private function errNum()
   {
-    return mysql_errno($this->conn);
+    return mysql_errno($this->_conn);
   }
 
   // MySQL Error
   private function error()
   {
-    return mysql_error($this->conn);
+    return mysql_error($this->_conn);
   }
 }
 

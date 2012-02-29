@@ -61,7 +61,7 @@ switch ($step)
    * Welcome screen
    */
   case 1:
-    CreateHeader("Welcome to xenoPMT", $step);
+    CreateHeader("Welcome to xenoPMT");
 
     if (IsInstalled())
     {
@@ -269,7 +269,7 @@ switch ($step)
         <h2>Administration Configuration</h2>
 
         <h3>xiPMT Settings</h3>
-        <table class="inputForms">
+        <table class="inputForm">
           <tr><td class="label">xiPMT Title</td>  <td><?php print($_POST["settings"]["title"]); ?></td></tr>
           <tr><td class="label">Use Clean URI</td><td><?php print(@$_POST["settings"]["seo_url"] ? "Yes" : "No" ); ?></td></tr>
         </table>
@@ -306,8 +306,7 @@ switch ($step)
     CreateHeader("Step 4 - Installing Database");
     ?>
     <div class="message">
-      Generating config file
-    </div>
+      Generating Configuration file
     <?php
 
     // InstallPMT();
@@ -317,6 +316,14 @@ switch ($step)
     $admin = json_decode($_POST["admin"], true);
 
     $db = new Database($dbase["server"], $dbase["user"], $dbase["pass"], $dbase["dbname"]);
+
+    print("Server0: " . $_POST["db"]["server"] . "<br>\n");
+    print("SVR: " . $dbase['server'] . "<br>\n");
+    print("usr: " . $dbase['user'] . "<br>\n");
+    print("pass: " . $dbase['pass'] . "<br>\n");
+    print("dbnme: " . $dbase['dbname'] . "<br>\n");
+    print("---------------\n");
+
 
     // Extract SQL & put prefix on tables
     $sqlPmtBrain = file_get_contents("pmt-db.sql");
@@ -364,6 +371,8 @@ switch ($step)
     $cfgPHP[] ='';
     $cfgPHP[] ="?>";
     $cfgPHP[] = implode(PHP_EOL, $cfgPHP);
+
+    print ("    </div>");
 
     if(!file_exists("../lib/config.php") && is_writable("../lib"))
     {

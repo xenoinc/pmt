@@ -6,12 +6,12 @@
  * Author:       suessdam
  * Document:     installer
  * Created Date: Jan 30, 2012
- * 
+ *
  * Description:
- *  
+ *
  *
  * Change Log:
- * 
+ *
  */
 
 /** Is PMT already installed */
@@ -25,7 +25,7 @@ function IsInstalled()
                           $pmtConf["db"]["user"],
                           $pmtConf["db"]["pass"]);
     mysql_select_db($pmtConf["db"]["dbname"], $link);
-    
+
     $ret = mysql_query("SHOW TABLES", $con);
     while ($arr = mysql_fetch_array($ret))
     {
@@ -44,7 +44,7 @@ function IsInstalled()
  * Input:
  *  $step - Current Step
  */
-function CreateHeader($title, $step)
+function CreateHeader($title)
 {
   echo("<!DOCTYPE html>\n");
 	echo("<html>\n");
@@ -58,8 +58,7 @@ function CreateHeader($title, $step)
 	//echo("      <h2>" . aselect(0, explode(" - ", $title)) . "</h2>\n");
 	echo("      <h2>" . $title . "</h2>\n");
 	echo("      <div id='page'>\n");
-  
-  echo($html);
+  // echo($html);
 }
 
 /*
