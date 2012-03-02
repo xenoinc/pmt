@@ -50,7 +50,7 @@ create table `USER`
 --`Work_Country`        VARCHAR(100) COLLATE utf8_unicode_ci,        -- ..
 
   `Account_Active`      BOOLEAN,
-  `Termination_Dttm1`   DATETIME,           -- used for interns, etc
+  `Termination_Dttm`    DATETIME,           -- used for interns, etc
   `Created_Dttm`        DATETIME,           -- when was user created
   `Password_Exp_Dttm`   DATETIME,           -- date of password expiration
 

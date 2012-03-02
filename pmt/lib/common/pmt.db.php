@@ -82,7 +82,8 @@ class Database {
    */
   public function Query($query)
   {
-    $ret = mysql_query( $query, $this->_conn) or $this->halt($query);
+    $ret = mysql_query( $query, $this->_conn)
+            or $this->halt($query);
     $this->last_query = $query;
     $this->query_count++;
     return $ret;
@@ -162,9 +163,18 @@ class Database {
   // Display error message
   private function halt($query=null)
   {
-
-    error("Database","#".$this->errNum().": ".$this->error()."<br />". ($query !== null ? $query : ''));
-
+  	echo '<div class="message error">'.
+            $this->errNum() .
+            ' error: '.$this->error().' <br>' .
+            'SQL: ' .($query !== null ? $query : '(no-sql)').
+         '</div>';
+/*
+    error("Database",
+            "#".$this->errNum().": ".
+            $this->error()."<br />".
+            ($query !== null ? $query : '')
+          );
+*/
     /*
     error("Database", "ErrNum[" . $this->errNum() . "]: " .
           $this->error() . "<br />" .

@@ -20,12 +20,17 @@
 require_once "installer.php";
 require_once "../lib/common/pmt.db.php";
 
-$defVal = array();
-$defVal["server"] = "localhost";
-$defVal["user"]   = "testuser";
-$defVal["pass"]   = "testpass";
-$defVal["dbname"] = "PMT_DATA";
-$defVal["prefix"] = "XIPMT_";
+$debug = true;
+
+if ($debug = true)
+{
+  $defVal = array();
+  $defVal["server"] = "localhost";
+  $defVal["user"]   = "testuser";
+  $defVal["pass"]   = "testpass";
+  $defVal["dbname"] = "PMT_DATA";
+  $defVal["prefix"] = "XIPMT_";
+}
 
 /*
  * Auto disappear text
@@ -153,7 +158,18 @@ switch ($step)
       if(!mysql_select_db($_POST["db"]["dbname"], $conn)) $fail = true;
 
       /* DB connection failure */
-      if($fail)
+      if(!$fail)
+      {
+        ?>
+        <form action="index.php" method="post">
+          <input type="hidden" name="step" value="<?php print($step+1); ?>" />
+          <input type="hidden" name="db" value='<?php echo json_encode($_POST['db']); ?>' />
+          <div align="center" class="message good">Database connection successful!</div>
+          <div id="actions"><input type="submit" value="Next" /></div>
+        </form>
+        <?php
+      }
+      else
       {
         ?>
         <div align="center" class="message error">
@@ -161,28 +177,13 @@ switch ($step)
           <p>Make sure the connection data was entered correctly and
           that your database has been created.</p>
         </div>
-
         <form action="index.php" method="post">
           <input type="hidden" name="step" value="<?php print($step); ?>" />
           <div id="actions"><input type="submit" value="Back" /></div>
         </form>
-
         <?php
-
         // Include the DB Input screen again so we don't have to click, Back.
         //  GenStep2Database();
-
-      }
-      else
-      {
-        ?>
-        <form action="index.php" method="post">
-          <input type="hidden" name="step" value="<?php print($step+1); ?>" />
-          <input type="hidden" name="db" value="<?php print(json_encode($_POST["db"])); ?>" />
-          <div align="center" class="message good">Database connection successful!</div>
-          <div id="actions"><input type="submit" value="Next" /></div>
-        </form>
-        <?php
       }
     }
     break;
@@ -204,6 +205,9 @@ switch ($step)
     if(!isset($_POST["settings"]) || count($arrErr))
     {
       CreateHeader("Step 3.a - Admin Settings");
+      if ($debug)
+        print("<div class='message'><pre>" . $_POST["db"] . "</pre></div>");
+
 
       if (isset($_POST[""]) && count($arrErr))
       {
@@ -217,7 +221,8 @@ switch ($step)
       ?>
       <form action="index.php" method="post">
         <input type="hidden" name="step" value="<?php print($step); ?>" />
-        <input type="hidden" name="db" value="<?php print($_POST["db"]); ?>" />
+        <!-- <input type="hidden" name="db" value="<?php //print($_POST["db"]); ?>" /> -->
+        <input type="hidden" name="db" value='<?php echo $_POST['db']; ?>' />
 
         <h2>Administration Configuration</h2>
 
@@ -258,13 +263,16 @@ switch ($step)
        */
 
       CreateHeader("Step 3.b - Verify Settings");
+      if ($debug)
+        print("<div class='message'><pre>" . $_POST["db"] . "</pre></div>");
+
 
       ?>
       <form action="index.php" method="post">
         <input type="hidden" name="step"      value="<?php print($step+1); ?>" />
-        <input type="hidden" name="db"        value="<?php print($_POST["db"]); ?>" />
-        <input type="hidden" name="settings"  value="<?php print(json_encode($_POST["settings"])); ?>" />
-        <input type="hidden" name="admin"     value="<?php print(json_encode($_POST["admin"])); ?>" />
+        <input type="hidden" name="db"        value='<?php echo $_POST['db']; ?>' />
+        <input type="hidden" name="settings"  value='<?php print(json_encode($_POST['settings'])); ?>' />
+        <input type="hidden" name="admin"     value='<?php print(json_encode($_POST['admin'])); ?>' />
 
         <h2>Administration Configuration</h2>
 
@@ -304,9 +312,16 @@ switch ($step)
   case 4:
 
     CreateHeader("Step 4 - Installing Database");
+    if ($debug)
+      print("<div class='message'><pre>" . $_POST["db"] . "</pre></div>");
+
+
     ?>
     <div class="message">
       Generating Configuration file
+
+      <ul>
+        <li>Starting system...</li>
     <?php
 
     // InstallPMT();
@@ -317,12 +332,13 @@ switch ($step)
 
     $db = new Database($dbase["server"], $dbase["user"], $dbase["pass"], $dbase["dbname"]);
 
-    print("Server0: " . $_POST["db"]["server"] . "<br>\n");
-    print("SVR: " . $dbase['server'] . "<br>\n");
-    print("usr: " . $dbase['user'] . "<br>\n");
-    print("pass: " . $dbase['pass'] . "<br>\n");
-    print("dbnme: " . $dbase['dbname'] . "<br>\n");
-    print("---------------\n");
+    print("        <li>SVR: " . $dbase['server'] . "</li>\n");
+    print("        <li>usr: " . $dbase['user'] . "</li>\n");
+    print("        <li>pass: " . $dbase['pass'] . "</li>\n");
+    print("        <li>dbnme: " . $dbase['dbname'] . "</li>\n");
+    print("        <li>---------------</li>\n");
+
+    print("        <li><b>[DB]</b> - Generating SQL tables..</li>\n");
 
 
     // Extract SQL & put prefix on tables
@@ -337,25 +353,30 @@ switch ($step)
         $db->Query($q);
     }
 
+    print("        <li><b>[DB]</b> - Inserting general defaults</li>\n");
+
     // Create default values
     //InsertDefaults($db, $dbase, $settings, $admin);
     // Simple settings
-    $db->Query("UPDATE".$dbase["prefix"]."SETTINGS SET Value='".$db->Res($settings["title"]) . "' WHERE Setting='title';" );
-    $db->Query("UPDATE".$dbase["prefix"]."SETTINGS SET Value='".$db->Res($settings["seo_url"]) . "' WHERE Setting='seo_url';" );
+    $db->Query("UPDATE ".$dbase["prefix"]."SETTINGS SET Value='".$db->Res($settings["title"]) . "' WHERE Setting='title';" );
+    $db->Query("UPDATE ".$dbase["prefix"]."SETTINGS SET Value='".$db->Res($settings["seo_url"]) . "' WHERE Setting='seo_url';" );
 
+    print("<li><b>[DB]</b> - Inserting admin defaults</li>\n");
     // Administration Account
-    $db->Query( "INSERT INTO ".$dbase["prefix"]."USERS (Username, Password, Name, Email, Group_Id, Sesshas) VALUES " .
+    $db->Query( "INSERT INTO ".$dbase["prefix"]."USERS ".
+                "(Username, Password, Name, Email, Group_Id, Sesshash) VALUES " .
                 "('". $db->Res($admin['username'])."', '".
                       sha1($admin['password'])."', '".
                       $db->Res($admin['username'])."', '".
                       $db->Res($admin['email'])."', 1, '');");
 
+    print("<li><b>[PMT]</b> - Generating 'config.php'</li>\n");
     // Generate Config file
     //$buff = GenerateConfig($dbase);
     $cfgPHP = array();
     $cfgPHP[] ="<?php";
     $cfgPHP[] ='';
-    $cfgPHP[] ="// Generated from Installer";
+    $cfgPHP[] ="/* Generated from Installer */";
     $cfgPHP[] ='$pmtConf = array(';
     $cfgPHP[] ='  "db" => array(';
     $cfgPHP[] ='    "server"  => "' . $dbase["server"] .'",   // Database Server';
@@ -370,20 +391,24 @@ switch ($step)
     $cfgPHP[] =');';
     $cfgPHP[] ='';
     $cfgPHP[] ="?>";
-    $cfgPHP[] = implode(PHP_EOL, $cfgPHP);
 
-    print ("    </div>");
+    $cfgPHP = implode(PHP_EOL, $cfgPHP);
+    print("        <li><b>[PMT]</b> - Writing 'config.php'</li>\n");
+    print("      </ul>");
+    print("    </div>");
 
     if(!file_exists("../lib/config.php") && is_writable("../lib"))
     {
-      $fHandle = fopen("../lib/config.php", "w+");
-      fwrite(fHandle, $cfgPHP);
+      $fh = fopen("../lib/config.php", "w+");
+      fwrite($fh, $cfgPHP);
       ?>
       <div align="center" class="message good">Installation Finished</div>
       <div id="actions"><a href="../">xiPHP Main</a></div>
       <?php
       // Use this in the future
       // print("<div id='actions'><a href='../user/" . $dbase['user'] . "'>Admin Control Panel</a></div>");
+
+      fclose($fh);
     }
     else
     {
@@ -398,12 +423,6 @@ switch ($step)
       </pre>
       <?php
     }
-
-    ?>
-    <div class="message">
-      Complete
-    </div>
-    <?php
 
 
     break;

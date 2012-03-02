@@ -12,7 +12,7 @@
  *
  * To Do:
  * [ ] Handle Plugins (Milestone 0.5)
- * 
+ *
  * Change Log:
  * [2012-0112] - Initial Creation
  *
@@ -40,7 +40,7 @@ if(!file_exists(PMT_PATH."lib/config.php"))
 
 // set breadcrumbs
 // strip magic quotes
- 
+
 
 
 /* Step 3
@@ -59,12 +59,13 @@ require(PMT_PATH."lib/config.php");             // Configuration Script
 
 /* Step 4)
  * Initialize the classes
- * 
+ *
  * 1. Connect to database
  * 2. Check if a user is cached in cookie or not
  * 3. If cashed user verify in database and set PMT_LOGGED_ID
  */
 
+// Add error handling to ensure that $pmtConf[][] is configured
 $pmtDb = new Database($pmtConf["db"]["server"],
                       $pmtConf["db"]["user"],
                       $pmtConf["db"]["pass"],
