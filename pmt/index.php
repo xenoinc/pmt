@@ -84,8 +84,8 @@ else
       (
           [test] => 234
       )
-  * 
-  * 
+  *
+  *
   * ####################################
   * #RewriteRule ^(.*)$ index.php?PAGE=$1 [L,QSA]
   * URL: http://pmt/project/xRehab/ticket/2948
@@ -122,7 +122,7 @@ else
   */
 
   print("</body></html>");
-  
+
 }
 
 ?>

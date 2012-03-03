@@ -57,6 +57,47 @@ function getData($cfgItem, $default)
     return $default;
 }
 
+/**
+ * Print list item
+ */
+function p($data)
+{
+  print ("<li>" . $data . "</li>\n");
+}
+
+
+if ($_GET["reset"])
+{
+  CreateHeader("Resetting system");
+  print("<ul>\n");
+
+  if (IsInstalled() == false)
+  {
+    p("CONFIG.PHP was not found.");
+
+
+    $db = new Database($defVal["server"], $defVal["user"], $defVal["pass"], $defVal["dbname"]);
+    if ($db == null)
+      p("Bad DB connection.");
+    else
+    {
+      $db->Query("DROP DATABASE ". $defVal['dbname'] . ";");
+      $db->Query("CREATE DATABASE ". $defVal['dbname'] . ";");
+
+      p("Removed and recreated database.");
+
+      p("You may now <a href='http://pmt/install/'>start over</a>");
+    }
+  }
+
+  print("</ul>\n");
+  CreateFooter();
+
+  exit;
+}
+
+
+
 // Get the step in the setup process
 $step = (isset($_POST['step']) ? $_POST['step'] : 1);
 

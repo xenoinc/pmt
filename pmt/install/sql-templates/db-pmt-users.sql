@@ -19,12 +19,6 @@
 -- =====================================
 
 
-/*
-  Used for customer logins
-  Version 1.0.3
-  Last Update:  2010-11-07
-  Note:  Accounts should not be active until they verify their Email address
-*/
 create table `USER`
 (
   `User_Id`             INT NOT NULL AUTO_INCREMENT,    -- Internal ID
