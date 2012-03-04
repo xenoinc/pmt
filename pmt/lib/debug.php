@@ -1,13 +1,13 @@
 <?php
 
-require_once('PhpConsole.php');
+require_once('phpConsole.php');
 PhpConsole::start(true, true, dirname(__FILE__));
 
 // test
 
 debug('debug message');
 debug('SELECT * FROM users', 'db');
-
+/*
 class TestErrorBacktrace {
 	function __construct() {
 		$this->yeah(12, array());
@@ -22,5 +22,5 @@ class TestErrorBacktrace {
 }
 
 new TestErrorBacktrace();
-
+*/
 ?>

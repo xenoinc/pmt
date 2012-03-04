@@ -10,6 +10,12 @@
  * Description:
  *  xiPMT system installation
  *
+ * Parameters:
+ *  reset - Reset system settings
+ *    * full  - Remove CONFIG.PHP
+ *            - Drop and recreate database
+ *    * db    - Recreate database and use default values
+ *
  * To Do:
  *  [ ] Step 2.a - Place into a function so we can resuse it in 2.b
  *  [ ] Step 2.a - Use disappearing suggestive text
@@ -20,9 +26,15 @@
 require_once "installer.php";
 require_once "../lib/common/pmt.db.php";
 
-$debug = true;
+if (!defined(DebugMode))
+{
+  define("DebugMode", TRUE);
+  require "../lib/phpConsole.php";
+  PhpConsole::start(true, true, dirname(__FILE__));
+}
 
-if ($debug = true)
+
+if (DebugMode == true)
 {
   $defVal = array();
   $defVal["server"] = "localhost";
@@ -32,6 +44,140 @@ if ($debug = true)
   $defVal["prefix"] = "XIPMT_";
 }
 
+
+
+if ($_GET["reset"] == "full")
+{
+  /*
+   * Remove both CONFIG.PHP and Drop Tables
+   */
+
+  CreateHeader("PMT System Reset - Full");
+  print("<ul>\n");
+
+  if (IsInstalled() == false)
+  {
+    p("CONFIG.PHP was NOT found. Using DebugMode values");
+    $db = new Database($defVal["server"], $defVal["user"], $defVal["pass"], $defVal["dbname"]);
+  }
+  else
+  {
+    p("CONFIG.PHP found.");
+    $db = new Database($pmtConf["db"]["server"], $pmtConf["db"]["user"], $pmtConf["db"]["pass"], $pmtConf["db"]["dbname"]);
+  }
+
+  if ($db == null)
+    p("Bad DB connection.");
+  else
+  {
+    $db->Query("DROP DATABASE ". $defVal['dbname'] . ";");
+    $db->Query("CREATE DATABASE ". $defVal['dbname'] . ";");
+
+    p("Removed and recreated database.");
+    p("You may now <a href='../'>start over</a>");
+  }
+
+  print("</ul>\n");
+  CreateFooter();
+  exit;
+}
+elseif ($_GET["reset"] == "db")
+{
+  /*
+   * Drop tables and recreate
+   */
+  CreateHeader("PMT System Reset - Database Only");
+  print("<ul>\n");
+
+  if (file_exists("../lib/config.php"))
+  {
+    require_once("../lib/config.php");
+
+    p("Server: " . $pmtConf["db"]["server"]);
+    p("Database: " . $pmtConf["db"]["dbname"]);
+    p("User Name: " . $pmtConf["db"]["user"]);
+    p("Password: " . $pmtConf["db"]["pass"]);
+    print("</ul><ul>\n");
+
+    $db = new Database(
+            $pmtConf["db"]["server"],
+            $pmtConf["db"]["user"],
+            $pmtConf["db"]["pass"],
+            $pmtConf["db"]["dbname"]);
+
+    p("<b>DB:</b> Removing database..");        $db->Query("DROP DATABASE ". $defVal['dbname'] . ";");
+    p("<b>DB:</b> Creating database..<br />");  $db->Query("CREATE DATABASE ". $defVal['dbname'] . ";");
+
+    // remove and reset connection
+    $db->Select($pmtConf["db"]["dbname"]);
+    /*
+    $db = null;
+    $db = new Database(
+            $pmtConf["db"]["server"],
+            $pmtConf["db"]["user"],
+            $pmtConf["db"]["pass"],
+            $pmtConf["db"]["dbname"]);
+    */
+
+    p("<b>Generating tables..</b>");
+    p("Executing: pmt-db.sql");       DbGenerateTables("pmt-db.sql", $pmtConf["db"]["prefix"]);
+    p("Executing: pmt-db-user.sql");  DbGenerateTables("pmt-db-user.sql", $pmtConf["db"]["prefix"]);
+
+
+    p("<b>[DB]</b> - Inserting admin defaults");
+
+    // Administration Account
+    $db->Query(
+            "INSERT INTO ".$pmtConf["db"]["prefix"]."USER ".
+            "(Username, Password, Name, Email, Group_Id, Active, Session_Hash) VALUES (" .
+            "'admin', " .                 // User
+            "'".sha1('admin')."',".       // Password
+            "'Test Administrator', " .    // Name
+            "'asdf@asdf.com', " .         // Email
+            "1, " .                       // Group_Id (ADMIN)
+            "true," .                     // Active
+            "''" .                        // Session_Hash
+            ");");
+
+    p("You may now <a href='../'>start over</a>");
+  }
+
+  print("</ul>\n");
+  CreateFooter();
+  exit;
+}
+else
+{
+/*
+  if (IsInstalled() == true)
+    print "It is installed!";
+  else
+    print "NOT installed!";
+
+  try
+  {
+    // Config file found. Check for DB
+    $db = new Database(
+            $pmtConf["db"]["server"],
+            $pmtConf["db"]["user"],
+            $pmtConf["db"]["pass"],
+            $pmtConf["db"]["dbname"]
+            );
+    $db->Query("list tables;");
+    print ("db works");
+  }
+  catch (Exception $e)
+  {
+    print ("Error: " .$e);
+  }
+
+  exit;
+*/
+}
+
+
+
+
 /*
  * Auto disappear text
   <input name="myvalue" type="text" onFocus="if(this.value=='enter value')this.value='';" value="enter value">
@@ -40,61 +186,6 @@ if ($debug = true)
          onblur="if(this.value == ''){ this.value = 'DefaultValue'; this.style.color = '#BBB';}"
          onfocus="if(this.value == 'DefaultValue'){ this.value = ''; this.style.color = '#000';}" />
 */
-
-/**
- * Get Confiuration Data
- * @param string $cfgItem $config db array item (server, user, pass, dbname, prefix)
- * @param string $default Default output if not set
- * @return Output (default) config setting
- */
-function getData($cfgItem, $default)
-{
-  global $conf;
-
-  if (isset($conf["db"][$cfgItem]))
-    return $conf["db"][$cfgItem];
-  else
-    return $default;
-}
-
-/**
- * Print list item
- */
-function p($data)
-{
-  print ("<li>" . $data . "</li>\n");
-}
-
-
-if ($_GET["reset"])
-{
-  CreateHeader("Resetting system");
-  print("<ul>\n");
-
-  if (IsInstalled() == false)
-  {
-    p("CONFIG.PHP was not found.");
-
-
-    $db = new Database($defVal["server"], $defVal["user"], $defVal["pass"], $defVal["dbname"]);
-    if ($db == null)
-      p("Bad DB connection.");
-    else
-    {
-      $db->Query("DROP DATABASE ". $defVal['dbname'] . ";");
-      $db->Query("CREATE DATABASE ". $defVal['dbname'] . ";");
-
-      p("Removed and recreated database.");
-
-      p("You may now <a href='http://pmt/install/'>start over</a>");
-    }
-  }
-
-  print("</ul>\n");
-  CreateFooter();
-
-  exit;
-}
 
 
 
@@ -246,7 +337,7 @@ switch ($step)
     if(!isset($_POST["settings"]) || count($arrErr))
     {
       CreateHeader("Step 3.a - Admin Settings");
-      if ($debug)
+      if (DebugMode)
         print("<div class='message'><pre>" . $_POST["db"] . "</pre></div>");
 
 
@@ -304,7 +395,7 @@ switch ($step)
        */
 
       CreateHeader("Step 3.b - Verify Settings");
-      if ($debug)
+      if (DebugMode)
         print("<div class='message'><pre>" . $_POST["db"] . "</pre></div>");
 
 
@@ -353,7 +444,7 @@ switch ($step)
   case 4:
 
     CreateHeader("Step 4 - Installing Database");
-    if ($debug)
+    if (DebugMode)
       print("<div class='message'><pre>" . $_POST["db"] . "</pre></div>");
 
 
@@ -373,15 +464,16 @@ switch ($step)
 
     $db = new Database($dbase["server"], $dbase["user"], $dbase["pass"], $dbase["dbname"]);
 
-    print("        <li>SVR: " . $dbase['server'] . "</li>\n");
-    print("        <li>usr: " . $dbase['user'] . "</li>\n");
-    print("        <li>pass: " . $dbase['pass'] . "</li>\n");
-    print("        <li>dbnme: " . $dbase['dbname'] . "</li>\n");
-    print("        <li>---------------</li>\n");
+    p("SVR: " . $dbase['server']);
+    p("Usr: " . $dbase['user']);
+    p("Pass: " . $dbase['pass']);
+    p("dbnme: " . $dbase['dbname']);
+    p("---------------");
+    p("<b>[DB]</b> - Generating SQL tables..");
 
-    print("        <li><b>[DB]</b> - Generating SQL tables..</li>\n");
 
-
+    DbGenerateTables("pmt-db.sql", $dbase["prefix"]);
+    /*
     // Extract SQL & put prefix on tables
     $sqlPmtBrain = file_get_contents("pmt-db.sql");
     $sqlPmtBrain = str_replace("PMT_", $dbase["prefix"], $sqlPmtBrain);
@@ -393,6 +485,7 @@ switch ($step)
       if(!empty($q) && strlen($q) > 5)
         $db->Query($q);
     }
+    */
 
     print("        <li><b>[DB]</b> - Inserting general defaults</li>\n");
 
@@ -485,80 +578,5 @@ switch ($step)
 }
 
 CreateFooter();
-
-/*
-function GenStep2Database()
-{
-?>
-      <form action="index.php" method="post">
-        <input name="step" type="hidden" value="<?php print($step); ?>" />
-        <h2>Input Database Information</h2>
-        <table class="inputForm">
-          <tr>
-            <td class="label">Server:</td>
-            <td><input type="text" name="db[server]" autocomplete="off" value="<?php print(getData("server")); ?>" /> </td>
-          </tr>
-          <tr>
-            <td class="label">Username:</td>
-            <td><input type="text" name="db[user]" autocomplete="off" value="<?php print(getData("user")); ?>" /> </td>
-          </tr>
-          <tr>
-            <td class="label">Password:</td>
-            <td><input type="text" name="db[pass]" autocomplete="off" value="<?php print(getData("pass")); ?>" /> </td>
-          </tr>
-          <tr>
-            <td class="label">Database Name:</td>
-            <td><input type="text" name="db[dbname]" autocomplete="off" value="<?php print(getData("dbname")); ?>" /> </td>
-          </tr>
-          <tr>
-            <td class="label">Database Table Prefix:</td>
-            <td><input type="text" name="db[prefix]" autocomplete="off" value="<?php print(getData("prefix")); ?>" /> </td>
-          </tr>
-        </table>
-        <div id="actions">
-          <input type="submit" value="Next" />
-        </div>
-      </form>
-<?php
-}
-*/
-
-
-/**
- * Performed during Step 4 - Installation
- */
-function InstallPMT()
-{
-
-}
-
-/**
- * Insert the default database information
- */
-function InsertDefaults(Database $db, $dbcfg, $settings, $admin)
-{
-  $pfx = $dbcfg["prefix"];
-
-  /*
-  // Plugin :: Textile
-  $db->Query( "INSERT INTO `".$pfx."PLUGINS` (`Name`, `Author`, `Website`, `Version`, `Enabled`, `Install_Sql`, `Uninstall_Sql`) VALUES " .
-              "('Textile Formatting', 'Jack', 'http://unknown/', '1.0', 1, '', '');");
-  $tmp =$db->Res
-          ("
-            global $textile;
-            if(!isset($textile)) {
-              require(PMT_PATH.'system/plugins/classTextile.php');
-              $textile = new Textile;
-            }
-            $text = $textile->TextileThis($text);"
-          );
-	$db->Query( "INSERT INTO `" . $dbconf['prefix'] . "plugin_code` (`plugin_id`, `title`, `hook`, `code`, `execorder`, `enabled`) VALUES ".
-              " (" . $db->InsertId() . ", 'formattext', 'function_formattext', '" . $tmp . "', 0, 1);");
-  */
-
-  //$db->Query("INSERT INTO ".$pfx."SETTINGS (`value`, `setting`) VALUES ('".$db->Res($settings["title"])."', 'title';" );
-  $db->Query("UPDATE ".$pfx."SETTINGS SET VALUE='".$db->Res($settings["title"])."' WHERE setting='title';" );
-
-}
 
 ?>

@@ -68,11 +68,20 @@ class Database {
 
   /**
    * Select the database
-   * @param type $db
+   * @param string $db Database name
    */
   public function Select($db)
   {
     mysql_select_db($db, $this->_conn);
+  }
+
+  /**
+   * Select database
+   * @param string $dbName Database name
+   */
+  public function SelectDb($dbName)
+  {
+    $this->Select($dbName);
   }
 
   /**

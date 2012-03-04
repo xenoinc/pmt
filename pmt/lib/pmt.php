@@ -28,6 +28,12 @@ $pmt_version_ex = "000001";
 $pmt_db_version = 1;
 define("PMT_VER",$pmt_version);
 
+require "phpConsole.php";
+PhpConsole::start(true, true, dirname(__FILE__));
+if (DebugMode == true)
+  debug("Debug Mode ON!");
+
+
 if(!file_exists(PMT_PATH."lib/config.php"))
 {
   header("Location: install/");

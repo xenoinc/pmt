@@ -69,10 +69,22 @@ h2 {
 	width: 300px;
 	margin: 0 auto;
 }
+label{
+  color: black;
+  font-style: normal;
+}
+
+td
+{
+  color: #000000;
+}
+
 .inputForm .label {
+
 	text-align: right;
 	font-weight: bold;
 	width: 100px;
+  color: black;
 }
 input {
 	background: #F6F6F6;

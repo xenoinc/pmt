@@ -17,7 +17,7 @@
 /** Is PMT already installed */
 function IsInstalled()
 {
-  $ins = false;
+  $installed = false;
   if(file_exists("../lib/config.php"))
   {
     require_once "../lib/config.php";
@@ -37,6 +37,7 @@ function IsInstalled()
       }
     }
   }
+  return $installed;
 }
 
 /**
@@ -88,6 +89,65 @@ function htmlMessage($msg1, $msg2="")
     echo("    <div class='message error'>" . $msg1 . " Error: " . $msg2 . "</div>\n");
   }else{
     echo("    <div align='center' class='message error'>" . $msg1 . "</div>\n");
+  }
+}
+
+
+/**
+ * Get Confiuration Data
+ * @param string $cfgItem $config db array item (server, user, pass, dbname, prefix)
+ * @param string $default Default output if not set
+ * @return Output (default) config setting
+ */
+function getData($cfgItem, $default)
+{
+  global $conf;
+
+  if (isset($conf["db"][$cfgItem]))
+    return $conf["db"][$cfgItem];
+  else
+    return $default;
+}
+
+/**
+ * Print list item
+ */
+function p($data)
+{
+  print ("<li>" . $data . "</li>\n");
+}
+
+
+/**
+ * Generate Execute SQL files
+ * @param string $sqlFile Path to SQL queries to execute
+ */
+function DbGenerateTables($sqlFile, $dbPrefix)
+{
+  global $db;
+
+  // Extract SQL & put prefix on tables
+  $sqlPmtBrain = file_get_contents($sqlFile);
+  $sqlPmtBrain = str_replace("TBLPMT_", $dbPrefix, $sqlPmtBrain);   // Use custom table header
+  $query = explode(";", $sqlPmtBrain);
+
+  // Run the queries
+  foreach($query as $q)
+  {
+    // TODO: Readjust the strlen(23). Where is the 20 Padding coming from?
+    if(!empty($q) && strlen($q) > 23)
+    {
+      $q .= ";";
+      /*
+      if(defined(DebugMode))
+        if (DebugMode == true)
+        {
+          debug("Query [". strlen($q) ."] [" . $q . "]" );
+        }
+      */
+
+      $db->Query($q);
+    }
   }
 }
 

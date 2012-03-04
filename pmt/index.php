@@ -23,7 +23,7 @@
  */
 
 // Development Debug Mode
-define("DebugMode", false);
+define("DebugMode", true);
 define("DebugIndex", false);
 
 // Define absolute path

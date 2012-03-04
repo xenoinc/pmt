@@ -14,7 +14,7 @@
  **********************************************************************/
 
 /* Test table */
-create table if not exists `PMT_SETTINGS`
+create table if not exists `TBLPMT_SETTINGS`
 (
   `Setting` varchar(255) collate utf8_unicode_ci not null,
   `Value`   longtext collate utf8_unicode_ci not null,
