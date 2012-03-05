@@ -16,16 +16,16 @@
  **********************************************************************/
 
 /* Currently removed until out of BETA status & project is more well-defined
-  CREATE TABLE proj_user_internal (...);      -- local database, only used if project doesn't use GLOBAL USERS
-  CREATE TABLE pmt_user_priv( ... );          -- User's project access level
-  CREATE TABLE pmt_user_priv_list ( ... );    -- Available Project Priv Items (STATIC)
+  CREATE TABLE proj_user_internal (...)   -- local database, only used if project doesn't use GLOBAL USERS
+  CREATE TABLE pmt_user_priv( ... )       -- User's project access level
+  CREATE TABLE pmt_user_priv_list ( ... ) -- Available Project Priv Items (STATIC)
 */
 
 
 /*
   2012-0304 * Changed Upadted_User_Name to Updated_User_Id
 */
-CREATE TABLE `TBLPMT_PROJECT`
+CREATE TABLE IF NOT EXISTS `TBLPMT_PROJECT`
 (
   `Project_Id`          BIGINT(20) NOT NULL AUTO_INCREMENT,
   `Project_Name`        VARCHAR(255) COLLATE utf8_unicode_ci NOT NULL,
@@ -40,7 +40,7 @@ CREATE TABLE `TBLPMT_PROJECT`
   Version 1.0
   Last Update:  2010-11-06
 */
-CREATE TABLE `TBLPMT_PROJECT_VERSION`
+CREATE TABLE IF NOT EXISTS `TBLPMT_PROJECT_VERSION`
 (
   `Project_Version_Id`        BIGINT(20) NOT NULL AUTO_INCREMENT,
   `Product_Id`        INTEGER NOT NULL,
@@ -59,7 +59,7 @@ CREATE TABLE `TBLPMT_PROJECT_VERSION`
   Version 1.0
   Last Update:  2010-11-06
 */
-CREATE TABLE `TBLPMT_PROJECT_COMPONENT`
+CREATE TABLE IF NOT EXISTS `TBLPMT_PROJECT_COMPONENT`
 (
   `Component_Name`  VARCHAR(100) COLLATE utf8_unicode_ci NOT NULL,  -- Project Component Name (Core, DocuFAST, QuantiFAST, PIE, ALL, FlexDx, ..)
 --`Owner_Name`      VARCHAR(15) COLLATE utf8_unicode_ci NOT NULL,   -- Default Owner, NOTE: Next release, use table 'group_component' to list all compnts assigned to what group (used in reports/issue listing)
@@ -73,7 +73,7 @@ CREATE TABLE `TBLPMT_PROJECT_COMPONENT`
   Last Update:  2010-11-06
   * Expanded Component_Name from 20 to 100
 */
-CREATE TABLE `TBLPMT_PROJECT_COMPONENT_VERSION`
+CREATE TABLE IF NOT EXISTS `TBLPMT_PROJECT_COMPONENT_VERSION`
 (
   `Component_Name`  VARCHAR(100) COLLATE utf8_unicode_ci NOT NULL,
   `Version_Name`    VARCHAR(10) COLLATE utf8_unicode_ci NOT NULL,
@@ -88,13 +88,13 @@ CREATE TABLE `TBLPMT_PROJECT_COMPONENT_VERSION`
   Version 1.0
   Last Update:  2010-11-06
 */
-CREATE TABLE `TBLPMT_PROJECT_MILESTONE`
+CREATE TABLE IF NOT EXISTS `TBLPMT_PROJECT_MILESTONE`
 (
-  `Milestone_Title` VARCHAR(50),    -- MMT v1.0, MMT v1.4, MMT 1.4.Flex, NextLevel
-  `Due_Date`          DATETIME,     -- Project Due Date
-  `Completed_Dttm`    DATETIME,     -- When was it completed? (NULL)
-  `Description`       BLOB,         -- What is it and what's special about it
-);
+  `Milestone_Title` VARCHAR(50) COLLATE utf8_unicode_ci NOT NULL,    -- MMT v1.0, MMT v1.4, MMT 1.4.Flex, NextLevel
+  `Due_Date`        DATETIME,     -- Project Due Date
+  `Completed_Dttm`  DATETIME,     -- When was it completed? (NULL)
+  `Description`     BLOB,         -- What is it and what's special about it
+) engine=InnoDb default charset=utf8 collate=utf_8_uicode_ci;
 -- TITLE                      DUE                 Completed           Default
 -- MMT - Version 1.0          YYYYMMDD HH:MM:SS   YYYYMMDD HH:MM:SS   0
 -- MMT - Version 1.1          YYYYMMDD HH:MM:SS   YYYYMMDD HH:MM:SS   0
@@ -107,43 +107,50 @@ CREATE TABLE `TBLPMT_PROJECT_MILESTONE`
   Version 1.0
   Last Update:  2010-11-06
 */
-CREATE TABLE REPORT
+CREATE TABLE IF NOT EXISTS `TBLPMT_REPORT`
 (
-  rpt_id        INT NOT NULL AUTO_INCREMENT,
-  rpt_title     VARCHAR(20),        -- Name of the report
-  rpt_author    VARCHAR(20),        -- Full name of person
-  rpt_version   VARCHAR(10),        -- Report Version
-  rpt_mod_dttm  DATETIME,           -- Late Modified Date
-  rpt_query     TEXT                -- Code behind it
-);
+  `Report_Id` INT NOT NULL AUTO_INCREMENT,
+  `Title`     VARCHAR(50) COLLATE utf8_unicode_ci NOT NULL,   -- Name of the report
+  `Author`    VARCHAR(50) COLLATE utf8_unicode_ci NOT NULL,   -- Full name of person
+  `Version`   VARCHAR(10) COLLATE utf8_unicode_ci NOT NULL,   -- Report Version
+  `Mod_dttm`  DATETIME,           -- Late Modified Date
+  `Query`     TEXT,                -- Code behind it
+  PRIMARY KEY (`Report_Id`)
+) engine=InnoDb default charset=utf8 collate=utf_8_uicode_ci;
 
 
 /*
   Wiki Pages
   Version: 1.0.3
-  Last Update: 2010-11-13
+  Crated: 2010-11-13
+  * 2011-0305 - Removed row, Data_Type - This is unneeded. Strictly use WIKI text
 */
-CREATE TABLE PROJECT_WIKI
+CREATE TABLE IF NOT EXISTS `TBLPMT_PROJECT_WIKI`
 (
-  page_id         INT(10) UNSIGNED NOT NULL AUTO_INCREMENT,
-  page_title      VARCHAR(100),                             -- Page Title
-  page_counter    BIGINT(20) UNSIGNED NOT NULL DEFAULT '0', -- Page Counter
-  version         INT UNSIGNED NOT NULL DEFALUT '1',        -- page revision
-  author_uid      VARCHAR(20),                              -- Author of the page (larger than default user, just incase)
-  update_dttm     DATETIME,                                 -- Last updated date time
-  update_ip       VARCHAR(15) DEFAULT NULL,                 -- IPv4 of who updated it last
-  data_type       VARCHAR(5) DEFAULT 'wiki',                -- Page Data Type ('wiki1', 'html4', 'html5')
-  page_data       BLOB,                                     -- Page code
-  PRIMARY KEY ('page_id')
+  `Page_Id`       INT(10) UNSIGNED NOT NULL AUTO_INCREMENT,
+  `Page_Title`    VARCHAR(100) COLLATE utf8_unicode_ci NOT NULL,  -- Page Title
+  `Page_Counter`  BIGINT(20) UNSIGNED NOT NULL DEFAULT '0',       -- Page Counter
+  `Version`       INT UNSIGNED NOT NULL DEFALUT '1',              -- page revision
+  `User_Id`       BIGINT(20),                                     -- Author of the page (larger than default user, just incase)
+  `User_Name`     VARCHAR(50) COLLATE utf8_unicode_ci NOT NULL,   -- Author name (for archiving purposes)
+  `Update_Dttm`   DATETIME,                                       -- Last updated date time
+  `Update_Ip`     VARCHAR(15) COLLATE utf8_unicode_ci DEFAULT NULL,  -- IPv4 of who updated it last
+--`Data_Type`     VARCHAR(5) COLLATE utf8_unicode_ci NOT NULL DEFAULT 'wiki', -- Page Data Type ('wiki1', 'html', 'text')
+  `Page_Data`     BLOB,                                           -- Page code
+  PRIMARY KEY (`page_id`)
 --UNIQUE INDEX 'name_title'
-);
-INSERT INTO PROJECT_WIKI (page_title, authr_uid, update_dttm, data_type, page_data) VALUES
-  ('pmt_main', 'xi_pmt', '2010-11-07 00:00:00.000', 'wiki', '''''Welcome to your personal xiPMT Project Space''''');  -- ['''' = '']
+) engine=InnoDb default charset=utf8 collate=utf_8_uicode_ci;
+
+/*
+  INSERT INTO `TBLPMT_PROJECT_WIKI`
+  (Page_Title, Author_Uid, Update_Dttm, Data_Type, page_data) VALUES
+  ('pmt_main', 'xi_pmt', '2010-11-07 00:00:00.000', 'wiki', '''''Welcome to your personal xiPMT Project Space''''')
+*/
 
 /*
   Log changes made to the wiki (see MediaWiki for details)
   ** Not to be used until 1.5 or 2.0
-  CREATE TABLE wiki_log ();
+  CREATE TABLE wiki_log ()
 */
 
 /*
@@ -152,91 +159,97 @@ INSERT INTO PROJECT_WIKI (page_title, authr_uid, update_dttm, data_type, page_da
   Version 1.0
   Last Update:  2010-11-12
 */
-CREATE TABLE S_PROJECT_ENUM
+CREATE TABLE IF NOT EXISTS `TLBPMT_S_PROJECT_ENUM`
 (
-  enum_type VARCHAR(15),           -- List Item Type  (ticket_type, resolution, priority)
-  enum_name VARCHAR(20),           -- List Item Description
-  enum_priority VARCHAR(10),       -- List Item Priority Level
+  `Enum_Type` VARCHAR(15) COLLATE utf8_unicode_ci NOT NULL,           -- List Item Type  (ticket_type, resolution, priority)
+  `Enum_Name` VARCHAR(20) COLLATE utf8_unicode_ci NOT NULL,           -- List Item Description
+  `Enum_Priority` VARCHAR(10) COLLATE utf8_unicode_ci NOT NULL,       -- List Item Priority Level
   -- emum_isdefault int,           -- 1/0 to mark what the default setting should be
   unique( enum_type, enum_name )
-);
+) engine=InnoDb default charset=utf8 collate=utf_8_uicode_ci;
 -- Type of ticket being created
-INSERT INTO s_proj_enum VALUES ('ticket_type',    'Defect',               '1');
-INSERT INTO s_proj_enum VALUES ('ticket_type',    'Enhancement',          '2');
-INSERT INTO s_proj_enum VALUES ('ticket_type',    'Task',                 '3'); /* tech request */
+INSERT INTO TLBPMT_S_PROJECT_ENUM VALUES ('ticket_type',    'Defect',               '1');
+INSERT INTO TLBPMT_S_PROJECT_ENUM VALUES ('ticket_type',    'Enhancement',          '2');
+INSERT INTO TLBPMT_S_PROJECT_ENUM VALUES ('ticket_type',    'Task',                 '3'); /* tech request */
 -- Ticket Resolutions
-INSERT INTO s_proj_enum VALUES ('resolution',     'Fixed',                '1');
-INSERT INTO s_proj_enum VALUES ('resolution',     'Completed',            '2');
-INSERT INTO s_proj_enum VALUES ('resolution',     'Next-Release',         '3');
-INSERT INTO s_proj_enum VALUES ('resolution',     'Duplicate',            '4');
-INSERT INTO s_proj_enum VALUES ('resolution',     'Invalid',              '5');
-INSERT INTO s_proj_enum VALUES ('resolution',     'Unable to Reproduce',  '6');
+INSERT INTO TLBPMT_S_PROJECT_ENUM VALUES ('resolution',     'Fixed',                '1');
+INSERT INTO TLBPMT_S_PROJECT_ENUM VALUES ('resolution',     'Completed',            '2');
+INSERT INTO TLBPMT_S_PROJECT_ENUM VALUES ('resolution',     'Next-Release',         '3');
+INSERT INTO TLBPMT_S_PROJECT_ENUM VALUES ('resolution',     'Duplicate',            '4');
+INSERT INTO TLBPMT_S_PROJECT_ENUM VALUES ('resolution',     'Invalid',              '5');
+INSERT INTO TLBPMT_S_PROJECT_ENUM VALUES ('resolution',     'Unable to Reproduce',  '6');
 -- Ticket and Bug Priority Levels
-INSERT INTO s_proj_enum VALUES ('priority',       'Trivial',              '1');
-INSERT INTO s_proj_enum VALUES ('priority',       'Minor',                '2');
-INSERT INTO s_proj_enum VALUES ('priority',       'Major',                '3');
-INSERT INTO s_proj_enum VALUES ('priority',       'Critical',             '4');
-INSERT INTO s_proj_enum VALUES ('priority',       'Blocker',              '5');
+INSERT INTO TLBPMT_S_PROJECT_ENUM VALUES ('priority',       'Trivial',              '1');
+INSERT INTO TLBPMT_S_PROJECT_ENUM VALUES ('priority',       'Minor',                '2');
+INSERT INTO TLBPMT_S_PROJECT_ENUM VALUES ('priority',       'Major',                '3');
+INSERT INTO TLBPMT_S_PROJECT_ENUM VALUES ('priority',       'Critical',             '4');
+INSERT INTO TLBPMT_S_PROJECT_ENUM VALUES ('priority',       'Blocker',              '5');
 -- -----------------------------------------------------------------------------
 -- Ticket Status
-INSERT INTO s_proj_enum VALUES ('ticket_status',  'Open',                 '10');  -- New/Unassigned  [1x]
-INSERT INTO s_proj_enum VALUES ('ticket_status',  'Reopened',             '11');
-INSERT INTO s_proj_enum VALUES ('ticket_status',  'Assigned',             '20');  -- Owned  [2x]
-INSERT INTO s_proj_enum VALUES ('ticket_status',  'Pending',              '21');
-INSERT INTO s_proj_enum VALUES ('ticket_status',  'Researching',          '22');
-INSERT INTO s_proj_enum VALUES ('ticket_status',  'Invalid',              '50');  -- Closed [5x]
-INSERT INTO s_proj_enum VALUES ('ticket_status',  'Closed',               '51');
-INSERT INTO s_proj_enum VALUES ('ticket_status',  'Closed-Duplicate',     '52');
-INSERT INTO s_proj_enum VALUES ('ticket_status',  'Closed-Bug',           '53');
-INSERT INTO s_proj_enum VALUES ('ticket_status',  'Closed-Canceled',      '54');
+INSERT INTO TLBPMT_S_PROJECT_ENUM VALUES ('ticket_status',  'Open',                 '10');  -- New/Unassigned  [1x]
+INSERT INTO TLBPMT_S_PROJECT_ENUM VALUES ('ticket_status',  'Reopened',             '11');
+INSERT INTO TLBPMT_S_PROJECT_ENUM VALUES ('ticket_status',  'Assigned',             '20');  -- Owned  [2x]
+INSERT INTO TLBPMT_S_PROJECT_ENUM VALUES ('ticket_status',  'Pending',              '21');
+INSERT INTO TLBPMT_S_PROJECT_ENUM VALUES ('ticket_status',  'Researching',          '22');
+INSERT INTO TLBPMT_S_PROJECT_ENUM VALUES ('ticket_status',  'Invalid',              '50');  -- Closed [5x]
+INSERT INTO TLBPMT_S_PROJECT_ENUM VALUES ('ticket_status',  'Closed',               '51');
+INSERT INTO TLBPMT_S_PROJECT_ENUM VALUES ('ticket_status',  'Closed-Duplicate',     '52');
+INSERT INTO TLBPMT_S_PROJECT_ENUM VALUES ('ticket_status',  'Closed-Bug',           '53');
+INSERT INTO TLBPMT_S_PROJECT_ENUM VALUES ('ticket_status',  'Closed-Canceled',      '54');
 -- -----------------------------------------------------------------------------
 -- Bug Status
-INSERT INTO s_proj_enum VALUES ('bug_status',     'Submitted',            '1');
-INSERT INTO s_proj_enum VALUES ('bug_status',     'Accepted',             '2');
-INSERT INTO s_proj_enum VALUES ('bug_status',     'Dev-Unverified',       '3');
-INSERT INTO s_proj_enum VALUES ('bug_status',     'Dev-Investigation',    '4');
-INSERT INTO s_proj_enum VALUES ('bug_status',     'Dev-In Progress',      '5');
-INSERT INTO s_proj_enum VALUES ('bug_status',     'Dev-Restesting',       '6');
-INSERT INTO s_proj_enum VALUES ('bug_status',     'Closed',               '7');
-INSERT INTO s_proj_enum VALUES ('bug_status',     'Closed-Deferred',      '8');
-INSERT INTO s_proj_enum VALUES ('bug_status',     'Closed-Rejected',      '9');
+INSERT INTO TLBPMT_S_PROJECT_ENUM VALUES ('bug_status',     'Submitted',            '1');
+INSERT INTO TLBPMT_S_PROJECT_ENUM VALUES ('bug_status',     'Accepted',             '2');
+INSERT INTO TLBPMT_S_PROJECT_ENUM VALUES ('bug_status',     'Dev-Unverified',       '3');
+INSERT INTO TLBPMT_S_PROJECT_ENUM VALUES ('bug_status',     'Dev-Investigation',    '4');
+INSERT INTO TLBPMT_S_PROJECT_ENUM VALUES ('bug_status',     'Dev-In Progress',      '5');
+INSERT INTO TLBPMT_S_PROJECT_ENUM VALUES ('bug_status',     'Dev-Restesting',       '6');
+INSERT INTO TLBPMT_S_PROJECT_ENUM VALUES ('bug_status',     'Closed',               '7');
+INSERT INTO TLBPMT_S_PROJECT_ENUM VALUES ('bug_status',     'Closed-Deferred',      '8');
+INSERT INTO TLBPMT_S_PROJECT_ENUM VALUES ('bug_status',     'Closed-Rejected',      '9');
 -- -----------------------------------------------------------------------------
 -- Task Type
-INSERT INTO s_proj_enum VALUES ('task_type',      'TechRequest',          '1'); -- Technical Request
-INSERT INTO s_proj_enum VALUES ('task_type',      'Purchase Order',       '2'); -- Purchased Equipment
-INSERT INTO s_proj_enum VALUES ('task_type',      'Custom Report',        '3'); -- Custom Report (Software, Other)
-INSERT INTO s_proj_enum VALUES ('task_type',      'SQL Task',             '4'); -- Custom SQL (misc)
-INSERT INTO s_proj_enum VALUES ('task_type',      'Upgrade',              '5'); -- Upgrade customer
-INSERT INTO s_proj_enum VALUES ('task_type',      'HotFix',               '6'); -- Manual Hotfix
-INSERT INTO s_proj_enum VALUES ('task_type',      'Other',                '7'); -- Other :: Provide Description
+INSERT INTO TLBPMT_S_PROJECT_ENUM VALUES ('task_type',      'TechRequest',          '1'); -- Technical Request
+INSERT INTO TLBPMT_S_PROJECT_ENUM VALUES ('task_type',      'Purchase Order',       '2'); -- Purchased Equipment
+INSERT INTO TLBPMT_S_PROJECT_ENUM VALUES ('task_type',      'Custom Report',        '3'); -- Custom Report (Software, Other)
+INSERT INTO TLBPMT_S_PROJECT_ENUM VALUES ('task_type',      'SQL Task',             '4'); -- Custom SQL (misc)
+INSERT INTO TLBPMT_S_PROJECT_ENUM VALUES ('task_type',      'Upgrade',              '5'); -- Upgrade customer
+INSERT INTO TLBPMT_S_PROJECT_ENUM VALUES ('task_type',      'HotFix',               '6'); -- Manual Hotfix
+INSERT INTO TLBPMT_S_PROJECT_ENUM VALUES ('task_type',      'Other',                '7'); -- Other :: Provide Description
 -- Task Status
-INSERT INTO s_proj_enum VALUES ('task_status',    'New',                  '10');  -- Submitted (unassigned)
-INSERT INTO s_proj_enum VALUES ('task_status',    'Mgmt-Pending-Approv',  '11');  -- Pending Management Approv
-INSERT INTO s_proj_enum VALUES ('task_status',    'PO-Approv',            '30');  -- In Progress :: Purchase Order Approved
-INSERT INTO s_proj_enum VALUES ('task_status',    'PO-Shipped',           '31');  -- In Progress :: Purchase Order Shipped
-INSERT INTO s_proj_enum VALUES ('task_status',    'Task-Assigned',        '32');  -- In Progress :: TR Assigned
-INSERT INTO s_proj_enum VALUES ('task_status',    'Task-In Progress',     '33');  -- In Progress :: TR In-Progress
-INSERT INTO s_proj_enum VALUES ('task_status',    'Completed',            '40');  -- Task completed, waiting managment verfication
-INSERT INTO s_proj_enum VALUES ('task_status',    'Review-Pending',       '41');  -- Task completed, waiting review verfication
-INSERT INTO s_proj_enum VALUES ('task_status',    'Review-Mgmt',          '42');  -- Task completed, waiting review verfication
-INSERT INTO s_proj_enum VALUES ('task_status',    'Closed',               '50');  -- Closed :: General
-INSERT INTO s_proj_enum VALUES ('task_status',    'Closed-Declined',      '51');  -- Closed :: Never worked on
+INSERT INTO TLBPMT_S_PROJECT_ENUM VALUES ('task_status',    'New',                  '10');  -- Submitted (unassigned)
+INSERT INTO TLBPMT_S_PROJECT_ENUM VALUES ('task_status',    'Mgmt-Pending-Approv',  '11');  -- Pending Management Approv
+INSERT INTO TLBPMT_S_PROJECT_ENUM VALUES ('task_status',    'PO-Approv',            '30');  -- In Progress :: Purchase Order Approved
+INSERT INTO TLBPMT_S_PROJECT_ENUM VALUES ('task_status',    'PO-Shipped',           '31');  -- In Progress :: Purchase Order Shipped
+INSERT INTO TLBPMT_S_PROJECT_ENUM VALUES ('task_status',    'Task-Assigned',        '32');  -- In Progress :: TR Assigned
+INSERT INTO TLBPMT_S_PROJECT_ENUM VALUES ('task_status',    'Task-In Progress',     '33');  -- In Progress :: TR In-Progress
+INSERT INTO TLBPMT_S_PROJECT_ENUM VALUES ('task_status',    'Completed',            '40');  -- Task completed, waiting managment verfication
+INSERT INTO TLBPMT_S_PROJECT_ENUM VALUES ('task_status',    'Review-Pending',       '41');  -- Task completed, waiting review verfication
+INSERT INTO TLBPMT_S_PROJECT_ENUM VALUES ('task_status',    'Review-Mgmt',          '42');  -- Task completed, waiting review verfication
+INSERT INTO TLBPMT_S_PROJECT_ENUM VALUES ('task_status',    'Closed',               '50');  -- Closed :: General
+INSERT INTO TLBPMT_S_PROJECT_ENUM VALUES ('task_status',    'Closed-Declined',      '51');  -- Closed :: Never worked on
 -- "Tech Request"    :: [New] > [Assigned] > [In Progress] > [Completed] > (Review-Mgmt) > [Closed]
 -- "Purchase Orders" :: [New] > [Mgmt-Pending-Approv] > [PO-...] > [Closed]
 -- "Custom Report"   :: [New] > []
 
 
-
-/* User Cookie info */
--- Version 1.0
--- Last Update:  2010-11-06
-CREATE TABLE AUTH_COOKIE
+/*
+  Static P-Type
+  Helps split tickets to reference Products or Projects.
+  This helps resolve the Chicken or the Egg.
+  Created: 2012-0305
+*/
+CREATE TABLE IF NOT EXISTS `TBLPMT_S_PTYPE`
 (
-  user_name       VARCHAR(15),                    -- PMT User Name
-  user_ip         VARCHAR(15),                    -- User's IPv4
-  cookie          VARCHAR(35),                    -- cookie id
-  login_dttm      DATETIME                        -- When did they login
-);
+  `Reference_Type_Id` BIGINT(20) NOT NULL AUTO_INCREMENT,
+  `Reference_Type` VARCHAR(16) COLLATE utf8_unicode_ci,
+  `Description` VARCHAR(64) COLLATE utf8_unicode_ci DEFAULT '',
+  UNIQUE INDEX `Reference_Type` (`Reference_Type`)
+) engine=InnoDb default charset=utf8 collate=utf_8_uicode_ci;
+
+INSERT INTO `TBLPMT_S_PTYPE` VALUES ('project', 'Development Project');
+INSERT INTO `TBLPMT_S_PTYPE` VALUES ('product', 'Live Hardware, Application or 3rd-Party');
+
 
 
 /* ***[ Ticket Tables ]******************************************** */
@@ -247,37 +260,39 @@ CREATE TABLE AUTH_COOKIE
   Request "Ticket Type" on the PMT Ticket page, "Enhancement, Deficet, TechRequest, Bug Report, etc.)
   Last Update: 2010-11-07
 */
-CREATE TABLE ticket
+CREATE TABLE IF NOT EXISTS TLBPMT_TICKET
 (
-  ticket_id         UNSIGNED INT NOT NULL AUTO_INCREMENT,
-  ticket_type       VARCHAR(15),          -- Ticket Type:  enhancement, deficet, inquiry, etc.  (Ask this on the Ticket Page)
-  created_dttm      DATETIME,             -- When was it created
-  updated_dttm      DATETIME,             -- Main Items last update
-  priority_enum     VARCHAR(15),          -- Priority Name:  major, minor, critical  [s_proj_enum.enum_name]
-  status_enum       VARCHAR(15),          -- Ticket status (from ENUM table)
+  `Ticket_Id`         UNSIGNED INT NOT NULL AUTO_INCREMENT,
+  `Ticket_Type`       VARCHAR(15),          -- Ticket Type:  enhancement, deficet, inquiry, etc.  (Ask this on the Ticket Page)
+  `Created_Dttm`      DATETIME,             -- When was it created
+  `Updated_Dttm`      DATETIME,             -- Main Items last update
+  `Priority_Enum`     VARCHAR(15),          -- Priority Name:  major, minor, critical  [TLBPMT_S_PROJECT_ENUM.enum_name]
+  `Status_Enum`       VARCHAR(15),          -- Ticket status (from ENUM table)
 
-  reporter_uid      VARCHAR(15),          -- UserID of who reported the issue (this can be handwritten if 'anon_user' is checked) <-- To allow Annon, set in ProjCONFIG.PHP
-  reporter_ip       VARCHAR(15),          -- User's IP, used for anonymous submitions
-  owner_gid         VARCHAR(20),          -- Not Needed :: Name of the general group assigned the Inquiry
-  owner_uid         VARCHAR(15),          -- UserID of who it addressing the ticket request
-  cc_addr           VARCHAR(100),         -- UserID or series of email addresses
+  `Reporter_Uid`      VARCHAR(15),          -- UserID of who reported the issue (this can be handwritten if 'anon_user' is checked) <-- To allow Annon, set in ProjCONFIG.PHP
+  `Reporter_Ip`       VARCHAR(15),          -- User's IP, used for anonymous submitions
+  `Owner_Gid`         VARCHAR(20),          -- Not Needed :: Name of the general group assigned the Inquiry
+  `Owner_Uid`         VARCHAR(15),          -- UserID of who it addressing the ticket request
+  `Cc_Addr`           VARCHAR(100),         -- UserID or series of email addresses
 
-  product_name      VARCHAR(50) NOT NULL, -- Name of the product  (xi_product.product_name)
-  product_ver       VARCHAR(15),          -- Name of the Project Version (xi_product_version.version)
-  component_name    VARCHAR(20),          -- Name of the Project Component
-  component_version VARCHAR(10),          -- Component Revision
-  milestone_id      VARCHAR(50),          -- Attatch to Milestone (Dev only, can be null)
+  `Reference_Type_Id` VARCHAR(16) NOT NULL, -- Product or Project (pmt_s_ptype)
+  `Ref_Id`            BIGINT(20) NOT NULL,  -- Reference (Project/Product) Id  (xi_product.product_name)
+  `Ref_Version_Id`    VARCHAR(15),          -- Name of the Project Version (xi_product_version.version)
+  `Component_Name`    VARCHAR(20),          -- Name of the Project Component
+  `Component_Version` VARCHAR(10),          -- Component Revision
+  `Milestone_Id`      VARCHAR(50),          -- Attatch to Milestone (Dev only, can be null)
 
-  resolution        VARCHAR(20),          -- Resolution description (from ENUM table s_proj_enum.enum_name = 'resolution')
-  summary           BLOB                  -- Description of the ticket
-);
+  `Resolution`        VARCHAR(20),          -- Resolution description (from ENUM table TLBPMT_S_PROJECT_ENUM.enum_name = 'resolution')
+  `Summary`           MEDIUMBLOB,           -- Description of the ticket
+
+) engine=InnoDb default charset=utf8 collate=utf_8_uicode_ci;
 
 /*
   Message Posting & updates associated with Tickets issued
   Version 1.0
   Last Update: 2010-11-07
 */
-CREATE TABLE ticket_update
+CREATE TABLE IF NOT EXISTS ticket_update
 (
   ticket_id       UNSIGNED INT NOT NULL,  -- Ticked ID Number
   created_dttm    DATETIME,               -- When was this created
@@ -285,8 +300,8 @@ CREATE TABLE ticket_update
   user_id         VARCHAR(15),            -- Who created it
   user_ip         VARCHAR(15),            -- User IP (used for anonymous updates)
   update_type     VARCHAR(15),            -- Status change, Additional Info, etc.  (not used in 1.0)
-  summary         BLOB                    -- User update text
-);
+  summary         MEDIUMBLOB              -- User update text
+) engine=InnoDb default charset=utf8 collate=utf_8_uicode_ci;
 
 
 /*
@@ -294,7 +309,7 @@ CREATE TABLE ticket_update
   Version 1.0.1
   Last Update:  2010-11-14
 */
-CREATE TABLE ticket_attachment
+CREATE TABLE IF NOT EXISTS ticket_attachment
 (
   atch_id         INT NOT NULL AUTO_INCREMENT,
   id              INT,                            -- ticket ID
@@ -305,7 +320,7 @@ CREATE TABLE ticket_attachment
   mod_dttm        DATETIME,                       -- file was modified (NULL)
   user_name       VARCHAR(15),                    -- who uploaded it
   user_ip         VARCHAR(15)                     -- user's IPv4 (created/mod)
-);
+) engine=InnoDb default charset=utf8 collate=utf_8_uicode_ci;
 
 
 /* ***[ Bug Report Tables ]******************************************** */
@@ -314,12 +329,12 @@ CREATE TABLE ticket_attachment
   Version: 1.0
   Last Update: 2010-11-05
 */
-CREATE TABLE bug
+CREATE TABLE IF NOT EXISTS bug
 (
   bug_id              UNSIGNED INT NOT NULL AUTO_INCREMENT,
   created_dttm        DATETIME,               -- Created DateTime
   updated_dttm        DATETIME,               -- Modified DateTime
-  priority_enum       VARCHAR(15),            -- Priority Name:  major, minor, critical  [s_proj_enum.enum_name]
+  priority_enum       VARCHAR(15),            -- Priority Name:  major, minor, critical  [TLBPMT_S_PROJECT_ENUM.enum_name]
   status_enum         VARCHAR(15),            -- Ticket status (from ENUM table)
 
   reporter_uid        VARCHAR(15),            -- User ID of who created this
@@ -334,9 +349,9 @@ CREATE TABLE bug
   component_version VARCHAR(10),              -- Component Revision
   milestone_id      VARCHAR(50),              -- Attatch to Milestone (Dev only, can be null)
 
-  resolution        VARCHAR(20),              -- Resolution description (from ENUM table s_proj_enum.enum_name = 'resolution')
-  summary           BLOB                      -- Description of the ticket
-);
+  resolution        VARCHAR(20),              -- Resolution description (from ENUM table TLBPMT_S_PROJECT_ENUM.enum_name = 'resolution')
+  summary           MEDIUMBLOB                -- Description of the ticket
+) engine=InnoDb default charset=utf8 collate=utf_8_uicode_ci;
 
 /*
   Tickets that the bug is linked to
@@ -344,7 +359,7 @@ CREATE TABLE bug
 */
 -- CREATE TABLE bug_ticket_links();
 
-CREATE TABLE bug_update
+CREATE TABLE IF NOT EXISTS bug_update
 (
   bug_id          UNSIGNED INT NOT NULL,  -- Bug ID Number
   created_dttm    DATETIME,               -- When was this created
@@ -352,10 +367,10 @@ CREATE TABLE bug_update
   user_id         VARCHAR(15),            -- Who created it
   user_ip         VARCHAR(15),            -- User IP (used for anonymous updates)
   update_type     VARCHAR(15),            -- Status change, Additional Info, "Transfered To"
-  summary         BLOB                    -- User update text
+  summary         MEDIUMBLOB              -- User update text
 );
 
-CREATE TABLE bug_attachment
+CREATE TABLE IF NOT EXISTS bug_attachment
 (
   atch_id         UNSIGNED INT NOT NULL AUTO_INCREMENT,    -- Index number of attachment
   bug_id          UNSIGNED INT NOT NULL,          -- Bug ID
@@ -366,7 +381,7 @@ CREATE TABLE bug_attachment
   modified_dttm   DATETIME,                       -- file was modified (NULL)
   user_name       VARCHAR(15),                    -- who uploaded it
   user_ip         VARCHAR(15)                     -- user's IPv4 (created/mod)
-);
+) engine=InnoDb default charset=utf8 collate=utf_8_uicode_ci;
 
 
 /* ***[ Task Tables - ToDo List / Tech Request ]****************** */
@@ -375,7 +390,7 @@ CREATE TABLE bug_attachment
   Version:      1.0.2
   Last Update:  2010-11-13
 */
-CREATE TABLE task
+CREATE TABLE IF NOT EXISTS task
 (
   task_id           UNSIGNED INT AUTO_INCREMENT,
   created_dttm      DATETIME,                 -- When was this created
@@ -401,10 +416,10 @@ CREATE TABLE task
   component_version VARCHAR(10) DEFAULT NULL, -- Component Revision   (can be null)
   milestone_id      VARCHAR(50),              -- Attatch to Milestone (Dev only, can be null)
 
-  summary           BLOB                      -- Description of the ticket
-);
+  summary           MEDIUMBLOB                -- Description of the ticket
+) engine=InnoDb default charset=utf8 collate=utf_8_uicode_ci;
 
-CREATE TABLE task_update
+CREATE TABLE IF NOT EXISTS task_update
 (
   task_id         UNSIGNED INT NOT NULL,  -- Task ID Number
   created_dttm    DATETIME,               -- When was this created
@@ -412,10 +427,10 @@ CREATE TABLE task_update
   user_id         VARCHAR(15),            -- Who created it
   user_ip         VARCHAR(15),            -- User IP (used for anonymous updates)
   update_type     VARCHAR(15),            -- Status change, Additional Info, etc.  (not used in 1.0)
-  summary         BLOB                    -- User update text
-);
+  summary         MEDIUMBLOB              -- User update text
+) engine=InnoDb default charset=utf8 collate=utf_8_uicode_ci;
 
-CREATE TABLE task_attachment
+CREATE TABLE IF NOT EXISTS task_attachment
 (
   atch_id         UNSIGNED INT NOT NULL AUTO_INCREMENT,    -- Index number of attachment
   task_id         UNSIGNED INT NOT NULL,          -- Task ID
@@ -426,7 +441,7 @@ CREATE TABLE task_attachment
   modified_dttm   DATETIME,                       -- file was modified (NULL)
   user_name       VARCHAR(15),                    -- who uploaded it
   user_ip         VARCHAR(15)                     -- user's IPv4 (created/mod)
-);
+) engine=InnoDb default charset=utf8 collate=utf_8_uicode_ci;
 
 
 

@@ -24,10 +24,10 @@
 */
 CREATE TABLE IF NOT EXISTS `TBLPMT_USER` (
   `User_Id`     BIGINT(20) NOT NULL AUTO_INCREMENT,
-  `Username`    VARCHAR(255) COLLATE utf8_unicode_ci NOT NULL,
+  `User_Name`   VARCHAR(50) COLLATE utf8_unicode_ci NOT NULL,
   `Password`    VARCHAR(255) COLLATE utf8_unicode_ci NOT NULL,  -- encrypted user password
   `Email`       VARCHAR(255) COLLATE utf8_unicode_ci NOT NULL,
-  `Group_Id`    bigint(20) NOT NULL DEFAULT '2',
+  `Group_Id`    BIGINT(20) NOT NULL DEFAULT '2',
   `Name`        varchar(255) COLLATE utf8_unicode_ci NOT NULL,
   `Name_First`  VARCHAR(75) COLLATE utf8_unicode_ci NULL,   -- First Name
   `Name_Last`   VARCHAR(75) COLLATE utf8_unicode_ci NULL,   -- Last Name
@@ -63,6 +63,20 @@ CREATE TABLE IF NOT EXISTS `TBLPMT_USER_INFO`
   `Detail_Type` VARCHAR(10) NOT NULL,
   PRIMARY KEY (`User_Info_Id`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+/*
+  User Cookie info
+  Version 0.2
+  Created:  2010-11-06
+  * 2012-0305 - Changed User_Name to User_Id
+*/
+CREATE TABLE IF NOT EXISTS `TLBPMT_USER_AUTH_COOKIE`
+(
+  User_Id     BIGINT(20),   -- PMT User Name
+  User_Ip     VARCHAR(15),  -- User's IPv4
+  Cookie      VARCHAR(35),  -- cookie id
+  Login_Dttm  DATETIME      -- When did they login
+);
 
 
 
@@ -127,9 +141,9 @@ CREATE TABLE IF NOT EXISTS `TBLPMT_S_GROUP_PERMISSION`
 */
 CREATE TABLE IF NOT EXISTS `TBLPMT_USER_PROJECT_PRIV`
 (
-  Username    VARCHAR(255) COLLATE utf8_unicode_ci NOT NULL,   -- User ID from 'pmt_user'
-  Project_Id  INT NOT NULL,           -- Product ID
-  Group_Name  VARCHAR(20) NOT NULL    -- Name of the group priv
+  `User_Name`    VARCHAR(255) COLLATE utf8_unicode_ci NOT NULL,   -- User ID from 'pmt_user'
+  `Project_Id`  INT NOT NULL,           -- Product ID
+  `Group_Name`  VARCHAR(20) NOT NULL    -- Name of the group priv
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 
