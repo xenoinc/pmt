@@ -10,6 +10,8 @@
  *   User tables.
  *
  * Change Log:
+ * 2012-0306  * (djs) fixed error 'unsigned int' to 'int unsigned'
+ * 2012-0305  * (djs) Changed BIGINT(20) to UNSIGNED INT
  * 2012-0304  * (djs) Cleaned semicolons from comments. Causing issues with parser.
  * 2012-0302  * (djs) Created file to have final user db changes.
  **********************************************************************/
@@ -22,30 +24,33 @@
   Last Update:  2010-11-07
   Note:  Accounts should not be active until they verify their Email address
 */
-CREATE TABLE IF NOT EXISTS `TBLPMT_USER` (
-  `User_Id`     BIGINT(20) NOT NULL AUTO_INCREMENT,
+
+CREATE TABLE IF NOT EXISTS `TBLPMT_USER`
+(
+  `User_Id`     INT UNSIGNED NOT NULL AUTO_INCREMENT,
   `User_Name`   VARCHAR(50) COLLATE utf8_unicode_ci NOT NULL,
   `Password`    VARCHAR(255) COLLATE utf8_unicode_ci NOT NULL,  -- encrypted user password
   `Email`       VARCHAR(255) COLLATE utf8_unicode_ci NOT NULL,
-  `Group_Id`    BIGINT(20) NOT NULL DEFAULT '2',
+  `Group_Id`    INT UNSIGNED NOT NULL DEFAULT '2',
   `Name`        varchar(255) COLLATE utf8_unicode_ci NOT NULL,
   `Name_First`  VARCHAR(75) COLLATE utf8_unicode_ci NULL,   -- First Name
   `Name_Last`   VARCHAR(75) COLLATE utf8_unicode_ci NULL,   -- Last Name
   `Name_Middle` VARCHAR(75) COLLATE utf8_unicode_ci NULL,   -- Middle Name
   `Name_Title`  VARCHAR(4) COLLATE utf8_unicode_ci NULL,    -- Dr, Mr, Mrs, Ms
   `Name_Salu`   VARCHAR(4) COLLATE utf8_unicode_ci NULL,    -- Sr, Jr, III, IV, Esq(uire)
-  `Customer_Id` VARCHAR(10) NULL,  -- Only used if it's a customer
+  `Customer_Id` VARCHAR(256) COLLATE utf8_unicode_ci NULL,  -- Only used if it's a customer
   `Active`      BOOLEAN,      -- Account is active
+  `Image_File`  VARCHAR(255) COLLATE  utf8_unicode_ci,      -- User picture
 
   `Termination_Dttm`    DATETIME,           -- used for interns, etc
   `Created_Dttm`        DATETIME,           -- when was user created
   `Password_Exp_Dttm`   DATETIME,           -- date of password expiration
   `Session_Hash`        VARCHAR(255) COLLATE utf8_unicode_ci NOT NULL DEFAULT '0',
   `Last_Login_Dttm`     DATETIME,           -- Last date/time of login
-  `Last_Login_Ip`       VARCHAR(15),        -- Last logged in from (IPv4)
+  `Last_Login_Ip`       VARCHAR(15)COLLATE utf8_unicode_ci,        -- Last logged in from (IPv4)
   `Receive_Updates`     INT,                -- email updates
   primary key (`User_Id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 /*
   User Inforamtion Details
@@ -57,26 +62,26 @@ CREATE TABLE IF NOT EXISTS `TBLPMT_USER` (
 */
 CREATE TABLE IF NOT EXISTS `TBLPMT_USER_INFO`
 (
-  `User_Info_Id` BIGINT(20) NOT NULL AUTO_INCREMENT,
-  `User_Id` BIGINT(20) NOT NULL,
+  `User_Info_Id` INT UNSIGNED NOT NULL AUTO_INCREMENT,
+  `User_Id` INT UNSIGNED NOT NULL,
   `Detail_Data` VARCHAR(255) COLLATE utf8_unicode_ci NOT NULL,
   `Detail_Type` VARCHAR(10) NOT NULL,
   PRIMARY KEY (`User_Info_Id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 /*
   User Cookie info
-  Version 0.2
+  Version 0.2.1
   Created:  2010-11-06
   * 2012-0305 - Changed User_Name to User_Id
 */
 CREATE TABLE IF NOT EXISTS `TLBPMT_USER_AUTH_COOKIE`
 (
-  User_Id     BIGINT(20),   -- PMT User Name
-  User_Ip     VARCHAR(15),  -- User's IPv4
-  Cookie      VARCHAR(35),  -- cookie id
+  User_Id     INT UNSIGNED,   -- PMT User Name
+  User_Ip     VARCHAR(45) COLLATE utf8_unicode_ci ,  -- User's IPv4/6
+  Cookie      VARCHAR(35) COLLATE utf8_unicode_ci ,  -- cookie id
   Login_Dttm  DATETIME      -- When did they login
-);
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 
 
@@ -92,7 +97,7 @@ CREATE TABLE IF NOT EXISTS `TLBPMT_USER_AUTH_COOKIE`
 */
 create table `TBLPMT_USER_GROUP`
 (
-  `Group_Id`    BIGINT(20) NOT NULL AUTO_INCREMENT,
+  `Group_Id`    INT UNSIGNED NOT NULL AUTO_INCREMENT,
   `Group_Name`  VARCHAR(20) COLLATE utf8_unicode_ci NOT NULL,   -- Name of the group
   `Description` VARCHAR(255) COLLATE utf8_unicode_ci NOT NULL,  -- Description of what this group does
   PRIMARY KEY (`Group_Id`)
@@ -114,9 +119,9 @@ INSERT INTO `TBLPMT_USER_GROUP` (Group_Name, Description) VALUES ('CUSTOMERADMIN
 */
 create table `TBLPMT_USER_GROUP_PRIV`
 (
-  `Group_Id`      VARCHAR(20) COLLATE utf8_unicode_ci NOT NULL, -- Name of the group
-  `Priv_Name`     VARCHAR(25) COLLATE utf8_unicode_ci NOT NULL  -- Available Privilege
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+  `Group_Id`    INT UNSIGNED NOT NULL,                   -- Name of the group
+  `Priv_Name`   VARCHAR(25) COLLATE utf8_unicode_ci NOT NULL  -- Available Privilege
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 
 /*
@@ -129,8 +134,7 @@ CREATE TABLE IF NOT EXISTS `TBLPMT_S_GROUP_PERMISSION`
   `Priv_Name`   VARCHAR(25) COLLATE utf8_unicode_ci NOT NULL,
   `Description` VARCHAR(255) COLLATE utf8_unicode_ci NOT NULL,
   `Sort_Order`  INT
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
-
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 
 /*
@@ -141,29 +145,32 @@ CREATE TABLE IF NOT EXISTS `TBLPMT_S_GROUP_PERMISSION`
 */
 CREATE TABLE IF NOT EXISTS `TBLPMT_USER_PROJECT_PRIV`
 (
-  `User_Name`    VARCHAR(255) COLLATE utf8_unicode_ci NOT NULL,   -- User ID from 'pmt_user'
-  `Project_Id`  INT NOT NULL,           -- Product ID
-  `Group_Name`  VARCHAR(20) NOT NULL    -- Name of the group priv
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+  `User_Name`   VARCHAR(255) COLLATE utf8_unicode_ci NOT NULL,   -- User ID from 'pmt_user'
+  `Project_Id`  INT UNSIGNED NOT NULL,  -- Product ID
+  `Group_Id`    SMALLINT UNSIGNED NOT NULL   -- Name of the group priv
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 
-
+/*
+  A group can be called, "development" and inside
+  that large group are teams.
+*/
 CREATE TABLE IF NOT EXISTS `TBLPMT_USER_TEAM`
 (
-  `Team_Id` BIGINT(20) NOT NULL AUTO_INCREMENT,
+  `Team_Id` INT UNSIGNED NOT NULL AUTO_INCREMENT,
   `Team_Name` VARCHAR(255) COLLATE utf8_unicode_ci NOT NULL,
   `Active` BOOLEAN,
   PRIMARY KEY (`Team_Id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 
 /* Team group members, Scrum team, etc. */
 CREATE TABLE IF NOT EXISTS `TBLPMT_USER_TEAM_MEMBERS`
 (
-  `Team_Id` BIGINT(20) NOT NULL,
-  `User_Id` BIGINT(20) NOT NULL,
+  `Team_Id` INT UNSIGNED NOT NULL,
+  `User_Id` INT UNSIGNED NOT NULL,
   PRIMARY KEY (`Team_Id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 
 

@@ -120,8 +120,10 @@ elseif ($_GET["reset"] == "db")
     */
 
     p("<b>Generating tables..</b>");
-    p("Executing: pmt-db.sql");       DbGenerateTables("pmt-db.sql", $pmtConf["db"]["prefix"]);
-    p("Executing: pmt-db-user.sql");  DbGenerateTables("pmt-db-user.sql", $pmtConf["db"]["prefix"]);
+    p("Executing: pmt-db.sql");         DbGenerateTables("pmt-db.sql", $pmtConf["db"]["prefix"]);
+    p("Executing: pmt-db-user.sql");    DbGenerateTables("pmt-db-user.sql", $pmtConf["db"]["prefix"]);
+    p("Executing: pmt-db-project.sql"); DbGenerateTables("pmt-db-project.sql", $pmtConf["db"]["prefix"]);
+    p("Executing: pmt-db-ticket.sql");  DbGenerateTables("pmt-db-ticket.sql", $pmtConf["db"]["prefix"]);
 
 
     p("<b>[DB]</b> - Inserting admin defaults");
@@ -129,7 +131,7 @@ elseif ($_GET["reset"] == "db")
     // Administration Account
     $db->Query(
             "INSERT INTO ".$pmtConf["db"]["prefix"]."USER ".
-            "(Username, Password, Name, Email, Group_Id, Active, Session_Hash) VALUES (" .
+            "(User_Name, Password, Name, Email, Group_Id, Active, Session_Hash) VALUES (" .
             "'admin', " .                 // User
             "'".sha1('admin')."',".       // Password
             "'Test Administrator', " .    // Name
