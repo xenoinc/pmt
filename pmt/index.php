@@ -24,6 +24,8 @@
 
 // Development Debug Mode
 define("DebugMode", true);
+
+// This is used to test quick code
 define("DebugIndex", false);
 
 // Define absolute path

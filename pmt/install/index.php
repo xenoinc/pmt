@@ -124,6 +124,8 @@ elseif ($_GET["reset"] == "db")
     p("Executing: pmt-db-user.sql");    DbGenerateTables("pmt-db-user.sql", $pmtConf["db"]["prefix"]);
     p("Executing: pmt-db-project.sql"); DbGenerateTables("pmt-db-project.sql", $pmtConf["db"]["prefix"]);
     p("Executing: pmt-db-ticket.sql");  DbGenerateTables("pmt-db-ticket.sql", $pmtConf["db"]["prefix"]);
+    //p("Executing: pmt-db-ticket.sql");  DbGenerateTables("pmt-db-customer.sql", $pmtConf["db"]["prefix"]);
+    //p("Executing: pmt-db-ticket.sql");  DbGenerateTables("pmt-db-product.sql", $pmtConf["db"]["prefix"]);
 
 
     p("<b>[DB]</b> - Inserting admin defaults");
@@ -473,8 +475,12 @@ switch ($step)
     p("---------------");
     p("<b>[DB]</b> - Generating SQL tables..");
 
-
+    
     DbGenerateTables("pmt-db.sql", $dbase["prefix"]);
+    DbGenerateTables("pmt-db-user.sql", $dbase["prefix"]);
+    DbGenerateTables("pmt-db-project.sql", $dbase["prefix"]);
+    DbGenerateTables("pmt-db-ticket.sql", $dbase["prefix"]);
+
     /*
     // Extract SQL & put prefix on tables
     $sqlPmtBrain = file_get_contents("pmt-db.sql");

@@ -23,8 +23,8 @@
  */
 
 // Set version (should be in array)
-$pmt_version = "0.0.1";
-$pmt_version_ex = "000001";
+$pmt_version = "0.0.2";
+$pmt_version_ex = "000002";
 $pmt_db_version = 1;
 define("PMT_VER",$pmt_version);
 
@@ -35,23 +35,14 @@ if (DebugMode == true)
 
 
 if(!file_exists(PMT_PATH."lib/config.php"))
-{
   header("Location: install/");
-}
 
-/* Step 2
- * Minor init
- */
-
-
-// set breadcrumbs
-// strip magic quotes
+/* Step 2 - Minor Init */
+// 1) set breadcrumbs
+// 2) strip magic quotes
 
 
-
-/* Step 3
- * Include the required classes
- */
+/* Step 3 - Include the required classes */
 
 // Require the core PMT files
 //require(PMT_PATH."lib/common/pmt.user.php");  // User Class
@@ -61,7 +52,7 @@ require(PMT_PATH."lib/common/pmt.uri.php");     // URI Parsing class
 
 // Since the system is "configured" include the class now
 require(PMT_PATH."lib/config.php");             // Configuration Script
-
+//require(PMT_PATH."lib/pmt-functions.php");      // General functions used all over
 
 /* Step 4)
  * Initialize the classes
@@ -77,6 +68,8 @@ $pmtDb = new Database($pmtConf["db"]["server"],
                       $pmtConf["db"]["pass"],
                       $pmtConf["db"]["dbname"]);
 define("TBL_PREFIX", $pmtConf["db"]["prefix"]);     // This may be removed
+
+$user = new User;
 
 /* Step 5) Parse the URL path
  * Possible Paths:

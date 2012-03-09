@@ -10,6 +10,7 @@
  *   User tables.
  *
  * Change Log:
+ * 2012-0309  + (djs) added Changed USER_GROUP to GROUP and created new USER_GROUP
  * 2012-0306  * (djs) fixed error 'unsigned int' to 'int unsigned'
  * 2012-0305  * (djs) Changed BIGINT(20) to UNSIGNED INT
  * 2012-0304  * (djs) Cleaned semicolons from comments. Causing issues with parser.
@@ -31,7 +32,7 @@ CREATE TABLE IF NOT EXISTS `TBLPMT_USER`
   `User_Name`   VARCHAR(50) COLLATE utf8_unicode_ci NOT NULL,
   `Password`    VARCHAR(255) COLLATE utf8_unicode_ci NOT NULL,  -- encrypted user password
   `Email`       VARCHAR(255) COLLATE utf8_unicode_ci NOT NULL,
-  `Group_Id`    INT UNSIGNED NOT NULL DEFAULT '2',
+  `Group_Id`    INT UNSIGNED NOT NULL DEFAULT '0',              -- Depricated, use table
   `Name`        varchar(255) COLLATE utf8_unicode_ci NOT NULL,
   `Name_First`  VARCHAR(75) COLLATE utf8_unicode_ci NULL,   -- First Name
   `Name_Last`   VARCHAR(75) COLLATE utf8_unicode_ci NULL,   -- Last Name
@@ -88,14 +89,15 @@ CREATE TABLE IF NOT EXISTS `TLBPMT_USER_AUTH_COOKIE`
 /*
   Groups and Descriptions
   List the different "available" groups
-  Version 0.2.0
-  Last Update:  2010-11-07
+  Version 0.2.1
+  Created:  2010-11-07
   Priv:
     SELECT p.priv_name from
       pmt_group g JOIN ON pmt_group_priv p
     WHERE g.pmt_group.group_id = p.pmt_group_priv.group_id
+  2012-03-09: - Changed from PMT_USER_GROUP to PMT_GROUP
 */
-create table `TBLPMT_USER_GROUP`
+create table `TBLPMT_GROUP`
 (
   `Group_Id`    INT UNSIGNED NOT NULL AUTO_INCREMENT,
   `Group_Name`  VARCHAR(20) COLLATE utf8_unicode_ci NOT NULL,   -- Name of the group
@@ -103,12 +105,12 @@ create table `TBLPMT_USER_GROUP`
   PRIMARY KEY (`Group_Id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
-INSERT INTO `TBLPMT_USER_GROUP` (Group_Name, Description) VALUES ('ADMIN', 'System Administrator Group');
-INSERT INTO `TBLPMT_USER_GROUP` (Group_Name, Description) VALUES ('DEVMNGR', 'Development Manager');
-INSERT INTO `TBLPMT_USER_GROUP` (Group_Name, Description) VALUES ('PRJMNGR', 'Project Manager');
-INSERT INTO `TBLPMT_USER_GROUP` (Group_Name, Description) VALUES ('DEV', 'Application Developer');
-INSERT INTO `TBLPMT_USER_GROUP` (Group_Name, Description) VALUES ('CUSTOMER', 'Customer General User');
-INSERT INTO `TBLPMT_USER_GROUP` (Group_Name, Description) VALUES ('CUSTOMERADMIN', 'Customer Administrator');
+INSERT INTO `TBLPMT_GROUP` (Group_Name, Description) VALUES ('ADMIN', 'System Administrator Group');
+INSERT INTO `TBLPMT_GROUP` (Group_Name, Description) VALUES ('DEVMNGR', 'Development Manager');
+INSERT INTO `TBLPMT_GROUP` (Group_Name, Description) VALUES ('PRJMNGR', 'Project Manager');
+INSERT INTO `TBLPMT_GROUP` (Group_Name, Description) VALUES ('DEV', 'Application Developer');
+INSERT INTO `TBLPMT_GROUP` (Group_Name, Description) VALUES ('CUSTOMER', 'Customer General User');
+INSERT INTO `TBLPMT_GROUP` (Group_Name, Description) VALUES ('CUSTOMERADMIN', 'Customer Administrator');
 
 
 /*
@@ -117,12 +119,11 @@ INSERT INTO `TBLPMT_USER_GROUP` (Group_Name, Description) VALUES ('CUSTOMERADMIN
   Version 0.2.0
   Last Update:  2010-11-07
 */
-create table `TBLPMT_USER_GROUP_PRIV`
+create table `TBLPMT_GROUP_PRIV`
 (
   `Group_Id`    INT UNSIGNED NOT NULL,                   -- Name of the group
   `Priv_Name`   VARCHAR(25) COLLATE utf8_unicode_ci NOT NULL  -- Available Privilege
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
-
 
 /*
   Available Project Priv Items (STATIC)
@@ -135,6 +136,20 @@ CREATE TABLE IF NOT EXISTS `TBLPMT_S_GROUP_PERMISSION`
   `Description` VARCHAR(255) COLLATE utf8_unicode_ci NOT NULL,
   `Sort_Order`  INT
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+/*
+  List of users within a group. Because users
+  can be apart of more than one group.
+  Version 0.2.0
+  Created: 2012-03-09
+  ** NOT USED YET (v1.5)
+*/
+CREATE TABLE `TBLPMT_USER_GROUP`
+(
+  `User_Id`  INT UNSIGNED NOT NULL,
+  `Group_Id` INT UNSIGNED NOT NULL
+);
+
 
 
 /*
