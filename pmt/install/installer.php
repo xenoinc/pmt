@@ -24,9 +24,10 @@ function IsInstalled()
     $con = mysql_connect( $pmtConf["db"]["server"],
                           $pmtConf["db"]["user"],
                           $pmtConf["db"]["pass"]);
+
     mysql_select_db($pmtConf["db"]["dbname"], $link);
 
-    $ret = mysql_query("SHOW TABLES", $con);
+    $ret = mysql_query("SHOW TABLES;", $con);
     while ($arr = mysql_fetch_array($ret))
     {
       // Check if the settings table exists
@@ -124,7 +125,7 @@ function p($data)
  */
 function DbGenerateTables($sqlFile, $dbPrefix)
 {
-  global $db;
+  global $pmtDB;
 
   // Extract SQL & put prefix on tables
   $sqlPmtBrain = file_get_contents($sqlFile);
@@ -146,7 +147,7 @@ function DbGenerateTables($sqlFile, $dbPrefix)
         }
       */
 
-      $db->Query($q);
+      $pmtDB->Query($q);
     }
   }
 }

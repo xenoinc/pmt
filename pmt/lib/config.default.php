@@ -40,21 +40,18 @@ $pmtRootUserName    = "rootadmin";
 $pmtRootUserPass    = "testing";
 
 
-// New Method
 $pmtConf = array(
 	"db" => array(
 		"server"  => "localhost",   // Database server
 		"user"    => "root",        // Database username
 		"pass"    => "testing123",  // Database password
-		"dbname"  => "pmt",         // Database name
+		"dbname"  => "PMT_DATA",    // Database name
 		"prefix"  => "PMT_"         // Table prefix
 	),
 	"general" => array(
 		"authorized_only" => false  // Allow access to public or auth-only
 	)
 );
-
-
 
 ?>
 

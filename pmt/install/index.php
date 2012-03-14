@@ -55,27 +55,36 @@ if ($_GET["reset"] == "full")
   CreateHeader("PMT System Reset - Full");
   print("<ul>\n");
 
+  if(file_exists("../lib/config.php"))
+  {
+    p("CONFIG.PHP found.");
+  }
   if (IsInstalled() == false)
   {
-    p("CONFIG.PHP was NOT found. Using DebugMode values");
-    $db = new Database($defVal["server"], $defVal["user"], $defVal["pass"], $defVal["dbname"]);
+    p("Installed components NOT found. Using DebugMode values");
+    $pmtDB = new Database($defVal["server"], $defVal["user"], $defVal["pass"], $defVal["dbname"]);
   }
   else
   {
-    p("CONFIG.PHP found.");
-    $db = new Database($pmtConf["db"]["server"], $pmtConf["db"]["user"], $pmtConf["db"]["pass"], $pmtConf["db"]["dbname"]);
+    p("Using CONFIG.PHP values.");
+    $pmtDB = new Database($pmtConf["db"]["server"], $pmtConf["db"]["user"], $pmtConf["db"]["pass"], $pmtConf["db"]["dbname"]);
   }
 
-  if ($db == null)
+  if ($pmtDB == null)
     p("Bad DB connection.");
   else
   {
-    $db->Query("DROP DATABASE ". $defVal['dbname'] . ";");
-    $db->Query("CREATE DATABASE ". $defVal['dbname'] . ";");
+    $pmtDB->Query("DROP DATABASE ". $defVal['dbname'] . ";");
+    $pmtDB->Query("CREATE DATABASE ". $defVal['dbname'] . ";");
 
     p("Removed and recreated database.");
     p("You may now <a href='../'>start over</a>");
   }
+
+  // Delete config.php
+  unlink("../lib/config.php");
+  p("Delete <b>config.php</b> file.");
+
 
   print("</ul>\n");
   CreateFooter();
@@ -99,20 +108,20 @@ elseif ($_GET["reset"] == "db")
     p("Password: " . $pmtConf["db"]["pass"]);
     print("</ul><ul>\n");
 
-    $db = new Database(
+    $pmtDB = new Database(
             $pmtConf["db"]["server"],
             $pmtConf["db"]["user"],
             $pmtConf["db"]["pass"],
             $pmtConf["db"]["dbname"]);
 
-    p("<b>DB:</b> Removing database..");        $db->Query("DROP DATABASE ". $defVal['dbname'] . ";");
-    p("<b>DB:</b> Creating database..<br />");  $db->Query("CREATE DATABASE ". $defVal['dbname'] . ";");
+    p("<b>DB:</b> Removing database..");        $pmtDB->Query("DROP DATABASE ". $defVal['dbname'] . ";");
+    p("<b>DB:</b> Creating database..<br />");  $pmtDB->Query("CREATE DATABASE ". $defVal['dbname'] . ";");
 
     // remove and reset connection
-    $db->Select($pmtConf["db"]["dbname"]);
+    $pmtDB->Select($pmtConf["db"]["dbname"]);
     /*
-    $db = null;
-    $db = new Database(
+    $pmtDB = null;
+    $pmtDB = new Database(
             $pmtConf["db"]["server"],
             $pmtConf["db"]["user"],
             $pmtConf["db"]["pass"],
@@ -128,12 +137,12 @@ elseif ($_GET["reset"] == "db")
     //p("Executing: pmt-db-ticket.sql");  DbGenerateTables("pmt-db-product.sql", $pmtConf["db"]["prefix"]);
 
 
-    p("<b>[DB]</b> - Inserting admin defaults");
+    p("<b>[DB]</b> - Inserting default admin account '<i>admin:admin</i>'.");
 
     // Administration Account
-    $db->Query(
+    $pmtDB->Query(
             "INSERT INTO ".$pmtConf["db"]["prefix"]."USER ".
-            "(User_Name, Password, Name, Email, Group_Id, Active, Session_Hash) VALUES (" .
+            "(`User_Name`, `Password`, `Name`, `Email`, `Group_Id`, `Active`, `Session_Hash`) VALUES (" .
             "'admin', " .                 // User
             "'".sha1('admin')."',".       // Password
             "'Test Administrator', " .    // Name
@@ -161,13 +170,13 @@ else
   try
   {
     // Config file found. Check for DB
-    $db = new Database(
+    $pmtDB = new Database(
             $pmtConf["db"]["server"],
             $pmtConf["db"]["user"],
             $pmtConf["db"]["pass"],
             $pmtConf["db"]["dbname"]
             );
-    $db->Query("list tables;");
+    $pmtDB->Query("list tables;");
     print ("db works");
   }
   catch (Exception $e)
@@ -210,7 +219,7 @@ switch ($step)
     }
     elseif(file_exists("../lib/config.php"))
     {
-      htmlMessage("<code>system/config.php</code> exists, unable to continue.");
+      htmlMessage("<code>lib/config.php</code> exists, unable to continue.");
     }
     else
     {
@@ -448,6 +457,7 @@ switch ($step)
   case 4:
 
     CreateHeader("Step 4 - Installing Database");
+
     if (DebugMode)
       print("<div class='message'><pre>" . $_POST["db"] . "</pre></div>");
 
@@ -466,7 +476,7 @@ switch ($step)
     $settings = json_decode($_POST["settings"], true);
     $admin = json_decode($_POST["admin"], true);
 
-    $db = new Database($dbase["server"], $dbase["user"], $dbase["pass"], $dbase["dbname"]);
+    $pmtDB = new Database($dbase["server"], $dbase["user"], $dbase["pass"], $dbase["dbname"]);
 
     p("SVR: " . $dbase['server']);
     p("Usr: " . $dbase['user']);
@@ -475,11 +485,13 @@ switch ($step)
     p("---------------");
     p("<b>[DB]</b> - Generating SQL tables..");
 
-    
-    DbGenerateTables("pmt-db.sql", $dbase["prefix"]);
-    DbGenerateTables("pmt-db-user.sql", $dbase["prefix"]);
-    DbGenerateTables("pmt-db-project.sql", $dbase["prefix"]);
-    DbGenerateTables("pmt-db-ticket.sql", $dbase["prefix"]);
+
+    DbGenerateTables("pmt-db.sql",          $dbase["prefix"]);
+    DbGenerateTables("pmt-db-user.sql",     $dbase["prefix"]);
+    DbGenerateTables("pmt-db-project.sql",  $dbase["prefix"]);
+    DbGenerateTables("pmt-db-ticket.sql",   $dbase["prefix"]);
+    //DbGenerateTables("pmt-db-customer.sql", $dbase["db"]["prefix"]);
+    //DbGenerateTables("pmt-db-product.sql",  $dbase["db"]["prefix"]);
 
     /*
     // Extract SQL & put prefix on tables
@@ -491,26 +503,44 @@ switch ($step)
     foreach($query as $q)
     {
       if(!empty($q) && strlen($q) > 5)
-        $db->Query($q);
+        $pmtDB->Query($q);
     }
     */
 
     print("        <li><b>[DB]</b> - Inserting general defaults</li>\n");
 
     // Create default values
-    //InsertDefaults($db, $dbase, $settings, $admin);
+    //InsertDefaults($pmtDB, $dbase, $settings, $admin);
     // Simple settings
-    $db->Query("UPDATE ".$dbase["prefix"]."SETTINGS SET Value='".$db->Res($settings["title"]) . "' WHERE Setting='title';" );
-    $db->Query("UPDATE ".$dbase["prefix"]."SETTINGS SET Value='".$db->Res($settings["seo_url"]) . "' WHERE Setting='seo_url';" );
+    $pmtDB->Query("UPDATE ".$dbase["prefix"]."SETTINGS SET Value='".$pmtDB->Res($settings["title"]) . "' WHERE Setting='title';" );
+    $pmtDB->Query("UPDATE ".$dbase["prefix"]."SETTINGS SET Value='".$pmtDB->Res($settings["seo_url"]) . "' WHERE Setting='seo_url';" );
 
     print("<li><b>[DB]</b> - Inserting admin defaults</li>\n");
+
     // Administration Account
-    $db->Query( "INSERT INTO ".$dbase["prefix"]."USERS ".
+    /*
+    $pmtDB->Query( "INSERT INTO ".$dbase["prefix"]."USERS ".
                 "(Username, Password, Name, Email, Group_Id, Sesshash) VALUES " .
-                "('". $db->Res($admin['username'])."', '".
+                "('". $pmtDB->Res($admin['username'])."', '".
                       sha1($admin['password'])."', '".
-                      $db->Res($admin['username'])."', '".
-                      $db->Res($admin['email'])."', 1, '');");
+                      $pmtDB->Res($admin['username'])."', '".
+                      $pmtDB->Res($admin['email'])."', 1, '');");
+    */
+    // TODO: Add protection against SQL Injection Attacks (http://snippets.dzone.com/posts/show/1507)
+    // TODO: Use the USER Class to perform user insert
+    $q ="INSERT INTO ".$dbase["prefix"]."USER ".
+        "(User_Name, Password, Name, Email, Group_Id, Active, Session_Hash) VALUES (" .
+        "'". $pmtDB->Res($admin['username'])."', ". // User
+        "'". sha1($admin['password'])       ."', ". // Password
+        "'". $pmtDB->Res($admin['username'])."', ". // Name
+        "'". $pmtDB->Res($admin['email'])   ."', ". // Email
+        "1, " .                                     // Group_Id (ADMIN)
+        "true," .                                   // Active (YES)
+        "'');";                                      // Session_Hash
+
+    // print("<li><b>[query]</b> - ".$q."</li>\n");
+    $pmtDB->Query($q);
+
 
     print("<li><b>[PMT]</b> - Generating 'config.php'</li>\n");
     // Generate Config file
@@ -522,10 +552,10 @@ switch ($step)
     $cfgPHP[] ='$pmtConf = array(';
     $cfgPHP[] ='  "db" => array(';
     $cfgPHP[] ='    "server"  => "' . $dbase["server"] .'",   // Database Server';
-    $cfgPHP[] ='    "user"    => "' . $dbase["user"] . '",    // Database user';
-    $cfgPHP[] ='    "pass"    => "' . $dbase["pass"] . '",    // Database password';
-    $cfgPHP[] ='    "dbname"  => "' . $dbase["dbname"] . '",  // Database name';
-    $cfgPHP[] ='    "prefix"  => "' . $dbase["prefix"] . '"   // Table prefix';
+    $cfgPHP[] ='    "user"    => "' . $dbase["user"] . '",    // Database User';
+    $cfgPHP[] ='    "pass"    => "' . $dbase["pass"] . '",    // Database Password';
+    $cfgPHP[] ='    "dbname"  => "' . $dbase["dbname"] . '",  // Database Name';
+    $cfgPHP[] ='    "prefix"  => "' . $dbase["prefix"] . '"   // Table Prefix';
     $cfgPHP[] ='  ),';
     $cfgPHP[] ='  "general" => array(';
     $cfgPHP[] ='    "authorized_only" => false    // Allow access to public or auth-only';
@@ -584,6 +614,9 @@ switch ($step)
     <?php
     break;
 }
+
+print("<hr><div align='center'><p>Reset <a href='?reset=full'>Config and DB</a> - or - " .
+      "<a href='?reset=full'>DB Defaults</a></p></div>");
 
 CreateFooter();
 

@@ -39,6 +39,23 @@ if (DebugIndex == false)
   include_once "lib/pmt.php";
 
 
+  pmtParseURL();
+
+
+  /*
+  if (isset($pmtConf["general"]["authorized_only"]) &&
+      $pmtConf["general"]["authorized_only"] == true &&
+      !$user->loggedin &&
+      @$_POST["action"] != "login" &&
+       ($uri->seg[0] != "user" &&
+        $uri->seg[1] != "register"))
+  {
+    include(template("user/login"));
+    exit;
+  }
+  */
+
+
   /* OLD
   /// Login Libary
   include_once "lib/security.php";

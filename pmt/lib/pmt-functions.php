@@ -41,4 +41,25 @@ function Locale($param, $args=array())
   return $param;
 }
 
+function GetSetting($setting)
+{
+  global $CACHE;
+  global $pmtDB;
+
+  // sent back what has been prevoiusly saved
+  if (isset($CACHE['setting'][$setting]))
+    return $CACHE['setting'][$setting];
+
+  $tmpArr = $pmtDB->Query( "SELECT Setting, Value FROM " . PMT_TBL .
+                        " WHERE Setting='" . $pmtDB->Res($setting) . "' LIMIT 1;");
+  $ret = $pmtDB->FetchArray($tmpArr);
+
+  // Save into cache now
+  $CACHE["setting"][$setting] = $ret['value'];
+
+  return $ret['value'];
+
+}
+
+
 ?>

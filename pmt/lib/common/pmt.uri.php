@@ -34,6 +34,15 @@
  *
  */
 
+
+
+function PmtParseURL()
+{
+
+}
+
+
+
 class URI
 {
   public $seg = array();
@@ -120,8 +129,7 @@ class URI
 
     foreach($arrSegs as $key => $val)
       $segs[] = $val;
-
-    return implode("/", $segs[]);
+    return implode("/", $segs);
 
   }
 

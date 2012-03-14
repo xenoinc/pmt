@@ -63,20 +63,20 @@ function InstallPMT()
 
 /**
  * Insert the default database information
- * @param Database $db Database class passed in
+ * @param Database $pmtDB Database class passed in
  * @param string $dbcfg Database Config array
  * @param string $settings Settings array
  * @param string $admin Administrator name
  */
-function InsertDefaults(Database $db, $dbcfg, $settings, $admin)
+function InsertDefaults(Database $pmtDB, $dbcfg, $settings, $admin)
 {
   $pfx = $dbcfg["prefix"];
 
   /*
   // Plugin :: Textile
-  $db->Query( "INSERT INTO `".$pfx."PLUGINS` (`Name`, `Author`, `Website`, `Version`, `Enabled`, `Install_Sql`, `Uninstall_Sql`) VALUES " .
+  $pmtDB->Query( "INSERT INTO `".$pfx."PLUGINS` (`Name`, `Author`, `Website`, `Version`, `Enabled`, `Install_Sql`, `Uninstall_Sql`) VALUES " .
               "('Textile Formatting', 'Jack', 'http://unknown/', '1.0', 1, '', '');");
-  $tmp =$db->Res
+  $tmp =$pmtDB->Res
           ("
             global $textile;
             if(!isset($textile)) {
@@ -85,12 +85,12 @@ function InsertDefaults(Database $db, $dbcfg, $settings, $admin)
             }
             $text = $textile->TextileThis($text);"
           );
-	$db->Query( "INSERT INTO `" . $dbconf['prefix'] . "plugin_code` (`plugin_id`, `title`, `hook`, `code`, `execorder`, `enabled`) VALUES ".
-              " (" . $db->InsertId() . ", 'formattext', 'function_formattext', '" . $tmp . "', 0, 1);");
+	$pmtDB->Query( "INSERT INTO `" . $dbconf['prefix'] . "plugin_code` (`plugin_id`, `title`, `hook`, `code`, `execorder`, `enabled`) VALUES ".
+              " (" . $pmtDB->InsertId() . ", 'formattext', 'function_formattext', '" . $tmp . "', 0, 1);");
   */
 
-  //$db->Query("INSERT INTO ".$pfx."SETTINGS (`value`, `setting`) VALUES ('".$db->Res($settings["title"])."', 'title';" );
-  $db->Query("UPDATE ".$pfx."SETTINGS SET VALUE='".$db->Res($settings["title"])."' WHERE setting='title';" );
+  //$pmtDB->Query("INSERT INTO ".$pfx."SETTINGS (`value`, `setting`) VALUES ('".$pmtDB->Res($settings["title"])."', 'title';" );
+  $pmtDB->Query("UPDATE ".$pfx."SETTINGS SET VALUE='".$pmtDB->Res($settings["title"])."' WHERE setting='title';" );
 
 }
 

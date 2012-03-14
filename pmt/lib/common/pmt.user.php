@@ -49,29 +49,29 @@ class User {
      * 1. Check if user cookie is set
      * 2. Set user group
      */
-    global $db;
+    global $pmtDB;
 
     if(!isset($_COOKIE["xipmt_user"])) $_COOKIE["xipmt_user"] = "";
     if(!isset($_COOKIE["xipmt_hash"])) $_COOKIE["xipmt_hash"] = "";
 
     $tmp =
-        "SELECT User_Id, User_Name, Name, Group_Id FROM ".TBL_PREFIX."USER WHERE " .
-        "User_Name='" . $db->es($_COOKIE['xipmt_user']) . "' AND " .
-        "Session_Hash='" . $db->es($_COOKIE['xipmt_hash']) . "' LIMIT 1;";
-    $q = $db->Query($tmp);
-    if($db->NumRows($q))
+        "SELECT User_Id, User_Name, Name, Group_Id FROM ".PMT_TBL."USER WHERE " .
+        "User_Name='" . $pmtDB->es($_COOKIE['xipmt_user']) . "' AND " .
+        "Session_Hash='" . $pmtDB->es($_COOKIE['xipmt_hash']) . "' LIMIT 1;";
+    $q = $pmtDB->Query($tmp);
+    if($pmtDB->NumRows($q))
     {
       // We're logged in still
-      $this->userInfo = $db->FetchArray(query);
+      $this->userInfo = $pmtDB->FetchArray(query);
       $this->online = true;
     }
 
     // TOD: Finish Group setup
     // Get user Group Info (Anon or Logged in)
     $tmp =
-        "SELECT * FROM ".TBL_PREFIX."USER_GROUP WHERE " .
+        "SELECT * FROM ".PMT_TBL."USER_GROUP WHERE " .
         "Group_Id='" . $this->userInfo['groupid'] . "' LIMIT 1";
-    $this->group = $db->QueryFirst($tmp);
+    $this->group = $pmtDB->QueryFirst($tmp);
 
     // TODO: Setup user SystemHook
     //($hook = SystemHook::Hook("User_Construction")) ? eval($hook) : false;
@@ -117,13 +117,13 @@ class User {
   public function NewUser($nfo)
   {
     $arrErr = array();
-    global $db;
+    global $pmtDB;
 
     // Test for errors
     $q =
-      "SELECT User_Name FROM ".TBL_PREFIX."USER WHERE " .
-      "User_Name='".$db->EscapeString($nfo['username'])."' LIMIT 1;";
-    if($db->NumRows($db->Query($q)))
+      "SELECT User_Name FROM ".PMT_TBL."USER WHERE " .
+      "User_Name='".$pmtDB->EscapeString($nfo['username'])."' LIMIT 1;";
+    if($pmtDB->NumRows($pmtDB->Query($q)))
       $arrErr["Username"] = Locale("error_username_taken");
 
     if(empty($nfo["password"]))                 $arrErr["password"]   = "password empty";
@@ -152,14 +152,14 @@ class User {
     // TODO: REMOVE THIS TEST USER!!
     //$colm = "User_Name, Password, Email, Name";
     //$vals = "'admin', 'admin', 'test@email.com', 'Test User'";
-    $db->query("INSERT INTO ".TBL_PREFIX."USER ($fields) VALUES($values)");
+    $pmtDB->query("INSERT INTO ".PMT_TBL."USER ($fields) VALUES($values)");
 
     return true;
   }
 
   public function GetInfo($userId)
   {
-    global $db;
+    global $pmtDB;
 
   }
 

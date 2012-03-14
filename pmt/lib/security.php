@@ -13,7 +13,7 @@ class pmtSecurity
 
   public function __construct()
   {
-    global $db;
+    global $pmtDB;
     
     // 1. Check for Cookies and if they are a valid user
     

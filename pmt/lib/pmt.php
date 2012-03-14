@@ -40,6 +40,8 @@ if(!file_exists(PMT_PATH."lib/config.php"))
 /* Step 2 - Minor Init */
 // 1) set breadcrumbs
 // 2) strip magic quotes
+$CACHE = array("setting"=>array());
+$BREADCRUMB = array();
 
 
 /* Step 3 - Include the required classes */
@@ -63,13 +65,16 @@ require(PMT_PATH."lib/config.php");             // Configuration Script
  */
 
 // Add error handling to ensure that $pmtConf[][] is configured
-$pmtDb = new Database($pmtConf["db"]["server"],
+$pmtDB = new Database($pmtConf["db"]["server"],
                       $pmtConf["db"]["user"],
                       $pmtConf["db"]["pass"],
                       $pmtConf["db"]["dbname"]);
-define("TBL_PREFIX", $pmtConf["db"]["prefix"]);     // This may be removed
+define("PMT_TBL", $pmtConf["db"]["prefix"]);     // This may be removed
 
 $user = new User;
+$uri = new URI;
+
+
 
 /* Step 5) Parse the URL path
  * Possible Paths:
@@ -83,8 +88,6 @@ global $_product, $_user, $_customer;
 global $_project, $_prjwiki, $_prjTicket, $_prjBug, $prjTask, $_prjReport,
                   $_prjRoadmap, $_prjMilestone, $_prjSource, $_prjTimeline;
 */
-
-pmtGetURL();
 
 
 
