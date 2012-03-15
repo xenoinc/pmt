@@ -37,9 +37,7 @@ if (DebugIndex == false)
   // print("path: " . PMT_PATH);
 
   include_once "lib/pmt.php";
-
-
-  pmtParseURL();
+  PmtParseURL();
 
 
   /*

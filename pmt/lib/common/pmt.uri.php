@@ -35,14 +35,6 @@
  */
 
 
-
-function PmtParseURL()
-{
-
-}
-
-
-
 class URI
 {
   public $seg = array();

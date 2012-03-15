@@ -20,6 +20,40 @@
 
 
 /**
+ * GetSetting
+ * Get system setting
+ * @global array $CACHE Session cached values
+ * @global string $pmtDB Database class
+ * @param string $setting Setting name
+ * @return string Setting Value
+ */
+function GetSetting($setting)
+{
+  /** Setting     Value
+   *  theme       <theme-name>
+   *
+   */
+
+  global $CACHE;
+  global $pmtDB;
+
+  // sent back what has been prevoiusly saved
+  if (isset($CACHE['setting'][$setting]))
+    return $CACHE['setting'][$setting];
+
+  $tmpArr = $pmtDB->Query("SELECT Setting, Value FROM " . PMT_TBL .
+                          " WHERE Setting='" . $pmtDB->Res($setting) . "' LIMIT 1;");
+  $ret = $pmtDB->FetchArray($tmpArr);
+
+  // Save into cache now
+  $CACHE["setting"][$setting] = $ret['value'];
+
+  return $ret['value'];
+
+}
+
+
+/**
  * Locale Lookup
  * Looks up the string set for the systems set language
  * @global string $lang System language type
@@ -40,26 +74,5 @@ function Locale($param, $args=array())
 
   return $param;
 }
-
-function GetSetting($setting)
-{
-  global $CACHE;
-  global $pmtDB;
-
-  // sent back what has been prevoiusly saved
-  if (isset($CACHE['setting'][$setting]))
-    return $CACHE['setting'][$setting];
-
-  $tmpArr = $pmtDB->Query( "SELECT Setting, Value FROM " . PMT_TBL .
-                        " WHERE Setting='" . $pmtDB->Res($setting) . "' LIMIT 1;");
-  $ret = $pmtDB->FetchArray($tmpArr);
-
-  // Save into cache now
-  $CACHE["setting"][$setting] = $ret['value'];
-
-  return $ret['value'];
-
-}
-
 
 ?>
