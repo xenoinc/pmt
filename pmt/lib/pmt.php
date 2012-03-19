@@ -12,6 +12,7 @@
  *
  * To Do:
  * [ ] Handle Plugins (Milestone 0.5)
+ * [ ] Include langauge pack (Milestone 0.5)
  *
  * Change Log:
  * [2012-0112] - Initial Creation
@@ -29,8 +30,8 @@ define("PMT_VER",$pmt_version);
 // ii) Setup debugging
 require "phpConsole.php";
 PhpConsole::start(true, true, dirname(__FILE__));
-if (DebugMode == true)
-  debug("Debug Mode ON!");
+//if (DebugMode == true)
+//  debug("Debug Mode ON!");
 
 // iii) no config.php? then goto installer
 if(!file_exists(PMT_PATH."lib/config.php"))
@@ -52,10 +53,12 @@ $BREADCRUMB = array();
 require(PMT_PATH."lib/common/pmt.db.php");      // Database Class
 require(PMT_PATH."lib/common/pmt.user.php");
 require(PMT_PATH."lib/common/pmt.uri.php");     // URI Parsing class
+require(PMT_PATH."lib/pmt-functions.php");      // Common functions in system
 
 // Since the system is "configured" include the class now
 require(PMT_PATH."lib/config.php");             // Configuration Script
 //require(PMT_PATH."lib/pmt-functions.php");      // General functions used all over
+
 
 /* Step 4) - Initialize the classes
  * 1. Connect to database
@@ -73,15 +76,12 @@ define("PMT_TBL", $pmtConf["db"]["prefix"]);     // This may be removed
 $user = new User;
 $uri = new URI;
 
+// undefined GetSetting
 define("THEME", $uri->Anchor("lib/themes", GetSetting("theme"))); // Set theme
-require(PMT_PATH."lib/lang/" . GetSetting("lang"));   // Setup language
 
+/* Include language pack (v0.5) */
+// require(PMT_PATH."lib/lang/" . GetSetting("lang"));   // Setup language
 
-/*
-global $_product, $_user, $_customer;
-global $_project, $_prjwiki, $_prjTicket, $_prjBug, $prjTask, $_prjReport,
-                  $_prjRoadmap, $_prjMilestone, $_prjSource, $_prjTimeline;
-*/
 
 
 function PmtParseURL()
@@ -96,7 +96,64 @@ function PmtParseURL()
   * /admin/                      System admin page
   */
 
-  
+  global $uri;
+  print("<small>" );  print_r($uri); print("</small>");
+  Print("<hr>");
+
+
+  if (count($uri->seg) == 0)
+    $uRoot = "";
+  else
+    $uRoot = $uri->seg[0];
+
+  pmtDebug("uri.seg[0]: '" . $uRoot . "'");
+
+  switch($uRoot)
+  {
+    case '':
+      print("Show Dashboard");
+
+      break;
+
+    case 'project':
+    case 'p':
+      print("Show Development Projects");
+
+      /* [1] - Project Name - http://pmt/project/<prj-name>
+       *
+       *
+       */
+
+
+      break;
+
+    case 'product':
+      print("Show Products");
+
+      break;
+
+    case 'user':
+      print("Show User Page");
+
+      break;
+
+    case 'customer':
+      print("Show Customer");
+
+      break;
+
+
+    case 'ticket':
+      // create general ticket
+      print("Create new general ticket");
+      break;
+
+
+    default:
+      print("<b>uri:</b> <i>Unknown directive:</i> '". $uRoot ."'");
+
+      break;
+  }
 
 }
 

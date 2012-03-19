@@ -47,7 +47,7 @@ class URI
   public function __construct()
   {
     // Get root
-    $this->root = str_replace($this-file, "", $_SERVER["SCRIPT_NAME"]);
+    $this->root = str_replace($this->file, "", $_SERVER["SCRIPT_NAME"]);
 
     // Get request without query string
     $req = explode("?", $_SERVER["REQUEST_URI"]);
@@ -105,7 +105,7 @@ class URI
             str_replace($this->file, "", $_SERVER["SCRIPT_NAME"])
             : $_SERVER["SCRIPT_NAME"] . "/"
            );
-    return $path . $this->ArrayToURI($arrSegments);
+    return $pth . $this->ArrayToURI($arrSegments);
   }
 
   /**

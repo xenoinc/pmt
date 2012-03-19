@@ -6,8 +6,8 @@
 #   print_r($_GET);
 #
 # Change Log
-# [2012-01-18]
-#   + Rewrote whole HTAccess file (djs)
+# [2012-03-19] * Complete rewrite
+# [2012-01-18] + Rewrote whole HTAccess file (djs)
 #####
 
 ##########################
@@ -18,32 +18,57 @@
 # From: http://pmt/prog/555/ticket/2
 # TO:   http://pmt/?prog=555&ticket=2
 ######################
-
-
-Options +FollowSymLinks
-RewriteEngine on
-
-RewriteCond %{REQUEST_FILENAME} !-d
-RewriteCond %{REQUEST_FILENAME} !-f
+#
+#Options +FollowSymLinks
+#RewriteEngine on
+#
+#RewriteCond %{REQUEST_FILENAME} !-d
+#RewriteCond %{REQUEST_FILENAME} !-f
 # RewriteRule ^(.*)$ index.php?PAGE=$1 [L,QSA]      # Sample "last"
-
+#
 # Custom project rule
-#RewriteRule ^project/(.*)/ticket/(.*) index.php?project=$1&ticket=$2
-RewriteRule ^project/(.*) index.php?project=$1
-
+#RewriteRule ^project/(.*) index.php?project=$1
+#
 # Custom user rule
-RewriteRule ^user/(.*) index.php?user=$1
+#RewriteRule ^user/(.*) index.php?user=$1
+########################
+#-----------------------------------------------------------------------
+# RewriteCond
+# -s  (is regular file, with size)
+#     Treats the TestString as a pathname and tests whether or not it
+#     exists, and is a regular file with size greater than zero.
+# -l  (is symbolic link)
+#     Treats the TestString as a pathname and tests whether or not it
+#     exists, and is a symbolic link. May also use the bash convention
+#     of -L or -h if there's a possibility of confusion such as when
+#     using the -lt or -le tests.
+# -d  (is directory)
+#     Treats the TestString as a pathname and tests whether or not it
+#     exists, and is a directory.
+# -f  (is regular file)
+#     Treats the TestString as a pathname and tests whether or not it
+#     exists, and is a regular file.
+#-----------------------------------------------------------------------
+# RewriteRule
+# -   (dash)
+#     A dash indicates that no substitution should be performed (the
+#     existing path is passed through untouched). This is used when a
+#     flag (see below) needs to be applied without changing the path.
+# NC  This means no-case and says that the condition should not be
+#     case sensitive.
+# L   This means it is the last rule that should be processed.
+#     Therefore, if this line is executed, everything else following in
+#     the .htaccess file will be skipped.
+# ^   In a regular expression, this means the beginning of the line.
+# $   In a regular expression, this means the end of the line.
+#(.*) In a regular expression, .* means to match anything.  The () around
+#     the expression is so you can use the match later using variables
+#     like $1, $2, etc.
+#-----------------------------------------------------------------------
 
-###############################
-## Removed until a better HTAccess is created
-## for now, use direct connect.
-#
-# Installer
-#RewriteRule ^install /install/index.php
-###############################
-
-#
-## Removed 2012-01-30 - because installer breaks
-##
-# Final decision
-#RewriteRule .* index.php
+RewriteEngine On
+RewriteCond %{REQUEST_FILENAME} -s [OR]
+RewriteCond %{REQUEST_FILENAME} -l [OR]
+RewriteCond %{REQUEST_FILENAME} -d
+RewriteRule ^.*$ - [NC,L]
+RewriteRule ^.*$ index.php [NC,L]

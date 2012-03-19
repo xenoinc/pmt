@@ -113,7 +113,7 @@ class Database {
    * Escape the string
    * @deprecated
    */
-  public function EscapeString()
+  public function EscapeString($string)
   {
     return mysql_escape_string($string);
   }
@@ -124,7 +124,7 @@ class Database {
    */
   public function es($string)
   {
-    return $this->escapestring($string);
+    return $this->EscapeString($string);
   }
 
 

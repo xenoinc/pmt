@@ -41,7 +41,7 @@ function GetSetting($setting)
   if (isset($CACHE['setting'][$setting]))
     return $CACHE['setting'][$setting];
 
-  $tmpArr = $pmtDB->Query("SELECT Setting, Value FROM " . PMT_TBL .
+  $tmpArr = $pmtDB->Query("SELECT Setting, Value FROM " . PMT_TBL . "SETTINGS" .
                           " WHERE Setting='" . $pmtDB->Res($setting) . "' LIMIT 1;");
   $ret = $pmtDB->FetchArray($tmpArr);
 
@@ -73,6 +73,12 @@ function Locale($param, $args=array())
   // TODO: check if $args is an array to use the function arguments
 
   return $param;
+}
+
+function pmtDebug($buff)
+{
+  if (DebugMode == true)
+    debug($buff);
 }
 
 ?>
