@@ -119,11 +119,21 @@ function PmtParseURL()
     case 'p':
       print("Show Development Projects");
 
-      /* [1] - Project Name - http://pmt/project/<prj-name>
-       *
-       *
+      /*  [1]         Project Stats / Selection   http://pmt/project/) or (http://pmt/p/)
+       *    [2]       Project view                ./p/<prj>/
+       *      [3]     Wiki Browser                ./p/../wiki/
+       *        [4a]  Wiki page viewer            ./p/../wiki/about
+       *        [4b]  Edit Wiki page              ./p/../wiki/about?edit
+       *      [3]     Ticket New                  ./p/../ticket
+       *        [4]   Ticket View                 ./p/../ticket/<id>
+       *          [5] Ticket Edit                 ./p/../ticket/<id>/edit
+       *      [3]     New Bug                     ./p/../bug
+       *        [4]   Bug View                    ./p/../bug/<id>
+       *          [5] Bug Edit                    ./p/../bug/<id>/edit
+       *      [3]     New Task                    ./p/../task
+       *        [4]   Task View                   ./p/../Task/<id>
+       *          [5] Task Edit                   ./p/../Task/<id>/edit
        */
-
 
       break;
 
@@ -139,6 +149,16 @@ function PmtParseURL()
 
     case 'customer':
       print("Show Customer");
+
+      /*  [1]         Customer Overview           http://pmt/customer/
+       *    [2]       View Customer Details       ./c/<custmr-id>
+       *      [3]     (redirect to [2]            ./c/../contact/
+       *        [4]   Contact Viewer              ./c/../contact/<id>
+       *          [5] Contact Edit                ./c/../contact/<id>/edit
+       *      [3a]    Edit Customer Details       ./c/../edit
+       *      [3c]    Tasks                       ./c/../task/
+       *        [4]   Task Viewer                 ./c/../task/<id>
+       */
 
       break;
 
