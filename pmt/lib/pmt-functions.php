@@ -126,11 +126,15 @@ function LoadModule($module, $arrParams)
 {
   /* TODO:
    * [ ] Use use User setting first, then check System Setting
-   * 
+   *
    */
   // if (count($arrParams) == 0)
 
-  $theme = GetSetting();
+  $theme = GetSetting("theme");
+  if (file_exists(PMT_PATH . "/lib/themes/" . $theme))
+  {
+
+  }
 
 }
 
