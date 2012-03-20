@@ -10,6 +10,7 @@
  *   User tables.
  *
  * Change Log:
+ * 2012-0320  + (djs) Added table, _USER_SETTINGS
  * 2012-0309  + (djs) added Changed USER_GROUP to GROUP and created new USER_GROUP
  * 2012-0306  * (djs) fixed error 'unsigned int' to 'int unsigned'
  * 2012-0305  * (djs) Changed BIGINT(20) to UNSIGNED INT
@@ -53,13 +54,30 @@ CREATE TABLE IF NOT EXISTS `TBLPMT_USER`
   primary key (`User_Id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
+
+/*
+  User Settings
+  Purpose:
+    This table will override default system settings
+  Version:  0.2.0
+  Created:  2012-03-20
+*/
+create table if not exists `TBLPMT_USER_SETTINGS`
+(
+  `User_Id` INT UNSIGNED NOT NULL,
+  `Setting` varchar(255) collate utf8_unicode_ci not null,
+  `Value`   varchar(128) collate utf8_unicode_ci not null,
+  primary key (`User_Id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+
 /*
   User Inforamtion Details
   Purpose:
     Contains the individual user data such as:
     Phone(1,..), Address, Email, Birthday
-  Version 0.2.0
-  Last Update:  2010-11-07
+  Version:  0.2.0
+  Created:  2010-11-07
 */
 CREATE TABLE IF NOT EXISTS `TBLPMT_USER_INFO`
 (
@@ -72,7 +90,7 @@ CREATE TABLE IF NOT EXISTS `TBLPMT_USER_INFO`
 
 /*
   User Cookie info
-  Version 0.2.1
+  Version:  0.2.1
   Created:  2010-11-06
   * 2012-0305 - Changed User_Name to User_Id
 */
@@ -89,7 +107,7 @@ CREATE TABLE IF NOT EXISTS `TBLPMT_USER_AUTH_COOKIE`
 /*
   Groups and Descriptions
   List the different "available" groups
-  Version 0.2.1
+  Version:  0.2.1
   Created:  2010-11-07
   Priv:
     SELECT p.priv_name from
@@ -140,8 +158,8 @@ CREATE TABLE IF NOT EXISTS `TBLPMT_S_GROUP_PERMISSION`
 /*
   List of users within a group. Because users
   can be apart of more than one group.
-  Version 0.2.0
-  Created: 2012-03-09
+  Version:  0.2.0
+  Created:  2012-03-09
   ** NOT USED YET (v1.5)
 */
 CREATE TABLE `TBLPMT_USER_GROUP`
@@ -155,8 +173,8 @@ CREATE TABLE `TBLPMT_USER_GROUP`
 /*
   User's project access level
   Workflow:  USER > TBL_USER_PRODUCT_PRIV > TBL_GROUP
-  Version 0.2
-  Last Update:  2010-11-07
+  Version:  0.2
+  Created:  2010-11-07
 */
 CREATE TABLE IF NOT EXISTS `TBLPMT_USER_PROJECT_PRIV`
 (

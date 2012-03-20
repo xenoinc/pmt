@@ -13,7 +13,7 @@
  * TO DO:
  *  [ ] Locale - Add functionaly for arrays
  *  [ ] Locale - Add SystemHook "function_locale"
- *
+ *  [ ] GetUserSetting - Get user & setting
  * Change Log:
  *
  */
@@ -31,6 +31,7 @@ function GetSetting($setting)
 {
   /** Setting     Value
    *  theme       <theme-name>
+   *  locale      <lang-code>   i.e. "en, en-gb, de, ..."
    *
    */
 
@@ -50,6 +51,41 @@ function GetSetting($setting)
 
   return $ret['value'];
 
+}
+
+/**
+ * GetUserSetting (NOT IMPLEMENTED)
+ * Get user's custom system setting
+ * @global array $CACHE Session cached values
+ * @global string $pmtDB Database class
+ * @param string $setting Setting name
+ * @return string Setting Value
+ */
+function GetUserSetting($setting)
+{
+  /** Setting     Value
+   *  theme       <theme-name>
+   *  locale      <lang-code>   i.e. "en, en-gb, de, ..."
+   *
+   */
+  /*
+  global $CACHE;
+  global $pmtDB;
+
+  // sent back what has been prevoiusly saved
+  if (isset($CACHE['setting'][$setting]))
+    return $CACHE['setting'][$setting];
+
+  $tmpArr = $pmtDB->Query("SELECT Setting, Value FROM " . PMT_TBL . "SETTINGS" .
+                          " WHERE Setting='" . $pmtDB->Res($setting) . "' LIMIT 1;");
+  $ret = $pmtDB->FetchArray($tmpArr);
+
+  // Save into cache now
+  $CACHE["setting"][$setting] = $ret['value'];
+
+  return $ret['value'];
+  */
+  return "";
 }
 
 
@@ -79,6 +115,23 @@ function pmtDebug($buff)
 {
   if (DebugMode == true)
     debug($buff);
+}
+
+/**
+ * Load Module - Node extended
+ * @param string $module Template Node (project, user, customer, ..)
+ * @param array $arrParams Module Parameter Array
+ */
+function LoadModule($module, $arrParams)
+{
+  /* TODO:
+   * [ ] Use use User setting first, then check System Setting
+   * 
+   */
+  // if (count($arrParams) == 0)
+
+  $theme = GetSetting();
+
 }
 
 ?>

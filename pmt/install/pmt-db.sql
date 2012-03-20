@@ -32,7 +32,7 @@ create table if not exists `TBLPMT_SETTINGS`
 (
   `Setting` varchar(255) collate utf8_unicode_ci not null,
   `Value`   longtext collate utf8_unicode_ci not null,
-  primary key (`setting`)
+  primary key (`Setting`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 /*

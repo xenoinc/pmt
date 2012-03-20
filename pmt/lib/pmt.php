@@ -97,21 +97,28 @@ function PmtParseURL()
   */
 
   global $uri;
-  print("<small>" );  print_r($uri); print("</small>");
-  Print("<hr>");
+  $param = array();
 
+  // Cleanup
+  if (count($uri->seg) == 0) $uRoot = ""; else $uRoot = $uri->seg[0];
 
-  if (count($uri->seg) == 0)
-    $uRoot = "";
-  else
-    $uRoot = $uri->seg[0];
+  /* *************** */
 
+  // Debugging
+  print("<small>" );
+  print("<p><b>Segments:</b> <br />"); print_r($uri->seg); print("</p>");
+  print("<p><b>Full:</b><br />"); print_r($uri); print("</p>");
+  print("</small><hr>");
   pmtDebug("uri.seg[0]: '" . $uRoot . "'");
+
+
 
   switch($uRoot)
   {
     case '':
       print("Show Dashboard");
+
+      LoadModule("main", $param);
 
       break;
 
@@ -145,6 +152,11 @@ function PmtParseURL()
     case 'user':
       print("Show User Page");
 
+      /** Admin Only
+       *  [1]         User Overview               http://pmt/user/
+       *    [2]       User details & stats        ./user/<user-name>  (min-length=4)
+       *    [2]       New User                    ./user/new
+       */
       break;
 
     case 'customer':
