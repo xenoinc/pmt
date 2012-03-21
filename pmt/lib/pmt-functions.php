@@ -133,7 +133,12 @@ function LoadModule($module, $arrParams)
   $theme = GetSetting("theme");
   if (file_exists(PMT_PATH . "/lib/themes/" . $theme))
   {
-
+    // use custom theme
+    
+  }
+  else
+  {
+    // using default
   }
 
 }

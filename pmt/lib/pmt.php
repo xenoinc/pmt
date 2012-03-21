@@ -97,7 +97,7 @@ function PmtParseURL()
   */
 
   global $uri;
-  $param = array();
+  //$param = array();
 
   // Cleanup
   if (count($uri->seg) == 0) $uRoot = ""; else $uRoot = $uri->seg[0];
@@ -126,6 +126,8 @@ function PmtParseURL()
     case 'p':
       print("Show Development Projects");
 
+      LoadModule("project", $param);
+
       /*  [1]         Project Stats / Selection   http://pmt/project/) or (http://pmt/p/)
        *    [2]       Project view                ./p/<prj>/
        *      [3]     Wiki Browser                ./p/../wiki/
@@ -147,10 +149,14 @@ function PmtParseURL()
     case 'product':
       print("Show Products");
 
+      //LoadModule("product", $param);
+
       break;
 
     case 'user':
       print("Show User Page");
+
+      //LoadModule("user", $param);
 
       /** Admin Only
        *  [1]         User Overview               http://pmt/user/
@@ -161,6 +167,8 @@ function PmtParseURL()
 
     case 'customer':
       print("Show Customer");
+
+      //LoadModule("customer", $param);
 
       /*  [1]         Customer Overview           http://pmt/customer/
        *    [2]       View Customer Details       ./c/<custmr-id>
@@ -178,6 +186,9 @@ function PmtParseURL()
     case 'ticket':
       // create general ticket
       print("Create new general ticket");
+
+      //LoadModule("ticket", $param);
+
       break;
 
 
