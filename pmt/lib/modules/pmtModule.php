@@ -10,7 +10,7 @@
  *  Interface to what modules must contain.
  *
  * Change Log:
- *
+ *  
  */
 
 /**
@@ -41,7 +41,17 @@ interface pmtModule
    */
   public function Toolbar();
 
+  /**
+   * Mini toolbar left aligned
+   * Can be used for module breadcrumbs
+   */
   public function MiniBarLeft();
+
+  /**
+   * Mini toolbar right aligned
+   * Can be used for module options and node settings
+   * i.e. Wiki: Edit, History, Remove, Rename
+   */
   public function MiniBarRight();
 
 }

@@ -62,14 +62,16 @@ global $PAGE_PATH;
       <!-- toolbar -->
       <?php print($PAGE_TOOLBAR); ?>
     </div>
+
+
     <div id="container">
-      <div id="minibar_left">
+      <div id="minibar_left" class="nav_left">
         <!-- breadcrumbs left -->
-        &nbsp; a
+        <?php print($PAGE_MINILEFT); ?>
       </div>
-      <div id="minibar_right">
+      <div id="minibar_right" class="nav_right">
         <!-- mini toolbar for module -->
-        &nbsp; b
+        <?php print($PAGE_MINIRIGHT); ?>
       </div>
 
       <div id="main">

@@ -36,23 +36,28 @@ class dashboard implements pmtModule
     // Get title from database setting
     $this->_title = "Dashboard" . "- " . "[PMT]";    // "Xeno Tracking System"
     $this->_toolbar = $this->GenerateToolbar();
-    $this->$_minileft = "&nbsp;";
-    $this->$_miniright = "&nbsp;";
-  }
-
-  public function PageData()
-  {
-    return "hello world";
+    $this->_minileft = $this->GenerateMiniLeft(); // "&nbsp; (test-left)";
+    $this->_miniright = $this->GenerateMiniRight();  // "&nbsp; (test-right)";
   }
 
   public function Title() { return $this->_title; }
-
   public function Toolbar() { return $this->_toolbar; }
-
-
   public function MiniBarLeft() { return $this->_minileft; }
-
   public function MiniBarRight() { return $this->_miniright; }
+
+  public function PageData()
+  {
+    $sample =  "<h1>Welcome to <b><i>xeno</i>PMT</b></h1>";
+    $sample .= "<p>This system is still under heavy development and is not ";
+    $sample .= "ready for live action use by any means. Soon enough you will ";
+    $sample .= "get to see what the future holds.  As the project develops the ";
+    $sample .= "user and engineering documentation will mature along with it.</p>";
+    $sample .= "<p>Sit tight and enjoy the ride!</p>";
+    $sample .= "<p>&nbsp;</p>";
+    $sample .= "<p>- Xeno Innovations, Inc. -</p>";
+
+    return $sample;
+  }
 
 
 
@@ -113,6 +118,24 @@ class dashboard implements pmtModule
     //pmtDebug("disp: " . $ret);
 
     return $ret;
+  }
+
+  private function GenerateMiniLeft()
+  {
+    $code = "<a class='first' href='/'>main</a>";
+    return $code;
+  }
+
+  private function GenerateMiniRight()
+  {
+    $code = "<ul>" .
+            "<li class='first'> 1st </li>" .
+            "<li> 2nd&nbsp; </li>" .
+            "<li class='last'> 3rd </li>" .
+            "</ul>";
+    //$code = "<ul><li class='last'> just one </li></ul>";
+
+    return $code;
   }
 
 }
