@@ -50,6 +50,7 @@ $pmtConf = array(
 	),
 	"general" => array(
 		"authorized_only" => false  // Allow access to public or auth-only
+  //, "title" => "Xeno Tracking System";
 	)
 );
 

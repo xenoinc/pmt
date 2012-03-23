@@ -1,7 +1,36 @@
+<?php
+
+/* * **********************************************************
+ * Copyright 2012 (C) Xeno Innovations, Inc.
+ * ALL RIGHTS RESERVED
+ * Author:       Damian Suess
+ * Document:     main
+ * Created Date: Mar 21, 2012
+ *
+ * Description:
+ *  This is a sample of the main dashboard "default" template
+ *  currently based upon Trac13 for its clean looks
+ *
+ * Change Log:
+ *
+ */
+
+// have a variable access the "project" class
+// which will handle all of the display features
+
+// page data to display
+global $PAGE_TITLE;
+global $PAGE_TOOLBAR;
+global $PAGE_METABAR;
+global $PAGE_HTDATA;
+global $PAGE_PATH;
+
+
+// require ("skin-fctn.php");
+?>
 <!--
   Copyright 2012 Xeno Innovations, Inc.
-  This is a sample of the main dashboard "default" template
-  currently based upon Trac13 for its clean looks
+
 -->
 <!DOCTYPE html
     PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
@@ -9,22 +38,30 @@
 
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
-    <?php themeHeader(); ?>
+    <meta content="text/html;charset=utf-8" http-equiv="content-type" />
+    <title><?php $PAGE_TITLE; ?></title>
+    <link type="text/css" href="<?php print($PAGE_PATH); ?>skin.css" rel="stylesheet" />
+
   </head>
   <body>
 
-    <div id="banner">
-      <div id="header">
+    <div id="header">
+      <div id="logo">
         <!-- logo -->
       </div>
-      <div id="headernav">
-        <!-- toolbar -->
+      <div id="metabar">
         <!-- (Login / View Profile), Account Settings, Logout -->
+        <?php print($PAGE_METABAR); ?>
       </div>
     </div>
-
-    <div id="content" class="<php? print($pageClassType); ?>">
-
+    <div id="mainbar" class="tbar">
+      <!-- toolbar -->
+      <?php print($PAGE_TOOLBAR); ?>
+    </div>
+    <div id="main">
+<?php
+  print($PAGE_HTDATA);
+?>
     </div>
 
     <div id="footer">

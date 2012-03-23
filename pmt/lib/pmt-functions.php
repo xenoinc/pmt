@@ -117,30 +117,5 @@ function pmtDebug($buff)
     debug($buff);
 }
 
-/**
- * Load Module - Node extended
- * @param string $module Template Node (project, user, customer, ..)
- * @param array $arrParams Module Parameter Array
- */
-function LoadModule($module, $arrParams)
-{
-  /* TODO:
-   * [ ] Use use User setting first, then check System Setting
-   *
-   */
-  // if (count($arrParams) == 0)
-
-  $theme = GetSetting("theme");
-  if (file_exists(PMT_PATH . "/lib/themes/" . $theme))
-  {
-    // use custom theme
-    
-  }
-  else
-  {
-    // using default
-  }
-
-}
 
 ?>

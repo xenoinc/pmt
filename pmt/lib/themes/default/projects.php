@@ -41,7 +41,9 @@
       <!-- toolbar -->
     </div>
     <div id="main">
-
+<?php
+  print($PMT_HTDATA);
+?>
     </div>
 
     <div id="footer">

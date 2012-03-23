@@ -54,6 +54,7 @@ require(PMT_PATH."lib/common/pmt.db.php");      // Database Class
 require(PMT_PATH."lib/common/pmt.user.php");
 require(PMT_PATH."lib/common/pmt.uri.php");     // URI Parsing class
 require(PMT_PATH."lib/pmt-functions.php");      // Common functions in system
+require(PMT_PATH."lib/modcontroller.php");      // module controller
 
 // Since the system is "configured" include the class now
 require(PMT_PATH."lib/config.php");             // Configuration Script
@@ -83,6 +84,12 @@ define("THEME", $uri->Anchor("lib/themes", GetSetting("theme"))); // Set theme
 // require(PMT_PATH."lib/lang/" . GetSetting("lang"));   // Setup language
 
 
+// Used to generate the body of our skin
+$PAGE_TITLE="";
+$PAGE_TOOLBAR="";
+$PAGE_METABAR="";
+$PAGE_HTDATA="";
+$PAGE_PATH="";
 
 function PmtParseURL()
 {
@@ -105,28 +112,30 @@ function PmtParseURL()
   /* *************** */
 
   // Debugging
-  print("<small>" );
-  print("<p><b>Segments:</b> <br />"); print_r($uri->seg); print("</p>");
-  print("<p><b>Full:</b><br />"); print_r($uri); print("</p>");
-  print("</small><hr>");
-  pmtDebug("uri.seg[0]: '" . $uRoot . "'");
+  /*
+    print("<small>" );
+    print("<p><b>Segments:</b> <br />"); print_r($uri->seg); print("</p>");
+    print("<p><b>Full:</b><br />"); print_r($uri); print("</p>");
+    print("</small><hr>");
+    //pmtDebug("uri.seg[0]: '" . $uRoot . "'");
+  */
 
 
 
   switch($uRoot)
   {
     case '':
-      print("Show Dashboard");
+      pmtDebug("Module: 'dashboard'");
 
-      LoadModule("main", $param);
+      LoadModule("dashboard", $uri->seg);
 
       break;
 
     case 'project':
     case 'p':
-      print("Show Development Projects");
+      pmtDebug("Module: 'project'");
 
-      LoadModule("project", $param);
+      LoadModule("project", $uri->seg);
 
       /*  [1]         Project Stats / Selection   http://pmt/project/) or (http://pmt/p/)
        *    [2]       Project view                ./p/<prj>/
@@ -147,16 +156,16 @@ function PmtParseURL()
       break;
 
     case 'product':
-      print("Show Products");
+      pmtDebug("Module: 'product'");
 
-      //LoadModule("product", $param);
+      //LoadModule("product", $uri->seg);
 
       break;
 
     case 'user':
-      print("Show User Page");
+      //pmtDebug("Show User Page");
 
-      //LoadModule("user", $param);
+      //LoadModule("user", $uri->seg);
 
       /** Admin Only
        *  [1]         User Overview               http://pmt/user/
@@ -166,9 +175,9 @@ function PmtParseURL()
       break;
 
     case 'customer':
-      print("Show Customer");
+      pmtDebug("Module: 'customer'");
 
-      //LoadModule("customer", $param);
+      //LoadModule("customer", $uri->seg);
 
       /*  [1]         Customer Overview           http://pmt/customer/
        *    [2]       View Customer Details       ./c/<custmr-id>
@@ -185,15 +194,17 @@ function PmtParseURL()
 
     case 'ticket':
       // create general ticket
-      print("Create new general ticket");
+      pmtDebug("Module: 'ticket'");
 
-      //LoadModule("ticket", $param);
+      //LoadModule("ticket", $uri->seg);
 
       break;
 
 
     default:
-      print("<b>uri:</b> <i>Unknown directive:</i> '". $uRoot ."'");
+      pmtDebug("Module: <Unknown> '". $uRoot ."'");
+
+      LoadModule("dashboard", $uri->seg);
 
       break;
   }

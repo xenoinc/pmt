@@ -1,0 +1,70 @@
+/*
+  Document   : skin.css
+  Created on : Mar 22, 2012, 6:24:41 PM
+  Author     : Damian Suess
+  Description:
+    Default theme style sheet
+*/
+
+#header
+{
+
+}
+
+#logo
+{
+
+}
+
+#metabar
+{
+
+}
+
+#mainbar
+{
+  border: 1px solid #e4e4e4;
+  border-radius: 0.5em 0.5em 0.5em 0.5em;
+  box-shadow: 0 0.5em 1.5em #EEEEEE;
+  font: 10px verdana, 'bitstream Vera Sans', helvetica, arial, sans-serif;
+  margin: 0.66em 0 0.33em;
+}
+
+body
+{
+  background: none repeat scroll 0 0 #FFFFFF;
+  color: #000000;
+  margin: 10px;
+  padding: 0;
+  font: 13px Verdana,Arial,'Bitstream Vera Sans',Helvetica,sans-serif;
+}
+
+/* ** Navigation ** */
+.tbar h2, .nav hr {display: none;}
+.tbar ul
+{
+  font-size: 10px;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  text-align: left;
+}
+
+.tbar li
+{
+  border-left: 1px solid #d7d7d7;
+  display: inline-block;
+  padding: 0 0.75em;
+  white-space: nowrap;
+}
+/* we're left aligned, don't show first boarder */
+.tbar li.first { border-left:none; }
+
+/* use if right aligned */ /*
+.tbar li.last{ border-right:none; }
+*/
+
+/* ** Main Window ** */
+
+
+
