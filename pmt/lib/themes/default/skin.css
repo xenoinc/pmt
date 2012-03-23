@@ -21,14 +21,6 @@
 
 }
 
-#mainbar
-{
-  border: 1px solid #e4e4e4;
-  border-radius: 0.5em 0.5em 0.5em 0.5em;
-  box-shadow: 0 0.5em 1.5em #EEEEEE;
-  font: 10px verdana, 'bitstream Vera Sans', helvetica, arial, sans-serif;
-  margin: 0.66em 0 0.33em;
-}
 
 body
 {
@@ -39,12 +31,45 @@ body
   font: 13px Verdana,Arial,'Bitstream Vera Sans',Helvetica,sans-serif;
 }
 
-/* ** Navigation ** */
+/* ** Navigation - Main Toolbar ** */
+
+#mainbar
+{
+  border: 1px solid #e4e4e4;
+  border-radius: 0.5em 0.5em 0.5em 0.5em;
+  box-shadow: 0 0.5em 1.5em #EEEEEE;
+  font: 10px verdana, 'bitstream Vera Sans', helvetica, arial, sans-serif;
+  margin: 0.66em 0 0.33em;
+}
+
+#mainbar .active *:link,
+#mainbar .active *:visited
+{
+  background: url("gfx/topbar_gradient2.png")
+    repeat-x scroll 0 0 #000000;
+  color: #eeeeee;
+  fong-weight: bold;
+}
+
+#mainbar .first,
+#mainbar .first *:link {
+  border-bottom-left-radius: 0.5em;
+  border-top-left-radius: 0.5em;
+}
+
+#mainbar *:link,
+#mainbar *:visited {
+    border-bottom: medium none;
+    box-shadow: 0 0.1em 0.3em 0 #999999;
+    color: #000000;
+    padding: 0.3em 20px;
+}
+
 .tbar h2, .nav hr {display: none;}
 .tbar ul
 {
   font-size: 10px;
-  list-style: none;
+  list-style: none outside none;
   margin: 0;
   padding: 0;
   text-align: left;
@@ -63,6 +88,8 @@ body
 /* use if right aligned */ /*
 .tbar li.last{ border-right:none; }
 */
+
+
 
 /* ** Main Window ** */
 
