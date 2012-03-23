@@ -6,22 +6,8 @@
     Default theme style sheet
 */
 
-#header
-{
 
-}
-
-#logo
-{
-
-}
-
-#metabar
-{
-
-}
-
-
+/* ** Main body ** */
 body
 {
   background: none repeat scroll 0 0 #FFFFFF;
@@ -31,8 +17,50 @@ body
   font: 13px Verdana,Arial,'Bitstream Vera Sans',Helvetica,sans-serif;
 }
 
-/* ** Navigation - Main Toolbar ** */
 
+
+/* ** Header ** */
+#header
+{ }
+
+/* Logo */
+#logo hr { display: none }
+#logo h1 { margin: 1.5em 0 -1.5em; padding: 0 }
+#logo img { border: none; margin: 0 0 /* -3em */ }
+#logo *:link, #logo *:link:hover,
+#logo *:visited, #logo *:visited:hover
+{
+  background: none repeat scroll 0 0 transparent;
+  border: medium none;
+  color: #555555;
+  margin-bottom: 2px;
+  padding: 0;
+}
+
+/* ** Navigation - Meta Toolbar ** */
+#metabar { padding-top: .3em; }
+
+.metanav h2,
+.metanav hr { display: none }
+
+.metanav ul {
+ font-size: 10px;
+ list-style: none;
+ margin: 0;
+ padding: 0;
+ text-align: right;
+}
+.metanav li {
+ border-right: 1px solid #d7d7d7;
+ display: inline-block;
+ padding: 0 .75em;
+ white-space: nowrap;
+}
+.metanav li.last { border-right: none }
+
+
+
+/* ** Navigation - Main Toolbar ** */
 #mainbar
 {
   border: 1px solid #e4e4e4;
@@ -94,4 +122,86 @@ body
 /* ** Main Window ** */
 
 
+#main {
+ position: relative; /* reference for absolute positioning of children */
+ margin: .3em auto;
+ padding: .5em 1em;
+ border: 1px solid #e4e4e4;
+ border-radius: .5em;
+ box-shadow: 0 .5em 1.5em #eee;
+}
+/*
+#main .paging { margin: 0 0 2em; padding: .5em 0 0;
+  font-size: 85%; line-height: 2em; text-align: center;
+}
+#main .paging .current {
+  padding: .1em .3em;
+  border: 1px solid #333;
+  background: #999; color: #fff;
+}
 
+#main .paging :link,
+#main .paging :visited {
+  padding: .1em .3em;
+  border: 1px solid #666;
+  background: transparent; color: #666;
+}
+#main .paging :link:hover,
+#main .paging :visited:hover {
+  background: #999; color: #fff;  border-color: #333;
+}
+#main .paging .previous a,
+#main .paging .next a {
+  font-size: 150%; font-weight: bold; border: none;
+}
+#main .paging .previous a:hover,
+#main .paging .next a:hover {
+  background: transparent; color: #666;
+}
+
+#main h2 .numresults { color: #666; font-size: 90%; }
+
+*/
+
+
+
+/* ** Breadcrubms ** */
+
+
+/* left aligned */
+#minibar_left {
+ font-size: 10px;
+ float: left;
+ padding: .4em 0;
+}
+#minibar_left :link,
+#minibar_left :visited { margin: 0 .2em }
+
+#minibar_left .first:link,
+#minibar_left .first:visited { color: #998 }
+#minibar_left .sep { color: #666; padding: 0 .1em }
+#minibar_left .pathentry { float: left }
+
+/* right aligned */
+#minibar_right {
+ font-size: 10px;
+ min-height: 1em;
+ padding: .4em 0;
+}
+#minibar_right li ul {
+ background: #f7f7f7;
+ color: #ccc;
+ border: 1px solid;
+ padding: 0;
+ display: inline;
+ margin: 0;
+}
+#minibar_right li li { padding: 0; }
+#minibar_right li li :link,
+#minibar_right li li :visited { padding: 0 1em }
+
+#minibar_right li li :link:hover,
+#minibar_right li li :visited:hover {
+  background: #bba;
+  color: #fff;
+}

@@ -85,11 +85,16 @@ define("THEME", $uri->Anchor("lib/themes", GetSetting("theme"))); // Set theme
 
 
 // Used to generate the body of our skin
-$PAGE_TITLE="";
-$PAGE_TOOLBAR="";
-$PAGE_METABAR="";
-$PAGE_HTDATA="";
-$PAGE_PATH="";
+
+
+$PAGE_TITLE="";     // Page title
+$PAGE_LOGO="";      // Site image path  ** not used yet.
+$PAGE_METABAR="";   // User (login/usr-pref)/settings/logout/about
+$PAGE_TOOLBAR="";   // Main toolbar
+$PAGE_MINILEFT="";  // Mini-bar Left aligned (bread crumbs)
+$PAGE_MINIRIGHT=""; // Mini-bar Right aligned (module node options)
+$PAGE_HTDATA="";    // Main page html data
+$PAGE_PATH="";      // Relative path to theme currently in use
 
 function PmtParseURL()
 {

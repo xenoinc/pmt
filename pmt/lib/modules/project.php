@@ -14,11 +14,33 @@
  *
  */
 
-class project {
-  
+require ("pmtModule.php");
+class project implements pmtModule {
+
   function __construct()
   {
     return "hell world";
+  }
+
+  public function PageData()
+  {
+    return "Project module data";
+  }
+
+  /**
+   * Title of the generated page
+   */
+  public function Title()
+  {
+    return "Project";
+  }
+
+  /**
+   * Toolbar - HTML generated toolbar according to location
+   */
+  public function Toolbar()
+  {
+    return "";
   }
 
 }

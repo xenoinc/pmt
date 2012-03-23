@@ -17,6 +17,7 @@
  *  $PAGE_METABAR   - Login (profile), preferences, logoff
  *  $PAGE_TOOLBAR   - Main toolbar
  *  $PAGE_HTDATA    - Main page data
+ *  $PAGE_PATH      - Relative path to theme being used
  *
  * Change Log:
  *
@@ -34,11 +35,14 @@ function LoadModule($module, $arrParams)
    *
    */
 
-  global $PAGE_TITLE;
-  global $PAGE_TOOLBAR;
-  global $PAGE_METABAR;
-  global $PAGE_HTDATA;
-  global $PAGE_PATH;
+  global $PAGE_TITLE;     // Page title
+  global $PAGE_LOGO;      // Site image path  ** not used yet.
+  global $PAGE_METABAR;   // User (login/usr-pref)/settings/logout/about
+  global $PAGE_TOOLBAR;   // Main toolbar
+  global $PAGE_MINILEFT;  // Mini-bar Left aligned (bread crumbs)
+  global $PAGE_MINIRIGHT; // Mini-bar Right aligned (module node options)
+  global $PAGE_HTDATA;    // Main page html data
+  global $PAGE_PATH;      // Relative path to theme currently in use
 
   // if (count($arrParams) == 0)
 
@@ -65,15 +69,72 @@ function LoadModule($module, $arrParams)
   require(PMT_PATH."lib/modules/".$module.".php");
 
   $obj = new $module();
-  $PAGE_TITLE = $obj->Title;
-  $PAGE_METABAR = "";
-  $PAGE_TOOLBAR = MakeToolbar($module);
-  $PAGE_HTDATA = $obj->PageData();
   $PAGE_PATH = $relpath;
+  $PAGE_TITLE = $obj->Title();
+  $PAGE_METABAR = GenerateMetabar($module);   // generated below
+  $PAGE_MINILEFT = $obj->MiniBarLeft();
+  $PAGE_MINIRIGHT = $obj->MiniBarRight();
+
+  // Main Toolbar
+  if($obj->Toolbar() == "")
+        $PAGE_TOOLBAR = MakeToolbar($module); // Generate default toolbar
+  else  $PAGE_TOOLBAR = $obj->Toolbar();      // Module generates toolbar
+
+  $PAGE_HTDATA = $obj->PageData();
 
   require($page);
 
 }
+
+
+function GenerateMetabar($module)
+{
+  /* TO DO:
+   * i)  Get user logged in / off
+   * II) Generate accordingly
+   * ----------------------
+   * Metabar
+   * 1) "Welcome, %USER%"  :: "Login"
+   * 2) System "Preferences"
+   * 3) "About xenoPMG"
+   * 4) "Log off"
+   */
+
+  /* I) Get online status & user name */
+  $user_online = true;
+  $user_name = "fuct";
+
+
+
+  /* II) Generate page */
+  $t = "        ";
+  $ret = $t . "<ul>". PHP_EOL;
+  // Login / Welcome, %USER%.   <-- Welcome screen take to user stats page
+  if ($user_online)
+  {
+    $ret .= AddLI('Welcome, <a href="/user" alt="User\'s Dashboard">' .$user_name . '</a>');
+  }
+  else
+  {
+    $ret .= AddLI("Login");
+  }
+
+
+  $ret .= "";
+  $ret .= "";
+  $ret .= "";
+
+  $ret .= $t . "</ul>" . PHP_EOL;
+
+
+  return $ret;
+}
+
+function AddLI($buff)
+{
+  return "<li>" . $buff . "</li>";
+}
+
 
 /**
  * Generate the page's toolbar
@@ -109,7 +170,6 @@ function MakeToolbar($module)
 
 
   $ret = $t . "<ul>". PHP_EOL;
-
   for ($ndx = 0; $ndx < count($tmod); $ndx++)
   {
     // pmtDebug($ndx);

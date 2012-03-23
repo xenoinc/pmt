@@ -48,8 +48,12 @@ global $PAGE_PATH;
     <div id="header">
       <div id="logo">
         <!-- logo -->
+        <a id="logo" href="/" alt="xenoPMT Dashboard">
+          <img height="61" width="214" alt="xenoPMT Dashboard"
+              src="<?php print($PAGE_PATH . 'gfx/logo.png'); ?>" />
+        </a>
       </div>
-      <div id="metabar">
+      <div id="metabar" class="metanav">
         <!-- (Login / View Profile), Account Settings, Logout -->
         <?php print($PAGE_METABAR); ?>
       </div>
@@ -58,10 +62,22 @@ global $PAGE_PATH;
       <!-- toolbar -->
       <?php print($PAGE_TOOLBAR); ?>
     </div>
-    <div id="main">
+    <div id="container">
+      <div id="minibar_left">
+        <!-- breadcrumbs left -->
+        &nbsp; a
+      </div>
+      <div id="minibar_right">
+        <!-- mini toolbar for module -->
+        &nbsp; b
+      </div>
+
+      <div id="main">
 <?php
   print($PAGE_HTDATA);
+  print("\n");
 ?>
+      </div>
     </div>
 
     <div id="footer">
