@@ -16,8 +16,27 @@ body
   padding: 0;
   font: 13px Verdana,Arial,'Bitstream Vera Sans',Helvetica,sans-serif;
 }
+body, th, tr {
+    font: 13px Verdana,Arial,'Bitstream Vera Sans',Helvetica,sans-serif;
+}
 
+/* Remove underlines from toolbar items */
+:link, *:visited
+{
+    border-bottom: 1px dotted #BBBBBB;
+    color: #BB0000;
+    text-decoration: none;
+}
+:link:hover, *:visited:hover
+{
+    background-color: #EEEEEE;
+    color: #555555;
+}
 
+.buttons { margin: 0.5em 0.5em 0.5em 0; }
+.buttons form,
+.buttons form div { display: inline; }
+.buttons input {    margin: 1em 0.5em 0.1em 0; }
 
 /* ** Header ** */
 #header
@@ -60,7 +79,8 @@ body
 .metanav li.last { border-right: none }
 
 
-
+/* ################################### */
+/* ################################### */
 /* ** Navigation - Main Toolbar ** */
 #mainbar
 {
@@ -71,71 +91,74 @@ body
   margin: 0.66em 0 0.33em;
 }
 
-#mainbar .active
+#mainbar li
 {
-  border: 1px solid #666666;
+  background: url("gfx/topbar_gradient.png") repeat scroll 0 0 white;
+  border: 1px solid #e4e4e4;
+  margin: -1px 0.0em 0 -0.4em;
+  padding: 0.3em 0;
+}
+#mainbar li:hover{ border: 1px solid #666666;}
+#mainbar *:link:hover, #mainbar *:visited:hover {
+  background: url("gfx/topbar_gradient2.png") repeat-x scroll 0 0 #000000;
+  box-shadow: 0 0.1em 0.6em 0 #666666;
+  color: #bbbbff;
 }
 
-#mainbar .active *:link,
-#mainbar .active *:visited
-{
-  background: url("gfx/topbar_gradient2.png")
-    repeat-x scroll 0 0 #000000;
-  color: #eeeeee;
+
+#mainbar .active { border: 1px solid #666666; }
+#mainbar .active *:link, #mainbar .active *:visited {
+  background: url("gfx/topbar_gradient2.png") repeat-x scroll 0 0 #000000;
+  color: #bbbbff;
   font-weight: bold;
 }
 
-#mainbar .first,
-#mainbar .first *:link {
-  border-bottom-left-radius: 0.5em;
+#mainbar .first, #mainbar .first *:link {
   border-top-left-radius: 0.5em;
+  border-bottom-left-radius: 0.5em;
+}
+#mainbar .last, #mainbar .last *:link {
+  border-top-right-radius: 0.5em;
+  border-bottom-right-radius: 0.5em;
 }
 
-#mainbar *:link,
-#mainbar *:visited {
+
+#mainbar *:link, #mainbar *:visited {
     border-bottom: medium none;
     box-shadow: 0 0.1em 0.3em 0 #999999;
     color: #000000;
     padding: 0.3em 20px;
 }
 
-#mainbar li
-{
-  background: url("gfx/topbar_gradient.png") repeat scroll 0 0 white;
-  border: 1px solid #e4e4e4;
-  margin: -1px 0.3em 0 -0.4em;
-  padding: 0.3em 0;
-}
 
 
 
 
+
+/* ** TBAR class used in ID 'mainbar' ** */
 .tbar h2, .nav hr {display: none;}
-.tbar ul
-{
+.tbar ul {
   font-size: 10px;
   list-style: none outside none;
   margin: 0;
   padding: 0;
-  text-align: left;
+  text-align: left;   /* Main bar is left aligned */
 }
-
-.tbar li
-{
+.tbar li{
   border-left: 1px solid #d7d7d7;
   display: inline-block;
   padding: 0 0.75em;
   white-space: nowrap;
 }
-/* we're left aligned, don't show first boarder */
-.tbar li.first { border-left:none; }
+.tbar li.first { border-left:none; }  /* we're left aligned, don't show first boarder */
 
 /* use if right aligned */ /*
 .tbar li.last{ border-right:none; }
 */
 
 
-
+/* ################################### */
+/* ################################### */
 /* ** Main Window ** */
 
 
