@@ -50,11 +50,12 @@ body
  padding: 0;
  text-align: right;
 }
-.metanav li {
- border-right: 1px solid #d7d7d7;
- display: inline-block;
- padding: 0 .75em;
- white-space: nowrap;
+.metanav li
+{
+  border-right: 1px solid #d7d7d7;
+  display: inline-block;
+  padding: 0 .75em;
+  white-space: nowrap;
 }
 .metanav li.last { border-right: none }
 
@@ -70,13 +71,18 @@ body
   margin: 0.66em 0 0.33em;
 }
 
+#mainbar .active
+{
+  border: 1px solid #666666;
+}
+
 #mainbar .active *:link,
 #mainbar .active *:visited
 {
   background: url("gfx/topbar_gradient2.png")
     repeat-x scroll 0 0 #000000;
   color: #eeeeee;
-  fong-weight: bold;
+  font-weight: bold;
 }
 
 #mainbar .first,
@@ -92,6 +98,17 @@ body
     color: #000000;
     padding: 0.3em 20px;
 }
+
+#mainbar li
+{
+  background: url("gfx/topbar_gradient.png") repeat scroll 0 0 white;
+  border: 1px solid #e4e4e4;
+  margin: -1px 0.3em 0 -0.4em;
+  padding: 0.3em 0;
+}
+
+
+
 
 .tbar h2, .nav hr {display: none;}
 .tbar ul
@@ -182,7 +199,7 @@ body
 }
 
 #minibar_left .first:link,
-#minibar_left .first:visited { color: #9999888 }
+#minibar_left .first:visited { color: #999888 }
 #minibar_left .sep { color: #666; padding: 0 .1em }
 #minibar_left .pathentry { float: left }
 
