@@ -11,13 +11,14 @@
  *
  *
  * Change Log:
- *
+ *  2012-0328 * fixed "makeLink" to include $pmtConf
  */
 
 require("pmtModule.php");
 
 class dashboard implements pmtModule
 {
+  const MODULE = "dashboard";
 
   private $_title;      // Title of the screen
   private $_toolbar;    // HTML generated toolbar according to location
@@ -84,7 +85,9 @@ class dashboard implements pmtModule
     $arrAvailMods = array(
           // Module         Display
     //    "dashboard"   => "Dashboard",
-          ""            => "Dashboard",
+    //    "main"        => "Dashboard",
+    //    ""            => "Dashboard",
+          "main"        => "Dashboard",
           "project"     => "Projects",
           "ticket"      => "Tickets",     /* "ticket" => array ("Tickets", "+"), */
           "bugs"        => "Bugs",
@@ -120,35 +123,6 @@ class dashboard implements pmtModule
     //pmtDebug("disp: " . $ret);
 
     return $ret;
-
-    /**
-     * OLD METHOD
-     *
-    $arrLinks = array();
-    $tmod = array();
-    array_push($tmod, "dashboard"); array_push($arrLinks, '<a href="/">Dashboard</a>');
-    array_push($tmod, "project");   array_push($arrLinks, '<a href="project">Projects</a>');
-    array_push($tmod, "ticket");    array_push($arrLinks, 'Tickets' . '&nbsp;&nbsp;' . '+');
-    array_push($tmod, "product");   array_push($arrLinks, 'Products');
-    array_push($tmod, "customer");  array_push($arrLinks, 'Customers');
-    array_push($tmod, "admin");     array_push($arrLinks, 'Admin');
-
-    for ($ndx = 0; $ndx < count($tmod); $ndx++)
-    {
-      // pmtDebug($ndx);
-      // Draw toolbar and set the active item
-      if ($ndx == 0){
-        $cls = ' class="first active"';
-      }elseif ($ndx == count($arrLinks)-1){
-        $cls = ' class="last"';
-      }else{
-        $cls = '';
-      }
-      $ret .= $tab . "  <li" . $cls. ">" . $arrLinks[$ndx] . "</li>" . PHP_EOL;
-    }
-    */
-
-
   }
 
   private function GenerateMiniLeft()
@@ -177,7 +151,8 @@ class dashboard implements pmtModule
    */
   private function makeLink($module, $text)
   {
-    return '<a href="'. $module.'">'.$text.'</a>';
+    global $pmtConf;
+    return '<a href="'. $pmtConf["general"]["base_url"] . $module.'">'.$text.'</a>';
   }
 
 

@@ -24,7 +24,7 @@ global $PAGE_TOOLBAR;
 global $PAGE_METABAR;
 global $PAGE_HTDATA;
 global $PAGE_PATH;
-
+global $pmtConf;
 
 // require ("skin-fctn.php");
 ?>
@@ -41,7 +41,7 @@ global $PAGE_PATH;
     <meta content="text/html;charset=utf-8" http-equiv="content-type" />
     <title><?php $PAGE_TITLE; ?></title>
     <link type="text/css" href="<?php print($PAGE_PATH); ?>skin.css" rel="stylesheet" />
-
+    <?php  //print($PAGE_PATH . "skin.css"); ?>
   </head>
   <body>
 

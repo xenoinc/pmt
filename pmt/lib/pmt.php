@@ -51,7 +51,7 @@ $BREADCRUMB = array();
 // Require the core PMT files
 //require(PMT_PATH."lib/common/pmt.user.php");  // User Class
 require(PMT_PATH."lib/common/pmt.db.php");      // Database Class
-require(PMT_PATH."lib/common/pmt.user.php");
+require(PMT_PATH."lib/common/pmt.member.php");  // Member (User) class
 require(PMT_PATH."lib/common/pmt.uri.php");     // URI Parsing class
 require(PMT_PATH."lib/pmt-functions.php");      // Common functions in system
 require(PMT_PATH."lib/modcontroller.php");      // module controller
@@ -74,7 +74,7 @@ $pmtDB = new Database($pmtConf["db"]["server"],
                       $pmtConf["db"]["dbname"]);
 define("PMT_TBL", $pmtConf["db"]["prefix"]);     // This may be removed
 
-$user = new User;
+$user = new Member;   // $user = new User;
 $uri = new URI;
 
 // undefined GetSetting
@@ -126,22 +126,22 @@ function PmtParseURL()
   */
 
 
-
+  /*
+   * Filter out the modules with ones that are known
+   * In the future, don't use this.. just rely on LoadModule()
+   * to handle the logic
+   */
   switch($uRoot)
   {
     case '':
       pmtDebug("Module: 'dashboard'");
-
       LoadModule("dashboard", $uri->seg);
-
       break;
 
     case 'project':
     case 'p':
       pmtDebug("Module: 'project'");
-
       LoadModule("project", $uri->seg);
-
       /*  [1]         Project Stats / Selection   http://pmt/project/) or (http://pmt/p/)
        *    [2]       Project view                ./p/<prj>/
        *      [3]     Wiki Browser                ./p/../wiki/
@@ -157,21 +157,16 @@ function PmtParseURL()
        *        [4]   Task View                   ./p/../Task/<id>
        *          [5] Task Edit                   ./p/../Task/<id>/edit
        */
-
       break;
 
     case 'product':
       pmtDebug("Module: 'product'");
-
-      //LoadModule("product", $uri->seg);
-
+      LoadModule("product", $uri->seg);
       break;
 
     case 'user':
       //pmtDebug("Show User Page");
-
-      //LoadModule("user", $uri->seg);
-
+      LoadModule("user", $uri->seg);
       /** Admin Only
        *  [1]         User Overview               http://pmt/user/
        *    [2]       User details & stats        ./user/<user-name>  (min-length=4)
@@ -181,9 +176,7 @@ function PmtParseURL()
 
     case 'customer':
       pmtDebug("Module: 'customer'");
-
-      //LoadModule("customer", $uri->seg);
-
+      LoadModule("customer", $uri->seg);
       /*  [1]         Customer Overview           http://pmt/customer/
        *    [2]       View Customer Details       ./c/<custmr-id>
        *      [3]     (redirect to [2]            ./c/../contact/
@@ -193,24 +186,31 @@ function PmtParseURL()
        *      [3c]    Tasks                       ./c/../task/
        *        [4]   Task Viewer                 ./c/../task/<id>
        */
-
       break;
-
 
     case 'ticket':
       // create general ticket
       pmtDebug("Module: 'ticket'");
-
-      //LoadModule("ticket", $uri->seg);
-
+      LoadModule("ticket", $uri->seg);
       break;
 
-
     default:
-      pmtDebug("Module: <Unknown> '". $uRoot ."'");
 
+      //pmtDebug("Module: <Unknown> '". $uRoot ."'");
+      /**
+       * A) If unknown - Use Dashboard
+       * B) if unknown - FORCE Dashboard  ** (Doen't work yet)
+       * C) Allows for custom modules
+       */
+
+      // Option A
       LoadModule("dashboard", $uri->seg);
 
+      // Option B
+      //header("Location: " . $pmtConf["general"]["base_url"] );  exit;
+
+      // Option C - (TEST) Allow virtually anything
+      //LoadModule($uRoot, $uri->seg);
       break;
   }
 

@@ -44,32 +44,50 @@ function LoadModule($module, $arrParams)
   global $PAGE_HTDATA;    // Main page html data
   global $PAGE_PATH;      // Relative path to theme currently in use
 
+  global $pmtConf;
+  global $uri;
   // if (count($arrParams) == 0)
 
+  /* ** Theme ** */
   $theme = GetSetting("theme");
-  if ($theme== "") $theme="default";
+  if ($theme== "")
+    $theme="default";
 
   if (file_exists(PMT_PATH . "lib/themes/" . $theme))
   { // use custom theme
-    $skinpath = PMT_PATH . "lib/themes/" . $theme . "/";
+    $skin_path = PMT_PATH . "lib/themes/" . $theme . "/";
     $relpath = "lib/themes/" . $theme . "/";
   }else{
     // using default
-    $skinpath = PMT_PATH . "lib/themes/default/";
+    $skin_path = PMT_PATH . "lib/themes/default/";
     $relpath = "lib/themes/default/";
   }
-
-  // check if module has custom skin.
-  // main, project, product, etc..
-  $skinfile = "main.php";
-  $page = $skinpath . $skinfile;
+  // check if module has custom skin. (i.e. main, project, product, etc.)
+  $skin_file = "main.php";
+  $page = $skin_path . $skin_file;
 
 
-  // Generate module
-  require(PMT_PATH."lib/modules/".$module.".php");
+  /* ** Prepare Module ** */
+  if (file_exists(PMT_PATH."lib/modules/".$module.".php"))
+    require(PMT_PATH."lib/modules/".$module.".php");
+  else
+  {
+    $module="dashboard";
+    //require(PMT_PATH."lib/modules/dashboard.php");              // Option A
+    header("Location: " . $pmtConf["general"]["base_url"] );    // Option B
+    exit;
+  }
+
+  //pmtDebug( "mod: '" .$module .  "' relPath: " . $relpath);
+  //pmtDebug( "relPath: " . $relpath);
+  //pmtDebug( "page: " . $page);
+  //pmtDebug( "skin_path: " . $skin_path);
+  //pmtDebug( "skin_file: " . $skin_file);
 
   $obj = new $module();
-  $PAGE_PATH = $relpath;
+  $PAGE_PATH = $pmtConf["general"]["base_url"] . $relpath;
+  //$PAGE_PATH = $relpath;      // OLD METHOD
+  //$PAGE_PATH = $skin_path;    // NOOO
   $PAGE_TITLE = $obj->Title();
   $PAGE_METABAR = GenerateMetabar($module);   // generated below
   $PAGE_MINILEFT = $obj->MiniBarLeft();
@@ -123,7 +141,6 @@ function GenerateMetabar($module)
   $ret .= "";
   $ret .= "";
   $ret .= "";
-
   $ret .= $t . "</ul>" . PHP_EOL;
 
 
@@ -136,11 +153,72 @@ function AddLI($buff)
 }
 
 
+function MakeToolbar($module)
+{
+  pmtDebug("Module: " . $module);
+  /* Steps:
+  * 1) Get user profile permissions to see what
+  *    items we can draw on the screen.
+  * 2) Generate toolbar
+  */
+
+  /* Step 1 - Get user permissions */
+
+
+  /* Step 2 - Generate Toolbar */
+
+  // List of all the available modules
+  // ** This should be pulled from DB depending on user/group
+  //    permissions & settings!!
+  $arrAvailMods = array(
+        // Module       Display
+        "dashboard" => "Dashboard",
+        "project"   => "Projects",
+        "ticket"    => "Tickets",     /* "ticket" => array ("Tickets", "+"), */
+        "bugs"      => "Bugs",
+        "tasks"     => "Tasks",
+        "product"   => "Products",
+        "customer"  => "Customers",
+        "user"      => "Users",
+        "admin"     => "Admin"
+        );
+
+  $tab = "        ";
+  $ret = $tab . "<ul>". PHP_EOL;
+  $ndxCount = 0;
+  //print (count($a));
+  foreach($arrAvailMods as $key => $value)
+  { //print ("key: $key, Obj: $value <br />");
+
+    if ($tmod[$ndx] == $module)
+      $active = true;
+    else
+      $active = false;
+
+    $ndxCount++;
+    if ($ndxCount == 1)
+      if($active) $cls = ' class="first active"'; else $cls = ' class="first"';
+    elseif($ndxCount == count($arrAvailMods))
+      $cls = ' class="last"';
+    else
+      if ($key=="project") $cls = ' class="active"'; else $cls = '';
+
+    $ret .= $tab .
+            "  <li" . $cls. ">" .
+            $this->makeLink($key, $value) .
+            "</li>" . PHP_EOL;
+
+  }
+  $ret .= $tab . "</ul>". PHP_EOL;
+  //pmtDebug("disp: " . $ret);
+  return $ret;
+}
+
 /**
  * Generate the page's toolbar
  * @param string $module Module name
  */
-function MakeToolbar($module)
+function MakeToolbar_OLD($module)
 {
   /* Steps:
    * 1) Get user profile permissions to see what

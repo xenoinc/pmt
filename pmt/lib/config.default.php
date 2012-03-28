@@ -15,6 +15,7 @@
  * [ ] Remove the DB Table Prefix and just use a static name?
  *
  * Change Log:
+ * 2012-0328  + added General > "base_url" to make internal programming faster.
  * 2012-0224 [djs]
  *  - removed 'require("version.php")' since is it no longer used
  *  - removed Include of 'Subversion.php' since its set in 'pmt.php'
@@ -49,8 +50,9 @@ $pmtConf = array(
 		"prefix"  => "PMT_"         // Table prefix
 	),
 	"general" => array(
-		"authorized_only" => false  // Allow access to public or auth-only
-  //, "title" => "Xeno Tracking System";
+		"auth_only" => true,            // Allow access to public or auth-only
+    "title"     => "Xeno Tracking System",
+    "base_url"  => "http://pmt/"    // Must include '/' at the end.
 	)
 );
 

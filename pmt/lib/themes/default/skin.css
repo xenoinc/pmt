@@ -8,8 +8,7 @@
 
 
 /* ** Main body ** */
-body
-{
+body{
   background: none repeat scroll 0 0 #FFFFFF;
   color: #000000;
   margin: 10px;
@@ -21,14 +20,12 @@ body, th, tr {
 }
 
 /* Remove underlines from toolbar items */
-:link, *:visited
-{
+:link, *:visited{
     border-bottom: 1px dotted #BBBBBB;
     color: #BB0000;
     text-decoration: none;
 }
-:link:hover, *:visited:hover
-{
+:link:hover, *:visited:hover{
     background-color: #EEEEEE;
     color: #555555;
 }
@@ -82,17 +79,14 @@ body, th, tr {
 /* ################################### */
 /* ################################### */
 /* ** Navigation - Main Toolbar ** */
-#mainbar
-{
+#mainbar{
   border: 1px solid #e4e4e4;
   border-radius: 0.5em 0.5em 0.5em 0.5em;
   box-shadow: 0 0.5em 1.5em #EEEEEE;
   font: 10px verdana, 'bitstream Vera Sans', helvetica, arial, sans-serif;
   margin: 0.66em 0 0.33em;
 }
-
-#mainbar li
-{
+#mainbar li {
   background: url("gfx/topbar_gradient.png") repeat scroll 0 0 white;
   border: 1px solid #e4e4e4;
   margin: -1px 0.0em 0 -0.4em;
@@ -104,15 +98,12 @@ body, th, tr {
   box-shadow: 0 0.1em 0.6em 0 #666666;
   color: #bbbbff;
 }
-
-
 #mainbar .active { border: 1px solid #666666; }
 #mainbar .active *:link, #mainbar .active *:visited {
   background: url("gfx/topbar_gradient2.png") repeat-x scroll 0 0 #000000;
   color: #bbbbff;
   font-weight: bold;
 }
-
 #mainbar .first, #mainbar .first *:link {
   border-top-left-radius: 0.5em;
   border-bottom-left-radius: 0.5em;
@@ -121,8 +112,6 @@ body, th, tr {
   border-top-right-radius: 0.5em;
   border-bottom-right-radius: 0.5em;
 }
-
-
 #mainbar *:link, #mainbar *:visited {
     border-bottom: medium none;
     box-shadow: 0 0.1em 0.3em 0 #999999;

@@ -10,7 +10,7 @@
  *  Interface to what modules must contain.
  *
  * Change Log:
- *  
+ *
  */
 
 /**
@@ -53,6 +53,56 @@ interface pmtModule
    * i.e. Wiki: Edit, History, Remove, Rename
    */
   public function MiniBarRight();
+
+
+
+  /*
+  
+  private function GenerateToolbar()
+  {
+    // List of all the available modules
+    // ** This should be pulled from DB depending on user/group
+    //    permissions & settings!!
+    $arrAvailMods = array(
+          // Module       Display
+          "dashboard" => "Dashboard",
+          "project"   => "Projects",
+          "ticket"    => "Tickets",
+          "bugs"      => "Bugs",
+          "tasks"     => "Tasks",
+          "product"   => "Products",
+          "customer"  => "Customers",
+          "user"      => "Users",
+          "admin"     => "Admin"
+          );
+
+    $tab = "        ";
+    $ret = $tab . "<ul>". PHP_EOL;
+    $ndxCount = 0;
+    //print (count($a));
+    foreach($arrAvailMods as $key => $value)
+    { //print ("key: $key, Obj: $value <br />");
+
+      $ndxCount++;
+      if ($ndxCount == 1)
+        $cls = ' class="first"';
+      elseif($ndxCount == count($arrAvailMods))
+        $cls = ' class="last"';
+      else
+        if ($key==$this->MODULE)$cls = ' class="active"'; else $cls = '';
+
+      $ret .= $tab .
+              "  <li" . $cls. ">" .
+              $this->makeLink($key, $value) .
+              "</li>" . PHP_EOL;
+
+    }
+    $ret .= $tab . "</ul>". PHP_EOL;
+    //pmtDebug("disp: " . $ret);
+    return $ret;
+  }
+
+  */
 
 }
 

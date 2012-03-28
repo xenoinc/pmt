@@ -25,7 +25,8 @@
  *  2012-0309 + Added code to constructor
  */
 
-class User {
+class Member {
+//class User {
   public $username = "Guest";
   public $userid = "0";
   public $fullname = "";

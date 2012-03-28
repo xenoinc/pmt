@@ -20,6 +20,8 @@
  *  [ ] Step 2.a - Place into a function so we can resuse it in 2.b
  *  [ ] Step 2.a - Use disappearing suggestive text
  * Change Log:
+ *  2012-0328 + config.php - Updated the cfg file to include "base_url"
+ *            + config.php - Added copyright and notes
  *  2012-0225 * 50% there (djs)
  */
 
@@ -548,7 +550,15 @@ switch ($step)
     $cfgPHP = array();
     $cfgPHP[] ="<?php";
     $cfgPHP[] ='';
-    $cfgPHP[] ="/* Generated from Installer */";
+    $cfgPHP[] ="/**";
+    $cfgPHP[] =" * xenoPMT - Copyright 2010-2012 (C) Xeno Innovations, Inc.";
+    $cfgPHP[] =" * ALL RIGHTS RESERVED";
+    $cfgPHP[] =" *";
+    $cfgPHP[] =" * Description:";
+    $cfgPHP[] =" *   This is the Default CORE config file, becareful when";
+    $cfgPHP[] =" *   editing this file as it will effect your entire system.";
+    $cfgPHP[] =" */";
+    $cfgPHP[] ='';
     $cfgPHP[] ='$pmtConf = array(';
     $cfgPHP[] ='  "db" => array(';
     $cfgPHP[] ='    "server"  => "' . $dbase["server"] .'",   // Database Server';
@@ -558,7 +568,9 @@ switch ($step)
     $cfgPHP[] ='    "prefix"  => "' . $dbase["prefix"] . '"   // Table Prefix';
     $cfgPHP[] ='  ),';
     $cfgPHP[] ='  "general" => array(';
-    $cfgPHP[] ='    "authorized_only" => false    // Allow access to public or auth-only';
+    $cfgPHP[] ='    "auth_only" => true,     // Allow access to public or auth-only';
+    $cfgPHP[] ='    "title"     => "xenoPMT",';
+    $cfgPHP[] ='    "base_url"  => "http://pmt/"    // Must include / at the end.';
     $cfgPHP[] ='  )';
     $cfgPHP[] =');';
     $cfgPHP[] ='';
