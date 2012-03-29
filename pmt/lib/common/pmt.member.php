@@ -11,17 +11,26 @@
  * Description:
  *  Class to handle user information
  *
+ *  * Password Hash = sha1($user.$pass.time())
+ *
+ * Cookies:
+ *  setcookie('xenopmt_user','',0,'/');
+ *  setcookie('xenopmt_hash','',0,'/');
+ *  setcookie('xenopmt_remember',0,0,'/');
+ *
  * To Do:
- *  [/] Constructor
- *  [ ] Login
- *  [X] Logoff
- *  [ ] NewUser
- *  [ ] GetInfo
- *  [ ] GetUsers
+ *  [/] Constructor - UNTESTED
+ *  [/] Login       - UNTESTED
+ *  [X] Logoff      - UNTESTED
+ *  [/] NewUser     - UNTESTED
+ *  [X] GetInfo     - UNTESTED
+ *  [X] GetUsers    - UNTESTED
  *  ------------------
  *  [ ] Finish Group Loader in constructor
+ *  [ ] Enable SystemHook
  *
  * Change Log:
+ *  2012-0328 + Updated Login code
  *  2012-0309 + Added code to constructor
  */
 
@@ -40,7 +49,8 @@ class Member {
       "id"        => "0",
       "username"  => "Guest",
       "fullname"  => "Anonymous",
-      "groupid"   => "0"          // Anon should be setup as Group "2"
+      "groupid"   => "0",         // Anon should be setup as Group "2"
+      "online"    => false
   );
 
 
@@ -52,18 +62,19 @@ class Member {
      */
     global $pmtDB;
 
-    if(!isset($_COOKIE["xipmt_user"])) $_COOKIE["xipmt_user"] = "";
-    if(!isset($_COOKIE["xipmt_hash"])) $_COOKIE["xipmt_hash"] = "";
+    if(!isset($_COOKIE["xenopmt_user"])) $_COOKIE["xenopmt_user"] = "";
+    if(!isset($_COOKIE["xenopmt_hash"])) $_COOKIE["xenopmt_hash"] = "";
 
     $tmp =
         "SELECT User_Id, User_Name, Name, Group_Id FROM ".PMT_TBL."USER WHERE " .
-        "User_Name='" . $pmtDB->es($_COOKIE['xipmt_user']) . "' AND " .
-        "Session_Hash='" . $pmtDB->es($_COOKIE['xipmt_hash']) . "' LIMIT 1;";
+        "User_Name='" . $pmtDB->es($_COOKIE['xenopmt_user']) . "' AND " .
+        "Session_Hash='" . $pmtDB->es($_COOKIE['xenopmt_hash']) . "' LIMIT 1;";
     $q = $pmtDB->Query($tmp);
     if($pmtDB->NumRows($q))
     {
       // We're logged in still
       $this->userInfo = $pmtDB->FetchArray(query);
+      $this->userInfo["online"] = true;
       $this->online = true;
     }
 
@@ -92,7 +103,44 @@ class Member {
    */
   public function Login($user, $pass, $stayOnline)
   {
+    global $pmtDB;
 
+    $q =  "SELECT * FROM ".PMT_TBL."USER ".
+          "WHERE User_Name='".$pmtDB->FixString($user)."' AND ".
+          "Password='".sha1($pmtDB->FixString($pass))."' LIMIT 1;";
+    $login = $pmtDB->Query($q);
+    if($pmtDB->NumRows($login))
+    {
+      $q =  "UPDATE ".PMT_TBL."USER ".
+            "SET Session_Hash='".$pmtDB->FixString(sha1($user.$pass.time()))."' ".
+            "WHERE User_Name='".$pmtDB->FixString($user)."' LIMIT 1;";
+      $pmtDB->Query($q);
+
+      if ($stayOnline)
+      {
+        // Remember User
+        setcookie('xenopmt_user',     $user,                    time()+9999999, '/');
+        setcookie('xenopmt_hash',     sha1($user.$pass.time()), time()+9999999, '/');
+        setcookie('xenopmt_remember', 1,                        time()+9999999, '/');
+      }
+      else
+      {
+        // Session Only
+        setcookie('xenopmt_user',     $user, 0, '/');
+        setcookie('xenopmt_hash',     sha1($user.$pass.time()), 0, '/');
+        setcookie('xenopmt_remember', 0, 0, '/');
+      }
+
+      //($hook = SystemHook::Hook("user_login_success")) ? eval($hook) : false;
+      return true;
+    }
+    else
+    {
+      unset($this->errors);
+      $this->errors[] = Locale("error_invalid_login");
+      //($hook = SystemHook::Hook("user_login_error")) ? eval($hook) : false;
+      return false;
+    }
   }
 
   /**
@@ -105,10 +153,10 @@ class Member {
     * 2. Set class vars back to nothing
     */
 
-    setcookie('xipmt_user','',0,'/');
-		setcookie('xipmt_hash','',0,'/');
-		setcookie('xipmt_remember',0,0,'/');
-    // ($hook = SystemHook::Hook('user_logout')) ? eval($hook) : false;
+    setcookie('xenopmt_user','',0,'/');
+		setcookie('xenopmt_hash','',0,'/');
+		setcookie('xenopmt_remember',0,0,'/');
+    // ($hook = SystemHook::Hook("user_logout")) ? eval($hook) : false;
   }
 
   /**
@@ -123,7 +171,7 @@ class Member {
     // Test for errors
     $q =
       "SELECT User_Name FROM ".PMT_TBL."USER WHERE " .
-      "User_Name='".$pmtDB->EscapeString($nfo['username'])."' LIMIT 1;";
+      "User_Name='".$pmtDB->FixString($nfo['username'])."' LIMIT 1;";
     if($pmtDB->NumRows($pmtDB->Query($q)))
       $arrErr["Username"] = Locale("error_username_taken");
 
@@ -153,20 +201,42 @@ class Member {
     // TODO: REMOVE THIS TEST USER!!
     //$colm = "User_Name, Password, Email, Name";
     //$vals = "'admin', 'admin', 'test@email.com', 'Test User'";
-    $pmtDB->query("INSERT INTO ".PMT_TBL."USER ($fields) VALUES($values)");
+    $pmtDB->Query("INSERT INTO ".PMT_TBL."USER ($fields) VALUES($values);");
 
     return true;
   }
 
+  /**
+   * Get User Information
+   * @global Database $pmtDB
+   * @param int $userId
+   */
+  //public function GetInfo($userId)
   public function GetInfo($userId)
   {
     global $pmtDB;
 
+    $q =  "SELECT * FROM ".PMT_TBL."USER WHERE ".
+          "User_Id='".$pmtDB->Res($userId)."' LIMIT 1;";
+    return $pmtDB->QueryFirst($q);
+
   }
 
+  /**
+   * Get list of all users
+   * @global Database $pmtDB
+   * @return array (User_Id, User_Name)
+   */
   public function ListUsers()
   {
+    global $pmtDB;
+    $arrUsers = array();
+    $q= "SELECT User_Id, User_Name, FROM ".PMT_TBL."USER ORDER BY User_Name ASC;";
+    $ret = $pmtDB->Query($q);
+    while($nfo = $pmtDB->FetchArray($ret))
+      $arrUsers[] = $nfo;
 
+    return $arrUsers;
   }
 
 }

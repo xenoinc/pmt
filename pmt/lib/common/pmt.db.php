@@ -127,6 +127,16 @@ class Database {
     return $this->EscapeString($string);
   }
 
+  /**
+   * Fix query string of errors
+   * @param string $string
+   * @return string
+   */
+  public function FixString($string)
+  {
+    return $this->EscapeString($string);
+  }
+
 
   /**
    * Insert ID

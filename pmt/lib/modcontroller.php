@@ -114,42 +114,69 @@ function GenerateMetabar($module)
    * Metabar
    * 1) "Welcome, %USER%"  :: "Login"
    * 2) System "Preferences"
-   * 3) "About xenoPMG"
+   * 3) "About xenoPMT"
    * 4) "Log off"
    */
 
-  /* I) Get online status & user name */
-  $user_online = true;
-  $user_name = "fuct";
+  global $user;
 
+  /* I) Get online status & user name */
+  //$user_online = true;
+  //$user_name = "fuct";
+
+  //if ($user->userInfo["online"]  == true)
 
 
   /* II) Generate page */
   $t = "        ";
   $ret = $t . "<ul>". PHP_EOL;
-  // Login / Welcome, %USER%.   <-- Welcome screen take to user stats page
-  if ($user_online)
+  if ($user->online)
   {
-    $ret .= AddLI('Welcome, <a href="/user" alt="User\'s Dashboard">' .$user_name . '</a>');
+    // ONLINE
+    // Login / Welcome, %USER%.   <-- Welcome screen take to user stats page
+    $ret .= AddLI('Welcome, <a href="/user" alt="User\'s Dashboard">' .$user->userInfo["username"] . '</a>', "first");
+    $ret .= AddLI("Preferences");
+    $ret .= AddLI("About xenoPMT");
+    $ret .= AddLI("Log off", "last");
   }
   else
   {
-    $ret .= AddLI("Login");
+    // OFFLINE
+    $ret .= AddLI("Login", "last");
+
+    // * Disabled for now
+    //
+    //$ret .= AddLI("Login", "first");
+    //$ret .= AddLI("Preferences");
+    //$ret .= AddLI("About xenoPMT", "last");
+
   }
+    $ret .= $t . "</ul>" . PHP_EOL;
+
+  /*
+  if(
+      isset($conf['general']['authorized_only'])
+      && $conf['general']['authorized_only'] == true
+      && !$user->loggedin && @$_POST['action'] != 'login'
+      && ($uri->seg[0] != 'user' && $uri->seg[1] != 'register'))
+  {
+      include(template('user/login'));
+      exit;
+  }
+  */
 
 
-  $ret .= "";
-  $ret .= "";
-  $ret .= "";
-  $ret .= $t . "</ul>" . PHP_EOL;
 
 
   return $ret;
 }
 
-function AddLI($buff)
+function AddLI($buff, $class="")
 {
-  return "<li>" . $buff . "</li>";
+  if($class=="")
+        $c = "";
+  else  $c = ' class="'.$class.'"';
+  return "<li$c>" . $buff . "</li>";
 }
 
 
@@ -213,6 +240,8 @@ function MakeToolbar($module)
   //pmtDebug("disp: " . $ret);
   return $ret;
 }
+
+
 
 /**
  * Generate the page's toolbar
