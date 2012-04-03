@@ -13,6 +13,8 @@
  *  ** See Engineering document for more info
  *
  * Change Log:
+ *  2012-0402 - Bypassed GenerateToolbar(). Return "" and use default.
+ *            + Added test front page for links
  *  2012-0328 * fixed "makeLink" to include $pmtConf
  */
 
@@ -20,33 +22,51 @@ require ("pmtModule.php");
 class project implements pmtModule
 {
   //const MODULE = "project";
-  private $MODULE = "project";
+  //private $MODULE = "project";
+  private $MODULE = "p";
 
   private $_title;      // Title of the screen
   private $_toolbar;    // HTML generated toolbar according to location
   private $_minileft;   // mini toolbar (left)
   private $_miniright;  // mini toolbar (right)
+  private $_pagedata;   // Main page data
+
+  private $_projSegment;    // Base project url ("p" or "p/test-proj"
 
   function __construct($uriPath = "")
   {
+    global $uri;
+
+    if (count($uri->seg)>1)
+          $this->_projSegment = $this->MODULE."/".$uri->seg[1];
+    else  $this->_projSegment = $this->MODULE;
+
     $this->_title = "Project " . " - " . "[PMT]";    // "Xeno Tracking System"
-    $this->_toolbar = $this->GenerateToolbar();
+    $this->_toolbar = ""; //$this->GenerateToolbar();
     $this->_minileft = "";
     $this->_miniright = $this->GenerateMiniRight();  // "&nbsp; (test-right)";
+    $this->_pagedata = $this->GeneratePage();
   }
 
   public function Title() { return $this->_title; }             /* Title of the generated page */
   public function Toolbar() { return $this->_toolbar; }         /* Toolbar - HTML generated toolbar according to location */
   public function MiniBarLeft() { return $this->_minileft; }
   public function MiniBarRight() { return $this->_miniright; }
+  public function PageData() { return $this->_pagedata; }
 
-  public function PageData()
+
+  /* **************************** */
+  /* **************************** */
+
+
+
+    private function GeneratePage()
   {
     /**
      * Depending on usr permissions settings, list all projects available to
      * the user logged in.
      */
-    $sample =  "<h1>Welcome to <b><i>xeno</i>PMT</b></h1>";
+    $sample =  "<h1>Projects</h1>";
     $sample .= "<p>This system is still under heavy development and is not ";
     $sample .= "ready for live action use by any means. Soon enough you will ";
     $sample .= "get to see what the future holds.  As the project develops the ";
@@ -54,14 +74,41 @@ class project implements pmtModule
     $sample .= "<p>Sit tight and enjoy the ride!</p>";
     $sample .= "<p>&nbsp;</p>";
     $sample .= "<p>- Xeno Innovations, Inc. -</p>";
+    $sample .= "<p></p>";
+
+    $sample .= "<h2>Navagation Test</h2>";
+    $sample .= "<p>Test out the mini-bar!</p>";
+    $sample .= "<p>Becareful, this is not completely accurate and you will get ";
+    $sample .= "unexpected results if you click out of sync or out of order. ";
+    $sample .= "The <b>MiniBarRight</b> uses a completely different algorithm!";
+    $sample .= "</p>";
+
+    $sample .= "<ul>";
+    //$sample .= "<li>View Project: " . "<a href='p/xrehab/'>xRehab</a></li>";
+    $sample .= "<li>View Project: " . $this->makeLink($this->MODULE, "xRehab", "/xrehab") . "</li>";
+    $sample .= "<li>Milestones";
+    $sample .= "  <ul>";
+
+    //$sample .= "    <li>New: " . "<a href='p/xrehab/milestone/?cmd=new'>test</a></li>";
+    //$sample .= "    <li>Edit: ". "<a href='p/xrehab/milestone/?cmd=edit'>test</a></li>";
+    //$sample .= "    <li>Remove: ". "<a href='p/xrehab/milestone/?cmd=remove'>test</a></li>";
+    $sample .= "  <li>New: " .    $this->makeLink($this->_projSegment, "Test", "/milestone?cmd=new") . "</li>";
+    $sample .= "  <li>Edit: ".    $this->makeLink($this->_projSegment, "Test", "/milestone?cmd=edit") . "</li>";
+    $sample .= "  <li>Remove: ".  $this->makeLink($this->_projSegment, "Test", "/milestone?cmd=remove") . "</li>";
+    $sample .= "  </ul></li>";
+    //$sample .= "<li>Wiki Page (new, edit, remove): " . "<a href='p/xrehab/wiki'>test</a></li>";
+    $sample .= "<li>Wiki Page";
+    $sample .= "  <ul>";
+    $sample .= "  <li>Page - Main: ".    $this->makeLink($this->_projSegment, "Main", "/wiki") . "</li>";
+    $sample .= "  <li>Page - Test: ".    $this->makeLink($this->_projSegment, "Main", "/wiki/test") . "</li>";
+    $sample .= "  <li>New: ".     $this->makeLink($this->_projSegment, "Test", "/wiki?cmd=new") . "</li>";
+    $sample .= "  <li>Edit: ".    $this->makeLink($this->_projSegment, "Test", "/wiki?cmd=edit") . "</li>";
+    $sample .= "  <li>Remove: ".  $this->makeLink($this->_projSegment, "Test", "/wiki?cmd=remove") . "</li>";
+    $sample .= "  </ul></li>";
+    $sample .= "</ul>";
 
     return $sample;
   }
-
-
-
-  /* **************************** */
-  /* **************************** */
 
 
   private function GenerateToolbar()
@@ -84,6 +131,7 @@ class project implements pmtModule
           // Module       Display
           "dashboard" => "Dashboard",
           "project"   => "Projects",
+          //"p"   => "Projects",
           "ticket"    => "Tickets",     /* "ticket" => array ("Tickets", "+"), */
           "bugs"      => "Bugs",
           "tasks"     => "Tasks",
@@ -106,6 +154,7 @@ class project implements pmtModule
       elseif($ndxCount == count($arrAvailMods))
         $cls = ' class="last"';
       else
+        //if ($key=="p")$cls = ' class="active"'; else $cls = '';
         if ($key=="project")$cls = ' class="active"'; else $cls = '';
 
       $ret .= $tab .

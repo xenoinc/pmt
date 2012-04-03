@@ -14,6 +14,8 @@
  *  ** See Engineering document for more info
  *
  * Change Log:
+ *  2012-0402 - Bypassed GenerateToolbar(). Return "" and use default.
+ *            * Moved PageData() to $_pagedata();
  *  2012-0328 * fixed "makeLink" to include $pmtConf
  */
 
@@ -28,22 +30,30 @@ class user implements pmtModule
   private $_toolbar;    // HTML generated toolbar according to location
   private $_minileft;   // mini toolbar (left)
   private $_miniright;  // mini toolbar (right)
+  private $_pagedata;   // Main page data
 
   //function __construct($uriPath = "")
   function __construct()
   {
     $this->_title = "User " . " - " . "[PMT]";    // "Xeno Tracking System"
-    $this->_toolbar = $this->GenerateToolbar();
+    $this->_toolbar = ""; //$this->GenerateToolbar();
     $this->_minileft = "";
     $this->_miniright = "";
+    $this->_pagedata = $this->GeneratePage();
   }
 
   public function Title() { return $this->_title; }             /* Title of the generated page */
   public function Toolbar() { return $this->_toolbar; }         /* Toolbar - HTML generated toolbar according to location */
   public function MiniBarLeft() { return $this->_minileft; }
   public function MiniBarRight() { return $this->_miniright; }
+  public function PageData() { return $this->_pagedata; }
 
-  public function PageData()
+
+
+  /* **************************** */
+  /* **************************** */
+
+  private function GeneratePage()
   {
     /**
      * Depending on usr permissions settings, list all projects available to
@@ -57,152 +67,185 @@ class user implements pmtModule
       pmtDebug("no");
     */
 
-    $sample =  "<h1<b><i>xeno</i>PMT</b> - User Setup</h1>";
-    $sample .= "<p>This system is still under heavy development and is not ";
-    $sample .= "ready for live action use by any means. Soon enough you will ";
-    $sample .= "get to see what the future holds.  As the project develops the ";
-    $sample .= "user and engineering documentation will mature along with it.</p>";
-    $sample .= "<p>Sit tight and enjoy the ride!</p>";
-    $sample .= "<p>&nbsp;</p>";
-    $sample .= "<p>- Xeno Innovations, Inc. -</p>";
+    global $user;
+    global $uri;
 
-    return $sample;
-  }
+    $html = "";
+
+    if (count($uri->seg) > 1)
+          $proj_url = $this->MODULE."/".$uri->seg[1];
+    else  $proj_url = $this->MODULE;
 
 
+    if ($user->online)
+    {
+      $mode = "";
+      switch (count($uri->seg))
+      {
+        case 1: // List all
+          $mode = "";
 
-  /* **************************** */
-  /* **************************** */
+          // Added the "isset" to suppress error messages of "cmd" not known
+          if (isset($_GET["cmd"]) && $_GET["cmd"] == "logoff")
+          {
+            // Log Off
+            $user->Logoff();
+            header("Location: " . $uri->Anchor());
+          }
+      }
+      $html =  "<h1<b><i>xeno</i>PMT</b> - User Setup</h1>";
+      $html .= "<p>You're ONLINE!</p>";
+      $html .= "<p>This system is still under heavy development and is not ";
+      $html .= "ready for live action use by any means. Soon enough you will ";
+      $html .= "get to see what the future holds.  As the project develops the ";
+      $html .= "user and engineering documentation will mature along with it.</p>";
+      $html .= "<p>Sit tight and enjoy the ride!</p>";
+      $html .= "<p>&nbsp;</p>";
+      $html .= "<p>- Xeno Innovations, Inc. -</p>";
+    }
+    else
+    {
+      $mode = "";
+      switch (count($uri->seg))
+      {
+        case 1: // List all
+          $mode = "";
+
+          // Added the "isset" to suppress error messages of "cmd" not known
+          if (isset($_GET["cmd"]) && $_GET["cmd"] == "login")
+          {
+            // Log In
+            $mode = "login";
+            $html = $this->GenerateLogin();
+          }
+          elseif (isset($_GET["cmd"]) && $_GET["cmd"] == "logoff")
+          {
+            // Log Off (just in case)
+            $user->Logoff();
+            header("Location: " . $uri->Anchor());
+          }
 
 
-  private function GenerateToolbar()
-  {
-    /* Steps:
-    * 1) Get user profile permissions to see what
-    *    items we can draw on the screen.
-    * 2) Generate toolbar
-    */
+          break;
+        case 2: // view user profile
+          $mode = "profile";
 
-    /* Step 1 - Get user permissions */
+          /** (_GET["cmd"] ==
+           * "remove"   - Remove user account
+           * "suspend"  - Suspend user account
+           * "edit"     - Edit user profile
+           */
+          break;
+        default:
 
+          $html =  "<h1<b><i>xeno</i>PMT</b> - User Setup</h1>";
+          $html .= "<p>This system is still under heavy development and is not ";
+          $html .= "ready for live action use by any means. Soon enough you will ";
+          $html .= "get to see what the future holds.  As the project develops the ";
+          $html .= "user and engineering documentation will mature along with it.</p>";
+          $html .= "<p>Sit tight and enjoy the ride!</p>";
+          $html .= "<p>&nbsp;</p>";
+          $html .= "<p>- Xeno Innovations, Inc. -</p>";
 
-    /* Step 2 - Generate Toolbar */
+          break;
 
-    // List of all the available modules
-    // ** This should be pulled from DB depending on user/group
-    //    permissions & settings!!
-    $arrAvailMods = array(
-          // Module       Display
-          "dashboard" => "Dashboard",
-          "project"   => "Projects",
-          "ticket"    => "Tickets",     /* "ticket" => array ("Tickets", "+"), */
-          "bugs"      => "Bugs",
-          "tasks"     => "Tasks",
-          "product"   => "Products",
-          "customer"  => "Customers",
-          "user"      => "Users",
-          "admin"     => "Admin"
-          );
+      }
 
-    $tab = "        ";
-    $ret = $tab . "<ul>". PHP_EOL;
-    $ndxCount = 0;
-    //print (count($a));
-    foreach($arrAvailMods as $key => $value)
-    { //print ("key: $key, Obj: $value <br />");
-
-      $ndxCount++;
-      if ($ndxCount == 1)
-        $cls = ' class="first"';
-      elseif($ndxCount == count($arrAvailMods))
-        $cls = ' class="last"';
-      else
-        if ($key==$this->MODULE)$cls = ' class="active"'; else $cls = '';
-
-      $ret .= $tab .
-              "  <li" . $cls. ">" .
-              $this->makeLink($key, $value) .
-              "</li>" . PHP_EOL;
 
     }
-    $ret .= $tab . "</ul>". PHP_EOL;
-    //pmtDebug("disp: " . $ret);
-    return $ret;
+
+    return $html;
   }
 
 
-  /**
-   * Make link
-   * @param type $module
-   * @param type $text
-   * @return type
-   */
-  private function makeLink($module, $text)
+  private function GenerateLogin()
   {
-    global $pmtConf;
-    return '<a href="'. $pmtConf["general"]["base_url"] . $module.'">'.$text.'</a>';
-  }
 
 
+    global $user;
+    global $uri;
 
+    if(isset($_POST["action"]) && $_POST["action"] == "login")
+    {
+      // Check if we can login
+      $u = $_POST["login"];       // user
+      $p = $_POST["password"];    // password
+      $r = (isset($_POST["remember"]) ? true : false);
+      // remember login
+      // $ret = $user->Login($u, $p, $r);
 
-  /*
-  private function GenerateToolbar_default()
-  {
-    // Steps:
-    // 1) Get user profile permissions to see what
-    //    items we can draw on the screen.
-    // 2) Generate toolbar
-    //
+      $ret = $user->Validate($u, $p);
+      if ($ret)
+      {
+        $ret = $user->Login($u, $p, $r);
+        // goto main page
+        header("Location: ". $uri->Anchor());
 
-    // Step 1 - Get user permissions
-
-
-    // Step 2 - Generate Toolbar
-
-    // List of all the available modules
-    // ** This should be pulled from DB depending on user/group
-    //    permissions & settings!!
-    $arrAvailMods = array(
-          // Module       Display
-          "dashboard" => "Dashboard",
-          "project"   => "Projects",
-          "ticket"    => "Tickets",
-          "bugs"      => "Bugs",
-          "tasks"     => "Tasks",
-          "product"   => "Products",
-          "customer"  => "Customers",
-          "user"      => "Users",
-          "admin"     => "Admin"
-          );
-
-    $tab = "        ";
-    $ret = $tab . "<ul>". PHP_EOL;
-    $ndxCount = 0;
-    //print (count($a));
-    foreach($arrAvailMods as $key => $value)
-    { //print ("key: $key, Obj: $value <br />");
-
-      $ndxCount++;
-      if ($ndxCount == 1)
-        $cls = ' class="first"';
-      elseif($ndxCount == count($arrAvailMods))
-        $cls = ' class="last"';
-      else
-        if ($key=="project")$cls = ' class="active"'; else $cls = '';
-
-      $ret .= $tab .
-              "  <li" . $cls. ">" .
-              $this->makeLink($key, $value) .
-              "</li>" . PHP_EOL;
+      }
 
     }
-    $ret .= $tab . "</ul>". PHP_EOL;
-    //pmtDebug("disp: " . $ret);
-    return $ret;
-  }
-  */
 
+
+
+
+    $ret = $uri->Anchor("user", "?cmd=login");  //  "/user/?cmd=login"
+
+    $html ='
+        <div id="login" class="login_form" align="center" style="padding: 2em;" >
+        <table><tr><td>
+          <form accept-charset="UTF-8" action="'. $ret .'" method="post">
+          <!-- <form accept-charset="UTF-8" action="/session" method="post"> -->
+            <input name="action" value="login" type="hidden" />
+            <input name="utf8" value="✓" type="hidden" />'.
+          /*
+            <div style="margin: 0pt; padding: 0pt; display: inline;">
+              <input type="hidden"
+                name="authenticity_token"
+                value="Sk3NI/mz6lwniDxpzFVWwMlNPZx0/Zw3yhtw7WolEK8=">
+            </div>
+          */
+        '
+            <h1>Log in</h1>';
+    if($user->errors)
+    {
+      $html .='<div class="message error">';
+      foreach($user->errors as $err)
+      {
+        $html .= $err . "<br />";
+      }
+      $html .='</div>';
+    }
+
+    $html .='
+            <div class="formbody">
+              <label for="login_field">
+                Login or Email<br />
+                <input autocapitalize="off" class="text" id="txtLogin" name="login"
+                  style="width: 21em;" tabindex="1" type="text">
+              </label>
+              <br />
+              <label for="password">
+                Password '. /* AddLink("user", "(forgot password)", "?cmd=forgot") . */ '
+                <br />
+                <input autocomplete="disabled" class="text" id="txtPass" name="password"
+                  style="width: 21em;" tabindex="2" value="" type="password">
+              </label>
+              <br />
+              <br />
+              <label for="remember">Remember
+                <input type="checkbox" name="remember" value="1" id="remember" />
+              </label>
+              <br />
+              <label class="submit_btn">
+                <input name="commit" tabindex="3" value="Log in" type="submit">
+              </label>
+            </div>
+          </form>
+        </td></tr>
+        </table>
+        </div>';
+    return $html;
+  }
 
 }
 

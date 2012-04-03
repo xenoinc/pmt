@@ -20,8 +20,29 @@
  *  $PAGE_PATH      - Relative path to theme being used
  *
  * Change Log:
- *
+ *  2012-0402 + Added ModRedirect($mod) to easily convert from long>short and short>long module names.
+ *            * Fixed MakeToolbar()
  */
+
+/**
+ * Redirect module to a shorter URL ("project" >> "p")
+ * @param string $module
+ */
+function ModRedirect($module)
+{
+  $rename = $module;
+  switch($module)
+  {
+    case "project":
+      $rename = "p";
+      break;
+
+    case "p":
+      $rename = "project";
+      break;
+  }
+  return $rename;
+}
 
 /**
  * Load Module - Node extended
@@ -30,6 +51,12 @@
  */
 function LoadModule($module, $arrParams)
 {
+  /** [Change Log]
+   *  2012-0402 + Added convert of $module="p" >> "project".
+   *              a better method will be needed!
+   *            + Using ModRedirect() for the "project" >> "p" convert.
+   */
+
   /* TODO:
    * [ ] Use use User setting first, then check System Setting
    *
@@ -47,6 +74,9 @@ function LoadModule($module, $arrParams)
   global $pmtConf;
   global $uri;
   // if (count($arrParams) == 0)
+
+  if ($module == "p")
+    $module = "project";
 
   /* ** Theme ** */
   $theme = GetSetting("theme");
@@ -89,13 +119,14 @@ function LoadModule($module, $arrParams)
   //$PAGE_PATH = $relpath;      // OLD METHOD
   //$PAGE_PATH = $skin_path;    // NOOO
   $PAGE_TITLE = $obj->Title();
-  $PAGE_METABAR = GenerateMetabar($module);   // generated below
+  $PAGE_METABAR = GenerateMetabar(ModRedirect($module));   // generated below
   $PAGE_MINILEFT = $obj->MiniBarLeft();
   $PAGE_MINIRIGHT = $obj->MiniBarRight();
 
   // Main Toolbar
   if($obj->Toolbar() == "")
-        $PAGE_TOOLBAR = MakeToolbar($module); // Generate default toolbar
+        $PAGE_TOOLBAR = MakeToolbar(ModRedirect($module)); // Generate default toolbar
+        //$PAGE_TOOLBAR = MakeToolbar($module); // Generate default toolbar
   else  $PAGE_TOOLBAR = $obj->Toolbar();      // Module generates toolbar
 
   $PAGE_HTDATA = $obj->PageData();
@@ -103,6 +134,27 @@ function LoadModule($module, $arrParams)
   require($page);
 
 }
+
+function AddLI($buff, $class="")
+{
+  if($class=="")
+        $c = "";
+  else  $c = ' class="'.$class.'"';
+  return "<li$c>" . $buff . "</li>";
+}
+
+  /**
+   * Generates simple link based upon PMT's installed location
+   * @param string $module Module name to go to
+   * @param string $text Link caption
+   * @param string $extLink Link URL Extended
+   * @return string
+   */
+  function AddLink($module, $text, $extLink = "")
+  {
+    global $pmtConf;
+    return '<a href="'. $pmtConf["general"]["base_url"].$module.$extLink.'">'.$text.'</a>';
+  }
 
 
 function GenerateMetabar($module)
@@ -134,15 +186,17 @@ function GenerateMetabar($module)
   {
     // ONLINE
     // Login / Welcome, %USER%.   <-- Welcome screen take to user stats page
-    $ret .= AddLI('Welcome, <a href="/user" alt="User\'s Dashboard">' .$user->userInfo["username"] . '</a>', "first");
+    //$ret .= AddLI('Welcome, <a href="/user" alt="User\'s Dashboard">' .$user->userInfo["username"] . '</a>', "first");
+    $ret .= AddLI('Welcome, <a href="/user" alt="User\'s Dashboard">' .$user->userInfo["User_Name"] . '</a>', "first");
     $ret .= AddLI("Preferences");
     $ret .= AddLI("About xenoPMT");
-    $ret .= AddLI("Log off", "last");
+    $ret .= AddLI(AddLink("user", "Logoff", "?cmd=logoff" ), "last");
   }
   else
   {
     // OFFLINE
-    $ret .= AddLI("Login", "last");
+    $ret .= AddLI(AddLink("user", "Login", "?cmd=login" )  );
+    $ret .= AddLI("About xenoPMT", "last");
 
     // * Disabled for now
     //
@@ -171,18 +225,10 @@ function GenerateMetabar($module)
   return $ret;
 }
 
-function AddLI($buff, $class="")
-{
-  if($class=="")
-        $c = "";
-  else  $c = ' class="'.$class.'"';
-  return "<li$c>" . $buff . "</li>";
-}
-
 
 function MakeToolbar($module)
 {
-  pmtDebug("Module: " . $module);
+  // pmtDebug("Module: " . $module);
   /* Steps:
   * 1) Get user profile permissions to see what
   *    items we can draw on the screen.
@@ -200,7 +246,8 @@ function MakeToolbar($module)
   $arrAvailMods = array(
         // Module       Display
         "dashboard" => "Dashboard",
-        "project"   => "Projects",
+        //"project"   => "Projects",
+        "p"   => "Projects",
         "ticket"    => "Tickets",     /* "ticket" => array ("Tickets", "+"), */
         "bugs"      => "Bugs",
         "tasks"     => "Tasks",
@@ -210,34 +257,43 @@ function MakeToolbar($module)
         "admin"     => "Admin"
         );
 
-  $tab = "        ";
-  $ret = $tab . "<ul>". PHP_EOL;
-  $ndxCount = 0;
-  //print (count($a));
-  foreach($arrAvailMods as $key => $value)
-  { //print ("key: $key, Obj: $value <br />");
-
-    if ($tmod[$ndx] == $module)
-      $active = true;
-    else
-      $active = false;
-
-    $ndxCount++;
-    if ($ndxCount == 1)
-      if($active) $cls = ' class="first active"'; else $cls = ' class="first"';
-    elseif($ndxCount == count($arrAvailMods))
-      $cls = ' class="last"';
-    else
-      if ($key=="project") $cls = ' class="active"'; else $cls = '';
-
-    $ret .= $tab .
-            "  <li" . $cls. ">" .
-            $this->makeLink($key, $value) .
-            "</li>" . PHP_EOL;
-
+  if (count($arrAvailMods) == 0)
+  {
+    // Looks like a system lockdown just occurred!
+    $ret = "";
   }
-  $ret .= $tab . "</ul>". PHP_EOL;
-  //pmtDebug("disp: " . $ret);
+  else
+  {
+
+    $tab = "        ";
+    $ret = $tab . "<ul>". PHP_EOL;
+    $ndxCount = 0;
+    //print (count($a));
+    foreach($arrAvailMods as $key => $value)
+    { //print ("key: $key, Obj: $value <br />");
+
+      $ndxCount++;
+      //if ($tmod[$ndx] == $module)
+      if ($key == $module) $active = true; else $active = false;
+
+      if ($ndxCount == 1)
+        if($active) $cls = ' class="first active"'; else $cls = ' class="first"';
+      elseif($ndxCount == count($arrAvailMods))
+        $cls = ' class="last"';
+      else
+        if ($key==$module) $cls = ' class="active"'; else $cls = '';
+        //if ($key=="project") $cls = ' class="active"'; else $cls = '';
+
+      $ret .= $tab .
+              "  <li" . $cls. ">" .
+              AddLink($key, $value) .
+              "</li>" . PHP_EOL;
+
+    }
+    $ret .= $tab . "</ul>". PHP_EOL;
+    //pmtDebug("disp: " . $ret);
+  }
+
   return $ret;
 }
 

@@ -11,6 +11,8 @@
  *
  *
  * Change Log:
+ *  2012-0402 - Bypassed GenerateToolbar(). Return "" and use default.
+ *            * Moved PageData() to $_pagedata();
  *  2012-0328 * fixed "makeLink" to include $pmtConf
  */
 
@@ -24,6 +26,7 @@ class dashboard implements pmtModule
   private $_toolbar;    // HTML generated toolbar according to location
   private $_minileft;   // mini toolbar (left)
   private $_miniright;  // mini toolbar (right)
+  private $_pagedata;   // Main page data
 
   function __construct()
   {
@@ -36,17 +39,24 @@ class dashboard implements pmtModule
 
     // Get title from database setting
     $this->_title = "Dashboard " . " - " . "[PMT]";    // "Xeno Tracking System"
-    $this->_toolbar = $this->GenerateToolbar();
+    $this->_toolbar = ""; //$this->GenerateToolbar();
     $this->_minileft = $this->GenerateMiniLeft(); // "&nbsp; (test-left)";
     $this->_miniright = $this->GenerateMiniRight();  // "&nbsp; (test-right)";
+    $this->_pagedata = $this->GeneratePage();
   }
 
   public function Title() { return $this->_title; }             /* Title of the generated page */
   public function Toolbar() { return $this->_toolbar; }         /* Toolbar - HTML generated toolbar according to location */
   public function MiniBarLeft() { return $this->_minileft; }
   public function MiniBarRight() { return $this->_miniright; }
+  public function PageData() { return $this->_pagedata; }
 
-  public function PageData()
+
+
+  /* ****************** */
+  /* ****************** */
+
+  public function GeneratePage()
   {
     $sample =  "<h1>Welcome to <b><i>xeno</i>PMT</b></h1>";
     $sample .= "<p>This system is still under heavy development and is not ";
@@ -59,11 +69,6 @@ class dashboard implements pmtModule
 
     return $sample;
   }
-
-
-
-  /* ****************** */
-  /* ****************** */
 
 
   private function GenerateToolbar()

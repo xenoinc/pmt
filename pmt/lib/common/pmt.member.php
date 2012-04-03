@@ -30,6 +30,9 @@
  *  [ ] Enable SystemHook
  *
  * Change Log:
+ *  2012-0402 * Changed $userInfo[] key to match the database
+ *              because the array's keys get overwritten when loaded by DB.
+ *              And when logged off, OG keys return.. so we match the names.
  *  2012-0328 + Updated Login code
  *  2012-0309 + Added code to constructor
  */
@@ -45,12 +48,24 @@ class Member {
   public $online = false;
   public $errors = array();
 
+  /* Array (
+   * [0] => 1
+   * [User_Id] => 1
+   * [1] => admin
+   * [User_Name] => admin
+   * [2] => Test Administrator
+   * [Name] => Test Administrator
+   * [3] => 1
+   * [Group_Id] => 1
+   * [online] => 1 )
+   *
+   */
   public $userInfo = array(
-      "id"        => "0",
-      "username"  => "Guest",
-      "fullname"  => "Anonymous",
-      "groupid"   => "0",         // Anon should be setup as Group "2"
-      "online"    => false
+      "User_Id"        => "0",
+      "User_Name"  => "Guest",
+      "Name"  => "Anonymous",
+      "Group_Id"   => "0",         // Anon should be setup as Group "2"
+      "Online"    => false
   );
 
 
@@ -73,16 +88,19 @@ class Member {
     if($pmtDB->NumRows($q))
     {
       // We're logged in still
-      $this->userInfo = $pmtDB->FetchArray(query);
+      $this->userInfo = $pmtDB->FetchArray($q);
       $this->userInfo["online"] = true;
       $this->online = true;
     }
 
     // TOD: Finish Group setup
     // Get user Group Info (Anon or Logged in)
+    //print_r($this->userInfo);
+
+    $grp = $this->userInfo["Group_Id"];
     $tmp =
         "SELECT * FROM ".PMT_TBL."USER_GROUP WHERE " .
-        "Group_Id='" . $this->userInfo['groupid'] . "' LIMIT 1";
+        "Group_Id='" . $grp . "' LIMIT 1";
     $this->group = $pmtDB->QueryFirst($tmp);
 
     // TODO: Setup user SystemHook
@@ -141,6 +159,27 @@ class Member {
       //($hook = SystemHook::Hook("user_login_error")) ? eval($hook) : false;
       return false;
     }
+  }
+
+  /**
+   * Validate if the login credientials are valid or not
+   * @global Database $pmtDB
+   * @param string $user
+   * @param string $pass
+   * @return boolean
+   */
+  public function Validate($user, $pass)
+  {
+    global $pmtDB;
+
+    $q =  "SELECT * FROM ".PMT_TBL."USER ".
+          "WHERE User_Name='".$pmtDB->FixString($user)."' AND ".
+          "Password='".sha1($pmtDB->FixString($pass))."' LIMIT 1;";
+    $login = $pmtDB->Query($q);
+    if($pmtDB->NumRows($login))
+      return true;
+    else
+      return false;
   }
 
   /**

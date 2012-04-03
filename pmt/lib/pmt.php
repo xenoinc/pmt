@@ -134,14 +134,17 @@ function PmtParseURL()
   switch($uRoot)
   {
     case '':
-      pmtDebug("Module: 'dashboard'");
+      //pmtDebug("Module: 'dashboard'");
       LoadModule("dashboard", $uri->seg);
       break;
 
     case 'project':
     case 'p':
-      pmtDebug("Module: 'project'");
-      LoadModule("project", $uri->seg);
+      //pmtDebug("Module: 'project'");
+
+      //LoadModule("project", $uri->seg);
+      LoadModule("p", $uri->seg);
+
       /*  [1]         Project Stats / Selection   http://pmt/project/) or (http://pmt/p/)
        *    [2]       Project view                ./p/<prj>/
        *      [3]     Wiki Browser                ./p/../wiki/
@@ -160,7 +163,7 @@ function PmtParseURL()
       break;
 
     case 'product':
-      pmtDebug("Module: 'product'");
+      //pmtDebug("Module: 'product'");
       LoadModule("product", $uri->seg);
       break;
 
@@ -175,7 +178,7 @@ function PmtParseURL()
       break;
 
     case 'customer':
-      pmtDebug("Module: 'customer'");
+      //pmtDebug("Module: 'customer'");
       LoadModule("customer", $uri->seg);
       /*  [1]         Customer Overview           http://pmt/customer/
        *    [2]       View Customer Details       ./c/<custmr-id>
@@ -190,7 +193,7 @@ function PmtParseURL()
 
     case 'ticket':
       // create general ticket
-      pmtDebug("Module: 'ticket'");
+      //pmtDebug("Module: 'ticket'");
       LoadModule("ticket", $uri->seg);
       break;
 
