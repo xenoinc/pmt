@@ -9,16 +9,16 @@ debug('debug message');
 debug('SELECT * FROM users', 'db');
 /*
 class TestErrorBacktrace {
-	function __construct() {
-		$this->yeah(12, array());
-	}
-	function yeah() {
-		self::oops('some string', new stdClass());
-	}
-	static function oops() {
-		file_get_contents('oops.txt');
-		throw new Exception('Exception with call backtrace');
-	}
+  function __construct() {
+    $this->yeah(12, array());
+  }
+  function yeah() {
+    self::oops('some string', new stdClass());
+  }
+  static function oops() {
+    file_get_contents('oops.txt');
+    throw new Exception('Exception with call backtrace');
+  }
 }
 
 new TestErrorBacktrace();

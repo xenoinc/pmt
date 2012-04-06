@@ -65,7 +65,6 @@ class project implements pmtModule
 
   private $_MODE;         // ENUM_ProjMode from parser
   private $_WikiPage;     // name of wikipage to display/add/edit/remove
-  private $_SWITCH;       // Switch: new, edit, remove, <blank>
 
   //function __construct($uriPath = "")
   function __construct()
@@ -260,13 +259,70 @@ class project implements pmtModule
     {
       $html = $this->Page_UserOffline();
     }else{
-
       $html = $this->Page_ListProjects();
 
     }
     return $html;
   }
 
+
+  private function GenerateToolbar()
+  {
+    /* Steps:
+    * 1) Get user profile permissions to see what
+    *    items we can draw on the screen.
+    * 2) Generate toolbar
+    */
+
+    /* Step 1 - Get user permissions */
+
+
+    /* Step 2 - Generate Toolbar */
+
+    // List of all the available modules
+    // ** This should be pulled from DB depending on user/group
+    //    permissions & settings!!
+    $arrAvailMods = array(
+          // Module       Display
+          "dashboard" => "Dashboard",
+          "project"   => "Projects",
+          //"p"   => "Projects",
+          "ticket"    => "Tickets",     /* "ticket" => array ("Tickets", "+"), */
+          "bugs"      => "Bugs",
+          "tasks"     => "Tasks",
+          "product"   => "Products",
+          "customer"  => "Customers",
+          "user"      => "Users",
+          "admin"     => "Admin"
+          );
+
+    $tab = "        ";
+    $ret = $tab . "<ul>". PHP_EOL;
+    $ndxCount = 0;
+    //print (count($a));
+    foreach($arrAvailMods as $key => $value)
+    { //print ("key: $key, Obj: $value <br />");
+
+      $ndxCount++;
+      if ($ndxCount == 1)
+        $cls = ' class="first"';
+      elseif($ndxCount == count($arrAvailMods))
+        $cls = ' class="last"';
+      else
+        //if ($key=="p")$cls = ' class="active"'; else $cls = '';
+        if ($key=="project")$cls = ' class="active"'; else $cls = '';
+
+      $ret .= $tab .
+              "  <li" . $cls. ">" .
+              //AddLink($key, $value) .
+              AddLink($key, $value) .
+              "</li>" . PHP_EOL;
+
+    }
+    $ret .= $tab . "</ul>". PHP_EOL;
+    //pmtDebug("disp: " . $ret);
+    return $ret;
+  }
 
   private function GenerateMiniRight()
   {
@@ -292,8 +348,84 @@ class project implements pmtModule
     //$proj_url = self::MODULE;  // Default to base URL
     $proj_mode = "";              // Default to base URL
     $wiki_page = "";              // Default wiki page
+    switch (count($uri->seg))
+    {
+      case 1: // List all
+        $proj_mode = "";
 
+        /**
+         * Handle
+          if($_GET["cmd"] == "new")
+         */
 
+        break;
+
+      case 2: // Project View
+        $proj_mode = "project-view";
+        /**
+         * Handle
+          if($_GET["cmd"] == "new")     // "New Milestone", "New Wiki Page"
+          if($_GET["cmd"] == "edit")    // "Edit Wiki Page"
+          if($_GET["cmd"] == "remove")  // "Remove Project"
+         */
+        break;
+
+      case 3: // "Milestone" / "Wiki Page" Viewer
+
+        if ($uri->seg[2] == "milestone")
+        {
+          // Show Milestone MAIN Toolbar
+          /**
+          * Handle
+            if($_GET["cmd"] == "edit")    // "Edit Milestone"
+            if($_GET["cmd"] == "remove")  // "Remove Milestone"
+          */
+          $proj_mode = "milestone-view";
+
+          if($_GET["cmd"] == "edit")
+            $proj_mode = "milestone-edit";
+        }
+        elseif ($uri->seg[2] == "wiki")
+        {
+          // Show MAIN WIKI toolbar
+          /**
+          * Handle
+            if($_GET["cmd"] == "new")     // "New Wiki Page"
+            if($_GET["cmd"] == "edit")    // "Edit Wiki Page"
+            if($_GET["cmd"] == "remove")  // "Remove Wiki Page"
+          */
+          $proj_mode = "wiki";
+        }
+        else
+        {
+            // Default to base URL
+        }
+        break;
+
+      case 4: // Wiki Toolbar --- OR --- (Milestone Edit <-- no?)
+
+        // Are we viewing wiki?
+        if ($uri->seg[2] == "wiki")
+        {
+          // Show MAIN WIKI toolbar
+          /**
+          * Handle
+            if($_GET["cmd"] == "new")     // "New Wiki Page"
+            if($_GET["cmd"] == "edit")    // "Edit Wiki Page"
+            if($_GET["cmd"] == "remove")  // "Remove Wiki Page"
+          */
+          $proj_mode = "wiki";
+          $wiki_page = $uri->seg[3];  // USED IN::  "/wiki/" ./*page*/ "?cmd=edit") ."</li>".
+        }
+        else
+        {
+          //$proj_mode = "milestone-edit";
+          $proj_mode = "";
+        }
+
+        break;
+
+    }
 
     /** Section 3 - Generate depending on Project_Mode **/
 
@@ -360,6 +492,62 @@ class project implements pmtModule
 
     return $code;
   }
+
+  private function GenerateToolbar_default()
+  {
+    /* Steps:
+    * 1) Get user profile permissions to see what
+    *    items we can draw on the screen.
+    * 2) Generate toolbar
+    */
+
+    /* Step 1 - Get user permissions */
+
+
+    /* Step 2 - Generate Toolbar */
+
+    // List of all the available modules
+    // ** This should be pulled from DB depending on user/group
+    //    permissions & settings!!
+    $arrAvailMods = array(
+          // Module       Display
+          "dashboard" => "Dashboard",
+          "project"   => "Projects",
+          "ticket"    => "Tickets",     /* "ticket" => array ("Tickets", "+"), */
+          "bugs"      => "Bugs",
+          "tasks"     => "Tasks",
+          "product"   => "Products",
+          "customer"  => "Customers",
+          "user"      => "Users",
+          "admin"     => "Admin"
+          );
+
+    $tab = "        ";
+    $ret = $tab . "<ul>". PHP_EOL;
+    $ndxCount = 0;
+    //print (count($a));
+    foreach($arrAvailMods as $key => $value)
+    { //print ("key: $key, Obj: $value <br />");
+
+      $ndxCount++;
+      if ($ndxCount == 1)
+        $cls = ' class="first"';
+      elseif($ndxCount == count($arrAvailMods))
+        $cls = ' class="last"';
+      else
+        if ($key==self::MODULE)$cls = ' class="active"'; else $cls = '';
+
+      $ret .= $tab .
+              "  <li" . $cls. ">" .
+              AddLink($key, $value) .
+              "</li>" . PHP_EOL;
+
+    }
+    $ret .= $tab . "</ul>". PHP_EOL;
+    //pmtDebug("disp: " . $ret);
+    return $ret;
+  }
+
 
   private function Page_ListProjects()
   {
