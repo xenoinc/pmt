@@ -22,8 +22,8 @@
 require ("pmtModule.php");
 class user implements pmtModule
 {
-  //const MODULE = "user";
-  private $MODULE = "user";
+  const MODULE = "user";
+  //private $MODULE = "user";
 
 
   private $_title;      // Title of the screen
@@ -73,8 +73,8 @@ class user implements pmtModule
     $html = "";
 
     if (count($uri->seg) > 1)
-          $proj_url = $this->MODULE."/".$uri->seg[1];
-    else  $proj_url = $this->MODULE;
+          $proj_url = self::MODULE."/".$uri->seg[1];
+    else  $proj_url = self::MODULE;
 
 
     if ($user->online)
@@ -146,14 +146,9 @@ class user implements pmtModule
           $html .= "<p>Sit tight and enjoy the ride!</p>";
           $html .= "<p>&nbsp;</p>";
           $html .= "<p>- Xeno Innovations, Inc. -</p>";
-
           break;
-
       }
-
-
     }
-
     return $html;
   }
 

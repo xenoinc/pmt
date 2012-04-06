@@ -19,7 +19,10 @@
  * To Do:
  *  [ ] Step 2.a - Place into a function so we can resuse it in 2.b
  *  [ ] Step 2.a - Use disappearing suggestive text
+ *
  * Change Log:
+ *  2012-0403 * Fixed warning messages from _GET command. Added "isset(_GET[..])"
+ *            * Fixed warning message from !defined(DebugMode)  >> !defined("DebugMode")
  *  2012-0328 + config.php - Updated the cfg file to include "base_url"
  *            + config.php - Added copyright and notes
  *  2012-0225 * 50% there (djs)
@@ -28,7 +31,7 @@
 require_once "installer.php";
 require_once "../lib/common/pmt.db.php";
 
-if (!defined(DebugMode))
+if (!defined("DebugMode"))
 {
   define("DebugMode", TRUE);
   require "../lib/phpConsole.php";
@@ -48,7 +51,7 @@ if (DebugMode == true)
 
 
 
-if ($_GET["reset"] == "full")
+if (isset($_GET["reset"]) && $_GET["reset"] == "full")
 {
   /*
    * Remove both CONFIG.PHP and Drop Tables
@@ -92,7 +95,7 @@ if ($_GET["reset"] == "full")
   CreateFooter();
   exit;
 }
-elseif ($_GET["reset"] == "db")
+elseif (isset($_GET["reset"]) && $_GET["reset"] == "db")
 {
   /*
    * Drop tables and recreate

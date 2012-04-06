@@ -35,7 +35,10 @@ PhpConsole::start(true, true, dirname(__FILE__));
 
 // iii) no config.php? then goto installer
 if(!file_exists(PMT_PATH."lib/config.php"))
+{
   header("Location: install/");
+  exit; // suppress from falling through
+}
 // else { [verify settings are valid] }
 
 

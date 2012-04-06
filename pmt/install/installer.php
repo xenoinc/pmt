@@ -17,6 +17,8 @@
 /** Is PMT already installed */
 function IsInstalled()
 {
+  global $pmtConf;
+
   $installed = false;
   if(file_exists("../lib/config.php"))
   {
