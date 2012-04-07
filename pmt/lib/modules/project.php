@@ -13,6 +13,7 @@
  *  ** See Engineering document for more info
  *
  * Change Log:
+ *  2012-0406 + Adding Heredoc & Nowdoc versus a shitload of PRINT statements
  *  2012-0404 - Removed usage of makeLink & using AddLink from pmt-functions.php
  *  2012-0402 - Bypassed GenerateToolbar(). Return "" and use default.
  *            + Added test front page for links
@@ -29,7 +30,7 @@ class ENUM_ProjMode   //interface ENUM_ProjMode
   const MilestoneAdd = 3;     // "milestone-add"
   const MilestoneEdit = 4;    // "milestone-edit"
   const MilestoneRemove = 5;  // "milestone-remove"
-  const WikiView = 6;             // "wiki"           - View wiki page
+  const WikiView = 6;         // "wiki"           - View wiki page
   const WikiNew = 7;          // "wiki-new"       - New wiki page
   const WikiEdit = 8;         // "wiki-edit"      - Edit wiki page
   const WikiRemove = 9;       // "wiki-remove"    - Remove wiki page
@@ -61,7 +62,7 @@ class project implements pmtModule
   private $_miniright;    // mini toolbar (right)
   private $_pagedata;     // Main page data
 
-  private $_projSegment;  // Base project url ("p" or "p/test-proj"
+  private $_PROJ_Name;  // Base project url ("p" or "p/test-proj"
 
   private $_MODE;         // ENUM_ProjMode from parser
   private $_WikiPage;     // name of wikipage to display/add/edit/remove
@@ -73,8 +74,8 @@ class project implements pmtModule
     global $uri;
 
     if (count($uri->seg)>1)
-          $this->_projSegment = self::MODULE."/".$uri->seg[1];
-    else  $this->_projSegment = self::MODULE;
+          $this->_PROJ_Name = self::MODULE."/".$uri->seg[1];
+    else  $this->_PROJ_Name = self::MODULE;
 
     // Get the segments and the mode to be used
     $this->ParseData();
@@ -114,6 +115,17 @@ class project implements pmtModule
     return "";
   }
 
+  /**
+   * Parse URL data to assist in redirecting information to properly
+   * generate the GUI
+   *
+   * @global array $pmtConf
+   * @global array $uri
+   * @property string _MODE       ListAll, ProjectView, MilestoneView/Edit, Wiki
+   * @property string _WikiPage   Wiki page to display (Not used yet)
+   * @property string _SWITCH     Switch: new, edit, remove, <blank>
+   *
+   */
   private function ParseData()
   {
     /**
@@ -136,10 +148,12 @@ class project implements pmtModule
     else  $proj_url = self::MODULE;
 
 
-    //$proj_url = self::MODULE;  // Default to base URL
-    $proj_mode = "";              // Default to base URL
-    $wiki_page = "";              // Default wiki page
-    $proj_switch ="";
+    //$proj_url = self::MODULE;         // Default to base URL
+    $proj_mode = "";                    // Default to base URL
+    $wiki_page = "";                    // Default wiki page
+    $proj_switch = $this->GetCmd();     // $proj_switch = "";
+
+
     switch (count($uri->seg))
     {
       case 1: // List all
@@ -151,12 +165,12 @@ class project implements pmtModule
          */
         // if (isset($_GET["cmd"] && $_GET["cmd"])
         //   $proj_switch = $_GET["cmd"];
-        $proj_switch = $this->GetCmd();
+        //$proj_switch = $this->GetCmd();
 
 
         break;
 
-      case 2: // Project View
+      case 2: // Project View  ("/p/<proj-name>/")
         $proj_mode =  ENUM_ProjMode::ProjectView;           // "project-view";
         /**
          * Handle
@@ -164,7 +178,7 @@ class project implements pmtModule
           if($_GET["cmd"] == "edit")                        // "Edit Wiki Page"
           if($_GET["cmd"] == "remove")                      // "Remove Project"
           */
-        $proj_switch = $this->GetCmd();
+        //$proj_switch = $this->GetCmd();
 
         break;
 
@@ -178,12 +192,15 @@ class project implements pmtModule
             if($_GET["cmd"] == "edit")                      // "Edit Milestone"
             if($_GET["cmd"] == "remove")                    // "Remove Milestone"
           */
-          $proj_mode = ENUM_ProjMode::MilestoneView;        // "milestone-view";
+          //$proj_switch = $this->GetCmd();
 
-          if($_GET["cmd"] == "edit")
+          if ($proj_switch == "edit")
             $proj_mode = ENUM_ProjMode::MilestoneEdit;      // "milestone-edit";
+          elseif ($proj_switch == "remove")
+            $proj_mode = ENUM_ProjMode::MilestoneRemove;      // "milestone-edit";
+          else
+            $proj_mode = ENUM_ProjMode::MilestoneView;        // "milestone-view";
 
-          $proj_switch = $this->GetCmd();
         }
         elseif ($uri->seg[2] == ENUM_ProjSegment::Wiki)     // "wiki")
         {
@@ -194,7 +211,7 @@ class project implements pmtModule
             if($_GET["cmd"] == "edit")                      // "Edit Wiki Page"
             if($_GET["cmd"] == "remove")                    // "Remove Wiki Page"
           */
-          $proj_switch = $this->GetCmd();
+          //$proj_switch = $this->GetCmd();
           if ($proj_switch == "new")
             $proj_mode = ENUM_ProjMode::WikiNew;
           elseif ($proj_switch == "edit")
@@ -223,11 +240,11 @@ class project implements pmtModule
             if($_GET["cmd"] == "edit")                      // "Edit Wiki Page"
             if($_GET["cmd"] == "remove")                    // "Remove Wiki Page"
           */
-          $proj_switch = $this->GetCmd();
+          //$proj_switch = $this->GetCmd();
           $proj_mode = ENUM_ProjMode::WikiView;                 // "wiki";
           $wiki_page = $uri->seg[3];          // USED IN::  "/wiki/" ./*page*/ "?cmd=edit") ."</li>".
 
-          if (proj_switch == "edit")
+          if ($proj_switch == "edit")
             $proj_mode = ENUM_ProjMode::WikiEdit;
 
         }
@@ -248,6 +265,13 @@ class project implements pmtModule
   }
 
 
+  /**
+   * Redirect information from ParseData() to generate
+   * the correct page
+   *
+   * @global Member $user
+   * @return string
+   */
   private function GeneratePage()
   {
     /**
@@ -255,13 +279,30 @@ class project implements pmtModule
      * the user logged in.
      */
     global $user;
+    global $uri;
 
     if($user->online == false)
-    {
       $html = $this->Page_UserOffline();
-    }else{
+    else
+    {
+      switch ($this->_MODE)
+      {
 
-      $html = $this->Page_ListProjects();
+        case ENUM_ProjMode::ListAll:
+          $html = $this->Page_ProjectList();
+          break;
+
+        default:
+          $html = <<<EOT
+        <div align='left' class='message error'>
+          Location Unknown: <code>{$uri->GetUri()}</code>
+          <blockquote><code>{$uri->GetUri()}</code></blockquote>
+        </div>
+EOT;
+          $html .= $this->Page_UserOffline();
+          break;
+      }
+
 
     }
     return $html;
@@ -289,16 +330,18 @@ class project implements pmtModule
     else  $proj_url = self::MODULE;
 
 
-    //$proj_url = self::MODULE;  // Default to base URL
-    $proj_mode = "";              // Default to base URL
-    $wiki_page = "";              // Default wiki page
+    //$proj_url = self::MODULE;     // Default to base URL
+    $proj_mode = $this->_MODE;      // Default to base URL
+    $wiki_page = $this->_WikiPage;  // Default wiki page
+    $proj_switch = $this->_SWITCH;  // "cmd" switch was thrown
 
 
 
     /** Section 3 - Generate depending on Project_Mode **/
 
     // $wiki_page = "";  // USED IN::  "/wiki/" ./*page*/ "?cmd=edit") ."</li>".
-    switch($proj_mode)
+    // switch($proj_mode)
+    switch($this->_MODE)
     {
       case "":
         /* Viewing ALL Available Projects */
@@ -309,7 +352,8 @@ class project implements pmtModule
                 "</ul>";
         break;
 
-      case "project-view":
+      case ENUM_ProjMode::ProjectView: // "project-view":
+
         /* Viewing Single Project */
         /* :: "New Milestone" | "Edit Project" | "Remove Project" :: */
 
@@ -328,7 +372,7 @@ class project implements pmtModule
       //  /* :: "New Milestone" :: */
       //  break;
 
-      case "milestone-view":
+      case ENUM_ProjMode::MilestoneView:  // "milestone-view":
         /* viewing Single Milestone */
         /* :: "Edit Milestone" | "Remove Milestone" :: */
         $code = "<ul>" .
@@ -337,31 +381,56 @@ class project implements pmtModule
                 "</ul>";
         break;
 
-      case "milestone-edit":
-        /* viewing Single Milestone */
+      case ENUM_ProjMode::MilestoneEdit:   // "milestone-edit":
+        /* Editing Milestone */
         /* :: <blank> :: */
         $code = "";
         break;
 
-      case "wiki":
+      case ENUM_ProjMode::MilestoneRemove:
+        /* Removing Milestone */
+        /* :: <blank> :: */
+        $code = "";
+        break;
+
+
+      case ENUM_ProjMode::WikiView:   // "wiki":
         /* View wiki page */
         /* :: "New Page" | "Edit Page" (| "Remove Page") <-- if not main :: */
 
-        if(strlen($wiki_page) > 0) $wiki_page.="/";   // add slash if we on a page
+        if(strlen($wiki_page) > 0)
+          $wiki_page.="/";   // add slash if we on a page
         $code = "<ul>" .
                 "<li class='first'>". AddLink($proj_url, "New Page", "/wiki/?cmd=new") ."</li>".
                 "<li> " .             AddLink($proj_url, "Edit Page",  "/wiki/".$wiki_page."?cmd=edit") ."</li>".
                 "<li class='last'>".  AddLink($proj_url, "Remove Page","/wiki/".$wiki_page."?cmd=remove") ."</li>".
                 "</ul>";
-
         break;
 
+      case ENUM_ProjMode::WikiEdit:
+        $code = "";
+        break;
+      case ENUM_ProjMode::WikiRemove:
+        $code = "";
+        break;
+
+      default:
+        $code = "";
+        break;
     }
 
     return $code;
   }
 
-  private function Page_ListProjects()
+  /* ######################################### */
+  /* ######################################### */
+
+  /**
+   * List all available projects if user has permissions
+   * @global mixed $pmtDB
+   * @return string HTML Data
+   */
+  private function Page_ProjectList()
   {
     global $pmtDB;
 
@@ -397,48 +466,64 @@ class project implements pmtModule
     return $html;
   }
 
+
+  private function Page_ProjectCreate()
+  {
+    // heredoc
+    $html = <<<EOT
+
+EOT;
+
+    return $html;
+  }
+
   private function Page_UserOffline()
   {
-      $html =  "<h1>Projects</h1>";
-      $html .= "<p>This system is still under heavy development and is not ";
-      $html .= "ready for live action use by any means. Soon enough you will ";
-      $html .= "get to see what the future holds.  As the project develops the ";
-      $html .= "user and engineering documentation will mature along with it.</p>";
-      $html .= "<p>Sit tight and enjoy the ride!</p>";
-      $html .= "<p>&nbsp;</p>";
-      $html .= "<p>- Xeno Innovations, Inc. -</p>";
-      $html .= "<p></p>";
 
-      $html .= "<h2>Navagation Test</h2>";
-      $html .= "<p>Test out the mini-bar!</p>";
-      $html .= "<p>Becareful, this is not completely accurate and you will get ";
-      $html .= "unexpected results if you click out of sync or out of order. ";
-      $html .= "The <b>MiniBarRight</b> uses a completely different algorithm!";
-      $html .= "</p>";
+    $html = <<<"EOT"
+        <h1>Projects</h1>
+        <p>
+          This system is still under heavy development and is not
+          ready for live action use by any means. Soon enough you will
+          get to see what the future holds.  As the project develops the
+          user and engineering documentation will mature along with it.</p>
+        <p>Sit tight and enjoy the ride!</p>
+        <p>&nbsp;</p>
+        <p>- Xeno Innovations, Inc. -</p>
+        <p></p>
 
-      $html .= "<ul>";
-      //$html .= "<li>View Project: " . "<a href='p/xrehab/'>xRehab</a></li>";
-      $html .= "<li>View Project: " . AddLink(self::MODULE, "xRehab", "/xrehab") . "</li>";
-      $html .= "<li>Milestones";
-      $html .= "  <ul>";
+        <h2>Navagation Test</h2>
+        <p>Test out the mini-bar!</p>
+        <p>
+          Becareful, this is not completely accurate and you will get
+          unexpected results if you click out of sync or out of order.
+          The <b>MiniBarRight</b> uses a completely different algorithm!
+        </p>
+EOT;
 
-      //$html .= "    <li>New: " . "<a href='p/xrehab/milestone/?cmd=new'>test</a></li>";
-      //$html .= "    <li>Edit: ". "<a href='p/xrehab/milestone/?cmd=edit'>test</a></li>";
-      //$html .= "    <li>Remove: ". "<a href='p/xrehab/milestone/?cmd=remove'>test</a></li>";
-      $html .= "  <li>New: " .    AddLink($this->_projSegment, "Test", "/milestone?cmd=new") . "</li>";
-      $html .= "  <li>Edit: ".    AddLink($this->_projSegment, "Test", "/milestone?cmd=edit") . "</li>";
-      $html .= "  <li>Remove: ".  AddLink($this->_projSegment, "Test", "/milestone?cmd=remove") . "</li>";
-      $html .= "  </ul></li>";
-      //$html .= "<li>Wiki Page (new, edit, remove): " . "<a href='p/xrehab/wiki'>test</a></li>";
-      $html .= "<li>Wiki Page";
-      $html .= "  <ul>";
-      $html .= "  <li>Page - Main: ".    AddLink($this->_projSegment, "Main", "/wiki") . "</li>";
-      $html .= "  <li>Page - Test: ".    AddLink($this->_projSegment, "Main", "/wiki/test") . "</li>";
-      $html .= "  <li>New: ".     AddLink($this->_projSegment, "Test", "/wiki?cmd=new") . "</li>";
-      $html .= "  <li>Edit: ".    AddLink($this->_projSegment, "Test", "/wiki?cmd=edit") . "</li>";
-      $html .= "  <li>Remove: ".  AddLink($this->_projSegment, "Test", "/wiki?cmd=remove") . "</li>";
-      $html .= "  </ul></li>";
-      $html .= "</ul>";
+      $html .="  <ul>";
+        //<li>View Project: " . "<a href='p/xrehab/'>xRehab</a></li>";
+      $html .="   <li>View Project: " . AddLink(self::MODULE, "xRehab", "/xrehab") . "</li>";
+      $html .="  <li>Milestones";
+      $html .="    <ul>";
+      //    <li>New: " . "<a href='p/xrehab/milestone/?cmd=new'>test</a></li>";
+      //    <li>Edit: ". "<a href='p/xrehab/milestone/?cmd=edit'>test</a></li>";
+      //    <li>Remove: ". "<a href='p/xrehab/milestone/?cmd=remove'>test</a></li>";
+      $html .="  <li>New: " .    AddLink($this->_PROJ_Name, "Test", "/milestone?cmd=new") . "</li>";
+      $html .="  <li>Edit: ".    AddLink($this->_PROJ_Name, "Test", "/milestone?cmd=edit") . "</li>";
+      $html .="  <li>Remove: ".  AddLink($this->_PROJ_Name, "Test", "/milestone?cmd=remove") . "</li>";
+      $html .="  </ul></li>";
+      //<li>Wiki Page (new, edit, remove): " . "<a href='p/xrehab/wiki'>test</a></li>";
+      $html .="<li>Wiki Page";
+      $html .="  <ul>";
+      $html .="  <li>Page - Main: ".    AddLink($this->_PROJ_Name, "Main", "/wiki") . "</li>";
+      $html .="  <li>Page - Test: ".    AddLink($this->_PROJ_Name, "Main", "/wiki/test") . "</li>";
+      $html .="  <li>New: ".     AddLink($this->_PROJ_Name, "Test", "/wiki?cmd=new") . "</li>";
+      $html .="  <li>Edit: ".    AddLink($this->_PROJ_Name, "Test", "/wiki?cmd=edit") . "</li>";
+      $html .="  <li>Remove: ".  AddLink($this->_PROJ_Name, "Test", "/wiki?cmd=remove") . "</li>";
+      $html .="  </ul></li>";
+      $html .="</ul>";
+
       return $html;
   }
 
