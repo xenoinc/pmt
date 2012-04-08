@@ -113,7 +113,7 @@ function Locale($param, $args=array())
 
 function pmtDebug($buff)
 {
-  if (DebugMode == true)
+  if (defined("DebugMode") && DebugMode == true)
     debug($buff);
 }
 

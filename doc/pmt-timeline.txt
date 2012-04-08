@@ -8,7 +8,7 @@ Milesstones and Timeline
 ========================
 
 
-Milestone 1 - "Ground work" - v0.1 - "Nighthawk"
+Milestone 1 - Getting started - v0.1 - "Ground work"
 ------------------------------------------------
 - Basic UI
 - Able to create Projects

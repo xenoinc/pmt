@@ -28,9 +28,6 @@
  *  2012-0225 * 50% there (djs)
  */
 
-require_once "installer.php";
-require_once "../lib/common/pmt.db.php";
-
 if (!defined("DebugMode"))
 {
   define("DebugMode", TRUE);
@@ -38,6 +35,8 @@ if (!defined("DebugMode"))
   PhpConsole::start(true, true, dirname(__FILE__));
 }
 
+require_once "installer.php";
+require_once "../lib/common/pmt.db.php";
 
 if (DebugMode == true)
 {
