@@ -24,16 +24,28 @@
 // Makeshift Enum
 class ENUM_ProjMode   //interface ENUM_ProjMode
 {
-  const ListAll = 0;          // ""
-  const ProjectView = 1;      // "project-view"   - View details (all milestones? or main wiki?)
-  const MilestoneView = 2;    // "milestone-view"
-  const MilestoneAdd = 3;     // "milestone-add"
-  const MilestoneEdit = 4;    // "milestone-edit"
-  const MilestoneRemove = 5;  // "milestone-remove"
-  const WikiView = 6;         // "wiki"           - View wiki page
-  const WikiNew = 7;          // "wiki-new"       - New wiki page
-  const WikiEdit = 8;         // "wiki-edit"      - Edit wiki page
-  const WikiRemove = 9;       // "wiki-remove"    - Remove wiki page
+  const ListAll         = 0;    // ""
+
+  const ProjectView     = 10;   // "project-view"   - View project (all milestones? or main wiki?)
+  const ProjectNew      = 11;   // "project-new"    - Create new project
+  const ProjectEdit     = 12;   // "project-edit"   - Edit project options (wiki, scm, milestones, components, versions)
+  const ProjectRemove   = 13;   // "project-remove" - Remove the project (if dependancies are remove first [milestones])
+
+  const MilestoneView   = 20;   // "milestone-view"
+  const MilestoneAdd    = 21;   // "milestone-add"
+  const MilestoneEdit   = 22;   // "milestone-edit"
+  const MilestoneRemove = 23;   // "milestone-remove"
+
+  const ComponentView   = 30;   // "component-view"
+  const ComponentAdd    = 31;   // "component-add"
+  const ComponentEdit   = 32;   // "component-edit"
+  const ComponentRemove = 33;   // "component-remove"
+
+  const WikiView        = 40;   // "wiki"           - View wiki page
+  const WikiNew         = 41;   // "wiki-new"       - New wiki page
+  const WikiEdit        = 42;   // "wiki-edit"      - Edit wiki page
+  const WikiRemove      = 43;   // "wiki-remove"    - Remove wiki page
+
 }
 
 /**
@@ -42,7 +54,9 @@ class ENUM_ProjMode   //interface ENUM_ProjMode
 class ENUM_ProjSegment
 {
   const Milestone = "milestone";
+  const Component = "component";
   const Wiki = "wiki";
+  const Repo = "repo";
 }
 
 
@@ -55,6 +69,11 @@ class project implements pmtModule
   const MODULE = "p";
   //private $MODULE = "project";
   //private $MODULE = "p";
+  const cCMD    = "cmd";
+  const cNEW    = "new";
+  const cEDIT   = "edit";
+  const cREMOVE = "remove";
+
 
   private $_title;        // Title of the screen
   private $_toolbar;      // HTML generated toolbar according to location
@@ -104,8 +123,9 @@ class project implements pmtModule
    */
   private function GetCmd()
   {
-    if (isset($_GET["cmd"]) && $_GET["cmd"])
-      return $_GET["cmd"];
+    // self::cCMD = "cmd"
+    if (isset($_GET[self::cCMD]) && $_GET[self::cCMD])
+      return $_GET[self::cCMD];
     else
       return "";
   }
@@ -167,17 +187,22 @@ class project implements pmtModule
         //   $proj_switch = $_GET["cmd"];
         //$proj_switch = $this->GetCmd();
 
+        if ($proj_switch == self::cNEW)         $proj_mode = ENUM_ProjMode::ProjectNew;
 
         break;
 
       case 2: // Project View  ("/p/<proj-name>/")
-        $proj_mode =  ENUM_ProjMode::ProjectView;           // "project-view";
+
         /**
          * Handle
           if($_GET["cmd"] == "new")                         // "New Milestone", "New Wiki Page"
           if($_GET["cmd"] == "edit")                        // "Edit Wiki Page"
           if($_GET["cmd"] == "remove")                      // "Remove Project"
-          */
+         */
+        if     ($proj_switch == self::cEDIT)    $proj_mode = ENUM_ProjMode::ProjectEdit;
+        elseif ($proj_switch == self::cREMOVE)  $proj_mode = ENUM_ProjMode::ProjectRemove;
+        else                                    $proj_mode = ENUM_ProjMode::ProjectView;          // "project-view";
+
         //$proj_switch = $this->GetCmd();
 
         break;
@@ -194,12 +219,9 @@ class project implements pmtModule
           */
           //$proj_switch = $this->GetCmd();
 
-          if ($proj_switch == "edit")
-            $proj_mode = ENUM_ProjMode::MilestoneEdit;      // "milestone-edit";
-          elseif ($proj_switch == "remove")
-            $proj_mode = ENUM_ProjMode::MilestoneRemove;      // "milestone-edit";
-          else
-            $proj_mode = ENUM_ProjMode::MilestoneView;        // "milestone-view";
+          if     ($proj_switch == self::cEDIT)    $proj_mode = ENUM_ProjMode::MilestoneEdit;      // "milestone-edit";
+          elseif ($proj_switch == self::cREMOVE)  $proj_mode = ENUM_ProjMode::MilestoneRemove;    // "milestone-edit";
+          else                                    $proj_mode = ENUM_ProjMode::MilestoneView;      // "milestone-view";
 
         }
         elseif ($uri->seg[2] == ENUM_ProjSegment::Wiki)     // "wiki")
@@ -212,14 +234,10 @@ class project implements pmtModule
             if($_GET["cmd"] == "remove")                    // "Remove Wiki Page"
           */
           //$proj_switch = $this->GetCmd();
-          if ($proj_switch == "new")
-            $proj_mode = ENUM_ProjMode::WikiNew;
-          elseif ($proj_switch == "edit")
-            $proj_mode = ENUM_ProjMode::WikiEdit;
-          elseif ($proj_switch == "remove")
-            $proj_mode = ENUM_ProjMode::WikiRemove;
-          else
-            $proj_mode = ENUM_ProjMode::WikiView;               // "wiki";
+          if     ($proj_switch == self::cNEW)       $proj_mode = ENUM_ProjMode::WikiNew;
+          elseif ($proj_switch == self::cEDIT)      $proj_mode = ENUM_ProjMode::WikiEdit;
+          elseif ($proj_switch == self::cREMOVE)    $proj_mode = ENUM_ProjMode::WikiRemove;
+          else                                      $proj_mode = ENUM_ProjMode::WikiView;         // "wiki";
         }
         else
         {
@@ -280,6 +298,7 @@ class project implements pmtModule
      */
     global $user;
     global $uri;
+    $html = "";
 
     if($user->online == false)
       $html = $this->Page_UserOffline();
@@ -291,6 +310,19 @@ class project implements pmtModule
         case ENUM_ProjMode::ListAll:
           $html = $this->Page_ProjectList();
           break;
+
+        case ENUM_ProjMode::ProjectNew:
+          $html = $this->Page_ProjectNew();
+          break;
+
+        case ENUM_ProjMode::ProjectEdit:
+
+          break;
+
+        // For now, do the same thing
+        case ENUM_ProjMode::ProjectView:
+        case ENUM_ProjMode::WikiView:
+
 
         default:
           $html = <<<EOT
@@ -334,7 +366,6 @@ EOT;
     $proj_mode = $this->_MODE;      // Default to base URL
     $wiki_page = $this->_WikiPage;  // Default wiki page
     $proj_switch = $this->_SWITCH;  // "cmd" switch was thrown
-
 
 
     /** Section 3 - Generate depending on Project_Mode **/
@@ -467,15 +498,80 @@ EOT;
   }
 
 
-  private function Page_ProjectCreate()
+  private function Page_ProjectNew()
   {
     // heredoc
     $html = <<<EOT
+        <h1>Create Project</h1>
+        <div class="tablethin">
+          <table width="100%" cellspacing="0">
+            <tr><td class="tblheader first" colspan="2">Project Name</td></tr>
+            <tr>
+              <td>
+                Name of your project<br />
+                <i>(Only Alpha-Numeric, no spaces, no slashes, no BS!)</i>
+              </td>
+              <td width="400"><input type="text" name="txtProjName" value="" /></td>
+            </tr>
 
+            <tr><td class="tblheader" colspan="2">Created Date</td></tr>
+            <tr>
+              <td>When was the project created <i>(YYYY-MM-DD)</i></td>
+              <td width="400"><input type="text" name="txtCreatedDTTM" value="YYY-MM-DD" /></td>
+            </tr>
+
+
+            <!--
+            <tr><td class="tblheader" colspan="2">Project Managers</td></tr>
+            <tr>
+              <td valigh="top">
+                Choose the project managers to control
+                the project properties.
+              </td>
+              <td width="200">
+                <select name="managers[]" multiple="multiple" style="width:100%;height:50px;">
+                  <option value="1">admin</option>
+                </select>
+              </td>
+            </tr>
+
+            <tr><td class="tblheader" colspan="2">Project Stakeholders</td></tr>
+            <tr>
+              <td valigh="top">
+                Select the users which have access to view and update the project's
+                tickets/bugs/tasks.
+              </td>
+              <td width="200">
+                <select name="managers[]"
+                    multiple="multiple" style="width:100%;height:50px;">
+                  <option value="1">admin</option>
+                </select>
+              </td>
+            </tr>
+            -->
+
+
+            <tr><td class="tblheader" colspan="2">Description</td></tr>
+            <tr>
+              <td width="400" colspan="2">
+                <textarea type="text" name="txtDescription"
+                  style="width:99%;height 300px"></textarea>
+              </td>
+            </tr>
+
+            <tr>
+              <td colspan="2">
+                <input type="submit" value="Create Project" />
+              </td>
+            </tr>
+
+          </table>
+        </div>
 EOT;
 
     return $html;
   }
+
 
   private function Page_UserOffline()
   {

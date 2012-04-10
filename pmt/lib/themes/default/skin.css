@@ -303,3 +303,34 @@ body, th, tr {
 	background: #edfff0;
 	border-color: #c9ffd3;
 }
+
+/* ################################### */
+/* ################################### */
+/* ** Tables ** */
+.tablethin {
+  border: 1px solid #000000;
+  border-top: 1px solid #000AAA;
+  border-left: 1px solid #000AAA;
+}
+.tablethin td{ padding: 6px; }
+
+.tblheader
+{
+  border-top: 1px solid #000AAA;
+  border-bottom: 1px solid #000AAA;
+  font-weight: bold;
+  font-size: 12px;
+  background: #d2d2f1;
+}
+.tblheader.first, .tblheader.first th { border-top: 0;}
+
+.tblheader th {
+  border-top: 1px solid #000AAA;
+  border-bottom: 1px solid #000AAA;
+  padding: 6px;
+}
+
+.tablerowdark
+{
+  backcolor: #e4e4f8;
+}
