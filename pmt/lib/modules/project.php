@@ -500,6 +500,12 @@ EOT;
 
   private function Page_ProjectNew()
   {
+
+    if (isset($_POST["action"]) && $_POST["action"] == "" )
+    {
+
+    }
+
     // heredoc
     $html = <<<EOT
         <h1>Create Project</h1>
