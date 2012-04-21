@@ -14,6 +14,8 @@
  *  This will be included in v0.3 and above
  *
  * Change Log:
+ * 2012-0420  * (djs) Updated table structures
+ *            * (djs) Named ALPHA tables with '_0' to signify differences
  * 2012-0419  * (djs) initial creation
  **********************************************************************/
 
@@ -34,16 +36,17 @@
   Created:  2012-04-19
   Last Update:  2012-04-20
 */
-CREATE TABLE IF NOT EXISTS `TBLPMT_KB0`
+CREATE TABLE IF NOT EXISTS `TBLPMT_KB_ARTICLE_0`
 (
-  `Article_Id`         INT UNSIGNED NOT NULL AUTO_INCREMENT,
+  `Article_Id`    INT UNSIGNED NOT NULL AUTO_INCREMENT,
+  `Article_Type`  VARCHAR(16) COLLATE  utf8_unicode_ci,           -- "How To", "General", "Solution"
   `Title`         VARCHAR(255) COLLATE utf8_unicode_ci NOT NULL,
   `Subject`       VARCHAR(255) COLLATE utf8_unicode_ci NOT NULL,
   `Article_Data`  LONGTEXT COLLATE utf8_unicode_ci NOT NULL,
   `Created_Uid`   INT UNSIGNED,
   `Created_Dttm`  DATETIME,
   `Modified_Dttm` DATETIME,
-  primary key (`Kb_Id`)
+  PRIMARY KEY (`Article_Id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 
@@ -54,13 +57,14 @@ CREATE TABLE IF NOT EXISTS `TBLPMT_KB0`
   Created:  2012-04-19
   Last Update:  2012-04-20
 */
-CREATE TABLE IF NOT EXISTS `TBLPMT_KB_ARTICLE_SETTING`
+CREATE TABLE IF NOT EXISTS `TBLPMT_KB_ARTICLE_SETTING_0`
 (
-  `Kb_Id`       INT UNSIGNED NOT NULL,
+  `Article_Id`  INT UNSIGNED NOT NULL,
   `Project_Id`  INT UNSIGNED DEFAULT 0,     -- Linked to project
   `Product_Id`  INT UNSIGNED DEFAULT 0,     -- Linked to product
   `Visible`     SMALLINT DEFAULT 0          -- Is it public or private to user (Created_Uid / Admin)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
 
 
 /* ##[ 0.5 Tables ]##################### */
@@ -68,7 +72,7 @@ CREATE TABLE IF NOT EXISTS `TBLPMT_KB_ARTICLE_SETTING`
 
 -- ** Not used yet **
 -- Future KB table to be used
-CREATE TABLE IF NOT EXISTS `TBLPMT_KB`
+CREATE TABLE IF NOT EXISTS `TBLPMT_KB_ARTICLE`
 (
   `Article_Id`      INT UNSIGNED NOT NULL AUTO_INCREMENT,
   `Article_Data_Id` INT UNSIGNED NOT NULL,
