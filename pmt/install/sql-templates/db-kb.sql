@@ -1,4 +1,3 @@
-/* ********************************************************************
  * Copyright 2010-2012 (C) Xeno Innovations, Inc.
  * ALL RIGHTS RESERVED
  * Author:        Damian Suess
