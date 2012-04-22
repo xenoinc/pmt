@@ -14,7 +14,6 @@
  *  This will be included in v0.3 and above
  *
  * Change Log:
- * 2012-0422  + (djs) Added Login_Required to KB_ARTICLE_SETTING 
  * 2012-0420  + (djs) Added Table rows to TBLPMT_KB0
  *            * (djs) Split away from v0.5 tables. Keeping it basic for testing.
  * 2012-0419  * (djs) initial creation
@@ -48,15 +47,13 @@ CREATE TABLE IF NOT EXISTS `TBLPMT_KB_ARTICLE`
   This allows for simple articles
   Version 0.3.0
   Created:  2012-04-19
-  Last Update:  2012-04-22
-  2012-0422 + Added `Login Required` to help keep articles private
+  Last Update:  2012-04-20
 */
-CREATE TABLE IF NOT EXISTS `TBLPMT_KB_ARTICLE_SETTING_0`
+CREATE TABLE IF NOT EXISTS `TBLPMT_KB_ARTICLE_SETTING`
 (
   `Article_Id`  INT UNSIGNED NOT NULL,
   `Project_Id`  INT UNSIGNED DEFAULT 0,     -- Linked to project
   `Product_Id`  INT UNSIGNED DEFAULT 0,     -- Linked to product
-  `Login_Required` BOOLEAN NOT NULL DEFAULT TRUE,
   `Visible`     SMALLINT DEFAULT 0          -- Is it public or private to user (Created_Uid / Admin)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 

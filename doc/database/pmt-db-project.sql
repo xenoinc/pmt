@@ -9,7 +9,6 @@
  *   Project tables provides the basic layout of the database tables used by project files
  *
  * Change Log:
- * 2012-0422  + Moved 'TBLPMT_USER_PROJECT_PRIV' here as 'TBLPMT_PROJECT_PRIV'
  * 2012-0305  * Updated all IP Address columns from width 15 to 45 (IPv6)
  *            * Formatted column names to camel case, tables to caps
  * 2012-0304  * Included into PMT 0.2 (djs)
@@ -118,7 +117,7 @@ CREATE TABLE IF NOT EXISTS `TBLPMT_PROJECT_MILESTONE`
   Version 1.0
   Last Update:  2010-11-06
 */
-CREATE TABLE IF NOT EXISTS `TBLPMT_PROJECT_REPORT`
+CREATE TABLE IF NOT EXISTS `TBLPMT_REPORT`
 (
   `Report_Id` INT NOT NULL AUTO_INCREMENT,
   `Title`     VARCHAR(50) COLLATE utf8_unicode_ci NOT NULL,   -- Name of the report
@@ -163,19 +162,3 @@ CREATE TABLE IF NOT EXISTS `TBLPMT_PROJECT_WIKI`
   ** Not to be used until 1.5 or 2.0
   CREATE TABLE wiki_log ()
 */
-
-
-/*
-  User's project access level
-  Workflow:  USER > TBL_USER_PRODUCT_PRIV > TBL_GROUP
-  Version:  0.2
-  Created:  2010-11-07
-  * 2012-0422 * Changed name 'TBLPMT_USER_PROJECT_PRIV' > 'TBLPMT_PROJECT_PRIV'
-*/
-CREATE TABLE IF NOT EXISTS `TBLPMT_PROJECT_PRIV`
-(
-  `User_Name`   VARCHAR(255) COLLATE utf8_unicode_ci NOT NULL,   -- User ID from 'pmt_user'
-  `Project_Id`  INT UNSIGNED NOT NULL,  -- Product ID
-  `Group_Id`    SMALLINT UNSIGNED NOT NULL   -- Name of the group priv
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
-

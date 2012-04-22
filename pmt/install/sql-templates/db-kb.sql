@@ -1,3 +1,4 @@
+/***********************************************************************
  * Copyright 2010-2012 (C) Xeno Innovations, Inc.
  * ALL RIGHTS RESERVED
  * Author:        Damian Suess
@@ -42,7 +43,7 @@ CREATE TABLE IF NOT EXISTS `TBLPMT_KB_ARTICLE_0`
   `Title`         VARCHAR(255) COLLATE utf8_unicode_ci NOT NULL,
   `Subject`       VARCHAR(255) COLLATE utf8_unicode_ci NOT NULL,
   `Article_Data`  LONGTEXT COLLATE utf8_unicode_ci NOT NULL,
-  `Created_Uid`   INT UNSIGNED,
+  `Created_Uid`   INT UNSIGNED DEFAULT 0,
   `Created_Dttm`  DATETIME,
   `Modified_Dttm` DATETIME,
   PRIMARY KEY (`Article_Id`)
@@ -54,13 +55,15 @@ CREATE TABLE IF NOT EXISTS `TBLPMT_KB_ARTICLE_0`
   This allows for simple articles
   Version 0.3.0
   Created:  2012-04-19
-  Last Update:  2012-04-20
+  Last Update:  2012-04-22
+  2012-0422 + Added `Login Required` to help keep articles private
 */
 CREATE TABLE IF NOT EXISTS `TBLPMT_KB_ARTICLE_SETTING_0`
 (
   `Article_Id`  INT UNSIGNED NOT NULL,
   `Project_Id`  INT UNSIGNED DEFAULT 0,     -- Linked to project
   `Product_Id`  INT UNSIGNED DEFAULT 0,     -- Linked to product
+  `Login_Required` BOOLEAN NOT NULL DEFAULT TRUE,
   `Visible`     SMALLINT DEFAULT 0          -- Is it public or private to user (Created_Uid / Admin)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 

@@ -137,6 +137,7 @@ elseif (isset($_GET["reset"]) && $_GET["reset"] == "db")
     p("Executing: pmt-db-user.sql");    DbGenerateTables("pmt-db-user.sql", $pmtConf["db"]["prefix"]);
     p("Executing: pmt-db-project.sql"); DbGenerateTables("pmt-db-project.sql", $pmtConf["db"]["prefix"]);
     p("Executing: pmt-db-ticket.sql");  DbGenerateTables("pmt-db-ticket.sql", $pmtConf["db"]["prefix"]);
+    p("Executing: pmt-db-kb.sql");      DbGenerateTables("pmt-db-kb.sql", $pmtConf["db"]["prefix"]);
     //p("Executing: pmt-db-ticket.sql");  DbGenerateTables("pmt-db-customer.sql", $pmtConf["db"]["prefix"]);
     //p("Executing: pmt-db-ticket.sql");  DbGenerateTables("pmt-db-product.sql", $pmtConf["db"]["prefix"]);
 
@@ -494,6 +495,7 @@ switch ($step)
     DbGenerateTables("pmt-db-user.sql",     $dbase["prefix"]);
     DbGenerateTables("pmt-db-project.sql",  $dbase["prefix"]);
     DbGenerateTables("pmt-db-ticket.sql",   $dbase["prefix"]);
+    DbGenerateTables("pmt-db-kb.sql",   $dbase["prefix"]);
     //DbGenerateTables("pmt-db-customer.sql", $dbase["db"]["prefix"]);
     //DbGenerateTables("pmt-db-product.sql",  $dbase["db"]["prefix"]);
 

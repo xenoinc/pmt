@@ -10,7 +10,6 @@
  *   User tables.
  *
  * Change Log:
- * 
  * 2012-0320  + (djs) Added table, _USER_SETTINGS
  * 2012-0309  + (djs) added Changed USER_GROUP to GROUP and created new USER_GROUP
  * 2012-0306  * (djs) fixed error 'unsigned int' to 'int unsigned'
@@ -169,6 +168,20 @@ CREATE TABLE `TBLPMT_USER_GROUP`
   `Group_Id` INT UNSIGNED NOT NULL
 );
 
+
+
+/*
+  User's project access level
+  Workflow:  USER > TBL_USER_PRODUCT_PRIV > TBL_GROUP
+  Version:  0.2
+  Created:  2010-11-07
+*/
+CREATE TABLE IF NOT EXISTS `TBLPMT_USER_PROJECT_PRIV`
+(
+  `User_Name`   VARCHAR(255) COLLATE utf8_unicode_ci NOT NULL,   -- User ID from 'pmt_user'
+  `Project_Id`  INT UNSIGNED NOT NULL,  -- Product ID
+  `Group_Id`    SMALLINT UNSIGNED NOT NULL   -- Name of the group priv
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 
 /*
