@@ -509,21 +509,22 @@ EOT;
     // heredoc
     $html = <<<EOT
         <h1>Create Project</h1>
-        <div class="tablethin">
-          <table width="100%" cellspacing="0">
+        <!-- <div class="tablethin"> -->
+        <div>
+          <table width="800px" cellspacing="0" class="tablethin">
             <tr><td class="tblheader first" colspan="2">Project Name</td></tr>
             <tr>
               <td>
                 Name of your project<br />
                 <i>(Only Alpha-Numeric, no spaces, no slashes, no BS!)</i>
               </td>
-              <td width="400"><input type="text" name="txtProjName" value="" /></td>
+              <td style="text-align: right;"><input type="text" name="txtProjName" value="" /></td>
             </tr>
 
             <tr><td class="tblheader" colspan="2">Created Date</td></tr>
             <tr>
               <td>When was the project created <i>(YYYY-MM-DD)</i></td>
-              <td width="400"><input type="text" name="txtCreatedDTTM" value="YYY-MM-DD" /></td>
+              <td style="text-align: right;"><input type="text" name="txtCreatedDTTM" value="YYY-MM-DD" /></td>
             </tr>
 
 
@@ -559,9 +560,9 @@ EOT;
 
             <tr><td class="tblheader" colspan="2">Description</td></tr>
             <tr>
-              <td width="400" colspan="2">
-                <textarea type="text" name="txtDescription"
-                  style="width:99%;height 300px"></textarea>
+              <td colspan="2">
+                <textarea name="txtDescription"
+                  style="width:99%;height:300px"></textarea>
               </td>
             </tr>
 
