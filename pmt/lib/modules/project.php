@@ -13,6 +13,7 @@
  *  ** See Engineering document for more info
  *
  * Change Log:
+ *  2012-0424 - Moved member 'Page_ProjectNew' to ProjExt::Page_ProjectNew
  *  2012-0406 + Adding Heredoc & Nowdoc versus a shitload of PRINT statements
  *  2012-0404 - Removed usage of makeLink & using AddLink from pmt-functions.php
  *  2012-0402 - Bypassed GenerateToolbar(). Return "" and use default.
@@ -91,6 +92,7 @@ class project implements pmtModule
   function __construct()
   {
     global $uri;
+    require ("ext/project.ext.php");    // Maybe move outside the class
 
     if (count($uri->seg)>1)
           $this->_PROJ_Name = self::MODULE."/".$uri->seg[1];
@@ -312,7 +314,8 @@ class project implements pmtModule
           break;
 
         case ENUM_ProjMode::ProjectNew:
-          $html = $this->Page_ProjectNew();
+          //$html = $this->Page_ProjectNew();
+          $html = ProjExt::Page_ProjectNew();
           break;
 
         case ENUM_ProjMode::ProjectEdit:
@@ -498,86 +501,6 @@ EOT;
   }
 
 
-  private function Page_ProjectNew()
-  {
-
-    if (isset($_POST["action"]) && $_POST["action"] == "" )
-    {
-
-    }
-
-    // heredoc
-    $html = <<<EOT
-        <h1>Create Project</h1>
-        <!-- <div class="tablethin"> -->
-        <div>
-          <table width="800px" cellspacing="0" class="tablethin">
-            <tr><td class="tblheader first" colspan="2">Project Name</td></tr>
-            <tr>
-              <td>
-                Name of your project<br />
-                <i>(Only Alpha-Numeric, no spaces, no slashes, no BS!)</i>
-              </td>
-              <td style="text-align: right;"><input type="text" name="txtProjName" value="" /></td>
-            </tr>
-
-            <tr><td class="tblheader" colspan="2">Created Date</td></tr>
-            <tr>
-              <td>When was the project created <i>(YYYY-MM-DD)</i></td>
-              <td style="text-align: right;"><input type="text" name="txtCreatedDTTM" value="YYY-MM-DD" /></td>
-            </tr>
-
-
-            <!--
-            <tr><td class="tblheader" colspan="2">Project Managers</td></tr>
-            <tr>
-              <td valigh="top">
-                Choose the project managers to control
-                the project properties.
-              </td>
-              <td width="200">
-                <select name="managers[]" multiple="multiple" style="width:100%;height:50px;">
-                  <option value="1">admin</option>
-                </select>
-              </td>
-            </tr>
-
-            <tr><td class="tblheader" colspan="2">Project Stakeholders</td></tr>
-            <tr>
-              <td valigh="top">
-                Select the users which have access to view and update the project's
-                tickets/bugs/tasks.
-              </td>
-              <td width="200">
-                <select name="managers[]"
-                    multiple="multiple" style="width:100%;height:50px;">
-                  <option value="1">admin</option>
-                </select>
-              </td>
-            </tr>
-            -->
-
-
-            <tr><td class="tblheader" colspan="2">Description</td></tr>
-            <tr>
-              <td colspan="2">
-                <textarea name="txtDescription"
-                  style="width:99%;height:300px"></textarea>
-              </td>
-            </tr>
-
-            <tr>
-              <td colspan="2">
-                <input type="submit" value="Create Project" />
-              </td>
-            </tr>
-
-          </table>
-        </div>
-EOT;
-
-    return $html;
-  }
 
 
   private function Page_UserOffline()

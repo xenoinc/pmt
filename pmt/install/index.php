@@ -21,6 +21,7 @@
  *  [ ] Step 2.a - Use disappearing suggestive text
  *
  * Change Log:
+ *  2012-0424 * Repaired Reset links & prompt message
  *  2012-0403 * Fixed warning messages from _GET command. Added "isset(_GET[..])"
  *            * Fixed warning message from !defined(DebugMode)  >> !defined("DebugMode")
  *  2012-0328 + config.php - Updated the cfg file to include "base_url"
@@ -158,6 +159,13 @@ elseif (isset($_GET["reset"]) && $_GET["reset"] == "db")
             ");");
 
     p("You may now <a href='../'>start over</a>");
+
+  }
+  else
+  {
+    print("<li><b>config.php</b> not found</li>");
+    print("<li>Please run the installer</li>");
+    print("<li><a href='index.php'>Run installer</a></li>");
   }
 
   print("</ul>\n");
@@ -631,8 +639,8 @@ switch ($step)
     break;
 }
 
-print("<hr><div align='center'><p>Reset <a href='?reset=full'>Config and DB</a> - or - " .
-      "<a href='?reset=full'>DB Defaults</a></p></div>");
+print("<hr><div align='center'><p>Reset <a href='?reset=full'>Full system (cfg &amp; db)</a> - or - " .
+      "<a href='?reset=db'>DB Only (drop &amp; create)</a></p></div>");
 
 CreateFooter();
 

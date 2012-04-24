@@ -12,7 +12,7 @@
  *  currently based upon Trac13 for its clean looks
  *
  * Change Log:
- *
+ *  2012-0424 + Added handling for 'global $errors'
  */
 
 // have a variable access the "project" class
@@ -65,6 +65,16 @@ global $pmtConf;
 
 
     <div id="container">
+    <?php
+    global $errors;
+    if(isset($errors) && count($errors))
+    { ?>
+      <div class="message error">
+      <?php foreach($errors as $error) { ?>
+        <?php echo $error?><br />
+      <?php } ?>
+      </div>
+    <?php } ?>
       <div id="minibar_left" class="nav_left">
         <!-- breadcrumbs left -->
         <?php print($PAGE_MINILEFT); ?>
