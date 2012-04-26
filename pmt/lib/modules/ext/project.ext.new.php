@@ -17,10 +17,11 @@
  *  $ret = ProjExt::MemberName();
  *
  * Change Log:
+ *  2012-0425 + Added input checking
  *  2012-0424 + Moved Page_ProjectNew here
  */
 
-class ProjExt
+class ProjExt_New
 {
   // accepts a date, and a date format (not a regular expression)
   private static function IsDate($dttm, $frmat='%Y-%m-%d %H:%M')
@@ -75,21 +76,28 @@ class ProjExt
 
   static function Page_ProjectNew()
   {
+    /** Workflow
+     * 1) Get New project details
+     * 2) Created NEW Project
+     * 3) Take user to "Edit Project" screen so they can edit the finer details
+     *    * Project Version(s), Component(s), Component Version(s), Milestone(s), User Priv(s)
+     */
+
     $styProjName=""; $valProjName="";
     $styProjDTTM=""; $valProjDTTM=date("Y-m-d H:i:s");    // Default outpu, "YYYY-MM-DD HH:MM:SS"
     $styProjDesc=""; $valProjDesc="";
 
-    // Errors generated
-    $errCnt = 0;
-    $flagPost = false;
+    $errCnt = 0;            // Errors generated
+    $flagPost = false;      // Has a post been performed
 
     if (isset($_POST["project"]) && $_POST["project"] == "newproj" )
     {
       // Submittion attempt for a New Project
       $flagPost = true;
 
-      // Project Name (NoSpaces)
-      if(empty($_POST["txtProjName"]))
+      // Project Name (NoSpaces?)
+      if  (empty($_POST["txtProjName"]) ||
+          (empty($_POST["txtProjName"]) && trim($_POST["txtProjName"])==""))
       {
         $errCnt++;
         $styProjName = "background-color:#FF0000;";
@@ -101,15 +109,17 @@ class ProjExt
       }
 
       // Created Date Time
-      if( empty($_POST["txtCreatedDTTM"]) )
+      if  (empty($_POST["txtCreatedDTTM"]) ||
+          (!empty($_POST["txtCreatedDTTM"]) && self::IsDTTM($_POST["txtCreatedDTTM"]) == false))
       {
         $errCnt++;
         $styProjDTTM = "background-color:#FF0000;";
         $valProjDTTM = $_POST["txtCreatedDTTM"];
       }
+      /*
       elseif (!empty($_POST["txtCreatedDTTM"]) &&
-              //(self::IsDate($_POST["txtCreatedDTTM"], "%Y-%m-%d %H:%M") == false )
               (self::IsDTTM($_POST["txtCreatedDTTM"]) == false )
+            //(self::IsDate($_POST["txtCreatedDTTM"], "%Y-%m-%d %H:%M") == false )
 
       //elseif (!empty($_POST["txtCreatedDTTM"]) &&
       //     (self::IsDate2($_POST["txtCreatedDTTM"]) == false )
@@ -123,6 +133,7 @@ class ProjExt
         $styProjDTTM = "background-color:#FF0000;";
         $valProjDTTM = $_POST["txtCreatedDTTM"];
       }
+      */
       else
       {
         $valProjDTTM = $_POST["txtCreatedDTTM"];
@@ -138,19 +149,48 @@ class ProjExt
       else
         $valProjDesc = $_POST["txtDescription"];
 
-
-
     }
     elseif (isset($_POST["project"]) && $_POST["project"] == "" )
     {
-
       // Invalid post sent
-      // Check input if it is valid. If not, redisplay $html below.
+      // Check input if it is valid. If not, redisplay $html below
+    }
 
+
+    // STEP 2 :: Add NEW Project
+    if ($flagPost && $errCnt == 0)
+    {
+      global $pmtDB;
+      global $user;
+
+      // $valProjName, $valProjDesc,  $valProjDTTM
+      // Project_Id, Project_Name, Project_Description, Created_Dttm, Updated_User_Id
+      $q =  "INSERT INTO " . PMT_TBL . "PROJECT " .
+            "(Project_Name, Project_Description, Created_Dttm, Updated_User_Id) VALUES " .
+            "('" .  trim($pmtDB->Res($valProjName)) .
+            "','".  trim($pmtDB->Res($valProjDesc)) .
+            "','".  trim($pmtDB->Res($valProjDTTM)) .
+            "','".  trim($pmtDB->Res($user->userInfo['User_Id'])).
+            "');";
+
+      $pmtDB->Query($q);
+
+
+
+      // heredoc
+      $html = <<<EOT
+        <h1>Create Project</h1>
+        <div>
+          Project Created!
+          <!-- Pause 3 seconds & continue to Editing Project's Advanced Details -->
+        </div>
+EOT;
 
     }
-    // heredoc
-    $html = <<<EOT
+    else
+    {
+      // heredoc
+      $html = <<<EOT
         <h1>Create Project</h1>
         <!-- <div class="tablethin"> -->
         <div>
@@ -220,6 +260,7 @@ class ProjExt
           </form>
         </div>
 EOT;
+    }
 
     return $html;
   }

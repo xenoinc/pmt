@@ -222,6 +222,4 @@ function PmtParseURL()
 
 }
 
-
-
 ?>

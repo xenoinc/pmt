@@ -60,11 +60,13 @@ class Member {
    * [online] => 1 )
    *
    */
+  // Usage:
+  // $user->userInfo["User_Name"]
   public $userInfo = array(
-      "User_Id"        => "0",
-      "User_Name"  => "Guest",
-      "Name"  => "Anonymous",
-      "Group_Id"   => "0",         // Anon should be setup as Group "2"
+      "User_Id"   => "0",
+      "User_Name" => "Guest",
+      "Name"      => "Anonymous",
+      "Group_Id"  => "0",         // Anon should be setup as Group "2"
       "Online"    => false
   );
 

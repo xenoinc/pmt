@@ -37,6 +37,10 @@
 
 class URI
 {
+  /**
+   *  Segments are broken up by the "/"
+   *  "p/testProject" >> Array ( [0] => p [1] => testProject )
+   */
   public $seg = array();
   public $style = 1;
 

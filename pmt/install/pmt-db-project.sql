@@ -170,6 +170,9 @@ CREATE TABLE IF NOT EXISTS `TBLPMT_PROJECT_WIKI`
   Workflow:  USER > TBL_USER_PRODUCT_PRIV > TBL_GROUP
   Version:  0.2
   Created:  2010-11-07
+  * Possibly remove User_Name & only use Group_Id & have it link back
+    to the GROUP table to list the Users whom are allowed access.
+    
   * 2012-0422 * Changed name 'TBLPMT_USER_PROJECT_PRIV' > 'TBLPMT_PROJECT_PRIV'
 */
 CREATE TABLE IF NOT EXISTS `TBLPMT_PROJECT_PRIV`

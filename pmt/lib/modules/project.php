@@ -92,7 +92,6 @@ class project implements pmtModule
   function __construct()
   {
     global $uri;
-    require ("ext/project.ext.php");    // Maybe move outside the class
 
     if (count($uri->seg)>1)
           $this->_PROJ_Name = self::MODULE."/".$uri->seg[1];
@@ -310,12 +309,15 @@ class project implements pmtModule
       {
 
         case ENUM_ProjMode::ListAll:
-          $html = $this->Page_ProjectList();
+          require ("ext/project.ext.view.php");    // Maybe move outside the class
+          $html = ProjExt_View::Proj_List();
+          // $html = $this->Page_ProjectList();
           break;
 
         case ENUM_ProjMode::ProjectNew:
-          //$html = $this->Page_ProjectNew();
-          $html = ProjExt::Page_ProjectNew();
+
+          require ("ext/project.ext.new.php");    // Maybe move outside the class
+          $html = ProjExt_New::Page_ProjectNew();
           break;
 
         case ENUM_ProjMode::ProjectEdit:
@@ -324,8 +326,15 @@ class project implements pmtModule
 
         // For now, do the same thing
         case ENUM_ProjMode::ProjectView:
+          require ("ext/project.ext.view.php");    // Maybe move outside the class
+          $html = ProjExt_View::Proj_Details();
+          break;
+
         case ENUM_ProjMode::WikiView:
 
+          require ("ext/project.ext.wiki.php");
+          $html = ProjExt_Wiki::Page_View();
+          break;
 
         default:
           $html = <<<EOT
@@ -483,11 +492,27 @@ EOT;
     $ret = $pmtDB->Query($q);
     if($pmtDB->NumRows($ret))
     {
+      $html = "<h1>List of Project</h1>\n";
+      $html .= "<div><ul>\n";
       while($prj = $pmtDB->FetchArray($ret))
       {
         $projects[] = $prj;         // Place project info into array
-        $html .= "<hr />" . $prj;   // test output
+        $html .= "<li>" .
+                  $prj["Project_Name"] . "<ul>".
+                    "<li><b>ID Number:</b> " . $prj["Project_Id"] . "</li>" .
+                    "<li><b>Description:</b> " .$prj["Project_Description"] . "</li></ul>" .
+                  "</li>\n";   // test output
+
+        /*
+         * Array ( [0] => 1
+         *         [Project_Id] => 1
+         *         [1] => testProject
+         *         [Project_Name] => testProject
+         *         [2] => This is a test project. There is nothing of any importance here.
+         *         [Project_Description] => This is a test project. There is nothing of any importance here. )
+         */
       }
+      $html .= "</ul></div>\n";
     }
     else
     {
