@@ -22,97 +22,123 @@
 
 class ProjExt
 {
-  //private static function IsDate($string)
-  #accepts a date, and a date format (not a regular expression)
-  //private static function isDate($d, $f='%d-%m-%Y %H:%M')
-  private static function IsDate($d, $f='%Y-%m-%d')
+  // accepts a date, and a date format (not a regular expression)
+  private static function IsDate($dttm, $frmat='%Y-%m-%d %H:%M')
   {
     $dateFmtRE = array(
       '/\//' => '\/',
       '/%g|%G|%y|%Y/' => '(19\d\d|20\d\d)',
       '/%m/' => '(0?[1-9]|1[012])',
       '/%d|%e/' => '(0?[1-9]|[12][0-9]|3[01])',
-      //'/%H|%I|%l/' => '([0-1]?\d|2[0-3])',
-      //'/%M/' => '([0-5]\d)'
+      '/%H|%I|%l/' => '([0-1]?\d|2[0-3])',
+      '/%M/' => '([0-5]\d)'
       );
-    if (empty($d))  return true;
+    if (empty($dttm))  return true;
 
     #convert Unix timestamp to a std format (must not include regular expressions)
-    if (preg_match('!\d{5,}!', $d))
-      $d = strftime($f, $d);
+    if (preg_match('!\d{5,}!', $dttm))
+      $dttm = strftime($frmat, $dttm);
 
     return (
-      #does %d match the regular expression version of $f? if it does m/d/y are in $x
-      preg_match('!^' .preg_replace(array_keys($dateFmtRE), array_values($dateFmtRE),$f) .'$!', $d, $x)
-      && (checkdate($x[2], $x[1], $x[3]) || checkdate($x[1], $x[2], $x[3]) || checkdate($x[3], $x[1], $x[2]))
+      #does %d match the regular expression version of $frmat? if it does m/d/y are in $x
+      preg_match('!^' .preg_replace(array_keys($dateFmtRE), array_values($dateFmtRE),$frmat) .'$!', $dttm, $x)
+      && (checkdate($x[2], $x[3], $x[1]) || checkdate($x[1], $x[2], $x[3]) || checkdate($x[3], $x[1], $x[2]))
+        // MM, DD, YYYY
       ?true :false);
   }
 
-  private static function IsDate2($string)
+  private static function IsDTTM($dttm)
   {
+    $frmat="%Y-%m-%d %H:%M:%S";
+    $dateFmtRE = array(
+      '/\//' => '\/',
+      '/%g|%G|%y|%Y/' => '(19\d\d|20\d\d)',
+      '/%m/' => '(0?[1-9]|1[012])',
+      '/%d|%e/' => '(0?[1-9]|[12][0-9]|3[01])',
+      '/%H|%I|%l/' => '([0-1]?\d|2[0-3])',
+      '/%M/' => '([0-5]\d)',
+      '/%S/' => '([0-5]\d)'
+      );
+    if (empty($dttm))  return true;
 
-    $t = strtotime($string);
-    $m = date('m',$t);
-    $d = date('d',$t);
-    $y = date('Y',$t);
-    return checkdate ($m, $d, $y);
+    // Convert Unix timestamp to a std format (must not include regular expressions)
+    if (preg_match('!\d{6,}!', $dttm))
+      $dttm = strftime($frmat, $dttm);
+
+    return (
+      // Does %d match the regular expression version of $frmat? if it does m/d/y are in $x
+      preg_match('!^' .preg_replace(array_keys($dateFmtRE), array_values($dateFmtRE),$frmat) .'$!', $dttm, $x)
+      && (checkdate($x[2], $x[3], $x[1]) || checkdate($x[1], $x[2], $x[3]) || checkdate($x[3], $x[1], $x[2]))
+         //         (MM, DD, YYYY)
+      ?true :false);
   }
 
   static function Page_ProjectNew()
   {
+    $styProjName=""; $valProjName="";
+    $styProjDTTM=""; $valProjDTTM=date("Y-m-d H:i:s");    // Default outpu, "YYYY-MM-DD HH:MM:SS"
+    $styProjDesc=""; $valProjDesc="";
 
-    $styProjName="";    $prevProjName="";
-    $styCreatedDTTM=""; $prevCreatedDTTM="";
-    $styDescription=""; $prevDescription="";
-
-
+    // Errors generated
+    $errCnt = 0;
+    $flagPost = false;
 
     if (isset($_POST["project"]) && $_POST["project"] == "newproj" )
     {
-      $errCnt = 0;
       // Submittion attempt for a New Project
-
+      $flagPost = true;
 
       // Project Name (NoSpaces)
       if(empty($_POST["txtProjName"]))
       {
         $errCnt++;
         $styProjName = "background-color:#FF0000;";
-        $prevProjName = $_POST["txtProjName"];
+        $valProjName = $_POST["txtProjName"];
       }
       else
-        $prevProjName = $_POST["txtProjName"];
+      {
+        $valProjName = $_POST["txtProjName"];
+      }
 
       // Created Date Time
       if( empty($_POST["txtCreatedDTTM"]) )
       {
         $errCnt++;
-        $styCreatedDTTM = "background-color:#FF0000;";
-        $prevCreatedDTTM = $_POST["txtCreatedDTTM"];
+        $styProjDTTM = "background-color:#FF0000;";
+        $valProjDTTM = $_POST["txtCreatedDTTM"];
       }
-      //elseif (self::IsDate2($_POST["txtCreatedDTTM"], "%Y-%m-%d") == false )
-      //elseif (self::IsDate2($_POST["txtCreatedDTTM"]) == false )
-      if (!empty($_POST["txtCreatedDTTM"]) &&
-          (!ereg("^[0-9]{4}-[0-9]{2}-[0-9]{2}", $_POST["txtCreatedDTTM"]))
-          //(!ereg("^[0-9]{4}-[0-9]{2}-[0-9]{2}", $_POST["txtCreatedDTTM"]))
-         )
+      elseif (!empty($_POST["txtCreatedDTTM"]) &&
+              //(self::IsDate($_POST["txtCreatedDTTM"], "%Y-%m-%d %H:%M") == false )
+              (self::IsDTTM($_POST["txtCreatedDTTM"]) == false )
+
+      //elseif (!empty($_POST["txtCreatedDTTM"]) &&
+      //     (self::IsDate2($_POST["txtCreatedDTTM"]) == false )
+
+      //elseif (!empty($_POST["txtCreatedDTTM"]) &&
+      //    (!preg_match("/^[0-9]{4}-[0-9]{2}-[0-9]{2}/", $_POST["txtCreatedDTTM"]))
+      //elseif(!ereg("^[0-9]{4}-[0-9]{2}-[0-9]{2}", $_POST["txtCreatedDTTM"]))
+      )
       {
         $errCnt++;
-        $styCreatedDTTM = "background-color:#FF0000;";
-        $prevCreatedDTTM = $_POST["txtCreatedDTTM"];
+        $styProjDTTM = "background-color:#FF0000;";
+        $valProjDTTM = $_POST["txtCreatedDTTM"];
       }
       else
-        $prevCreatedDTTM = $_POST["txtCreatedDTTM"];
+      {
+        $valProjDTTM = $_POST["txtCreatedDTTM"];
+      }
 
       // Description
       if(empty($_POST["txtDescription"]))
       {
         $errCnt++;
-        $styDescription = "background-color:#FF0000;";
-        $prevDescription = $_POST["txtDescription"];
+        $styProjDesc = "background-color:#FF0000;";
+        $valProjDesc = $_POST["txtDescription"];
       }
       else
-        $prevDescription = $_POST["txtDescription"];
+        $valProjDesc = $_POST["txtDescription"];
+
+
 
     }
     elseif (isset($_POST["project"]) && $_POST["project"] == "" )
@@ -137,13 +163,13 @@ class ProjExt
                   Name of your project<br />
                   <i>(Only Alpha-Numeric, no spaces, no slashes, no BS!)</i>
                 </td>
-                <td style="text-align: right;"><input type="text" name="txtProjName" value="{$prevProjName}" style="{$styProjName}" /></td>
+                <td style="text-align: right;"><input type="text" name="txtProjName" value="{$valProjName}" style="{$styProjName}" /></td>
               </tr>
 
               <tr><td class="tblheader" colspan="2">Created Date</td></tr>
               <tr>
                 <td>When was the project created <i>(YYYY-MM-DD)</i></td>
-                <td style="text-align: right;"><input type="text" name="txtCreatedDTTM" value="{$prevCreatedDTTM}" style="{$styCreatedDTTM}" /></td>
+                <td style="text-align: right;"><input type="text" name="txtCreatedDTTM" value="{$valProjDTTM}" style="{$styProjDTTM}" /></td>
               </tr>
 
 
@@ -180,8 +206,8 @@ class ProjExt
               <tr><td class="tblheader" colspan="2">Description</td></tr>
               <tr>
                 <td colspan="2">
-                  <textarea name="txtDescription" rows="7" cols="0" style="{$styDescription}"
-                  style="width:99%;">{$prevDescription}</textarea>
+                  <textarea name="txtDescription" rows="7" cols="80" style="{$styProjDesc}"
+                  style="width:99%;">{$valProjDesc}</textarea>
                 </td>
               </tr>
 
