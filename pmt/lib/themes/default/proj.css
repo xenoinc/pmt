@@ -1,0 +1,151 @@
+/*
+  Document   : proj.css
+  Created on : April 26, 2012, 6:24:41 PM
+  Author     : Damian Suess
+  Description:
+    Project style sheet
+*/
+
+
+/* *************************** */
+/* ** Project List          ** */
+/* *************************** */
+
+/* div container */
+.projlist{
+  width: 550px;
+}
+
+/* project mini-icon */
+.proj-listing-icon {
+  background-color: transparent;
+  background-position: 0 0;
+  background-repeat: no-repeat;
+  display: inline-block;
+  height: 16px;
+  width: 16px;
+  vertical-align: text-bottom;
+}
+/* default icon */
+.proj-listing-icon.def-img {
+  background-image: url("gfx/proj-default-icon.png");
+}
+
+/* List Item Outline */
+ul.proj-listing > li {
+  border: 1px solid #DDDDDD;
+  border-radius: 4px 4px 4px 4px;
+  list-style-type: none;
+  margin: 0 0 10px;
+  overflow: hidden;
+  padding: 8px 10px 0;
+}
+ul.proj-listing h3
+{
+  font-size: 14px;
+  margin: 0;
+  white-space: nowrap;
+}
+
+/* ********************************** */
+/* mini-img :: Tickets | Bugs | Tasks */
+
+/* container */
+ul.proj-listing ul.tbt {
+  background: url("gfx/proj-action-fade.png") no-repeat scroll 0 0 transparent;
+  border: medium none;
+  float: right;
+  font-size: 11px;
+  font-weight: bold;
+  margin-right: -10px;
+  padding-left: 15px;
+  padding-right: 10px;
+  position: relative;
+  z-index: 5;
+}
+
+/* tbt */
+.tbt {
+  background: none repeat scroll 0 0 #FFFFFF;
+  border: 1px solid #DDDDDD;
+  border-radius: 3px 3px 3px 3px;
+  display: inline-block;
+  margin: 0;
+}
+
+ul.proj-listing ul.tbt li {
+  border: medium none;
+  color: #666666;
+}
+/* tbt items */
+.tbt li {
+  display: inline-block;
+  list-style-type: none;
+  margin: 0 !important;
+}
+
+/* icons */
+ul.tbt li a {
+  background: url("gfx/proj-tbt.png") no-repeat scroll 0 0 transparent;
+  border-left: 1px solid #DDDDDD;
+  color: #666666;
+  display: inline-block;
+  height: 21px;
+  line-height: 21px;
+  padding: 0 5px 0 23px;
+}
+
+/* tickets */
+ul.proj-listing ul.tbt li.tickets a,
+ul.proj-listing ul.tbt li.tickets a:hover {
+  background-position: 5px -2px;
+}
+
+/* bugs */
+ul.proj-listing ul.tbt li.bugs a,
+ul.proj-listing ul.tbt li.bugs a:hover {
+  background-position: 5px -2px;
+}
+
+/* tasks */
+ul.proj-listing ul.tbt li.tasks a,
+ul.proj-listing ul.tbt li.tasks a:hover {
+  background-position: 5px -52px;
+}
+
+/* ************** */
+/* Quick Nav      */
+ul.proj-listing .quicknav {
+
+}
+
+
+/* ********* */
+/* Body      */
+
+ul.proj-listing .body
+{
+  /*
+  background: -moz-linear-gradient(#FAFAFA, #EFEFEF) repeat scroll 0 0 transparent;
+  */
+  background: -moz-linear-gradient(#FAFAFA,#EFEFEF);
+  background: -webkit-linear-gradient(#FAFAFA,#EFEFEF);
+
+  border-bottom-left-radius: 4px;
+  border-top: 1px solid #EEEEEE;
+  border-bottom-right-radius: 4px;
+  margin-top: 8px;
+  margin-left: -10px;
+  padding: 5px 10px 5px 10px;
+  width: 100%;
+}
+ul.repositories p.description {
+    color: #444444;
+    font-size: 12px;
+    margin: 0 0 3px;
+}
+ul.proj-listing p.created {
+    color: #888888;
+    font-size: 11px;
+    margin: 0;
+}

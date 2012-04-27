@@ -61,30 +61,66 @@ class ProjExt_View
     global $pmtDB;
 
     /** View
-     *  --------------------------------------
-     * | {Project-Title}                      |
-     * | Tickets: {0}  Bugs: {0}  Tasks: {0}  |
-     * | Milestones | Wiki
-     * | {Description}                        |
-     *  --------------------------------------
+     *  -----------------------------------------
+     * | {Project-Title}                         |
+     * |     Tickets: {0}  Bugs: {0}  Tasks: {0} |
+     * | Wiki | Milestones | Reports | Admin     |
+     * | --------------------------------------- |
+     * | {Description}                           |
+     *  -----------------------------------------
      */
     $html = "";
     $projects = array();
-    $q = "SELECT `Project_Id`, `Project_Name`, `Project_Description` FROM ".PMT_TBL."PROJECT ".
+    $q = "SELECT `Project_Id`, `Project_Name`, `Project_Description`, `Created_Dttm` FROM ".PMT_TBL."PROJECT ".
          "ORDER BY `Project_Name` ASC;";
     $ret = $pmtDB->Query($q);
     if($pmtDB->NumRows($ret))
     {
-      $html = "<h1>List of Project</h1>\n";
-      $html .= "<div><ul>\n";
+      $html =  <<<"EOT"
+        <h1>Available Project</h1>
+          <div class="projlist">
+            <ul class="proj-listing">
+
+EOT;
+
+      $s14 = str_repeat(" ", 14);
       while($prj = $pmtDB->FetchArray($ret))
       {
         $projects[] = $prj;         // Place project info into array
-        $html .= "<li>" .
-                  $prj["Project_Name"] . "<ul>".
-                    "<li><b>ID Number:</b> " . $prj["Project_Id"] . "</li>" .
-                    "<li><b>Description:</b> " .$prj["Project_Description"] . "</li></ul>" .
-                  "</li>\n";   // test output
+        $html .= $s14.
+                "<li>". "\n".
+                  // Tickets | Bugs | Tasks
+                "  <ul class=\"tbt\">". "\n".
+                "    <li class=\"tickets\">".   "<a title='Tickets' href='' >3</a>"  ."</li>". "\n".
+                "    <li class=\"bugs\">".      "<a title='Bugs'    href='' >2</a>"  ."</li>". "\n".
+                "    <li class=\"tasks\">".     "<a title='Tasks'   href='' >4</a>"  ."</li>". "\n".
+                "  </ul>". "\n".
+
+                  // Title
+                "  <h3>". "\n".
+                "    <span class='proj-listing-icon def-img'></span> &nbsp;" . "\n".
+                    AddLink(project::MODULE, $prj["Project_Name"], "/".$prj["Project_Name"]). "\n".
+                "  </h3>". "\n".
+
+                "  <p class=\"quicknav\">"."\n".
+                "    <a href=''>Wiki</a> &nbsp;"."\n".
+                "    <a href=''>Milestones</a> &nbsp;"."\n".
+                "    <a href=''>Reports</a> &nbsp;"."\n".
+                "    <a href=''>Admin</a> &nbsp;"."\n".
+                "  </p>"."\n".
+
+                  // Details
+                "  <div class='body'>". "\n".
+                //"    <p class='created'>Id: " . $prj["Project_Id"] . "</p>". "\n".
+                "    <p class='description'>". "\n".
+                "      <b>Id:</b> " . $prj["Project_Id"] . "<br />". "\n".
+                "      <b>Description:</b> <br />". "\n".
+                       $prj["Project_Description"] . "<br />". "\n".
+                "   </p>". "\n".
+                    // Created Date
+                "    <p class='created'>Created: ". $prj["Created_Dttm"]. "</p>". "\n".
+                "  </div>" . "\n".
+                "</li>". "\n";   // test output
 
         /*
          * Array ( [0] => 1
@@ -102,9 +138,7 @@ class ProjExt_View
       $html .= "<h1>Projects</h1>";
       $html .= "<p>There are no projects to view</p>";
       $html .= "<p>If permissions allow, you may ".
-                //AddLink(self::MODULE, "Create", "?cmd=new").
-                //AddLink(parent::MODULE, "Create", "?cmd=new").
-                AddLink("p", "Create", "?cmd=new").
+                AddLink(project::MODULE, "Create", "?cmd=new").
                 " a new project</p>";
     }
 

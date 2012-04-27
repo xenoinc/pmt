@@ -41,6 +41,7 @@ global $pmtConf;
     <meta content="text/html;charset=utf-8" http-equiv="content-type" />
     <title><?php print($PAGE_TITLE); ?></title>
     <link type="text/css" href="<?php print($PAGE_PATH); ?>skin.css" rel="stylesheet" />
+    <link type="text/css" href="<?php print($PAGE_PATH); ?>proj.css" rel="stylesheet" />
     <?php  //print($PAGE_PATH . "skin.css"); ?>
   </head>
   <body>
