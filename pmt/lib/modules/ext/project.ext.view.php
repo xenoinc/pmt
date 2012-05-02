@@ -15,6 +15,12 @@
  *  requre("ext/project.ext.view.php");
  *  $ret = ProjExt_View::Proj_Details();
  *
+ * To Do:
+ * [ ] 2012-0427 - Proposal for v1.1 PCR
+ *      Project List :: Multi Column / Pages
+ *      If the project list os > 25, start a column right next to it
+ *      If list is > 50, create a page 2,3,.. (?)
+ *
  * Change Log:
  *  2012-0425 + initial
  */

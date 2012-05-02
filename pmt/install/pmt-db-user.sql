@@ -194,6 +194,21 @@ CREATE TABLE IF NOT EXISTS `TBLPMT_USER_TEAM_MEMBERS`
 
 
 
+/*
+  STATIC Group Permissions
+  List the different permissions allowed for the group users
+  Version 0.2.0
+  Created:  2010-11-07
+  
+  Updates:
+  * 2010-11-07  * Proposed format for easier debugging / editing
+ 
+INSERT INTO `TBLPMT_S_GROUP_PERMISSION` (Priv_Name, Description, Sort_Order) VALUES
+    ('ADMIN',                   'User will have access to all components', 0),
+    ('REPO_BROWSER_VIEW',       'User is able to view the project files',  '0'),
+    ('REPO_CHANGESET_VIEW',     'User is able to view each revision desciption and compare source differences', 0)
+*/
+
 INSERT INTO `TBLPMT_S_GROUP_PERMISSION` VALUES ('ADMIN',                   'User will have access to all components', 0);
 INSERT INTO `TBLPMT_S_GROUP_PERMISSION` VALUES ('REPO_BROWSER_VIEW',       'User is able to view the project files',  '0');
 INSERT INTO `TBLPMT_S_GROUP_PERMISSION` VALUES ('REPO_CHANGESET_VIEW',     'User is able to view each revision desciption and compare source differences', 0);
