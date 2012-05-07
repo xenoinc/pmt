@@ -30,7 +30,7 @@ CREATE TABLE IF NOT EXISTS `TBLPMT_PRODUCT`
   Decommission_DTTM       DATETIME,               --      Date of product decommission (past, present, future)
   Changed_UID             VARCHAR(15),            -- [*]  UserId who made last update to this product information   [* INT to Varchar to match PMT-USERID *]
   PMT_Allow_Global_Users  BOOLEAN DEFAULT FALSE,  --      Used by PMT - Allow the master list of users to view product
-  PMT_Path                VARCHAR(256),           --      Used by PMT - Location in PMT
+  PMT_Path                VARCHAR(256),           --      Used by PMT - Location in PMT (if intended for DL, then this should be its own normalized table)
   PRIMARY KEY (`Product_Id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
@@ -38,6 +38,11 @@ CREATE TABLE IF NOT EXISTS `TBLPMT_PRODUCT`
   ** Probably reject addition **
   Listing of updates to product (minor revisions).
   This will be used for GA Revisions made to a Branch copy
+  
+  Note:
+  There should be a row for each Minor version. Only revisions should be
+  updated; except for BETAs, they are allowed.
+    i.e. [OK] "1.5.2" && "1.5.3"(beta)    [NOT-OK] "1.5.2" && "1.5.4"
 */
 --create table PRODUCT_VERSION_UPDATE
 --create table PRODUCT_UPDATE
@@ -47,6 +52,7 @@ CREATE TABLE IF NOT EXISTS `TBLPMT_PRODUCT_VERSION`
   Product_Id          INTEGER,      -- xi_product.ProductId
   Release_Dttm        DATETIME,     -- Date the revision was released
   Decommission_Dttm   DATETIME,
+  Development_Build   BOOLEAN DEFAULT FALSE,  -- Version marked as a development "beta" build
   Version             VARCHAR(15),  -- Full version number (1.22.333.44444)
   Versoin_Major       INTEGER,      -- Major Version Number (1)
   Version_Minor       INTEGER,      -- Minor number (22)
