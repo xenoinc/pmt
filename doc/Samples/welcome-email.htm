@@ -1,0 +1,29 @@
+<img src="logo.jpg" />
+<h2>Hi {$newuser->FirstName}</h2>
+<p>
+  Welcome to Rally! Soon you will join your teammates to easily collaborate while tracking all of your work in one place. 
+</p>
+<h2>Getting Started</h2>
+<p>
+  Your user name is: {$newuser->Email}
+</p>
+<p>
+  To begin using xenoPMT, click the link below to create your password:<br />
+  {$newuser->ResetPassword}
+  <!-- https://support.xenoinc.org/slm/resetChangePassword.tr?brk=1p9a9xwy10asm&o=5993515449 -->
+  <br />
+  (This link expires on {$newuser->RegistrationExpire}.)
+</p>
+<p>
+  After setting up your password, we'll show you a 3-minute tour of xenoPMT and
+  links to more resources your team can use to deliver great software, faster.
+</p>
+<p>
+  If you have any problems loggin in, or have other questions, please contact
+  your subscription administrator or view our FAQ section
+  <a href="http://support.xenoinc.org/kb/xenoPMT"></a>
+</p>
+<p>
+  Sincerely,<br />
+  The xenoPMT Team
+</p>
