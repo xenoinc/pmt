@@ -1,3 +1,35 @@
+/* ********************************************************************
+ * Copyright 2010-2012 (C) Xeno Innovations, Inc.
+ * ALL RIGHTS RESERVED
+ * Author:
+ * Document:      db-product.sql
+ * Created Date:  Aug 25, 2011, 20:03:17
+ * Version:       0.2.3
+ * Description:
+ *  Customer and Customer Product tables
+ *
+ * Change Log:
+ * 2012-0507  + v0.2.3 - Added column `Allow_Beta` to _CUSTOMER_PRODUCT (it was missing)
+ * 2012-0131  * v0.2.2 - Initial GA
+ */
+
+
+/*
+  Removed columns:
+  * Customer_Name >> Name
+  - `LicensedTo`  VARCHAR(50),  -- [-]  Being used by specific person(s)  (Customer: UPMC,, Licensed To: Dr SOnSO)
+      See table: `TBLPMT_CUSTOMER_PRODUCT_REGISTRATION`
+  - `Email1`    VARCHAR(50),  -- [-]  Email Default       [* RMV:  See >> xi_customer_contact.MainContact *]
+  - `Email2`    VARCHAR(50),  -- [-]  Email Backup        [* RMV:  See >> xi_customer_contact.MainContact *]
+  - `custom1`   VARCHAR(50),  -- [-]  Custom Address Line 1, ...
+  - `custom2`   VARCHAR(50),  -- [-]  Special Contact Name, etc.
+  - `custom3`   VARCHAR(50),  -- [-]
+  - `custom4`   VARCHAR(50)   -- [-]
+  - `Phone1`    VARCHAR(25) COLLATE utf8_unicode_ci,                --      Main Phone "+001-412-111-0000 x1234.."
+  - `Phone2`    VARCHAR(25) COLLATE utf8_unicode_ci DEFAULT NULL,   --      Phone #2
+  - `Fax1`      VARCHAR(25) COLLATE utf8_unicode_ci DEFAULT NULL,   --
+*/
+-- Proposed restructure of customer table
 CREATE TABLE IF NOT EXISTS `TBLPMT_CUSTOMER`
 (
   `Customer_Index`  INT UNSIGNED NOT NULL AUTO_INCREMENT, -- Only used by internal indexing
@@ -15,6 +47,15 @@ CREATE TABLE IF NOT EXISTS `TBLPMT_CUSTOMER`
   PRIMARY KEY (`Customer_Index`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
+/*
+  Listing of contacts for customer site
+  Removed Columns:
+  - `Phone_Number`  VARCHAR(25),  -- Main phone
+  - `Phone_Number2` VARCHAR(25),  -- Alternate phone
+  - `Phone_Fax`     VARCHAR(25),  -- Fax number
+  - `EMail`         VARCHAR(50),  -- Email address
+
+*/
 CREATE TABLE IF NOT EXISTS `TBLPMT_CUSTOMER_CONTACT`
 (
   `Customer_Contact_Id` INT UNSIGNED NOT NULL AUTO_INCREMENT,
@@ -35,6 +76,10 @@ CREATE TABLE IF NOT EXISTS `TBLPMT_CUSTOMER_CONTACT_DATA`
   Detail_Data     VARCHAR(256) collate utf8_unicode_ci NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
+/*
+  (Static) Contact Type
+
+*/
 CREATE TABLE IF NOT EXISTS `TBLPMT_S_CONTACT_DETAIL_TYPE`
 (
   `Detail_Type_Id` TINYINT UNSIGNED NOT NULL AUTO_INCREMENT,
@@ -49,17 +94,31 @@ INSERT INTO `TBLPMT_S_CONTACT_TYPE` (Contact_Type, Description) VALUES ('Mobile'
 INSERT INTO `TBLPMT_S_CONTACT_TYPE` (Contact_Type, Description) VALUES ('Fax', 'Fax machine');
 INSERT INTO `TBLPMT_S_CONTACT_TYPE` (Contact_Type, Description) VALUES ('Website', 'Websites');
 
+
+/*
+  Customer Product listing
+  Created: 2010-01-01
+  
+  Changes:
+  2012-0507 + Added "Allow_Beta"
+            * Set defalut values for all UPDATE_Versions = FALSE
+            * Set defalut licenses to 3
+*/
+-- Listing of customer products
 CREATE TABLE IF NOT EXISTS `TBLPMT_CUSTOMER_PRODUCT`
 (
   `CPID`        INTEGER UNSIGNED NOT AUTO_INCREMENT NULL PRIMARY KEY,    -- ** Customer Product ID
   `Customer_Id` VARCHAR(256) COLLATE utf8_unicode_ci NOT NULL, -- CustomerId to link to
   `Product_Id`  INT UNSIGNED,   -- Product Identificaiton Number (xi_product.ProductId)
+
   `Product_Cost`  VARCHAR(10) COLLATE utf8_unicode_ci,  -- Sales price paid for product (ex: 3222111.00) [** Changed: FLOAT to VC(10) **]
   `Paid_Ammount`  VARCHAR(10) COLLATE utf8_unicode_ci,  -- Sum of payment paid to date
   `Payment_Plan`  BOOLEAN,                  -- Are they on payment plan?   1=yes 0=no (see payment plan table)
   `Num_Licenses`  INT UNSIGNED DEFAULT 3,   -- How many licenses are they allowed?
+
   `Install_Dttm`      DateTime,             -- Date of installation
   `Last_Update_Dttm`  DateTime,             -- Last update of product version
+
   `Allow_Beta`      BOOLEAN DEFAULT FALSE,  -- Customer is allowed development's pre-releases
   `Update_Enabled`  BOOLEAN DEFAULT FALSE,  -- Allow customer to update this product  ** Used by updater application
   `Update_Major`    BOOLEAN DEFAULT FALSE,  -- Allowed to upgrade? x.x.x  def=0  ** Used by updater application
@@ -68,6 +127,10 @@ CREATE TABLE IF NOT EXISTS `TBLPMT_CUSTOMER_PRODUCT`
   PRIMARY KEY (`CPID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
+
+/*
+  Listing of product updates as per the customer
+*/
 CREATE TABLE IF NOT EXISTS `TBLPMT_CUSTOMER_PRODUCT_UPDATE`
 (
   `Customer_Id`         VARCHAR(256) COLLATE utf8_unicode_ci,      -- xi_customer.CustomerId
@@ -79,6 +142,10 @@ CREATE TABLE IF NOT EXISTS `TBLPMT_CUSTOMER_PRODUCT_UPDATE`
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 
+/*
+  Registration infromation for customer product
+  Was previously "CUSTOMER_MMT1" used used as reg info for Fdx-MMT v1.x
+*/
 CREATE TABLE IF NOT EXISTS `TBLPMT_CUSTOMER_PRODUCT_REGISTRATION`
 (
   `Product_Reg_Id`    INT UNSIGNED NOT NULL AUTO_INCREMENT,
@@ -92,4 +159,5 @@ CREATE TABLE IF NOT EXISTS `TBLPMT_CUSTOMER_PRODUCT_REGISTRATION`
   `Old_Custom4`       VARCHAR(50) COLLATE utf8_unicode_ci,  -- Custom Info / Address Line 4
   PRIMARY KEY (Product_Reg_Id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
 

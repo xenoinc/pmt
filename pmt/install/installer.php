@@ -128,7 +128,7 @@ function p($data)
 function DbGenerateTables($sqlFile, $dbPrefix)
 {
   global $pmtDB;
-
+  debug("dbFile: " . $sqlFile . "Prefix: " . $dbPrefix);
   // Extract SQL & put prefix on tables
   $sqlPmtBrain = file_get_contents($sqlFile);
   $sqlPmtBrain = str_replace("TBLPMT_", $dbPrefix, $sqlPmtBrain);   // Use custom table header

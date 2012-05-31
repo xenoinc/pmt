@@ -499,12 +499,12 @@ switch ($step)
     p("<b>[DB]</b> - Generating SQL tables..");
 
 
-    DbGenerateTables("pmt-db.sql",          $dbase["prefix"]);
-    DbGenerateTables("pmt-db-user.sql",     $dbase["prefix"]);
-    DbGenerateTables("pmt-db-project.sql",  $dbase["prefix"]);
-    DbGenerateTables("pmt-db-ticket.sql",   $dbase["prefix"]);
-    DbGenerateTables("pmt-db-kb.sql",   $dbase["prefix"]);
-    //DbGenerateTables("pmt-db-customer.sql", $dbase["db"]["prefix"]);
+    p("<b>[DB]</b> - pmt-db");            DbGenerateTables("pmt-db.sql",          $dbase["prefix"]);
+    p("<b>[DB]</b> - pmt-db-user");       DbGenerateTables("pmt-db-user.sql",     $dbase["prefix"]);
+    p("<b>[DB]</b> - pmt-db-project");    DbGenerateTables("pmt-db-project.sql",  $dbase["prefix"]);
+    p("<b>[DB]</b> - pmt-db-ticket");     DbGenerateTables("pmt-db-ticket.sql",   $dbase["prefix"]);
+    p("<b>[DB]</b> - pmt-db-kb");         DbGenerateTables("pmt-db-kb.sql",   $dbase["prefix"]);
+    p("<b>[DB]</b> - pmt-db-customer");   DbGenerateTables("pmt-db-customer.sql", $dbase["db"]["prefix"]);
     //DbGenerateTables("pmt-db-product.sql",  $dbase["db"]["prefix"]);
 
     /*
