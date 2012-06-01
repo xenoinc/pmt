@@ -125,9 +125,11 @@ function p($data)
  * Generate Execute SQL files
  * @param string $sqlFile Path to SQL queries to execute
  */
-function DbGenerateTables($sqlFile, $dbPrefix)
+function DbGenerateTables($sqlFile, $dbPrefix, $dbConn)
 {
-  global $pmtDB;
+  // global $pmtDB;   // Removed 2012-0531. Was failing on GD host
+  $pmtDB = $dbConn;
+  
   debug("dbFile: " . $sqlFile . "Prefix: " . $dbPrefix);
   // Extract SQL & put prefix on tables
   $sqlPmtBrain = file_get_contents($sqlFile);

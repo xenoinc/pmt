@@ -1,5 +1,7 @@
 <?php
+phpinfo();
 
+exit;
 /* * **********************************************************
  * Copyright 2012 (C) Xeno Innovations, Inc.
  * ALL RIGHTS RESERVED
@@ -19,6 +21,7 @@
  * To Do:
  *  [ ] Step 2.a - Place into a function so we can resuse it in 2.b
  *  [ ] Step 2.a - Use disappearing suggestive text
+ *  [ ] GD.com is using PHP 5.3.6 which is buggy. PMT is tested @ xiLabs against v5.3.10
  *
  * Change Log:
  *  2012-0424 * Repaired Reset links & prompt message
@@ -43,9 +46,9 @@ if (DebugMode == true)
 {
   $defVal = array();
   $defVal["server"] = "localhost";
+  $defVal["dbname"] = "PMT_DATA";
   $defVal["user"]   = "testuser";
   $defVal["pass"]   = "testpass";
-  $defVal["dbname"] = "PMT_DATA";
   $defVal["prefix"] = "XIPMT_";
 }
 
@@ -134,12 +137,12 @@ elseif (isset($_GET["reset"]) && $_GET["reset"] == "db")
     */
 
     p("<b>Generating tables..</b>");
-    p("Executing: pmt-db.sql");         DbGenerateTables("pmt-db.sql", $pmtConf["db"]["prefix"]);
-    p("Executing: pmt-db-user.sql");    DbGenerateTables("pmt-db-user.sql", $pmtConf["db"]["prefix"]);
-    p("Executing: pmt-db-project.sql"); DbGenerateTables("pmt-db-project.sql", $pmtConf["db"]["prefix"]);
-    p("Executing: pmt-db-ticket.sql");  DbGenerateTables("pmt-db-ticket.sql", $pmtConf["db"]["prefix"]);
-    p("Executing: pmt-db-kb.sql");      DbGenerateTables("pmt-db-kb.sql", $pmtConf["db"]["prefix"]);
-    //p("Executing: pmt-db-ticket.sql");  DbGenerateTables("pmt-db-customer.sql", $pmtConf["db"]["prefix"]);
+    p("Executing: pmt-db.sql");         DbGenerateTables("pmt-db.sql", $pmtConf["db"]["prefix"], $pmtDB);
+    p("Executing: pmt-db-user.sql");    DbGenerateTables("pmt-db-user.sql", $pmtConf["db"]["prefix"], $pmtDB);
+    p("Executing: pmt-db-project.sql"); DbGenerateTables("pmt-db-project.sql", $pmtConf["db"]["prefix"], $pmtDB);
+    p("Executing: pmt-db-ticket.sql");  DbGenerateTables("pmt-db-ticket.sql", $pmtConf["db"]["prefix"], $pmtDB);
+    p("Executing: pmt-db-kb.sql");      DbGenerateTables("pmt-db-kb.sql", $pmtConf["db"]["prefix"], $pmtDB);
+    p("Executing: pmt-db-customer.sql");  DbGenerateTables("pmt-db-customer.sql", $pmtConf["db"]["prefix"], $pmtDB);
     //p("Executing: pmt-db-ticket.sql");  DbGenerateTables("pmt-db-product.sql", $pmtConf["db"]["prefix"]);
 
 
@@ -174,7 +177,7 @@ elseif (isset($_GET["reset"]) && $_GET["reset"] == "db")
 }
 else
 {
-/*
+
   if (IsInstalled() == true)
     print "It is installed!";
   else
@@ -196,9 +199,7 @@ else
   {
     print ("Error: " .$e);
   }
-
-  exit;
-*/
+  
 }
 
 
@@ -488,23 +489,32 @@ switch ($step)
     $dbase = json_decode($_POST["db"], true);
     $settings = json_decode($_POST["settings"], true);
     $admin = json_decode($_POST["admin"], true);
+    
+    //print ("jdec-dbase: " . $dbase . "<br>");
+    //print ("jdec-settings: " . $settings . "<br>");
+    //print ("jdec-admin: " . $admin . "<br>");
+    
+    $pmtDB = new Database(
+                $dbase["server"],
+                $dbase["user"],
+                $dbase["pass"],
+                $dbase["dbname"]);
 
-    $pmtDB = new Database($dbase["server"], $dbase["user"], $dbase["pass"], $dbase["dbname"]);
-
-    p("SVR: " . $dbase['server']);
-    p("Usr: " . $dbase['user']);
-    p("Pass: " . $dbase['pass']);
+    p("SVR: " .   $dbase['server']);
+    p("Usr: " .   $dbase['user']);
+    p("Pass: " .  $dbase['pass']);
     p("dbnme: " . $dbase['dbname']);
     p("---------------");
+    //p("test_db: " . json_encode($_POST["db"]));
+    //p("test_post-db: " . $_POST["db"]["server"]);
+    //p("---------------");
     p("<b>[DB]</b> - Generating SQL tables..");
-
-
-    p("<b>[DB]</b> - pmt-db");            DbGenerateTables("pmt-db.sql",          $dbase["prefix"]);
-    p("<b>[DB]</b> - pmt-db-user");       DbGenerateTables("pmt-db-user.sql",     $dbase["prefix"]);
-    p("<b>[DB]</b> - pmt-db-project");    DbGenerateTables("pmt-db-project.sql",  $dbase["prefix"]);
-    p("<b>[DB]</b> - pmt-db-ticket");     DbGenerateTables("pmt-db-ticket.sql",   $dbase["prefix"]);
-    p("<b>[DB]</b> - pmt-db-kb");         DbGenerateTables("pmt-db-kb.sql",   $dbase["prefix"]);
-    p("<b>[DB]</b> - pmt-db-customer");   DbGenerateTables("pmt-db-customer.sql", $dbase["db"]["prefix"]);
+    p("<b>[DB]</b> - pmt-db");            DbGenerateTables("pmt-db.sql",          $dbase["prefix"], $pmtDB);
+    p("<b>[DB]</b> - pmt-db-user");       DbGenerateTables("pmt-db-user.sql",     $dbase["prefix"], $pmtDB);
+    p("<b>[DB]</b> - pmt-db-project");    DbGenerateTables("pmt-db-project.sql",  $dbase["prefix"], $pmtDB);
+    p("<b>[DB]</b> - pmt-db-ticket");     DbGenerateTables("pmt-db-ticket.sql",   $dbase["prefix"], $pmtDB);
+    p("<b>[DB]</b> - pmt-db-kb");         DbGenerateTables("pmt-db-kb.sql",       $dbase["prefix"], $pmtDB);
+    p("<b>[DB]</b> - pmt-db-customer");   DbGenerateTables("pmt-db-customer.sql", $dbase["prefix"], $pmtDB);
     //DbGenerateTables("pmt-db-product.sql",  $dbase["db"]["prefix"]);
 
     /*
