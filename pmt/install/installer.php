@@ -27,7 +27,7 @@ function IsInstalled()
                           $pmtConf["db"]["user"],
                           $pmtConf["db"]["pass"]);
 
-    mysql_select_db($pmtConf["db"]["dbname"], $link);
+    mysql_select_db($pmtConf["db"]["dbname"], $con);// $link);
 
     $ret = mysql_query("SHOW TABLES;", $con);
     while ($arr = mysql_fetch_array($ret))

@@ -30,6 +30,7 @@
  *  [ ] Enable SystemHook
  *
  * Change Log:
+ *  2012-0603 * Updated usage of table _USER column `Name` to `Display_Name`
  *  2012-0402 * Changed $userInfo[] key to match the database
  *              because the array's keys get overwritten when loaded by DB.
  *              And when logged off, OG keys return.. so we match the names.
@@ -65,7 +66,7 @@ class Member {
   public $userInfo = array(
       "User_Id"   => "0",
       "User_Name" => "Guest",
-      "Name"      => "Anonymous",
+      "Display_Name" => "Anonymous",
       "Group_Id"  => "0",         // Anon should be setup as Group "2"
       "Online"    => false
   );
@@ -83,7 +84,7 @@ class Member {
     if(!isset($_COOKIE["xenopmt_hash"])) $_COOKIE["xenopmt_hash"] = "";
 
     $tmp =
-        "SELECT User_Id, User_Name, Name, Group_Id FROM ".PMT_TBL."USER WHERE " .
+        "SELECT User_Id, User_Name, Display_Name, Group_Id FROM ".PMT_TBL."USER WHERE " .
         "User_Name='" . $pmtDB->es($_COOKIE['xenopmt_user']) . "' AND " .
         "Session_Hash='" . $pmtDB->es($_COOKIE['xenopmt_hash']) . "' LIMIT 1;";
     $q = $pmtDB->Query($tmp);

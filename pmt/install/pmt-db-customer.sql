@@ -40,18 +40,18 @@ CREATE TABLE IF NOT EXISTS `TBLPMT_S_CONTACT_DETAIL_TYPE`
   `Detail_Type_Id` TINYINT UNSIGNED NOT NULL AUTO_INCREMENT,
   `Detail_Type`    VARCHAR(24) COLLATE utf8_unicode_ci NOT NULL,   -- email, phone, fax
   `Description`    VARCHAR(64) COLLATE utf8_unicode_ci DEFAULT '', -- Description of
-  PRIMARY KEY (`Contact_Type_Id`)
+  PRIMARY KEY (`Detail_Type_Id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
-INSERT INTO `TBLPMT_S_CONTACT_TYPE` (Contact_Type, Description) VALUES ('Email', 'Email Address');
-INSERT INTO `TBLPMT_S_CONTACT_TYPE` (Contact_Type, Description) VALUES ('Phone', 'Phone');
-INSERT INTO `TBLPMT_S_CONTACT_TYPE` (Contact_Type, Description) VALUES ('Mobile', 'Cell Phone');
-INSERT INTO `TBLPMT_S_CONTACT_TYPE` (Contact_Type, Description) VALUES ('Fax', 'Fax machine');
-INSERT INTO `TBLPMT_S_CONTACT_TYPE` (Contact_Type, Description) VALUES ('Website', 'Websites');
+INSERT INTO `TBLPMT_S_CONTACT_DETAIL_TYPE` (Detail_Type, Description) VALUES ('Email', 'Email Address');
+INSERT INTO `TBLPMT_S_CONTACT_DETAIL_TYPE` (Detail_Type, Description) VALUES ('Phone', 'Phone');
+INSERT INTO `TBLPMT_S_CONTACT_DETAIL_TYPE` (Detail_Type, Description) VALUES ('Mobile', 'Cell Phone');
+INSERT INTO `TBLPMT_S_CONTACT_DETAIL_TYPE` (Detail_Type, Description) VALUES ('Fax', 'Fax machine');
+INSERT INTO `TBLPMT_S_CONTACT_DETAIL_TYPE` (Detail_Type, Description) VALUES ('Website', 'Websites');
 
 CREATE TABLE IF NOT EXISTS `TBLPMT_CUSTOMER_PRODUCT`
 (
-  `CPID`        INTEGER UNSIGNED NOT AUTO_INCREMENT NULL PRIMARY KEY,    -- ** Customer Product ID
+  `CPID`        INT UNSIGNED NOT NULL AUTO_INCREMENT,    -- ** Customer Product ID
   `Customer_Id` VARCHAR(256) COLLATE utf8_unicode_ci NOT NULL, -- CustomerId to link to
   `Product_Id`  INT UNSIGNED,   -- Product Identificaiton Number (xi_product.ProductId)
   `Product_Cost`  VARCHAR(10) COLLATE utf8_unicode_ci,  -- Sales price paid for product (ex: 3222111.00) [** Changed: FLOAT to VC(10) **]

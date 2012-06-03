@@ -187,7 +187,8 @@ function GenerateMetabar($module)
     // ONLINE
     // Login / Welcome, %USER%.   <-- Welcome screen take to user stats page
     //$ret .= AddLI('Welcome, <a href="/user" alt="User\'s Dashboard">' .$user->userInfo["username"] . '</a>', "first");
-    $ret .= AddLI('Welcome, <a href="/user" alt="User\'s Dashboard">' .$user->userInfo["User_Name"] . '</a>', "first");
+    $ret .= AddLI('Welcome, <a href="/user" alt="User\'s Dashboard">' .$user->userInfo["Display_Name"] . '</a>', "first");
+    // $ret .= AddLI('Welcome, <a href="/user" alt="User\'s Dashboard">' .$user->userInfo["User_Name"] . '</a>', "first");
     $ret .= AddLI("Preferences");
     $ret .= AddLI("About xenoPMT");
     $ret .= AddLI(AddLink("user", "Logoff", "?cmd=logoff" ), "last");

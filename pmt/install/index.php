@@ -1,12 +1,13 @@
 <?php
-phpinfo();
+//phpinfo();
+//exit;
 
-exit;
+
 /* * **********************************************************
  * Copyright 2012 (C) Xeno Innovations, Inc.
  * ALL RIGHTS RESERVED
- * Author:       suessdam
- * Document:     index
+ * Author:       Damian Suess
+ * Document:     index.php
  * Created Date: Jan 30, 2012
  *
  * Description:
@@ -24,6 +25,7 @@ exit;
  *  [ ] GD.com is using PHP 5.3.6 which is buggy. PMT is tested @ xiLabs against v5.3.10
  *
  * Change Log:
+ *  2012-0603 * Updated XIPMT_USER table column `Name` to `Display_Name`
  *  2012-0424 * Repaired Reset links & prompt message
  *  2012-0403 * Fixed warning messages from _GET command. Added "isset(_GET[..])"
  *            * Fixed warning message from !defined(DebugMode)  >> !defined("DebugMode")
@@ -151,16 +153,16 @@ elseif (isset($_GET["reset"]) && $_GET["reset"] == "db")
     // Administration Account
     $pmtDB->Query(
             "INSERT INTO ".$pmtConf["db"]["prefix"]."USER ".
-            "(`User_Name`, `Password`, `Name`, `Email`, `Group_Id`, `Active`, `Session_Hash`) VALUES (" .
+            "(`User_Name`, `Password`, `Display_Name`, `Email`, `Group_Id`, `Active`, `Session_Hash`) VALUES (" .
             "'admin', " .                 // User
             "'".sha1('admin')."',".       // Password
-            "'Test Administrator', " .    // Name
+            "'xenoPMT Administrator', " . // Display name the world sees
             "'asdf@asdf.com', " .         // Email
             "1, " .                       // Group_Id (ADMIN)
             "true," .                     // Active
             "''" .                        // Session_Hash
             ");");
-
+    
     p("You may now <a href='../'>start over</a>");
 
   }
@@ -192,7 +194,9 @@ else
             $pmtConf["db"]["pass"],
             $pmtConf["db"]["dbname"]
             );
-    $pmtDB->Query("list tables;");
+    // Removed 2012-0603 - It was causing some error
+    // $pmtDB->Query("list tables;");
+    $pmtDB->Query("show tables;");
     print ("db works");
   }
   catch (Exception $e)
@@ -553,10 +557,10 @@ switch ($step)
     // TODO: Add protection against SQL Injection Attacks (http://snippets.dzone.com/posts/show/1507)
     // TODO: Use the USER Class to perform user insert
     $q ="INSERT INTO ".$dbase["prefix"]."USER ".
-        "(User_Name, Password, Name, Email, Group_Id, Active, Session_Hash) VALUES (" .
+        "(User_Name, Password, Display_Name, Email, Group_Id, Active, Session_Hash) VALUES (" .
         "'". $pmtDB->Res($admin['username'])."', ". // User
         "'". sha1($admin['password'])       ."', ". // Password
-        "'". $pmtDB->Res($admin['username'])."', ". // Name
+        "'". $pmtDB->Res($admin['username'])."', ". // Display name the world sees
         "'". $pmtDB->Res($admin['email'])   ."', ". // Email
         "1, " .                                     // Group_Id (ADMIN)
         "true," .                                   // Active (YES)
@@ -649,8 +653,10 @@ switch ($step)
     break;
 }
 
-print("<hr><div align='center'><p>Reset <a href='?reset=full'>Full system (cfg &amp; db)</a> - or - " .
-      "<a href='?reset=db'>DB Only (drop &amp; create)</a></p></div>");
+print("<hr><div align='center'><p>Admin Reset Options: <br />" .
+      "&nbsp;&nbsp; * <a href='?reset=full'>Full System Reset (cfg &amp; db)</a> [removes config] " .
+      "<br />" . //"- or - " .
+      "&nbsp;&nbsp; * <a href='?reset=db'>DB Only (drop &amp; create)</a> [retains config]</p></div>");
 
 CreateFooter();
 
