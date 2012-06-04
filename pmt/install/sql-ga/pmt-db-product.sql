@@ -54,7 +54,7 @@ CREATE TABLE IF NOT EXISTS `TBLPMT_PRODUCT_VERSION`
   Decommission_Dttm   DATETIME,
   Development_Build   BOOLEAN DEFAULT FALSE,  -- Version marked as a development "beta" build
   Version             VARCHAR(15),  -- Full version number (1.22.333.44444)
-  Versoin_Major       INTEGER,      -- Major Version Number (1)
+  Version_Major       INTEGER,      -- Major Version Number (1)
   Version_Minor       INTEGER,      -- Minor number (22)
   Product_Revision    VARCHAR(10),  -- Revision Version Number (333.rc4)
   Update_User_Name    VARCHAR(50),
