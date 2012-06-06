@@ -139,13 +139,13 @@ elseif (isset($_GET["reset"]) && $_GET["reset"] == "db")
     */
 
     p("<b>Generating tables..</b>");
-    p("Executing: pmt-db.sql");         DbGenerateTables("pmt-db.sql", $pmtConf["db"]["prefix"], $pmtDB);
-    p("Executing: pmt-db-user.sql");    DbGenerateTables("pmt-db-user.sql", $pmtConf["db"]["prefix"], $pmtDB);
-    p("Executing: pmt-db-project.sql"); DbGenerateTables("pmt-db-project.sql", $pmtConf["db"]["prefix"], $pmtDB);
-    p("Executing: pmt-db-ticket.sql");  DbGenerateTables("pmt-db-ticket.sql", $pmtConf["db"]["prefix"], $pmtDB);
-    p("Executing: pmt-db-kb.sql");      DbGenerateTables("pmt-db-kb.sql", $pmtConf["db"]["prefix"], $pmtDB);
-    p("Executing: pmt-db-customer.sql");  DbGenerateTables("pmt-db-customer.sql", $pmtConf["db"]["prefix"], $pmtDB);
-    //p("Executing: pmt-db-ticket.sql");  DbGenerateTables("pmt-db-product.sql", $pmtConf["db"]["prefix"]);
+    p("Executing: pmt-db.sql");           DbGenerateTables("pmt-db.sql",          $pmtConf["db"]["prefix"], $pmtDB);
+    p("Executing: pmt-db-user.sql");      DbGenerateTables("pmt-db-user.sql",     $pmtConf["db"]["prefix"], $pmtDB);
+    p("Executing: pmt-db-project.sql");   DbGenerateTables("pmt-db-project.sql",  $pmtConf["db"]["prefix"], $pmtDB);
+    p("Executing: pmt-db-ticket.sql");    DbGenerateTables("pmt-db-ticket.sql",   $pmtConf["db"]["prefix"], $pmtDB);
+    p("Executing: pmt-db-kb.sql");        DbGenerateTables("pmt-db-kb.sql",       $pmtConf["db"]["prefix"], $pmtDB);
+    p("Executing: pmt-db-customer.sql");  DbGenerateTables("pmt-db-customer.sql", $pmtConf["db"]["prefix"], $pmtDB);  // 2012-06-02 + Added (testing phase)
+    p("Executing: pmt-db-product.sql");   DbGenerateTables("pmt-db-product.sql",  $pmtConf["db"]["prefix"], $pmtDB);  // 2012-06-05 + Added (testing phase)
 
 
     p("<b>[DB]</b> - Inserting default admin account '<i>admin:admin</i>'.");
@@ -162,7 +162,7 @@ elseif (isset($_GET["reset"]) && $_GET["reset"] == "db")
             "true," .                     // Active
             "''" .                        // Session_Hash
             ");");
-    
+
     p("You may now <a href='../'>start over</a>");
 
   }
@@ -203,7 +203,7 @@ else
   {
     print ("Error: " .$e);
   }
-  
+
 }
 
 
@@ -493,11 +493,11 @@ switch ($step)
     $dbase = json_decode($_POST["db"], true);
     $settings = json_decode($_POST["settings"], true);
     $admin = json_decode($_POST["admin"], true);
-    
+
     //print ("jdec-dbase: " . $dbase . "<br>");
     //print ("jdec-settings: " . $settings . "<br>");
     //print ("jdec-admin: " . $admin . "<br>");
-    
+
     $pmtDB = new Database(
                 $dbase["server"],
                 $dbase["user"],
@@ -518,8 +518,8 @@ switch ($step)
     p("<b>[DB]</b> - pmt-db-project");    DbGenerateTables("pmt-db-project.sql",  $dbase["prefix"], $pmtDB);
     p("<b>[DB]</b> - pmt-db-ticket");     DbGenerateTables("pmt-db-ticket.sql",   $dbase["prefix"], $pmtDB);
     p("<b>[DB]</b> - pmt-db-kb");         DbGenerateTables("pmt-db-kb.sql",       $dbase["prefix"], $pmtDB);
-    p("<b>[DB]</b> - pmt-db-customer");   DbGenerateTables("pmt-db-customer.sql", $dbase["prefix"], $pmtDB);
-    //DbGenerateTables("pmt-db-product.sql",  $dbase["db"]["prefix"]);
+    p("<b>[DB]</b> - pmt-db-customer");   DbGenerateTables("pmt-db-customer.sql", $dbase["prefix"], $pmtDB);  // 2012-06-02 + Added (testing phase)
+    p("<b>[DB]</b> - pmt-db-product");    DbGenerateTables("pmt-db-product.sql",  $dbase["prefix"], $pmtDB);  // 2012-06-05 + Added (testing phase)
 
     /*
     // Extract SQL & put prefix on tables
