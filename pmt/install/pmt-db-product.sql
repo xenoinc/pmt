@@ -41,9 +41,9 @@ CREATE TABLE IF NOT EXISTS `TBLPMT_PRODUCT`
   Product_Description     BLOB collate utf8_unicode_ci,                   -- Description of the product
   Category                VARCHAR(50) collate utf8_unicode_ci,            -- What type of product it is (Ex: "hardware", "software", etc.)
   Sub_Category            VARCHAR(15),            --      Sub Category (Ex: "Muscle Evaluation", "Utility", "FTP-Client")
-  Release_DTTM            DATETIME,               --      Product Go-Live
-  Update_DTTM             DATETIME,               --      YYYYMMDD of last detail update
-  Decommission_DTTM       DATETIME,               --      Date of product decommission (past, present, future)
+  Release_Dttm            DATETIME,               --      Product Go-Live
+  Update_Dttm             DATETIME,               --      YYYYMMDD of last detail update
+  Decommission_Dttm       DATETIME,               --      Date of product decommission (past, present, future)
   Changed_Uid             VARCHAR(50) collate utf8_unicode_ci,            -- UserId who made last update to this product information   [* INT to Varchar to match PMT-USERID *]
   PMT_Allow_Global_Users  BOOLEAN DEFAULT FALSE,                          -- Used by PMT - Allow the master list of users to view product
   PMT_Path                VARCHAR(255) collate utf8_unicode_ci,           -- Used by PMT - Location in PMT (if intended for DL, then this should be its own normalized table)
