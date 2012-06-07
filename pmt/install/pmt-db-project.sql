@@ -9,6 +9,7 @@
  *   Project tables provides the basic layout of the database tables used by project files
  *
  * Change Log:
+ * 2012-0606  - Removed "AUTO_INCREMENT" from Component_Version.Component_Id (bug)
  * 2012-0422  + Moved 'TBLPMT_USER_PROJECT_PRIV' here as 'TBLPMT_PROJECT_PRIV'
  * 2012-0305  * Updated all IP Address columns from width 15 to 45 (IPv6)
  *            * Formatted column names to camel case, tables to caps
@@ -26,7 +27,8 @@
 
 
 /*
-  2012-0304 * Changed Upadted_User_Name to Updated_User_Id
+  Created: 2010-1007
+  * 2012-0304 * Changed Upadted_User_Name to Updated_User_Id
 */
 CREATE TABLE IF NOT EXISTS `TBLPMT_PROJECT`
 (
@@ -41,7 +43,7 @@ CREATE TABLE IF NOT EXISTS `TBLPMT_PROJECT`
 /*
   Main Project Version
   Version 1.0
-  Last Update:  2010-11-06
+  Created:  2010-11-06
 */
 CREATE TABLE IF NOT EXISTS `TBLPMT_PROJECT_VERSION`
 (
@@ -59,8 +61,9 @@ CREATE TABLE IF NOT EXISTS `TBLPMT_PROJECT_VERSION`
 /*
   Project Components
   Project Editions, Revisions, Sub-Projects
-  Version 0.2
+  Version 0.2.2
   Created:  2010-11-06
+  * 2012-0606 + Added `Project_Version` to help identify where components belong
   * 2012-0306 - `Owner_Name` VARCHAR(15) COLLATE utf8_unicode_ci NOT NULL,   -- Default Owner, NOTE: Next release, use table 'group_component' to list all compnts assigned to what group (used in reports/issue listing)
   * 2012-0305 + Added `Project_Id` to assign the component to project
 */
@@ -69,21 +72,23 @@ CREATE TABLE IF NOT EXISTS `TBLPMT_PROJECT_COMPONENT`
   `Component_Id`    INT UNSIGNED NOT NULL AUTO_INCREMENT,
   `Component_Name`  VARCHAR(128) COLLATE utf8_unicode_ci NOT NULL,  -- Project Component Name (Core, DocuFAST, QuantiFAST, PIE, ALL, FlexDx, ..)
   `Project_Id`      INT UNSIGNED NOT NULL,
-  `Description`     MEDIUMBLOB,                -- description            (All Fdx 1.x Products.  This includes, ...)
+  `Project_Version` VARCHAR(15) COLLATE utf8_unicode_ci ,            -- Full version number (1.22.333.44444) or (1.5)
+  `Description`     MEDIUMBLOB COLLATE utf8_unicode_ci ,                                     -- description (All Fdx 1.x Products.  This includes, ...)
   PRIMARY KEY (`Component_Id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 /*
   Project Component Version
   (proj) xRehab=1.0, (component) ROM=1.2
-  Version 1.0
+  Version 1.1
   Last Update:  2010-11-06
+  * 2012-0606 - Removed "AUTO_INCREMENT" from Component_Id (bug)
   * 2012-0306 - `Component_Name`  VARCHAR(128) COLLATE utf8_unicode_ci NOT NULL,  -- Range of Motion
   * Expanded Component_Name from 20 to 100
 */
 CREATE TABLE IF NOT EXISTS `TBLPMT_PROJECT_COMPONENT_VERSION`
 (
-  `Component_Id`    INT UNSIGNED NOT NULL AUTO_INCREMENT,
+  `Component_Id`    INT UNSIGNED NOT NULL,
   `Version_Number`  VARCHAR(24) COLLATE utf8_unicode_ci NOT NULL,   -- 10.255.4345
   `Released_Dttm`   DATETIME,                       --
   `Is_Default`      BOOLEAN DEFAULT FALSE,          -- This is the default project component
@@ -141,15 +146,15 @@ CREATE TABLE IF NOT EXISTS `TBLPMT_PROJECT_REPORT`
 CREATE TABLE IF NOT EXISTS `TBLPMT_PROJECT_WIKI`
 (
   `Page_Id`       INT UNSIGNED NOT NULL AUTO_INCREMENT,
-  `Page_Title`    VARCHAR(100) COLLATE utf8_unicode_ci NOT NULL,  -- Page Title
-  `Page_Counter`  INT UNSIGNED NOT NULL DEFAULT 0,     -- Page Counter
-  `Version`       INT UNSIGNED NOT NULL DEFAULT 1,              -- page revision
-  `User_Id`       INT UNSIGNED,                                   -- Author of the page (larger than default user, just incase)
-  `User_Name`     VARCHAR(50) COLLATE utf8_unicode_ci NOT NULL,   -- Author name (for archiving purposes)
-  `Update_Dttm`   DATETIME,                                       -- Last updated date time
-  `Update_Ip`     VARCHAR(15) COLLATE utf8_unicode_ci DEFAULT NULL,  -- IPv4 of who updated it last
-  `Page_Data`     MEDIUMBLOB,                                           -- Page code
-  PRIMARY KEY (`page_id`)
+  `Page_Title`    VARCHAR(100) COLLATE utf8_unicode_ci NOT NULL,    -- Page Title
+  `Page_Counter`  INT UNSIGNED NOT NULL DEFAULT 0,                  -- Page Counter
+  `Version`       INT UNSIGNED NOT NULL DEFAULT 1,                  -- page revision
+  `User_Id`       INT UNSIGNED,                                     -- Author of the page (larger than default user, just incase)
+  `User_Name`     VARCHAR(50) COLLATE utf8_unicode_ci NOT NULL,     -- Author name (for archiving purposes)
+  `Update_Dttm`   DATETIME,                                         -- Last updated date time
+  `Update_Ip`     VARCHAR(15) COLLATE utf8_unicode_ci DEFAULT NULL, -- IPv4 of who updated it last
+  `Page_Data`     MEDIUMBLOB COLLATE utf8_unicode_ci,                                       -- Page code
+  PRIMARY KEY (`Page_Id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 /*
@@ -172,7 +177,7 @@ CREATE TABLE IF NOT EXISTS `TBLPMT_PROJECT_WIKI`
   Created:  2010-11-07
   * Possibly remove User_Name & only use Group_Id & have it link back
     to the GROUP table to list the Users whom are allowed access.
-    
+
   * 2012-0422 * Changed name 'TBLPMT_USER_PROJECT_PRIV' > 'TBLPMT_PROJECT_PRIV'
 */
 CREATE TABLE IF NOT EXISTS `TBLPMT_PROJECT_PRIV`
