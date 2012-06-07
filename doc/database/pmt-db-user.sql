@@ -8,6 +8,9 @@
  * Version:       0.2.2
  * Description:
  *   User tables.
+ *  
+ * To Do:
+ * [ ]  2012-0603 - Remove [_USER.Group_Id] and refer only to _GROUP via JOIN
  *
  * Change Log:
  * 2012-0320  + (djs) Added table, _USER_SETTINGS
@@ -22,32 +25,34 @@
 
 /*
   Used for customer logins
-  Version 0.2.0
+  Version 0.2.2
   Last Update:  2010-11-07
   Note:  Accounts should not be active until they verify their Email address
+  2012-0603 * Changed `Session_Hash` from NOT NULL to NULL (stupid mistake)
+            * Changed `Name` to `Display_Name`
 */
 
 CREATE TABLE IF NOT EXISTS `TBLPMT_USER`
 (
-  `User_Id`     INT UNSIGNED NOT NULL AUTO_INCREMENT,
-  `User_Name`   VARCHAR(50) COLLATE utf8_unicode_ci NOT NULL,
-  `Password`    VARCHAR(255) COLLATE utf8_unicode_ci NOT NULL,  -- encrypted user password
-  `Email`       VARCHAR(255) COLLATE utf8_unicode_ci NOT NULL,
-  `Group_Id`    INT UNSIGNED NOT NULL DEFAULT '0',              -- Depricated, use table
-  `Name`        varchar(255) COLLATE utf8_unicode_ci NOT NULL,
-  `Name_First`  VARCHAR(75) COLLATE utf8_unicode_ci NULL,   -- First Name
-  `Name_Last`   VARCHAR(75) COLLATE utf8_unicode_ci NULL,   -- Last Name
-  `Name_Middle` VARCHAR(75) COLLATE utf8_unicode_ci NULL,   -- Middle Name
-  `Name_Title`  VARCHAR(4) COLLATE utf8_unicode_ci NULL,    -- Dr, Mr, Mrs, Ms
-  `Name_Salu`   VARCHAR(4) COLLATE utf8_unicode_ci NULL,    -- Sr, Jr, III, IV, Esq(uire)
-  `Customer_Id` VARCHAR(256) COLLATE utf8_unicode_ci NULL,  -- Only used if it's a customer
-  `Active`      BOOLEAN,      -- Account is active
-  `Image_File`  VARCHAR(255) COLLATE  utf8_unicode_ci,      -- User picture
+  `User_Id`       INT UNSIGNED NOT NULL AUTO_INCREMENT,
+  `User_Name`     VARCHAR(50) COLLATE utf8_unicode_ci NOT NULL,
+  `Password`      VARCHAR(255) COLLATE utf8_unicode_ci NOT NULL,  -- encrypted user password
+  `Email`         VARCHAR(255) COLLATE utf8_unicode_ci NOT NULL,
+  `Group_Id`      INT UNSIGNED NOT NULL DEFAULT '0',              -- Deprecated, use table
+  `Display_Name`  VARCHAR(255) COLLATE utf8_unicode_ci NOT NULL,  -- Name the world sees
+  `Name_First`    VARCHAR(75) COLLATE utf8_unicode_ci NULL,   -- First Name
+  `Name_Last`     VARCHAR(75) COLLATE utf8_unicode_ci NULL,   -- Last Name
+  `Name_Middle`   VARCHAR(75) COLLATE utf8_unicode_ci NULL,   -- Middle Name
+  `Name_Title`    VARCHAR(4) COLLATE utf8_unicode_ci NULL,    -- Dr, Mr, Mrs, Ms
+  `Name_Salu`     VARCHAR(4) COLLATE utf8_unicode_ci NULL,    -- Sr, Jr, III, IV, Esq(uire)
+  `Customer_Id`   VARCHAR(256) COLLATE utf8_unicode_ci NULL,  -- Only used if it's a customer
+  `Active`        BOOLEAN,      -- Account is active
+  `Image_File`    VARCHAR(255) COLLATE  utf8_unicode_ci,      -- User picture
 
   `Termination_Dttm`    DATETIME,           -- used for interns, etc
   `Created_Dttm`        DATETIME,           -- when was user created
   `Password_Exp_Dttm`   DATETIME,           -- date of password expiration
-  `Session_Hash`        VARCHAR(255) COLLATE utf8_unicode_ci NOT NULL DEFAULT '0',
+  `Session_Hash`        VARCHAR(255) COLLATE utf8_unicode_ci NULL DEFAULT '0',
   `Last_Login_Dttm`     DATETIME,           -- Last date/time of login
   `Last_Login_Ip`       VARCHAR(15)COLLATE utf8_unicode_ci,        -- Last logged in from (IPv4)
   `Receive_Updates`     INT,                -- email updates
@@ -171,20 +176,6 @@ CREATE TABLE `TBLPMT_USER_GROUP`
 
 
 /*
-  User's project access level
-  Workflow:  USER > TBL_USER_PRODUCT_PRIV > TBL_GROUP
-  Version:  0.2
-  Created:  2010-11-07
-*/
-CREATE TABLE IF NOT EXISTS `TBLPMT_USER_PROJECT_PRIV`
-(
-  `User_Name`   VARCHAR(255) COLLATE utf8_unicode_ci NOT NULL,   -- User ID from 'pmt_user'
-  `Project_Id`  INT UNSIGNED NOT NULL,  -- Product ID
-  `Group_Id`    SMALLINT UNSIGNED NOT NULL   -- Name of the group priv
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
-
-
-/*
   A group can be called, "development" and inside
   that large group are teams.
 */
@@ -206,6 +197,21 @@ CREATE TABLE IF NOT EXISTS `TBLPMT_USER_TEAM_MEMBERS`
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 
+
+/*
+  STATIC Group Permissions
+  List the different permissions allowed for the group users
+  Version 0.2.0
+  Created:  2010-11-07
+  
+  Updates:
+  * 2010-11-07  * Proposed format for easier debugging / editing
+ 
+INSERT INTO `TBLPMT_S_GROUP_PERMISSION` (Priv_Name, Description, Sort_Order) VALUES
+    ('ADMIN',                   'User will have access to all components', 0),
+    ('REPO_BROWSER_VIEW',       'User is able to view the project files',  '0'),
+    ('REPO_CHANGESET_VIEW',     'User is able to view each revision desciption and compare source differences', 0)
+*/
 
 INSERT INTO `TBLPMT_S_GROUP_PERMISSION` VALUES ('ADMIN',                   'User will have access to all components', 0);
 INSERT INTO `TBLPMT_S_GROUP_PERMISSION` VALUES ('REPO_BROWSER_VIEW',       'User is able to view the project files',  '0');

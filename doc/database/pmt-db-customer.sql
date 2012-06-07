@@ -4,12 +4,13 @@
  * Author:
  * Document:      db-product.sql
  * Created Date:  Aug 25, 2011, 20:03:17
- * Version:       0.2.2
+ * Version:       0.2.3
  * Description:
  *  Customer and Customer Product tables
  *
  * Change Log:
- * [2012-0131] - v0.2.2
+ * 2012-0507  + v0.2.3 - Added column `Allow_Beta` to _CUSTOMER_PRODUCT (it was missing)
+ * 2012-0131  * v0.2.2 - Initial GA
  */
 
 
@@ -84,39 +85,45 @@ CREATE TABLE IF NOT EXISTS `TBLPMT_S_CONTACT_DETAIL_TYPE`
   `Detail_Type_Id` TINYINT UNSIGNED NOT NULL AUTO_INCREMENT,
   `Detail_Type`    VARCHAR(24) COLLATE utf8_unicode_ci NOT NULL,   -- email, phone, fax
   `Description`    VARCHAR(64) COLLATE utf8_unicode_ci DEFAULT '', -- Description of
-  PRIMARY KEY (`Contact_Type_Id`)
+  PRIMARY KEY (`Detail_Type_Id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
-INSERT INTO `TBLPMT_S_CONTACT_TYPE` (Contact_Type, Description) VALUES ('Email', 'Email Address');
-INSERT INTO `TBLPMT_S_CONTACT_TYPE` (Contact_Type, Description) VALUES ('Phone', 'Phone');
-INSERT INTO `TBLPMT_S_CONTACT_TYPE` (Contact_Type, Description) VALUES ('Mobile', 'Cell Phone');
-INSERT INTO `TBLPMT_S_CONTACT_TYPE` (Contact_Type, Description) VALUES ('Fax', 'Fax machine');
-INSERT INTO `TBLPMT_S_CONTACT_TYPE` (Contact_Type, Description) VALUES ('Website', 'Websites');
+INSERT INTO `TBLPMT_S_CONTACT_DETAIL_TYPE` (Detail_Type, Description) VALUES ('Email', 'Email Address');
+INSERT INTO `TBLPMT_S_CONTACT_DETAIL_TYPE` (Detail_Type, Description) VALUES ('Phone', 'Phone');
+INSERT INTO `TBLPMT_S_CONTACT_DETAIL_TYPE` (Detail_Type, Description) VALUES ('Mobile', 'Cell Phone');
+INSERT INTO `TBLPMT_S_CONTACT_DETAIL_TYPE` (Detail_Type, Description) VALUES ('Fax', 'Fax machine');
+INSERT INTO `TBLPMT_S_CONTACT_DETAIL_TYPE` (Detail_Type, Description) VALUES ('Website', 'Websites');
 
 
 /*
   Customer Product listing
   Created: 2010-01-01
+  
+  Changes:
+  2012-0507 + Added "Allow_Beta"
+            * Set defalut values for all UPDATE_Versions = FALSE
+            * Set defalut licenses to 3
 */
 -- Listing of customer products
 CREATE TABLE IF NOT EXISTS `TBLPMT_CUSTOMER_PRODUCT`
 (
-  `CPID`        INTEGER UNSIGNED NOT AUTO_INCREMENT NULL PRIMARY KEY,    -- ** Customer Product ID
+  `CPID`        INT UNSIGNED NOT NULL AUTO_INCREMENT,    -- ** Customer Product ID
   `Customer_Id` VARCHAR(256) COLLATE utf8_unicode_ci NOT NULL, -- CustomerId to link to
   `Product_Id`  INT UNSIGNED,   -- Product Identificaiton Number (xi_product.ProductId)
 
   `Product_Cost`  VARCHAR(10) COLLATE utf8_unicode_ci,  -- Sales price paid for product (ex: 3222111.00) [** Changed: FLOAT to VC(10) **]
   `Paid_Ammount`  VARCHAR(10) COLLATE utf8_unicode_ci,  -- Sum of payment paid to date
-  `Payment_Plan`  BOOLEAN,      -- Are they on payment plan?   1=yes 0=no (see payment plan table)
-  `Num_Licenses`  INT UNSIGNED, -- How many licenses are they allowed?
+  `Payment_Plan`  BOOLEAN,                  -- Are they on payment plan?   1=yes 0=no (see payment plan table)
+  `Num_Licenses`  INT UNSIGNED DEFAULT 3,   -- How many licenses are they allowed?
 
-  `Install_Dttm`      DateTime, -- Date of installation
-  `Last_Update_Dttm`  DateTime, -- Last update of product version
+  `Install_Dttm`      DateTime,             -- Date of installation
+  `Last_Update_Dttm`  DateTime,             -- Last update of product version
 
-  `Update_Enabled`  BOOLEAN,    -- Allow customer to update this product  ** Used by updater application
-  `Update_Major`    BOOLEAN,    -- Allowed to upgrade? x.x.x  def=0  ** Used by updater application
-  `Update_Minor`    BOOLEAN,    -- Allowed to upgrade? #.x.x  def=0  ** Used by updater application
-  `Update_Rev`      BOOLEAN,    -- Allowed to upgrade? #.#.x  def=1  ** Used by updater application
+  `Allow_Beta`      BOOLEAN DEFAULT FALSE,  -- Customer is allowed development's pre-releases
+  `Update_Enabled`  BOOLEAN DEFAULT FALSE,  -- Allow customer to update this product  ** Used by updater application
+  `Update_Major`    BOOLEAN DEFAULT FALSE,  -- Allowed to upgrade? x.x.x  def=0  ** Used by updater application
+  `Update_Minor`    BOOLEAN DEFAULT FALSE,  -- Allowed to upgrade? #.x.x  def=0  ** Used by updater application
+  `Update_Rev`      BOOLEAN DEFAULT FALSE,  -- Allowed to upgrade? #.#.x  def=1  ** Used by updater application
   PRIMARY KEY (`CPID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
@@ -131,14 +138,13 @@ CREATE TABLE IF NOT EXISTS `TBLPMT_CUSTOMER_PRODUCT_UPDATE`
   `Changed_Uid`         INT UNSIGNED, -- UserId who made last update to this product information
   `Update_Dttm`         DATETIME,     -- Date of the update itself
   `New_Product_Version` VARCHAR(24) COLLATE utf8_unicode_ci,  -- Updated to version 'X'
-  `Installed_By`        VARCHAR(256) COLLATE utf8_unicode_ci  -- Who installed the product
+  `Installed_By`        VARCHAR(256) COLLATE utf8_unicode_ci  -- Who installed the product (user_id or "xiUpdate" [app])
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 
 /*
   Registration infromation for customer product
   Was previously "CUSTOMER_MMT1" used used as reg info for Fdx-MMT v1.x
-
 */
 CREATE TABLE IF NOT EXISTS `TBLPMT_CUSTOMER_PRODUCT_REGISTRATION`
 (

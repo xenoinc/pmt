@@ -1,3 +1,37 @@
+/* *********************************************************************
+ * Copyright 2010 (C) Xeno Innovations, Inc.
+ * ALL RIGHTS RESERVED
+ * Author:        Damian J. Suess
+ * Document:      pmt-db-ticket.sql
+ * Created Date:  2010-11-07
+ * Version:       0.2.0
+ * Description:
+ *   Project tables provides the basic layout of the database tables used by project files
+ *
+ * Change Log:
+ * 2012-0305  * Updated all IP Address columns from width 15 to 45 (IPv6)
+ *            * Formatted column names to camel case, tables to caps
+ * 2012-0304  * Included into PMT 0.2 (djs)
+ *            + Modified table names & some rows
+ * 2010-1114  * RC 1.1 (djs)
+ * 2010-1107  + Initial creation (djs)
+ **********************************************************************/
+
+/* Currently removed until out of BETA status & project is more well-defined
+  CREATE TABLE proj_user_internal (...)   -- local database, only used if project doesn't use GLOBAL USERS
+  CREATE TABLE pmt_user_priv( ... )       -- User's project access level
+  CREATE TABLE pmt_user_priv_list ( ... ) -- Available Project Priv Items (STATIC)
+*/
+
+
+/*
+  Project Enumerations
+  (Custom for each project)
+  Version 1.0
+  Last Update:  2010-11-12
+  * 2012-0306 - emum_isdefault int,-- 1/0 to mark what the default setting should be
+  *           - unique( `Enum_Type`, `Enum_Name` )
+*/
 CREATE TABLE IF NOT EXISTS `TBLPMT_S_TBT_ENUM`
 (
   `Enum_Type` VARCHAR(16) COLLATE utf8_unicode_ci NOT NULL, -- List Item Type  (ticket_type, resolution, priority)
@@ -7,20 +41,25 @@ CREATE TABLE IF NOT EXISTS `TBLPMT_S_TBT_ENUM`
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 
+-- Type of ticket being created
 INSERT INTO TBLPMT_S_TBT_ENUM VALUES ('ticket_type',    'Defect',               1);
 INSERT INTO TBLPMT_S_TBT_ENUM VALUES ('ticket_type',    'Enhancement',          2);
 INSERT INTO TBLPMT_S_TBT_ENUM VALUES ('ticket_type',    'Task',                 3); /* tech request */
+-- Ticket Resolutions
 INSERT INTO TBLPMT_S_TBT_ENUM VALUES ('resolution',     'Fixed',                1);
 INSERT INTO TBLPMT_S_TBT_ENUM VALUES ('resolution',     'Completed',            2);
 INSERT INTO TBLPMT_S_TBT_ENUM VALUES ('resolution',     'Next-Release',         3);
 INSERT INTO TBLPMT_S_TBT_ENUM VALUES ('resolution',     'Duplicate',            4);
 INSERT INTO TBLPMT_S_TBT_ENUM VALUES ('resolution',     'Invalid',              5);
 INSERT INTO TBLPMT_S_TBT_ENUM VALUES ('resolution',     'Unable to Reproduce',  6);
+-- Ticket and Bug Priority Levels
 INSERT INTO TBLPMT_S_TBT_ENUM VALUES ('priority',       'Trivial',              1);
 INSERT INTO TBLPMT_S_TBT_ENUM VALUES ('priority',       'Minor',                2);
 INSERT INTO TBLPMT_S_TBT_ENUM VALUES ('priority',       'Major',                3);
 INSERT INTO TBLPMT_S_TBT_ENUM VALUES ('priority',       'Critical',             4);
 INSERT INTO TBLPMT_S_TBT_ENUM VALUES ('priority',       'Blocker',              5);
+-- -----------------------------------------------------------------------------
+-- Ticket Status
 INSERT INTO TBLPMT_S_TBT_ENUM VALUES ('ticket_status',  'Open',                 10);  -- New/Unassigned  [1x]
 INSERT INTO TBLPMT_S_TBT_ENUM VALUES ('ticket_status',  'Reopened',             11);
 INSERT INTO TBLPMT_S_TBT_ENUM VALUES ('ticket_status',  'Assigned',             20);  -- Owned  [2x]
@@ -31,6 +70,8 @@ INSERT INTO TBLPMT_S_TBT_ENUM VALUES ('ticket_status',  'Closed',               
 INSERT INTO TBLPMT_S_TBT_ENUM VALUES ('ticket_status',  'Closed-Duplicate',     52);
 INSERT INTO TBLPMT_S_TBT_ENUM VALUES ('ticket_status',  'Closed-Bug',           53);
 INSERT INTO TBLPMT_S_TBT_ENUM VALUES ('ticket_status',  'Closed-Canceled',      54);
+-- -----------------------------------------------------------------------------
+-- Bug Status
 INSERT INTO TBLPMT_S_TBT_ENUM VALUES ('bug_status',     'Submitted',            1);
 INSERT INTO TBLPMT_S_TBT_ENUM VALUES ('bug_status',     'Accepted',             2);
 INSERT INTO TBLPMT_S_TBT_ENUM VALUES ('bug_status',     'Dev-Unverified',       3);
@@ -40,6 +81,8 @@ INSERT INTO TBLPMT_S_TBT_ENUM VALUES ('bug_status',     'Dev-Restesting',       
 INSERT INTO TBLPMT_S_TBT_ENUM VALUES ('bug_status',     'Closed',               7);
 INSERT INTO TBLPMT_S_TBT_ENUM VALUES ('bug_status',     'Closed-Deferred',      8);
 INSERT INTO TBLPMT_S_TBT_ENUM VALUES ('bug_status',     'Closed-Rejected',      9);
+-- -----------------------------------------------------------------------------
+-- Task Type
 INSERT INTO TBLPMT_S_TBT_ENUM VALUES ('task_type',      'TechRequest',          1); -- Technical Request
 INSERT INTO TBLPMT_S_TBT_ENUM VALUES ('task_type',      'Purchase Order',       2); -- Purchased Equipment
 INSERT INTO TBLPMT_S_TBT_ENUM VALUES ('task_type',      'Custom Report',        3); -- Custom Report (Software, Other)
@@ -47,6 +90,7 @@ INSERT INTO TBLPMT_S_TBT_ENUM VALUES ('task_type',      'SQL Task',             
 INSERT INTO TBLPMT_S_TBT_ENUM VALUES ('task_type',      'Upgrade',              5); -- Upgrade customer
 INSERT INTO TBLPMT_S_TBT_ENUM VALUES ('task_type',      'HotFix',               6); -- Manual Hotfix
 INSERT INTO TBLPMT_S_TBT_ENUM VALUES ('task_type',      'Other',                7); -- Other :: Provide Description
+-- Task Status
 INSERT INTO TBLPMT_S_TBT_ENUM VALUES ('task_status',    'New',                  10);  -- Submitted (unassigned)
 INSERT INTO TBLPMT_S_TBT_ENUM VALUES ('task_status',    'Mgmt-Pending-Approv',  11);  -- Pending Management Approv
 INSERT INTO TBLPMT_S_TBT_ENUM VALUES ('task_status',    'PO-Approv',            30);  -- In Progress :: Purchase Order Approved
@@ -58,7 +102,18 @@ INSERT INTO TBLPMT_S_TBT_ENUM VALUES ('task_status',    'Review-Pending',       
 INSERT INTO TBLPMT_S_TBT_ENUM VALUES ('task_status',    'Review-Mgmt',          42);  -- Task completed, waiting review verfication
 INSERT INTO TBLPMT_S_TBT_ENUM VALUES ('task_status',    'Closed',               50);  -- Closed :: General
 INSERT INTO TBLPMT_S_TBT_ENUM VALUES ('task_status',    'Closed-Declined',      51);  -- Closed :: Never worked on
+-- "Tech Request"    :: [New] > [Assigned] > [In Progress] > [Completed] > (Review-Mgmt) > [Closed]
+-- "Purchase Orders" :: [New] > [Mgmt-Pending-Approv] > [PO-...] > [Closed]
+-- "Custom Report"   :: [New] > []
 
+
+/*
+  Static P-Type
+  Helps split tickets to reference Products or Projects.
+  This helps resolve the Chicken or the Egg.
+  Created: 2012-0305
+  * 2012-0306 - UNIQUE INDEX `Reference_Type` (`Reference_Type`)
+*/
 CREATE TABLE IF NOT EXISTS `TBLPMT_S_REFERENCE_TYPE`
 (
   `Reference_Type_Id` INT NOT NULL AUTO_INCREMENT,
@@ -72,6 +127,15 @@ INSERT INTO `TBLPMT_S_REFERENCE_TYPE` (`Reference_Type`,`Description`) VALUES ('
 INSERT INTO `TBLPMT_S_REFERENCE_TYPE` (`Reference_Type`,`Description`) VALUES ('product', 'Live Hardware, Application or 3rd-Party');
 
 
+
+/* ***[ Ticket Tables ]******************************************** */
+
+/*
+  Ticket / TechRequest being issued
+  TRs will be branched to its own table in the future
+  Request "Ticket Type" on the PMT Ticket page, "Enhancement, Deficet, TechRequest, Bug Report, etc.)
+  Last Update: 2010-11-07
+*/
 CREATE TABLE IF NOT EXISTS `TBLPMT_TICKET`
 (
   `Ticket_Id`         INT UNSIGNED NOT NULL AUTO_INCREMENT,
@@ -103,6 +167,11 @@ CREATE TABLE IF NOT EXISTS `TBLPMT_TICKET`
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 
+/*
+  Message Posting & updates associated with Tickets issued
+  Version 0.2.1
+  Created: 2010-11-07
+*/
 CREATE TABLE IF NOT EXISTS `TBLPMT_TICKET_UPDATE`
 (
   `Ticket_Update_Id`  INT UNSIGNED NOT NULL AUTO_INCREMENT,
@@ -118,6 +187,13 @@ CREATE TABLE IF NOT EXISTS `TBLPMT_TICKET_UPDATE`
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 
+/*
+  Ticket Attatchments
+  Version 0.2.2
+  Created:  2010-11-14
+  * 2012-0305 * Changed User_Ip length from 15 to 45 for IPv6 (ABCD:ABCD:ABCD:ABCD:ABCD:ABCD:192.168.158.190)
+  *           * Changed File_Size to BIGINT so it can be greater than 4GB
+*/
 CREATE TABLE IF NOT EXISTS `TBLPMT_TICKET_ATTACHMENT`
 (
   `Attachment_Id` INT UNSIGNED NOT NULL AUTO_INCREMENT,
@@ -132,6 +208,14 @@ CREATE TABLE IF NOT EXISTS `TBLPMT_TICKET_ATTACHMENT`
   PRIMARY KEY (`Attachment_Id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
+
+/* ***[ Bug Report Tables ]******************************************** */
+
+/*
+  Version: 0.2.1
+  Created: 2010-11-05
+  * 2012-0305 * Modified for new db rules
+*/
 CREATE TABLE IF NOT EXISTS `TBLPMT_BUG`
 (
   `Bug_Id`            INT UNSIGNED NOT NULL AUTO_INCREMENT,
@@ -160,6 +244,12 @@ CREATE TABLE IF NOT EXISTS `TBLPMT_BUG`
   PRIMARY KEY (`Bug_Id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
+/*
+  Tickets that the bug is linked to
+  Version 0.2.0
+  Created: 2010-11-07
+*/
+-- CREATE TABLE bug_ticket_links();
 
 CREATE TABLE IF NOT EXISTS `TBLPMT_BUG_UPDATE`
 (
@@ -192,6 +282,14 @@ CREATE TABLE IF NOT EXISTS `TBLPMT_BUG_ATTACHMENT`
 
 
 
+/* ***[ Task Tables - ToDo List / Tech Request ]****************** */
+/*
+  Task Request table
+  Version:      0.2.3
+  Created:  2010-11-13
+  * 2012-0306 * Updated column types and added in compliance to table changes
+  *           + Added, Status_Enum (it was missing before)
+*/
 CREATE TABLE IF NOT EXISTS `TBLPMT_TASK`
 (
   `Task_id`           INT UNSIGNED AUTO_INCREMENT,
@@ -248,4 +346,43 @@ CREATE TABLE IF NOT EXISTS `TBLPMT_TASK_ATTACHMENT`
   `Description`   VARCHAR(64) COLLATE utf8_unicode_ci,  -- short description
   PRIMARY KEY (`Attachment_Id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+
+/*
+ SVN Tables (keep local log for quick info)
+  ------------------------------------------
+  + svn_repos       db_ver, repo_dir, repo_ver
+  + svn_revision
+*/
+/*
+
+-- Used to track when something was updated
+CREATE TABLE `TBLPMT_TBT_AUDIT`
+(
+  `Audit_Id`    INT UNSIGNED NOT NULL AUTO_INCREMENT,
+  `TBT_Type`    VARCHAR(6),   -- ticket,bug,task
+  `Action`      VARCHAR(),    -- Update Type: status,desc,score,priority
+  `User_Id`     INT UNSIGNED,
+  `Update_Dttm` DATETIME,
+  PRIMARY KEY (`Audit_Id`)
+)
+
+CREATE TABLE PROJECT_SVN_REPO
+(
+--db_ver      VARCHAR(5),       -- Version of Subversion cor compatibility.  ex: 1.4  (not really needed)
+  repo_dir    VARCHAR(255),     -- where is it located  (svn:42d14667-55a7-4533-b801-018457db5143:/var/svn/fdx1)
+  repo_ver    INT UNSIGNED      -- Current HEAD version
+)
+
+CREATE TABLE PROJECT_SVN_REVISION
+(
+  svn_rev       INT UNSIGNED,   -- Revision number
+  svn_path      VARCHAR(256),   -- Path to the project.  EX: "https://svn.xenoinc.org/project1"
+  node_type     VARCHAR(1),     -- (F)ile, (D)irectory
+  change_type   VARCHAR(1),     -- (A)dded, C, (D)elete, E, (M)odified
+--base_path     VARCHAR(256),   -- Used to describe if/what it updated from (NOT IN BETA)
+  base_rev      INT UNSIGNED    -- Updated from revision, NULL=unknown/new
+)
+
+*/
 
