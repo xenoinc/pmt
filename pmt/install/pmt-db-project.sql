@@ -73,7 +73,7 @@ CREATE TABLE IF NOT EXISTS `TBLPMT_PROJECT_COMPONENT`
   `Component_Name`  VARCHAR(128) COLLATE utf8_unicode_ci NOT NULL,  -- Project Component Name (Core, DocuFAST, QuantiFAST, PIE, ALL, FlexDx, ..)
   `Project_Id`      INT UNSIGNED NOT NULL,
   `Project_Version` VARCHAR(15) COLLATE utf8_unicode_ci ,            -- Full version number (1.22.333.44444) or (1.5)
-  `Description`     MEDIUMBLOB COLLATE utf8_unicode_ci ,                                     -- description (All Fdx 1.x Products.  This includes, ...)
+  `Description`     MEDIUMBLOB,                                     -- description (All Fdx 1.x Products.  This includes, ...)
   PRIMARY KEY (`Component_Id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
@@ -153,7 +153,7 @@ CREATE TABLE IF NOT EXISTS `TBLPMT_PROJECT_WIKI`
   `User_Name`     VARCHAR(50) COLLATE utf8_unicode_ci NOT NULL,     -- Author name (for archiving purposes)
   `Update_Dttm`   DATETIME,                                         -- Last updated date time
   `Update_Ip`     VARCHAR(15) COLLATE utf8_unicode_ci DEFAULT NULL, -- IPv4 of who updated it last
-  `Page_Data`     MEDIUMBLOB COLLATE utf8_unicode_ci,                                       -- Page code
+  `Page_Data`     MEDIUMBLOB,                                       -- Page code
   PRIMARY KEY (`Page_Id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 

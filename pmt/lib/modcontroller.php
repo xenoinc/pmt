@@ -1,3 +1,4 @@
+
 <?php
 
 /* * **********************************************************
@@ -231,16 +232,15 @@ function MakeToolbar($module)
 {
   // pmtDebug("Module: " . $module);
   /* Steps:
-  * 1) Get user profile permissions to see what
-  *    items we can draw on the screen.
+  * 1) [deprecated] Get user profile permissions to see what items we can draw on the screen.
   * 2) Generate toolbar
   */
 
   /* Step 1 - Get user permissions */
-
+  // This should possibly be handled by the module itself considering
+  // that the modules will be dynamic plug-ins in future versions.
 
   /* Step 2 - Generate Toolbar */
-
   // List of all the available modules
   // ** This should be pulled from DB depending on user/group
   //    permissions & settings!!
@@ -248,10 +248,10 @@ function MakeToolbar($module)
         // Module       Display
         "dashboard" => "Dashboard",
         //"project"   => "Projects",
-        "p"   => "Projects",
+        "p"         => "Projects",
         "ticket"    => "Tickets",     /* "ticket" => array ("Tickets", "+"), */
-        "bugs"      => "Bugs",
-        "tasks"     => "Tasks",
+        "bug"       => "Bugs",
+        "task"      => "Tasks",
         "product"   => "Products",
         "customer"  => "Customers",
         "user"      => "Users",
@@ -259,8 +259,7 @@ function MakeToolbar($module)
         );
 
   if (count($arrAvailMods) == 0)
-  {
-    // Looks like a system lockdown just occurred!
+  { // Looks like a system lockdown just occurred!
     $ret = "";
   }
   else
@@ -289,7 +288,6 @@ function MakeToolbar($module)
               "  <li" . $cls. ">" .
               AddLink($key, $value) .
               "</li>" . PHP_EOL;
-
     }
     $ret .= $tab . "</ul>". PHP_EOL;
     //pmtDebug("disp: " . $ret);

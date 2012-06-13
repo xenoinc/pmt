@@ -38,7 +38,7 @@ CREATE TABLE IF NOT EXISTS `TBLPMT_PRODUCT`
   Product_Id              INT UNSIGNED NOT NULL AUTO_INCREMENT,           -- Product ID Number - Unique value for internal tracking
   Product_Code            VARCHAR(255) collate utf8_unicode_ci ,          -- Unique manufacturer product code (Ex: "xi-1337")
   Product_Name            VARCHAR(255) collate utf8_unicode_ci NOT NULL,  -- Short name of product (Ex: "MMT-IR")
-  Product_Description     BLOB collate utf8_unicode_ci,                   -- Description of the product
+  Product_Description     BLOB,                                           -- Description of the product
   Category                VARCHAR(50) collate utf8_unicode_ci,            -- What type of product it is (Ex: "hardware", "software", etc.)
   Sub_Category            VARCHAR(15),            --      Sub Category (Ex: "Muscle Evaluation", "Utility", "FTP-Client")
   Release_Dttm            DATETIME,               --      Product Go-Live
@@ -65,8 +65,6 @@ CREATE TABLE IF NOT EXISTS `TBLPMT_PRODUCT`
               * Made Product_Id INT UNSIGNED
 
 */
---create table PRODUCT_VERSION_UPDATE
---create table PRODUCT_UPDATE
 CREATE TABLE IF NOT EXISTS `TBLPMT_PRODUCT_VERSION`
 (
   Version_Update_Id   INT UNSIGNED NOT NULL AUTO_INCREMENT, -- Unique identifyer for update
@@ -81,6 +79,15 @@ CREATE TABLE IF NOT EXISTS `TBLPMT_PRODUCT_VERSION`
   Update_User_Name    VARCHAR(50) collate utf8_unicode_ci,  -- Raw user name for record purposes
   PRIMARY KEY (`Version_Update_Id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+/*
+To Do:  (2012-06-06
+-- Register each version's revision updates
+CREATE TABLE IF NOT EXISTS `PRODUCT_VERSION_UPDATE`
+
+-- don't know
+CREATE TABLE IF NOT EXISTS `PRODUCT_UPDATE`
+*/
 
 /*
   Changes:
@@ -111,8 +118,8 @@ CREATE TABLE IF NOT EXISTS `TBLPMT_PRODUCT_COMPONENT`
   `Component_Id`    INT UNSIGNED NOT NULL AUTO_INCREMENT,
   `Component_Name`  VARCHAR(128) COLLATE utf8_unicode_ci NOT NULL,  -- (Core, DocuFAST, PIE, ALL, ..)
   `Product_Id`      INT UNSIGNED NOT NULL,                          --
-  `Product_Version` VARCHAR(15) COLLATE utf8_unicode_ci ,            -- Full version number (1.22.333.44444) or (1.5)
-  `Description`     MEDIUMBLOB COLLATE utf8_unicode_ci ,
+  `Product_Version` VARCHAR(15) COLLATE utf8_unicode_ci ,           -- Full version number (1.22.333.44444) or (1.5)
+  `Description`     MEDIUMBLOB,
   PRIMARY KEY (`Component_Id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
@@ -149,7 +156,7 @@ CREATE TABLE IF NOT EXISTS `TBLPMT_PRODUCT_WIKI`
   `User_Name`     VARCHAR(50) COLLATE utf8_unicode_ci NOT NULL,     -- Author name (for archiving purposes)
   `Update_Dttm`   DATETIME,                                         -- Last updated date time
   `Update_Ip`     VARCHAR(15) COLLATE utf8_unicode_ci DEFAULT NULL, -- IPv4 of who updated it last
-  `Page_Data`     MEDIUMBLOB COLLATE utf8_unicode_ci,               -- Page code
+  `Page_Data`     MEDIUMBLOB,                                       -- Page code
   PRIMARY KEY (`Page_Id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
@@ -163,7 +170,7 @@ CREATE TABLE IF NOT EXISTS `TBLPMT_PRODUCT_CATEGORY`
 (
   Category_Id   INT UNSIGNED NOT NULL AUTO_INCREMENT,
   Category_Name VARCHAR(255) COLLATE utf8_unicode_ci NOT NULL,
-  Description   MEDIUMBLOB COLLATE utf8_unicode_ci,
+  Description   MEDIUMBLOB,
   PRIMARY KEY (`Category_Id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
@@ -175,7 +182,7 @@ Cateogry_Sub(
   Category_Sub_Id     INT UNSIGNED NOT NULL AUTO_INCREMENT,
   Category_Sub_Name   VARCHAR(255) COLLATE utf8_unicode_ci NOT NULL,
   Parent_Category_Id  INT UNSIGNED NOT NULL,
-  Description         MEDIUMBLOB COLLATE utf8_unicode_ci,
+  Description         MEDIUMBLOB,
   PRIMARY KEY (`Category_Sub_Id`)
 )
 */
@@ -186,14 +193,17 @@ Cateogry_Sub(
   You can have products referencing multiple categories
   Version 1.0
   Created: 2012-06-06
+
+  Possible Addition:
+    Is_SubCat     BOOLEAN DEFAULT FALSE,      -- Point to Sub Category
+
 */
 CREATE TABLE IF NOT EXISTS `TBLPMT_PRODUCT_CATEGORY_ITEM`
 (
   Cat_Item_Id   INT UNSIGNED NOT NULL AUTO_INCREMENT,
   Category_Id   INT UNSIGNED NOT NULL,      -- Category to ref
   Product_Id    INT UNSIGNED NOT NULL,      -- Product to ref
---Is_SubCat     BOOLEAN DEFAULT FALSE,      -- Point to Sub Category
-  Description   MEDIUMBLOB COLLATE utf8_unicode_ci,
+  Description   MEDIUMBLOB,
   PRIMARY KEY (`Cat_Item_Id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
