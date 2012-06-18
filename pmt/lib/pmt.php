@@ -51,6 +51,9 @@ $BREADCRUMB = array();
 
 /* Step 3 - Include the required classes */
 
+// Since the system is "configured" include the class now
+require(PMT_PATH."lib/config.php");             // Configuration Script
+
 // Require the core PMT files
 //require(PMT_PATH."lib/common/pmt.user.php");  // User Class
 require(PMT_PATH."lib/common/pmt.db.php");      // Database Class
@@ -58,10 +61,6 @@ require(PMT_PATH."lib/common/pmt.member.php");  // Member (User) class
 require(PMT_PATH."lib/common/pmt.uri.php");     // URI Parsing class
 require(PMT_PATH."lib/pmt-functions.php");      // Common functions in system
 require(PMT_PATH."lib/modcontroller.php");      // module controller
-
-// Since the system is "configured" include the class now
-require(PMT_PATH."lib/config.php");             // Configuration Script
-//require(PMT_PATH."lib/pmt-functions.php");      // General functions used all over
 
 
 /* Step 4) - Initialize the classes
@@ -142,6 +141,7 @@ function PmtParseURL()
       break;
 
     case 'project':
+    case 'prj':
     case 'p':
       //pmtDebug("Module: 'project'");
 
@@ -165,6 +165,7 @@ function PmtParseURL()
        */
       break;
 
+    case 'prod':
     case 'product':
       //pmtDebug("Module: 'product'");
       LoadModule("product", $uri->seg);
