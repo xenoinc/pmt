@@ -140,6 +140,10 @@ function PmtParseURL()
       LoadModule("dashboard", $uri->seg);
       break;
 
+    case 'kb':
+      LoadModule("kb", $uri->seg);
+      break;
+
     case 'project':
     case 'prj':
     case 'p':

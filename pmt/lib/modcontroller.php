@@ -21,6 +21,9 @@
  *  $PAGE_PATH      - Relative path to theme being used
  *
  * Change Log:
+ *  2012-0619 + Added alternative module load method. This is used until the whole LoadModule() procedure
+ *              can be rewritten to handle dynamic loading.
+ *              New Method: Module subfolder is same as mod name
  *  2012-0402 + Added ModRedirect($mod) to easily convert from long>short and short>long module names.
  *            * Fixed MakeToolbar()
  */
@@ -60,6 +63,8 @@ function LoadModule($module, $arrParams)
 
   /* TODO:
    * [ ] Use use User setting first, then check System Setting
+   * [ ] Change this function to check the DB for where the module is installed to (PMT_MODULE)
+   *     this will be used for the more dynamic approach of En/Disabling installed modules
    *
    */
 
@@ -98,9 +103,16 @@ function LoadModule($module, $arrParams)
   $page = $skin_path . $skin_file;
 
 
+
   /* ** Prepare Module ** */
+
   if (file_exists(PMT_PATH."lib/modules/".$module.".php"))
     require(PMT_PATH."lib/modules/".$module.".php");
+
+  // Alternative method (Module subfolder is same as mod name)
+  elseif (file_exists(PMT_PATH."lib/modules/".$module."/".$module.".php"))
+    require(PMT_PATH."lib/modules/".$module."/".$module.".php");
+
   else
   {
     $module="dashboard";

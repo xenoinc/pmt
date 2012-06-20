@@ -10,7 +10,8 @@
  *  Interface to what modules must contain.
  *
  * Change Log:
- *
+ *  2012-0619 + Added Install, Uninstall, Init functions. (NOT Implemented Yet)
+ *  2012-0322 + Initial creation
  */
 
 /**
@@ -54,10 +55,13 @@ interface pmtModule
    */
   public function MiniBarRight();
 
+  // public function Install();       // Install module (create components and tables if needed)
+  // public function Uninstall();     // Uninstall this module (remove tables and settings if needed)
+  // public function Initialize();    // initialize data (basically the construct)
 
 
   /*
-  
+
   private function GenerateToolbar()
   {
     // List of all the available modules
