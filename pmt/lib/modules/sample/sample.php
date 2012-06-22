@@ -54,7 +54,7 @@ class sample implements pmtModule
 
     $this->_title = "Sample Module - [xenoPMT]";
     $this->_toolbar = ""; //$this->GenerateToolbar();
-    $this->_minileft = "(test-left)";
+    $this->_minileft = "(test-left)";       // Usually used for breadcrumbs
     $this->_miniright = $this->GenerateMiniRight();  // "&nbsp; (test-right)";
     $this->_pagedata = $this->GeneratePage();
   }
@@ -98,12 +98,8 @@ class sample implements pmtModule
     global $pmtConf;
     global $uri;
 
-
-
     //$proj_url = self::MODULE;         // Default to base URL
     $cmd = $this->GetCmd();             // $proj_switch = "";
-
-
 
     switch (count($uri->seg))
     {
@@ -126,6 +122,8 @@ class sample implements pmtModule
   private function GenerateMiniRight()
   {
     $code = "<ul>".
+            "<li>".  $this->AddLink(self::MODULE, "Item1", "?cmd=action1") ."</li>".
+            "<li>".  $this->AddLink(self::MODULE, "Item2", "?cmd=action2") ."</li>".
             "<li class='last'>".  $this->AddLink(self::MODULE, "Create New", "?cmd=new") ."</li>".
             "</ul>";
 

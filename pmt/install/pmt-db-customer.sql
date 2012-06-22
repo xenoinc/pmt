@@ -1,14 +1,15 @@
-/* ********************************************************************
+ /* ********************************************************************
  * Copyright 2010-2012 (C) Xeno Innovations, Inc.
  * ALL RIGHTS RESERVED
  * Author:
  * Document:      db-product.sql
  * Created Date:  Aug 25, 2011, 20:03:17
- * Version:       0.2.3
+ * Version:       0.2.4
  * Description:
  *  Customer and Customer Product tables
  *
  * Change Log:
+ * 2012-0621  + v0.2.4 - Added, Customer Bulletin Board
  * 2012-0507  + v0.2.3 - Added column `Allow_Beta` to _CUSTOMER_PRODUCT (it was missing)
  * 2012-0131  * v0.2.2 - Initial GA
  */
@@ -98,7 +99,7 @@ INSERT INTO `TBLPMT_S_CONTACT_DETAIL_TYPE` (Detail_Type, Description) VALUES ('W
 /*
   Customer Product listing
   Created: 2010-01-01
-  
+
   Changes:
   2012-0507 + Added "Allow_Beta"
             * Set defalut values for all UPDATE_Versions = FALSE
@@ -157,7 +158,22 @@ CREATE TABLE IF NOT EXISTS `TBLPMT_CUSTOMER_PRODUCT_REGISTRATION`
   `Old_Custom2`       VARCHAR(50) COLLATE utf8_unicode_ci,  -- Custom Info / Address Line 2  *Special Contact Name, etc.*
   `Old_Custom3`       VARCHAR(50) COLLATE utf8_unicode_ci,  -- Custom Info / Address Line 3
   `Old_Custom4`       VARCHAR(50) COLLATE utf8_unicode_ci,  -- Custom Info / Address Line 4
-  PRIMARY KEY (Product_Reg_Id)
+  PRIMARY KEY (`Product_Reg_Id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
+/*
+  Customer Bulletin Board
+  Post Bulletin Board messages to the customer(s)
+  If Customer_Id = NULL then this will show on EVERY Customer's Dashboard
 
+  Created: 2012-06-21
+*/
+CREATE TABLE IF NOT EXISTS `TBLPMT_CUSTOMER_BULLETIN_BOARD`
+(
+  `Board_Id`        INT UNSIGNED NOT NULL AUTO_INCREMENT,
+  `Customer_Id`     VARCHAR(256) COLLATE utf8_unicode_ci,   -- For a certain customer?
+  `Expire_Dttm`     DATETIME,                               -- When does message expire
+  `Visible`         BOOLEAN DEFAULT TRUE,                   -- Show message
+  `Message`         BLOB,                                   -- WikiText or HTML Message
+  PRIMARY KEY (`Board_Id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;

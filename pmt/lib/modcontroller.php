@@ -202,8 +202,8 @@ function GenerateMetabar($module)
     //$ret .= AddLI('Welcome, <a href="/user" alt="User\'s Dashboard">' .$user->userInfo["username"] . '</a>', "first");
     $ret .= AddLI('Welcome, <a href="/user" alt="User\'s Dashboard">' .$user->userInfo["Display_Name"] . '</a>', "first");
     // $ret .= AddLI('Welcome, <a href="/user" alt="User\'s Dashboard">' .$user->userInfo["User_Name"] . '</a>', "first");
-    $ret .= AddLI("Preferences");
-    $ret .= AddLI("About xenoPMT");
+    $ret .= AddLI("Preferences");         //
+    $ret .= AddLI("About xenoPMT");       // "pmt/wiki/about"
     $ret .= AddLI(AddLink("user", "Logoff", "?cmd=logoff" ), "last");
   }
   else
@@ -261,6 +261,7 @@ function MakeToolbar($module)
         "dashboard" => "Dashboard",
         //"project"   => "Projects",
         "p"         => "Projects",
+        "kb"        => "Knowledge Base",
         "ticket"    => "Tickets",     /* "ticket" => array ("Tickets", "+"), */
         "bug"       => "Bugs",
         "task"      => "Tasks",

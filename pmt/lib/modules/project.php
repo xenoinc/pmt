@@ -46,7 +46,6 @@ class ENUM_ProjMode   //interface ENUM_ProjMode
   const WikiNew         = 41;   // "wiki-new"       - New wiki page
   const WikiEdit        = 42;   // "wiki-edit"      - Edit wiki page
   const WikiRemove      = 43;   // "wiki-remove"    - Remove wiki page
-
 }
 
 /**
@@ -131,6 +130,9 @@ class project implements pmtModule
       return "";
   }
 
+  /**
+   * Safely get data from POST command
+   */
   private function GetPost($postCmd)
   {
     return "";
@@ -155,6 +157,9 @@ class project implements pmtModule
      *    * Project Listing   (pmt/project/)
      *      * Generate: (List Projects, Create Project
      *    * Milestone Listing (pmt/project/milestones)
+     *
+     * Note:
+     *  $uri->seg[]  0=p  1=projectName  2=Action (wiki, milestone, etc)
      */
 
     // print(ENUM_ProjMode::ListAll);
@@ -192,8 +197,7 @@ class project implements pmtModule
 
         break;
 
-      case 2: // Project View  ("/p/<proj-name>/")
-
+      case 2: // Project View  ("/p/<proj-name>/")  (seg[1]=<proj-name>)
         /**
          * Handle
           if($_GET["cmd"] == "new")                         // "New Milestone", "New Wiki Page"
@@ -209,6 +213,11 @@ class project implements pmtModule
         break;
 
       case 3: // "Milestone" / "Wiki Page" Viewer
+        /**
+         * Segment ($uri->seg[])
+         * [1] = <proj-name>
+         * [2] = (milestone, wiki)
+         */
 
         if ($uri->seg[2] == ENUM_ProjSegment::Milestone)    // "milestone")
         {
@@ -248,7 +257,12 @@ class project implements pmtModule
         break;
 
       case 4: // Wiki Toolbar --- OR --- (Milestone Edit <-- no?)
-
+        /**
+         * Segment ($uri->seg[])
+         * [1] = <proj-name>
+         * [2] = (milestone, wiki)
+         *    wiki: [3] = page
+         */
         // Are we viewing wiki?
         if ($uri->seg[2] == ENUM_ProjSegment::Wiki)         // "wiki")
         {
@@ -275,12 +289,10 @@ class project implements pmtModule
         break;
     }
 
-
     $this->_MODE = $proj_mode;        // ListAll, ProjectView, MilestoneView/Edit, Wiki
     $this->_WikiPage = $wiki_page;    // Not used yet
     $this->_SWITCH = $proj_switch;    // Switch: new, edit, remove, <blank>
-
-
+    
   }
 
 
