@@ -126,22 +126,20 @@ class kb implements pmtModule {
     {
       /// Show KB Article welcome page ("/kb")
       case 1:
-        $mode = ENUM_KBMode::KBMain;    // Display main page
-        pmtDebug("KB: Display Main Page");
+        if ($cmd == self::cNEW)         $mode = ENUM_KBMode::KBNew;     // Create New
+        else                            $mode = ENUM_KBMode::KBMain;    // Display main page
         break;
 
       /// Display KB page ("/kb/<kb-id>")
       case 2:
 
         $kbPage = $uri->seg[1];         // Get KB number to edit
-
         if ($cmd == self::cNEW)         $mode = ENUM_KBMode::KBNew;     // Create New
         elseif ($cmd == self::cEDIT)    $mode = ENUM_KBMode::KBEdit;    // Edit KB Article
         elseif ($cmd == self::cREMOVE)  $mode = ENUM_KBMode::KBRemove;  // Remove KB Article
         else                            $mode = ENUM_KBMode::KBView;    // View page
 
         pmtDebug("KB Page Id: " . $kbPage . PHP_EOL . "Mode: " . $mode);
-
         break;
 
       default:
@@ -171,6 +169,8 @@ class kb implements pmtModule {
      * To Do:
      *  [ ] Check user permission if they can create [new], [edit], [rmv] articles
      */
+    global $user;
+
     if ($user->online != false)
     {
       $code = "<ul>";
@@ -197,7 +197,7 @@ class kb implements pmtModule {
   private function GeneratePage()
   {
     global $user;
-    global $uri;
+    //global $uri;
     $html = "";
 
 
@@ -205,7 +205,35 @@ class kb implements pmtModule {
       $html = $this->Page_UserOffline();
     else {
       switch ($this->_MODE) {
-        // For now just display the default message
+
+        case ENUM_KBMode::KBNew:
+            pmtDebug("KB: New");
+          break;
+
+
+        case ENUM_KBMode::KBEdit:
+          pmtDebug("KB: Edit");
+          break;
+
+
+        case ENUM_KBMode::KBRemove:
+          pmtDebug("KB: Remove");
+          break;
+
+        case ENUM_KBMode::KBView:
+          pmtDebug("KB: View");
+          break;
+
+        case ENUM_KBMode::KBList:
+          pmtDebug("KB: List");
+          break;
+
+        case ENUM_KBMode::KBMain:
+          pmtDebug("KB: Main");
+          $html .= $this->Page_UserOffline();
+          break;
+
+
         default:
           $html .= $this->Page_UserOffline();
           break;
