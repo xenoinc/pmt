@@ -85,7 +85,8 @@ class kb implements pmtModule {
     $this->_toolbar = "";                             // Custom toolbar not used )($this->GenerateToolbar();)
     $this->_minileft = $this->GenerateMiniLeft();     // Breadcrumbs  (Not used in KB space)
     $this->_miniright = $this->GenerateMiniRight();   // "&nbsp; (test-right)";
-    $this->_pagedata = $this->GeneratePage();
+    //$this->_pagedata = $this->GeneratePage();
+    $this->_pagedata = $this->EventHandler();
   }
 
   public function Title() {         return $this->_title; }       /* Title of the generated page */
@@ -194,7 +195,7 @@ class kb implements pmtModule {
     return $code;
   }
 
-  private function GeneratePage()
+  private function EventHandler()
   {
     global $user;
     //global $uri;
@@ -207,7 +208,18 @@ class kb implements pmtModule {
       switch ($this->_MODE) {
 
         case ENUM_KBMode::KBNew:
-            pmtDebug("KB: New");
+
+          require_once "kb-new.php";
+          // use xenoPMT\Module\KB\KBNew as kb;
+          // $k = new kb;
+          // $html = \xenoPMT\Module\KB\KBNew::DataHandler();
+
+          $k = new xenoPMT\Module\KB\Create;
+          $ret = $k->DataHandler();
+          $html = $ret. "\n\n<hr>\n\n";
+          $html .= $k->pageGen();
+
+          pmtDebug("KB: New");
           break;
 
 

@@ -292,7 +292,7 @@ class project implements pmtModule
     $this->_MODE = $proj_mode;        // ListAll, ProjectView, MilestoneView/Edit, Wiki
     $this->_WikiPage = $wiki_page;    // Not used yet
     $this->_SWITCH = $proj_switch;    // Switch: new, edit, remove, <blank>
-    
+
   }
 
 

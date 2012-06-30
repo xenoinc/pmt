@@ -1,0 +1,139 @@
+<!--
+To change this template, choose Tools | Templates
+and open the template in the editor.
+-->
+<!DOCTYPE html>
+<html>
+  <head>
+    <title></title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <style type="text/css">
+
+      form.frmData {
+        margin: 20px 14px 0;
+        padding: 0 0 20px;
+        position: relative;
+      }
+
+      .frmData {
+        font-family: "Lucida Grande","Lucida Sans Unicode",Tahoma,sans-serif;
+        letter-spacing: 0.01em;
+      }
+
+      form ul:after, form li:after, form li div:after {
+        clear: both;
+        content: ".";
+        display: block;
+        height: 0;
+        visibility: hidden;
+      }
+
+      form ul {
+        list-style-type: none;
+        margin: 0;
+        padding: 0;
+      }
+
+      form li.buttons {
+        clear: both;
+        padding: 10px 1%;
+        position: relative;
+        width: auto !important;
+      }
+    </style>
+  </head>
+  <body>
+
+
+    <div style="background-color: #CCCCFF; width: 600px;">
+
+      <form id="form1" name="form1" class="frmData page1"
+            autocomplete="off" enctype="multipart/form-data"
+            method="post" novalidate=""
+            action="kb-new.php">
+
+        <header id="header" class="info">
+          <h2>Contact Form</h2>
+          <div></div>
+        </header>
+
+        <ul>
+
+          <!-- Title -->
+          <li>
+            <label class="desc" id="title1" for="Field1">Email Address</label>
+            <div>
+              <input id="Field1" name="Field1" class="field text large"
+                     size="66"
+                     spellcheck="false" value=""
+                     maxlength="255" tabindex="1"
+                     onkeyup="handleInput(this);"
+                     onchange="handleInput(this);" type="text" />
+            </div>
+            <!-- <p class="instruct" id="instruct2"><small>We won't share this with strangers.</small></p> -->
+          </li>
+
+
+          <!-- Subject -->
+          <li>
+            <label class="desc" id="title2" for="Field2">Email Address</label>
+            <div>
+              <input id="Field2" name="Field2" class="field text large"
+                     size="66"
+                     spellcheck="false" value=""
+                     maxlength="255" tabindex="2"
+                     onkeyup="handleInput(this);"
+                     onchange="handleInput(this);" type="text" />
+            </div>
+            <!-- <p class="instruct" id="instruct2"><small>We won't share this with strangers.</small></p> -->
+          </li>
+
+          <!-- Product(s) -->
+          <!-- size="66" -->
+          <li>
+            <label class="desc" id="title3" for="Field3">Product(s)</label>
+            <div>
+              <input id="Field3" name="Field3" class="field text large"
+                     size="66"
+                     spellcheck="false" value=""
+                     maxlength="255" tabindex="3"
+                     onkeyup="handleInput(this);"
+                     onchange="handleInput(this);" type="text" />
+            </div>
+            <!-- <p class="instruct" id="instruct2"><small>We won't share this with strangers.</small></p> -->
+          </li>
+
+
+          <!-- HTData -->
+          <li>
+            <label class="desc" id="title4" for="Field1">Message</label>
+            <div>
+              <textarea id="Field4" name="Field4" class="field textarea medium"
+                        spellcheck="true" rows="10"
+                        cols="50" tabindex="4"
+                        onkeyup="handleInput(this);"
+                        onchange="handleInput(this);"
+                        required=""></textarea>
+            </div>
+            <!-- ** hover-over to pop up instructions ** <p id="instruct1" class="instruct"><small>This field is required.</small></p> -->
+          </li>
+
+
+
+          <li class="buttons ">
+            <div>
+              <input name="currentPage" id="currentPage" value="Evsvr2wuslashAbQKTfplkTXUEOwQJuCaYnw8JgQ0BYME9Ix8=" type="hidden" />
+              <input
+                id="saveForm" name="saveForm"
+                tabindex="20" type="submit"
+                class="btTxt submit"
+                value="Submit"
+                onmousedown="doSubmitEvents();" />
+            </div>
+          </li>
+
+        </ul>
+      </form>
+    </div>
+  </body>
+</html>
