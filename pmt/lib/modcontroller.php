@@ -21,6 +21,7 @@
  *  $PAGE_PATH      - Relative path to theme being used
  *
  * Change Log:
+ *  2012-0703 * Cleaned up tab spacing for easy HTML code view.
  *  2012-0619 + Added alternative module load method. This is used until the whole LoadModule() procedure
  *              can be rewritten to handle dynamic loading.
  *              New Method: Module subfolder is same as mod name
@@ -98,7 +99,8 @@ function LoadModule($module, $arrParams)
     $skin_path = PMT_PATH . "lib/themes/default/";
     $relpath = "lib/themes/default/";
   }
-  // check if module has custom skin. (i.e. main, project, product, etc.)
+
+  // Set DEFAULT skin to MAIN.PHP - check LATER if module has custom skin
   $skin_file = "main.php";
   $page = $skin_path . $skin_file;
 
@@ -120,6 +122,15 @@ function LoadModule($module, $arrParams)
     header("Location: " . $pmtConf["general"]["base_url"] );    // Option B
     exit;
   }
+
+  /// Skin Part 2 ============
+  // check if module has custom skin. (i.e. main, project, product, etc.)
+  if (file_exists($skin_path . $module . ".php"))
+  {
+    $skin_file = $module . ".php";
+    $page = $skin_path . $skin_file;
+  }
+
 
   //pmtDebug( "mod: '" .$module .  "' relPath: " . $relpath);
   //pmtDebug( "relPath: " . $relpath);
@@ -194,9 +205,11 @@ function GenerateMetabar($module)
 
   /* II) Generate page */
   $t = "        ";
-  $ret = $t . "<ul>". PHP_EOL;
+  //$ret = $t . "<ul>" . PHP_EOL;
+  $ret = $t . "<ul>" . PHP_EOL;
   if ($user->online)
   {
+    $ret .= $t . "  ";
     // ONLINE
     // Login / Welcome, %USER%.   <-- Welcome screen take to user stats page
     //$ret .= AddLI('Welcome, <a href="/user" alt="User\'s Dashboard">' .$user->userInfo["username"] . '</a>', "first");
@@ -209,6 +222,7 @@ function GenerateMetabar($module)
   else
   {
     // OFFLINE
+    $ret .= $t . "  ";
     $ret .= AddLI(AddLink("user", "Login", "?cmd=login" )  );
     $ret .= AddLI("About xenoPMT", "last");
 
@@ -219,7 +233,7 @@ function GenerateMetabar($module)
     //$ret .= AddLI("About xenoPMT", "last");
 
   }
-    $ret .= $t . "</ul>" . PHP_EOL;
+    $ret .= PHP_EOL . $t . "</ul>" . PHP_EOL;
 
   /*
   if(

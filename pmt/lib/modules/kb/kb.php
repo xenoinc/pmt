@@ -215,8 +215,8 @@ class kb implements pmtModule {
           // $html = \xenoPMT\Module\KB\KBNew::DataHandler();
 
           $k = new xenoPMT\Module\KB\Create;
-          $ret = $k->DataHandler();
-          $html = $ret. "\n\n<hr>\n\n";
+          $html = $k->DataHandler();
+          //$html .= $html . "\n\n        <hr>\n\n";
           $html .= $k->pageGen();
 
           pmtDebug("KB: New");

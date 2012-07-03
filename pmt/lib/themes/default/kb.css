@@ -1,0 +1,117 @@
+/*
+  Document   : kb.css
+  Created on : July 2, 2012, 6:24:41 PM
+  Author     : Damian Suess
+  Description:
+    Knowledge Base style sheet
+*/
+
+
+/* *************************** */
+/* ** KB Group Boxes        ** */
+/* *************************** */
+
+fieldset{
+  border: 1px solid #D7D7D7;
+  border-radius: .4em;
+  padding: .9em;
+  margin: 1em 0;
+
+  display: block;
+  -webkit-margine-start: 2px;
+  -webkit-margine-end: 2px;
+  -webkit-padding-before: 0.35em;
+  -webkit-padding-start: 0.75em;
+  -webkit-padding-end: 0.75em;
+  -webkit-padding-after: 0.65em;
+}
+
+legend
+{
+  color: #000000;
+  font-weight: bold;
+  display: block;
+  -webkit-padding-start: 2px;
+  -webkit-padding-end: 2px;
+  border: none;
+}
+
+label{
+  font-weight: bold;
+}
+
+input[type="button"], input[type="submit"], input[type="reset"]
+{
+  background: #E0E0E0;
+  color: #000000;
+  border: 1px outset #eee;    /* slim the border */
+  border-radius: .3em;        /* make it rounded */
+  padding: .1em .5em .2em;
+  box-shadow: .1em .1em .4em 0 #888888;
+  text-shadow: .1em .1em #D0D0D0;
+
+}
+
+/* preview of KB data */
+#kb-prev-box
+{
+  color: #000000;
+  background-color: #e6e6ff;
+  border: 1px outset #8888FF; /* top and left border */
+  border-radius: .4em;
+  margin-top: 1em;
+  margin-bottom: 1em;
+  padding: .5em 1em;
+  position: relative;
+}
+
+/* div(id="kb-prev-box"){ table(class="kb-preview") }  */
+
+#kb-prev-box table.preview
+{
+  clear: both;
+  border-top: 1px solid #8888FF;
+  border-collapse: collapse;
+  table-layout: fixed;
+  width: 100%;
+}
+
+#kb-prev-box table.preview tr
+{
+  display: table-row;
+  border-bottom: 1px dotted #8888FF;
+  border-collapse: collapse;
+  table-layout: fixed;
+  width: 100%;
+}
+
+#kb-prev-box table.preview th
+{
+  font: normal 13px Verdana,Arial,'Bitstream Vera Sans',Helvetica,sans-serif;
+  font-weight: bold;
+  font-size: 80%;
+  text-align: left;
+  vertical-align: top;
+  width: 20%;
+  /* padding: .5em 1em; */
+}
+
+#kb-prev-box table.td
+{
+  font: normal 13px Verdana,Arial,'Bitstream Vera Sans',Helvetica,sans-serif;
+  font-size: 80%;
+  vertical-align: top;
+  font-weight: normal;
+}
+
+#kb-prev-box div.data
+{
+  font: normal 13px Verdana,Arial,'Bitstream Vera Sans',Helvetica,sans-serif;
+  font-weight: normal;
+  display: block;
+  color: #000000;
+  -webkit-margin-before: 1em;
+  -webkit-margin-after: 1em;
+  -webkit-margin-start: 0px;
+  -webkit-margin-end: 0px;
+}

@@ -56,7 +56,7 @@ global $pmtConf;
       </div>
       <div id="metabar" class="metanav">
         <!-- (Login / View Profile), Account Settings, Logout -->
-        <?php print($PAGE_METABAR); ?>
+<?php print($PAGE_METABAR); ?>
       </div>
     </div>
     <div id="mainbar" class="tbar">
@@ -76,13 +76,15 @@ global $pmtConf;
       <?php } ?>
       </div>
     <?php } ?>
+
       <div id="minibar_left" class="nav_left">
-        <!-- breadcrumbs left -->
-        <?php print($PAGE_MINILEFT); ?>
+        <!-- breadcrumbs left --><?php print($PAGE_MINILEFT); ?>
+
       </div>
       <div id="minibar_right" class="nav_right">
         <!-- mini toolbar for module -->
         <?php print($PAGE_MINIRIGHT); ?>
+
       </div>
 
       <div id="main">
