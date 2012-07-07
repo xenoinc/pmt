@@ -11,10 +11,9 @@
  *  Generate data for creating KB Articles
  *
  * To Do:
- *  [ ] Title
- *  [ ] Subject
- *  [ ] Product(s) (CSV or List>>CSV)
+ *  [ ] Product(s) (CSV to List>>CSV)
  *  [ ] WikiText / HTML
+ *  [ ] Save Page Data
  *
  * Change Log:
  *  2012-0625 + Ground Breaking
@@ -31,62 +30,128 @@ namespace xenoPMT\Module\KB
     private $_products;
     private $_data;
 
-    /*
-    function __construct() {
-      $this->_title = $_POST["Field1"];
-      $this->_subject = $_POST["Field2"];
-      $this->_products = $_POST["Field3"];
-      $this->_data = $_POST["Field4"];
-    }
-    */
+    private $_btnSubmit = false;
+    private $_btnPreview = false;
 
-    //static function DataHandler()
-    function DataHandler()
+    private $_flagSaved = false;
+
+    function __construct()
     {
-
+      // This use to hold DataHandler() events.. for some dumb reason i moved it
       // Collect data   { (expr) ? (true) : (false) };
       $this->_title     = (isset($_POST["Field1"])) ?  ($_POST["Field1"]) : ("");
       $this->_subject   = (isset($_POST["Field2"])) ?  ($_POST["Field2"]) : ("");
       $this->_products  = (isset($_POST["Field3"])) ?  ($_POST["Field3"]) : ("");
       $this->_data      = (isset($_POST["Field4"])) ?  ($_POST["Field4"]) : ("");
 
-      $title = $this->_title;
-      $subj = $this->_subject;    //SELF::subject;
-      $prod = $this->_products;   //SELF::_products;
-      $data = $this->_data;       //SELF::_data;
+      /* OnEvent()
+       * btnSave    = "Submit"
+       * btnPreview = "Preview"
+       * ** false==null, true=1
+       */
 
-      if ( $title!="" || $subj!="" || $prod!="" || $data!="" )
-        $vals = <<<EOT
+      // return TRUE(1) or FALSE(null) depending upon button event
+      $this->_btnSubmit   = (isset($_POST["btnSubmit"]))  ? ($_POST["btnSubmit"]=="Submit")   : (false);
+      $this->_btnPreview  = (isset($_POST["btnPreview"])) ? ($_POST["btnPreview"]=="Preview") : (false);
+
+    }
+
+
+    /**
+     * Pull in $_POST and $_GET data and prepare the class to handle it
+     *
+     * @return string
+     */
+    function DataHandler()
+    { //static function DataHandler()
+
+
+      /* NOTE:
+       * For now we don't care about PRODUCTS
+       */
+      if (($this->_btnSubmit == true) &&
+          ($this->_title!="" || $this->_subject!="" || $this->_data!=""))
+      {
+        //($this->_title!="" || $this->_subject!="" || $this->_products!="" || $this->_data!="")
+        $this->ArticleSave();
+        $this->_flagSaved = true;
+
+      }
+      else
+      {
+        // Invalid submittion
+        $vals = $this->ArticlePreview();
+      }
+
+      return $vals;
+    }
+
+    /**
+     * Generate Page Data
+     * @return String
+     */
+    function PageLayout()
+    {
+      if ($this->_flagSaved == true)
+        return $this->ArticleSaved();      // Display: "Saved!"
+      else
+        return $this->ArticleForm();       // Display: Form Contents
+    }
+
+    /* ###################################################################### */
+
+    /**
+     *  Generates, Article was Saved Save form date as KB Article
+     */
+    private function ArticleSave()
+    {
+
+    }
+
+    /*
+      static function Test() {
+        // Use:       echo \xenoPMT\Module\KB\KBNew::Test()
+        // returns:   "xenoPMT\Module\KB\KBNew::Test"
+        return __METHOD__;
+      }
+    */
+
+    private function ArticlePreview()
+    {
+      //$title = $this->_title;
+      //$subj = $this->_subject;    //SELF::subject;
+      //$prod = $this->_products;   //SELF::_products;
+      //$data = $this->_data;       //SELF::_data;
+      $htdata = "";
+
+      if ( $this->_title!="" || $this->_subject!="" || $this->_products!="" || $this->_data!="" )
+      {
+        $htdata = <<<EOT
         <div id="kb-prev-box">
           <header id="header" class="info">
             <h3>KB Article Preview</h3>
             <div></div>
           </header>
           <table class="preview" border="0" cellspacing="0" cellpadding="2">
-            <tr><th>Title:</th>      <td> {$title} </td></tr>
-            <tr><th>Subject:</th>    <td> {$subj} </td></tr>
-            <tr><th>Products:</th>   <td> {$prod} </td></tr>
+            <tr><th>Title:</th>      <td> {$this->_title} </td></tr>
+            <tr><th>Subject:</th>    <td> {$this->_subject} </td></tr>
+            <tr><th>Products:</th>   <td> {$this->_products} </td></tr>
           </table>
           <div>
             <header style="border-bottom: 1px solid #8888FF; color: #000000; font-weight: bold;">
               Data:
             </header>
-            <div class="data">{$data}</div>
+            <div class="data">{$this->_data}</div>
           </div>
         </div>
 EOT;
-      else
-        $vals = "";
-      return $vals;
+      }
+      return $htdata;
     }
 
-    static function Test() {
-      // Use:       echo \xenoPMT\Module\KB\KBNew::Test()
-      // returns:   "xenoPMT\Module\KB\KBNew::Test"
-      return __METHOD__;
-    }
 
-    function pageGen() {
+    function ArticleForm()
+    {
 
       $link = "kb?cmd=new";
 
@@ -168,12 +233,18 @@ EOT;
                 </li>
 
 
-
-                <li class="buttons ">
+                <!-- Buttons <li class="buttons "> -->
+                <li>
                   <div>
-                    <input name="currentPage" id="currentPage" value="Evsvr2wuslashAbQKTfplkTXUEOwQJuCaYnw8JgQ0BYME9Ix8=" type="hidden" />
+                    <!-- <input name="currentPage" id="currentPage" value="Evsvr2wuslashAbQKTfplkTXUEOwQJuCaYnw8JgQ0BYME9Ix8=" type="hidden" /> -->
                     <input
-                      id="saveForm" name="saveForm"
+                      id="btnPreview" name="btnPreview"
+                      tabindex="20" type="submit"
+                      class="btTxt submit"
+                      value="Preview" />
+
+                    <input
+                      id="btnSubmit" name="btnSubmit"
                       tabindex="20" type="submit"
                       class="btTxt submit"
                       value="Submit" />

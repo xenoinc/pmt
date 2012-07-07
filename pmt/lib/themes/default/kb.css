@@ -40,6 +40,7 @@ label{
   font-weight: bold;
 }
 
+/* make buttons pretty */
 input[type="button"], input[type="submit"], input[type="reset"]
 {
   background: #E0E0E0;

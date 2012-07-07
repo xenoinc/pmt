@@ -215,11 +215,10 @@ class kb implements pmtModule {
           // $html = \xenoPMT\Module\KB\KBNew::DataHandler();
 
           $k = new xenoPMT\Module\KB\Create;
-          $html = $k->DataHandler();
-          //$html .= $html . "\n\n        <hr>\n\n";
-          $html .= $k->pageGen();
+          $html =   $k->DataHandler();        // Handle $_POST & $_GET commands
+          $html .=  $k->PageLayout();
 
-          pmtDebug("KB: New");
+          // pmtDebug("KB: New");
           break;
 
 
@@ -241,7 +240,7 @@ class kb implements pmtModule {
           break;
 
         case ENUM_KBMode::KBMain:
-          pmtDebug("KB: Main");
+          // pmtDebug("KB: Main");
           $html .= $this->Page_UserOffline();
           break;
 
