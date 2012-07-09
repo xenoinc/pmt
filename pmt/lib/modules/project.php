@@ -13,6 +13,8 @@
  *  ** See Engineering document for more info
  *
  * Change Log:
+ *  2012-0709 * Renamed 'pmtModule' to new interface name, 'iModule' [DJS]
+ *            - Removed require of interface since the core includes it already [DJS]
  *  2012-0424 - Moved member 'Page_ProjectNew' to ProjExt::Page_ProjectNew
  *  2012-0406 + Adding Heredoc & Nowdoc versus a shitload of PRINT statements
  *  2012-0404 - Removed usage of makeLink & using AddLink from pmt-functions.php
@@ -63,8 +65,8 @@ class ENUM_ProjSegment
 //var $today = DaysOfWeek::Sunday;
 
 
-require ("pmtModule.php");
-class project implements pmtModule
+//require ("pmtModule.php");
+class project implements iModule
 {
   const MODULE = "p";
   //private $MODULE = "project";

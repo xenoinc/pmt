@@ -3,13 +3,14 @@
  * Copyright 2012 (C) Xeno Innovations, Inc.
  * ALL RIGHTS RESERVED
  * Author:       Damian Suess
- * Document:     pmtModule.php
+ * Document:     iModule.php
  * Created Date: Mar 22, 2012
  *
  * Description:
- *  Interface to what modules must contain.
+ *  Interface to what the xenoPMT modules must contain.
  *
  * Change Log:
+ *  2012-0709 * Renamed from "pmtModule.php" to "iModule.php"
  *  2012-0619 + Added Install, Uninstall, Init functions. (NOT Implemented Yet)
  *  2012-0322 + Initial creation
  */
@@ -18,7 +19,8 @@
  *
  * @author Damian Suess
  */
-interface pmtModule
+//interface pmtModule
+interface iModule
 {
   /**
    * Generates the page data for the module

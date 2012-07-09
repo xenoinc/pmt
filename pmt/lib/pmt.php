@@ -13,10 +13,12 @@
  * To Do:
  * [ ] Handle Plugins (Milestone 0.5)
  * [ ] Include langauge pack (Milestone 0.5)
+ * [ ] Call "config.default.php" before calling "config.php" to ensure
+ *      that our system handles the default settings.
  *
  * Change Log:
- * [2012-0112] - Initial Creation
- *
+ * 2012-0709 + Added 'iModule.php' interface to {required} list. (old pmtModule interface) [DJS]
+ * 2012-0112 - Initial Creation [DJS]
  */
 
 /* Step 1 - Make sure system is configured & db installed */
@@ -61,7 +63,7 @@ require(PMT_PATH."lib/common/pmt.member.php");  // Member (User) class
 require(PMT_PATH."lib/common/pmt.uri.php");     // URI Parsing class
 require(PMT_PATH."lib/pmt-functions.php");      // Common functions in system
 require(PMT_PATH."lib/modcontroller.php");      // module controller
-
+require(PMT_PATH."lib/iModule.php");            // module interface
 
 /* Step 4) - Initialize the classes
  * 1. Connect to database
@@ -97,6 +99,12 @@ $PAGE_MINILEFT="";  // Mini-bar Left aligned (bread crumbs)
 $PAGE_MINIRIGHT=""; // Mini-bar Right aligned (module node options)
 $PAGE_HTDATA="";    // Main page html data
 $PAGE_PATH="";      // Relative path to theme currently in use
+
+
+
+/* ################################################################################ */
+
+
 
 function PmtParseURL()
 {

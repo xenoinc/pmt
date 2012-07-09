@@ -16,5 +16,12 @@
  *
  */
 
+namespace xenoPMT\Module\KB
+{
+  class View
+  {
+
+  }
+}
 
 ?>

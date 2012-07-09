@@ -16,9 +16,9 @@
  *  2012-0328 * fixed "makeLink" to include $pmtConf
  */
 
-require("pmtModule.php");
-
-class dashboard implements pmtModule
+// require("pmtModule.php");
+// require("/../pmtModule.php");
+class dashboard implements iModule
 {
   const MODULE = "dashboard";
 

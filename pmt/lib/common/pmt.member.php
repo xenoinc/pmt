@@ -20,7 +20,7 @@
  *
  * To Do:
  *  [/] Constructor - UNTESTED
- *  [/] Login       - UNTESTED
+ *  [X] Login       - UNTESTED
  *  [X] Logoff      - UNTESTED
  *  [/] NewUser     - UNTESTED
  *  [X] GetInfo     - UNTESTED

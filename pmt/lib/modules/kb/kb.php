@@ -43,9 +43,10 @@ class ENUM_KBMode
   const KBList = 14;        // List of articles - In the future, break down to TOP 20 or 0-200
 }
 
-require ("/../pmtModule.php");
+//require ("/../pmtModule.php");
 
-class kb implements pmtModule {
+class kb implements iModule
+{
 
   const MODULE = "kb";      // Module name
   const cCMD = "cmd";       // view "1" (1-20), "21" (21-40)

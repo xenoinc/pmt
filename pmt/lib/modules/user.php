@@ -14,13 +14,15 @@
  *  ** See Engineering document for more info
  *
  * Change Log:
+ *  2012-0709 * Renamed 'pmtModule' to new interface name, 'iModule' [DJS]
+ *            - Removed require of interface since the core includes it already [DJS]
  *  2012-0402 - Bypassed GenerateToolbar(). Return "" and use default.
  *            * Moved PageData() to $_pagedata();
  *  2012-0328 * fixed "makeLink" to include $pmtConf
  */
 
-require ("pmtModule.php");
-class user implements pmtModule
+//require ("pmtModule.php");
+class user implements iModule
 {
   const MODULE = "user";
   //private $MODULE = "user";

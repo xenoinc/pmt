@@ -14,10 +14,13 @@
  *
  */
 
-
-class KBEdit
+namespace xenoPMT\Module\KB
 {
-  
+  class Edit
+  {
+
+
+  }
 
 }
 

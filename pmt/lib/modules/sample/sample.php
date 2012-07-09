@@ -15,8 +15,8 @@
  */
 
 
-require ("/../pmtModule.php");
-class sample implements pmtModule
+//require ("/../../iModule.php");
+class sample implements iModule
 {
   const MODULE  = "sample";    // Module name
 

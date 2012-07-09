@@ -16,4 +16,11 @@
  * Change Log:
  *
  */
+namespace xenoPMT\Module\KB
+{
+  class Main
+  {
+    
+  }
+}
 ?>
