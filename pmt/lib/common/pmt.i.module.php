@@ -19,10 +19,9 @@
  *
  * @author Damian Suess
  */
+//interface pmtModule
 interface iModule
 {
-  //Old Name: interface pmtModule
-
   /**
    * Generates the page data for the module
    */
