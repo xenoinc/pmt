@@ -85,8 +85,10 @@ class Member {
 
     $tmp =
         "SELECT User_Id, User_Name, Display_Name, Group_Id FROM ".PMT_TBL."USER WHERE " .
-        "User_Name='" . $pmtDB->es($_COOKIE['xenopmt_user']) . "' AND " .
-        "Session_Hash='" . $pmtDB->es($_COOKIE['xenopmt_hash']) . "' LIMIT 1;";
+        //"User_Name='" . $pmtDB->es($_COOKIE['xenopmt_user']) . "' AND " .
+        //"Session_Hash='" . $pmtDB->es($_COOKIE['xenopmt_hash']) . "' LIMIT 1;";
+        "User_Name='" . $pmtDB->FixString($_COOKIE['xenopmt_user']) . "' AND " .
+        "Session_Hash='" . $pmtDB->FixString($_COOKIE['xenopmt_hash']) . "' LIMIT 1;";
     $q = $pmtDB->Query($tmp);
     if($pmtDB->NumRows($q))
     {
@@ -259,7 +261,7 @@ class Member {
     global $pmtDB;
 
     $q =  "SELECT * FROM ".PMT_TBL."USER WHERE ".
-          "User_Id='".$pmtDB->Res($userId)."' LIMIT 1;";
+          "User_Id='".$pmtDB->FixString($userId)."' LIMIT 1;";
     return $pmtDB->QueryFirst($q);
 
   }

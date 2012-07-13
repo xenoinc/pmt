@@ -17,6 +17,8 @@
  *  [\] Save Page Data
  *  [ ] Check if previous title exists
  *
+ * Test Title:  "It's my "Test" title :woo;s: all around!"
+ * 
  * Change Log:
  *  2012-0712 * Cleaned up code errors
  *            + Added SaveArticle() private member to save to DB
@@ -162,6 +164,8 @@ namespace xenoPMT\Module\KB
       //$fixTitle = $pmtDB->FixString(str_replace(" ", "_", $this->_title));    // Use this for Wiki Articles
       $fixTitle = $pmtDB->FixString($this->_title);
       $fixSubject = $pmtDB->FixString($this->_subject);
+      
+      
       /*
          CREATE TABLE IF NOT EXISTS `TBLPMT_KB_ARTICLE`
            `Article_Id`    INT UNSIGNED NOT NULL AUTO_INCREMENT,
