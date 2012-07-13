@@ -14,7 +14,8 @@
  *  This will be included in v0.3 and above
  *
  * Change Log:
- * 2016-06-11 + (djs) Added KB_ATTACHMENT
+ * 2012-0712  * (djs) Fixed error in Attachemnt table
+ * 2012-0611  + (djs) Added KB_ATTACHMENT
  * 2012-0422  + (djs) Added Login_Required to KB_ARTICLE_SETTING
  * 2012-0420  + (djs) Added Table rows to TBLPMT_KB0
  *            * (djs) Split away from v0.5 tables. Keeping it basic for testing.
@@ -72,12 +73,12 @@ CREATE TABLE IF NOT EXISTS `TBLPMT_KB_ARTICLE_SETTING_0`
   Version 0.1
   Created:  2012-06-11
   Last Update:  2012-06-11
-
 */
 CREATE TABLE IF NOT EXISTS `TBLPMT_KB_ATTACHMENT`
 (
   `Attachment_Id` INT UNSIGNED NOT NULL,
   `File_Path`     VARCHAR(255) DEFAULT '',
   `File_Title`    VARCHAR(255),
+  PRIMARY KEY (`Attachment_Id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 

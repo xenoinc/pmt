@@ -113,20 +113,25 @@ class Database {
    * Escape the string
    * @deprecated
    */
+  /*
   public function EscapeString($string)
   {
     return mysql_escape_string($string);
   }
+  /*
 
   /**
    * Escape string shortcut - quick way to perform escapestring
-   *
+   *  @deprecated
    */
+  /*
   public function es($string)
   {
     return $this->EscapeString($string);
   }
-
+  */
+  
+  
   /**
    * Fix query string of errors
    * @param string $string
@@ -134,7 +139,8 @@ class Database {
    */
   public function FixString($string)
   {
-    return $this->EscapeString($string);
+    //return $this->EscapeString($string);
+    return $this->Res($string);
   }
 
 
@@ -157,15 +163,6 @@ class Database {
   }
 
   /**
-   * Real Escape String
-   * Escapes the string, making it safe for use in queries.
-   */
-  public function Res($string)
-  {
-    return mysql_real_escape_string($string,$this->_conn);
-  }
-
-  /**
    * Query First
    * Returns an array of the first row from the query result.
    * @param string $query The query.
@@ -179,6 +176,20 @@ class Database {
 
   /* **[ Privates Members ]********************************** */
 
+  /**
+   * Real Escape String
+   * Escapes the string, making it safe for use in queries.
+   */
+  private function Res($string)
+  {
+    
+    // Use this instead.. however it does prompt WARNINGS w/ PHPConsole
+    // $string = function_exists("mysql_real_escape_string") ? mysql_real_escape_string($string,$this->_conn) : mysql_escape_string($string);
+    
+    return mysql_real_escape_string($string,$this->_conn);
+  }
+
+  
   // Display error message
   private function halt($query=null)
   {

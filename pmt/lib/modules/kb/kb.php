@@ -112,7 +112,7 @@ class kb implements iModule
    */
   private function ParseData()
   {
-    global $pmtConf;
+    //global $pmtConf;
     global $uri;
 
     /**
@@ -129,19 +129,22 @@ class kb implements iModule
       /// Show KB Article welcome page ("/kb")
       case 1:
         if ($cmd == self::cNEW)         $mode = ENUM_KBMode::KBNew;     // Create New
-        else                            $mode = ENUM_KBMode::KBMain;    // Display main page
+        else{                           $mode = ENUM_KBMode::KBMain;}   // Display main page
         break;
 
       /// Display KB page ("/kb/<kb-id>")
       case 2:
 
         $kbPage = $uri->seg[1];         // Get KB number to edit
-        if ($cmd == self::cNEW)         $mode = ENUM_KBMode::KBNew;     // Create New
-        elseif ($cmd == self::cEDIT)    $mode = ENUM_KBMode::KBEdit;    // Edit KB Article
-        elseif ($cmd == self::cREMOVE)  $mode = ENUM_KBMode::KBRemove;  // Remove KB Article
-        else                            $mode = ENUM_KBMode::KBView;    // View page
-
+        switch($cmd)
+        {
+          case self::cNEW:      $mode = ENUM_KBMode::KBNew;     break;    // Create New
+          case self::cEDIT:     $mode = ENUM_KBMode::KBEdit;    break;    // Edit KB Article
+          case self::cREMOVE:   $mode = ENUM_KBMode::KBRemove;  break;    // Remove KB Article
+          default:              $mode = ENUM_KBMode::KBView;    break;   // View page
+        }
         pmtDebug("KB Page Id: " . $kbPage . PHP_EOL . "Mode: " . $mode);
+        
         break;
 
       default:
@@ -216,7 +219,7 @@ class kb implements iModule
           // $html = \xenoPMT\Module\KB\KBNew::DataHandler();
 
           $k = new xenoPMT\Module\KB\Create;
-          $html =   $k->DataHandler();        // Handle $_POST & $_GET commands
+          $k->DataHandler();            // Handle $_POST & $_GET commands
           $html .=  $k->PageLayout();
 
           // pmtDebug("KB: New");

@@ -9,13 +9,17 @@
  *
  * Description:
  *  Generate data for creating KB Articles
+ *  See "./src/install/pmt-db-kb.sql" for reference
  *
  * To Do:
  *  [ ] Product(s) (CSV to List>>CSV)
  *  [ ] WikiText / HTML
- *  [ ] Save Page Data
+ *  [\] Save Page Data
+ *  [ ] Check if previous title exists
  *
  * Change Log:
+ *  2012-0712 * Cleaned up code errors
+ *            + Added SaveArticle() private member to save to DB
  *  2012-0625 + Ground Breaking
  */
 
@@ -25,15 +29,23 @@ namespace xenoPMT\Module\KB
   class Create
   {
 
-    private $_title;
-    private $_subject;
-    private $_products;
-    private $_data;
+    private $_type;                   // [NOT USED] "How To", "General", "Solution"
+    private $_title;                  // Title of article
+    private $_subject;                // Subject of article
+    private $_products;               // List of products (or projects) it pretains to
+    private $_data;                   // HTML Data
+    private $_arrAttach = array();    // [NOT USED] File Attachments (PC Path to files)
+        
+    // ButtonEvents
+    private $_btnSubmit = false;      // Was the Save button pressed
+    private $_btnPreview = false;     // Was the Preview button pressed
 
-    private $_btnSubmit = false;
-    private $_btnPreview = false;
-
+    /// KB Article Preview HTML
+    private $_htPreview = "";
+    
+    /// Article is valid and was saved (true). If so, Do NOT display preview & show "Article Submitted" message
     private $_flagSaved = false;
+    
 
     function __construct()
     {
@@ -53,37 +65,54 @@ namespace xenoPMT\Module\KB
       // return TRUE(1) or FALSE(null) depending upon button event
       $this->_btnSubmit   = (isset($_POST["btnSubmit"]))  ? ($_POST["btnSubmit"]=="Submit")   : (false);
       $this->_btnPreview  = (isset($_POST["btnPreview"])) ? ($_POST["btnPreview"]=="Preview") : (false);
-
+      
     }
 
 
     /**
      * Pull in $_POST and $_GET data and prepare the class to handle it
+     * ** Really this all should just go in the constructor. Doing this just as sample case.
      *
      * @return string
      */
     function DataHandler()
     { //static function DataHandler()
-
+      /*
+       * To Do:
+       *  [ ] Check if previous title exists.. the throw error if it does.
+       */
 
       /* NOTE:
        * For now we don't care about PRODUCTS
        */
+      
       if (($this->_btnSubmit == true) &&
           ($this->_title!="" || $this->_subject!="" || $this->_data!=""))
       {
         //($this->_title!="" || $this->_subject!="" || $this->_products!="" || $this->_data!="")
-        $this->ArticleSave();
-        $this->_flagSaved = true;
+        
+        
+        $dupeTitle = false;
+        
+        if ($dupeTitle == false)
+        {
+          $kbId = $this->SaveArticle();
 
+          $this->_htPreview = "";     // No need for preview
+          $this->_flagSaved = true;
+        }
+        else
+        {
+          $this->_htPreview = "<div><b>Previous Title Exists!</b> - Change your title</div>\n";
+          $this->_htPreview .= $this->ArticlePreview();
+        }
+        
       }
       else
       {
-        // Invalid submittion
-        $vals = $this->ArticlePreview();
+        // Preview button was pressed or it was an invalid submittion
+        $this->_htPreview = $this->ArticlePreview();
       }
-
-      return $vals;
     }
 
     /**
@@ -93,19 +122,122 @@ namespace xenoPMT\Module\KB
     function PageLayout()
     {
       if ($this->_flagSaved == true)
+      {
         return $this->ArticleSaved();      // Display: "Saved!"
+      }
       else
-        return $this->ArticleForm();       // Display: Form Contents
+      {
+        return $this->_htPreview . $this->ArticleForm();       // Display: Form Contents
+      }
     }
 
-    /* ###################################################################### */
+    /* ##[ Database Shit ]################################################### */
+    
+    /**
+     * Save article to database
+     * @return string KB Id Number
+     */
+    private function SaveArticle()
+    {
+      global $pmtConf;  // Database shit
+      global $pmtDB;
+      global $user;     // Current User
+      /*
+       * To Do:
+       *  [ ] Save Article
+       *      _KB_ARTICLE (
+       *  [ ] Parse Attachements and save the files KB_ATTACHMENT(File_Path, File_Title)
+       *  [ ] Add settings (Project_Id, Product_Id {recursive}, Login_Required=TRUE, Visible=(if it's still in editing mode)
+       */
+      
+      // Create vars to use
+      $user_id      = $user->userInfo["User_Id"];
+      $user_handle  = $user->userInfo["User_Name"];
+      $user_Name    = $user->userInfo["Display_Name"];
+      
+      
+      // $url = str_replace("%3A", ":", $url);
+      
+      $dbPre = $pmtConf["db"]["prefix"];
+      //$fixTitle = $pmtDB->FixString(str_replace(" ", "_", $this->_title));    // Use this for Wiki Articles
+      $fixTitle = $pmtDB->FixString($this->_title);
+      $fixSubject = $pmtDB->FixString($this->_subject);
+      /*
+         CREATE TABLE IF NOT EXISTS `TBLPMT_KB_ARTICLE`
+           `Article_Id`    INT UNSIGNED NOT NULL AUTO_INCREMENT,
+           `Article_Type`  VARCHAR(16) COLLATE  utf8_unicode_ci,           -- "How To", "General", "Solution"
+           `Title`         VARCHAR(255) COLLATE utf8_unicode_ci NOT NULL,
+           `Subject`       VARCHAR(255) COLLATE utf8_unicode_ci NOT NULL,
+           `Article_Data`  LONGTEXT COLLATE utf8_unicode_ci NOT NULL,
+           `Created_Uid`   INT UNSIGNED,
+           `Created_Dttm`  DATETIME,
+           `Modified_Dttm` DATETIME,
+           PRIMARY KEY (`Article_Id`)
+       */
+      /*
+        CREATE TABLE IF NOT EXISTS `TBLPMT_KB_ARTICLE_SETTING_0`
+          `Article_Id`  INT UNSIGNED NOT NULL,
+          `Project_Id`  INT UNSIGNED DEFAULT 0,     -- Linked to project
+          `Product_Id`  INT UNSIGNED DEFAULT 0,     -- Linked to product
+          `Login_Required` BOOLEAN NOT NULL DEFAULT TRUE,
+          `Visible`     SMALLINT DEFAULT 0          -- Is it public or private to user (Created_Uid / Admin)
+       */
+      /*
+        CREATE TABLE IF NOT EXISTS `TBLPMT_KB_ATTACHMENT`
+          `Attachment_Id` INT UNSIGNED NOT NULL,
+          `File_Path`     VARCHAR(255) DEFAULT '',
+          `File_Title`    VARCHAR(255),
+       */
+      
+       
+      $q = <<<SQL
+INSERT INTO {$dbPre}KB_ARTICLE 
+(`Article_Type`  VARCHAR(16) COLLATE  utf8_unicode_ci,           -- "How To", "General", "Solution"
+           `Title`         VARCHAR(255) COLLATE utf8_unicode_ci NOT NULL,
+           `Subject`       VARCHAR(255) COLLATE utf8_unicode_ci NOT NULL,
+           `Article_Data`  LONGTEXT COLLATE utf8_unicode_ci NOT NULL,
+           `Created_Uid`   INT UNSIGNED,
+           `Created_Dttm`  DATETIME,
+           `Modified_Dttm` DATETIME,) VALUES (" .
+SQL;
 
+      // print("<li><b>[query]</b> - ".$q."</li>\n");
+      //$pmtDB->Query($q);
+    
+      
+      return "0";
+    }
+    
+    
+    /* --[ HTML Data ]------------------------------------------------------- */
+    
     /**
      *  Generates, Article was Saved Save form date as KB Article
+     * @return string HTML Preview Data
      */
-    private function ArticleSave()
+    private function ArticleSaved()
     {
-
+      
+      
+      
+      $htdata = <<<EOT
+        <center><h1>Your article has been saved!</h1>
+        <div>
+          <header id="header">
+            <h3>KB Article Submitted</h3>
+          </header>
+          <table class="preview" border="0" cellspacing="0" cellpadding="2">
+            <tr><th>Article Id:</th> <td> <i>(unknown)</i> </td></tr>
+            <tr><th>Title:</th>      <td> {$this->_title} </td></tr>
+            <tr><th>Subject:</th>    <td> {$this->_subject} </td></tr>
+            <tr><th>Products:</th>   <td> {$this->_products} </td></tr>
+          </table>
+         </div>
+         </center>
+         
+EOT;
+      return $htdata;
+        
     }
 
     /*
@@ -144,6 +276,7 @@ namespace xenoPMT\Module\KB
             <div class="data">{$this->_data}</div>
           </div>
         </div>
+
 EOT;
       }
       return $htdata;

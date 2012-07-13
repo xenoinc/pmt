@@ -1,21 +1,18 @@
 Copyright (c) 2010-2012 Xeno Innovations, Inc.
 -----------------------------------------------
+Readme-Dev.txt consist of general documentation which outlines
+the items which you need to get you going
+  1) Creating a Test Database
+  2) PMT Project Pages (overview)
+  3) Basic Folder structure
+  4) Example: Mulitple Projects
+  5) Example: User Interface
 
 Change Log:
 -----------
-
-
-2012-0224 [djs]
-  * Note, the project's folder structure has reciently changed as of
-    version 0.1 "nighthawk" (Concept-3). This will need to be changed.
-2012-0112 [djs]
-  * Created structure baised upon v0.1 "Concept-2"
-
-
-To Do:
-[ ] Update Folder Structure to v0.1 "Nighthawk"
-
-
+2012-0224 [djs] * Note, the project's folder structure has reciently changed as of
+                  version 0.1 "nighthawk" (Concept-3). This will need to be changed.
+2012-0112 [djs] * Created structure baised upon v0.1 "Concept-2"
 ###################################
 
 
@@ -24,21 +21,21 @@ Creating Test Database
 ----------------------
 
 
-1) Log into MySQL
-  mysql -h localhost  -u root -p
+/* Log into MySQL */
+mysql -h localhost  -u root -p
 
-2) Create User
-  CREATE USER 'testuser'@'localhost' IDENTIFIED BY 'testpass';
+/* Create User */
+CREATE USER 'testuser'@'localhost' IDENTIFIED BY 'testpass';
 
-3) Create database
-  CREATE DATABASE PMT_DATA;
+/* Create database */
+CREATE DATABASE PMT_DATA;
 
-4) Add user permissions
-  GRANT ALL ON PMT_DATA.* TO testuser@localhost;
+/* Add user permissions */
+GRANT ALL ON PMT_DATA.* TO testuser@localhost;
 
-5) Cleanup and Exit
-  flush privileges;
-  exit;
+/* Cleanup and Exit */
+flush privileges;
+exit;
 
   
 
@@ -53,25 +50,25 @@ Below is a list of pages were the project is hosted/tracked
 
 
 Section 3
-Folder structure
+Basic Folder structure
 ----------------
 
-|/Doc/
+|/doc/
 |/pmt/
-|--/admin/
-|--/htdoc/
-|--/skin-std/
-|--/lib/
-|--/pluings/
-|--/svn/
-|--/wiki/
-|/sample-plugin/
+|   ./install/
+|   ./lib/
+|     ./common/
+|     ./modules/
+|     ./themes/
+|       ./default/
+|   index.php
+|/sandbox/
 ---------------------
 
 
 
 Section 4
-Mulitple Projects
+Example: Mulitple Projects
 -----------------
 
 To access a different projects, simply navigate to the name of it:
@@ -83,11 +80,11 @@ To access a different projects, simply navigate to the name of it:
   http://pmt.xenoinc.org/project1
   http://pmt.xenoinc.org/project2
 
-  
-  
+
+
 
 Section 5
-User Interface
+Example: User Interface
 --------------
 
  ______________________________________________

@@ -23,6 +23,7 @@
  *  [ ] Step 2.a - Place into a function so we can resuse it in 2.b
  *  [ ] Step 2.a - Use disappearing suggestive text
  *  [ ] GD.com is using PHP 5.3.6 which is buggy. PMT is tested @ xiLabs against v5.3.10
+ *      [ ] Remove usage of so many _POSTs and use ajax
  *
  * Change Log:
  *  2012-0603 * Updated XIPMT_USER table column `Name` to `Display_Name`
@@ -112,10 +113,10 @@ elseif (isset($_GET["reset"]) && $_GET["reset"] == "db")
   {
     require_once("../lib/config.php");
 
-    p("Server: " . $pmtConf["db"]["server"]);
-    p("Database: " . $pmtConf["db"]["dbname"]);
+    p("Server: " .    $pmtConf["db"]["server"]);
+    p("Database: " .  $pmtConf["db"]["dbname"]);
     p("User Name: " . $pmtConf["db"]["user"]);
-    p("Password: " . $pmtConf["db"]["pass"]);
+    p("Password: " .  $pmtConf["db"]["pass"]);
     print("</ul><ul>\n");
 
     $pmtDB = new Database(
@@ -180,11 +181,14 @@ elseif (isset($_GET["reset"]) && $_GET["reset"] == "db")
 else
 {
 
+  /*
+   * Just some stupid beta testing
+   * 
   if (IsInstalled() == true)
     print "It is installed!";
   else
     print "NOT installed!";
-
+  
   try
   {
     // Config file found. Check for DB
@@ -198,11 +202,13 @@ else
     // $pmtDB->Query("list tables;");
     $pmtDB->Query("show tables;");
     print ("db works");
+   * 
   }
   catch (Exception $e)
   {
     print ("Error: " .$e);
   }
+  */
 
 }
 
@@ -540,8 +546,8 @@ switch ($step)
     // Create default values
     //InsertDefaults($pmtDB, $dbase, $settings, $admin);
     // Simple settings
-    $pmtDB->Query("UPDATE ".$dbase["prefix"]."SETTINGS SET Value='".$pmtDB->Res($settings["title"]) . "' WHERE Setting='title';" );
-    $pmtDB->Query("UPDATE ".$dbase["prefix"]."SETTINGS SET Value='".$pmtDB->Res($settings["seo_url"]) . "' WHERE Setting='seo_url';" );
+    $pmtDB->Query("UPDATE ".$dbase["prefix"]."SETTINGS SET Value='".$pmtDB->FixString($settings["title"]) . "' WHERE Setting='title';" );
+    $pmtDB->Query("UPDATE ".$dbase["prefix"]."SETTINGS SET Value='".$pmtDB->FixString($settings["seo_url"]) . "' WHERE Setting='seo_url';" );
 
     print("<li><b>[DB]</b> - Inserting admin defaults</li>\n");
 
@@ -558,10 +564,10 @@ switch ($step)
     // TODO: Use the USER Class to perform user insert
     $q ="INSERT INTO ".$dbase["prefix"]."USER ".
         "(User_Name, Password, Display_Name, Email, Group_Id, Active, Session_Hash) VALUES (" .
-        "'". $pmtDB->Res($admin['username'])."', ". // User
+        "'". $pmtDB->FixString($admin['username'])."', ". // User
         "'". sha1($admin['password'])       ."', ". // Password
-        "'". $pmtDB->Res($admin['username'])."', ". // Display name the world sees
-        "'". $pmtDB->Res($admin['email'])   ."', ". // Email
+        "'". $pmtDB->FixString($admin['username'])."', ". // Display name the world sees
+        "'". $pmtDB->FixString($admin['email'])   ."', ". // Email
         "1, " .                                     // Group_Id (ADMIN)
         "true," .                                   // Active (YES)
         "'');";                                      // Session_Hash

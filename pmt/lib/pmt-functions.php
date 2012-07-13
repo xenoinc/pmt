@@ -14,8 +14,9 @@
  *  [ ] Locale - Add functionaly for arrays
  *  [ ] Locale - Add SystemHook "function_locale"
  *  [ ] GetUserSetting - Get user & setting
+ * 
  * Change Log:
- *
+ *  2012-0712 * Changed db call from the now private $pmtDB->Res(..) to the proper FixString method.
  */
 
 
@@ -43,7 +44,7 @@ function GetSetting($setting)
     return $CACHE['setting'][$setting];
 
   $tmpArr = $pmtDB->Query("SELECT Setting, Value FROM " . PMT_TBL . "SETTINGS" .
-                          " WHERE Setting='" . $pmtDB->Res($setting) . "' LIMIT 1;");
+                          " WHERE Setting='" . $pmtDB->FixString($setting) . "' LIMIT 1;");
   $ret = $pmtDB->FetchArray($tmpArr);
 
   // Save into cache now
