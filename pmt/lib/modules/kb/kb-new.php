@@ -31,11 +31,11 @@ namespace xenoPMT\Module\KB
   class Create
   {
 
-    private $_type;                   // [NOT USED] "How To", "General", "Solution"
     private $_title;                  // Title of article
     private $_subject;                // Subject of article
     private $_products;               // List of products (or projects) it pretains to
     private $_data;                   // HTML Data
+    private $_type;                   // [NOT USED] "How To", "General", "Solution"
     private $_arrAttach = array();    // [NOT USED] File Attachments (PC Path to files)
         
     // ButtonEvents
@@ -96,6 +96,10 @@ namespace xenoPMT\Module\KB
         
         $dupeTitle = false;
         
+        // Perform article check
+        
+        
+        // save our data
         if ($dupeTitle == false)
         {
           $kbId = $this->SaveArticle();
@@ -153,18 +157,17 @@ namespace xenoPMT\Module\KB
        */
       
       // Create vars to use
-      $user_id      = $user->userInfo["User_Id"];
-      $user_handle  = $user->userInfo["User_Name"];
-      $user_Name    = $user->userInfo["Display_Name"];
-      
+      $user_id      = $user->userInfo["User_Id"];       // 1
+      $user_handle  = $user->userInfo["User_Name"];     // admin
+      $user_Name    = $user->userInfo["Display_Name"];  // xenoPMT Administrator
+      // debug("id: '" . $user_id . "'  hanle: '" . $user_handle . "' nme: '" . $user_Name . "'");
       
       // $url = str_replace("%3A", ":", $url);
-      
-      $dbPre = $pmtConf["db"]["prefix"];
+      $dbPrefix = $pmtConf["db"]["prefix"];
       //$fixTitle = $pmtDB->FixString(str_replace(" ", "_", $this->_title));    // Use this for Wiki Articles
-      $fixTitle = $pmtDB->FixString($this->_title);
-      $fixSubject = $pmtDB->FixString($this->_subject);
-      
+      $title = $pmtDB->FixString($this->_title);
+      $subject = $pmtDB->FixString($this->_subject);
+      $data = $pmtDB->FixString($this->_data);
       
       /*
          CREATE TABLE IF NOT EXISTS `TBLPMT_KB_ARTICLE`
@@ -195,19 +198,15 @@ namespace xenoPMT\Module\KB
       
        
       $q = <<<SQL
-INSERT INTO {$dbPre}KB_ARTICLE 
-(`Article_Type`  VARCHAR(16) COLLATE  utf8_unicode_ci,           -- "How To", "General", "Solution"
-           `Title`         VARCHAR(255) COLLATE utf8_unicode_ci NOT NULL,
-           `Subject`       VARCHAR(255) COLLATE utf8_unicode_ci NOT NULL,
-           `Article_Data`  LONGTEXT COLLATE utf8_unicode_ci NOT NULL,
-           `Created_Uid`   INT UNSIGNED,
-           `Created_Dttm`  DATETIME,
-           `Modified_Dttm` DATETIME,) VALUES (" .
+INSERT INTO {$dbPrefix}KB_ARTICLE 
+(`Article_Type`, `Title`, `Subject`, `Article_Data`, `Created_Uid`, `Created_Dttm`, `Modified_Dttm`) VALUES
+('General', '{$title}', '{$subject}', '{$data}', {$user_id}, null, null);
+  
 SQL;
 
       // print("<li><b>[query]</b> - ".$q."</li>\n");
       //$pmtDB->Query($q);
-    
+      debug('Query: ' . $q);
       
       return "0";
     }
