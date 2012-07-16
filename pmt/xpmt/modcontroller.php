@@ -90,14 +90,14 @@ function LoadModule($module, $arrParams)
   if ($theme== "")
     $theme="default";
 
-  if (file_exists(PMT_PATH . "lib/themes/" . $theme))
+  if (file_exists(PMT_PATH . "xpmt/themes/" . $theme))
   { // use custom theme
-    $skin_path = PMT_PATH . "lib/themes/" . $theme . "/";
-    $relpath = "lib/themes/" . $theme . "/";
+    $skin_path = PMT_PATH . "xpmt/themes/" . $theme . "/";
+    $relpath = "xpmt/themes/" . $theme . "/";
   }else{
     // using default
-    $skin_path = PMT_PATH . "lib/themes/default/";
-    $relpath = "lib/themes/default/";
+    $skin_path = PMT_PATH . "xpmt/themes/default/";
+    $relpath = "xpmt/themes/default/";
   }
 
   // Set DEFAULT skin to MAIN.PHP - check LATER if module has custom skin
@@ -108,17 +108,17 @@ function LoadModule($module, $arrParams)
 
   /* ** Prepare Module ** */
 
-  if (file_exists(PMT_PATH."lib/modules/".$module.".php"))
-    require(PMT_PATH."lib/modules/".$module.".php");
+  if (file_exists(PMT_PATH."xpmt/modules/".$module.".php"))
+    require(PMT_PATH."xpmt/modules/".$module.".php");
 
   // Alternative method (Module subfolder is same as mod name)
-  elseif (file_exists(PMT_PATH."lib/modules/".$module."/".$module.".php"))
-    require(PMT_PATH."lib/modules/".$module."/".$module.".php");
+  elseif (file_exists(PMT_PATH."xpmt/modules/".$module."/".$module.".php"))
+    require(PMT_PATH."xpmt/modules/".$module."/".$module.".php");
 
   else
   {
     $module="dashboard";
-    //require(PMT_PATH."lib/modules/dashboard.php");              // Option A
+    //require(PMT_PATH."xpmt/modules/dashboard.php");              // Option A
     header("Location: " . $pmtConf["general"]["base_url"] );    // Option B
     exit;
   }

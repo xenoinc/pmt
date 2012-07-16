@@ -20,6 +20,7 @@
  * Test Title:  "It's my "Test" title :woo;s: all around!"
  *
  * Change Log:
+ *  2012-0716 + Added to form, display test button if (constant) DebugMode==true
  *  2012-0712 * Cleaned up code errors
  *            + Added SaveArticle() private member to save to DB
  *  2012-0625 + Ground Breaking
@@ -76,7 +77,7 @@ namespace xenoPMT\Module\KB
       // return TRUE(1) or FALSE(null) depending upon button event
       $this->_btnSubmit   = (isset($_POST["btnSubmit"]))  ? ($_POST["btnSubmit"]=="Submit")   : (false);
       $this->_btnPreview  = (isset($_POST["btnPreview"])) ? ($_POST["btnPreview"]=="Preview") : (false);
-      $this->_btnTest     = (isset($_POST["btnTest"]))    ? ($_POST["btnTest"]=="Preview")    : (false);
+      $this->_btnTest     = (isset($_POST["btnTest"]))    ? ($_POST["btnTest"]=="Test")    : (false);
 
     }
 
@@ -98,6 +99,7 @@ namespace xenoPMT\Module\KB
       if ($this->_btnTest == true)
       {
         $this->UnitTest();
+        //$this->_htPreview = $this->ArticlePreview();
       }
       elseif (($this->_btnSubmit == true) &&
               ($this->_kbTitle!="" || $this->_kbSubject!="" || $this->_kbData!=""))
@@ -307,6 +309,12 @@ EOT;
     {
 
       $link = "kb?cmd=new";
+      
+      // Display test button if in debug mode
+      if (defined("DebugMode") && DebugMode == true)
+        $testBtn = "<input id=\"btnTest\" name=\"btnTest\" tabindex=\"20\" type=\"submit\" class=\"btTxt submit\" value=\"Test\" />";
+      else
+        $testBtn = "";
 
       return <<<"EOT"
 
@@ -391,11 +399,7 @@ EOT;
                   <div>
                     <!-- <input name="currentPage" id="currentPage" value="Evsvr2wuslashAbQKTfplkTXUEOwQJuCaYnw8JgQ0BYME9Ix8=" type="hidden" /> -->
 
-                    <input
-                      id="btnTest" name="btnTest"
-                      tabindex="20" type="submit"
-                      class="btTxt submit"
-                      value="Test" />
+                    {$testBtn}
 
                     <input
                       id="btnPreview" name="btnPreview"
@@ -428,6 +432,43 @@ EOT;
       $this->_kbProducts  = "Product1;Product2";
       $this->_kbData      = "<p>This is a test article</p><p>And some <b>sample data</b>.</p>";
 
+      $this->_kbData = <<<SAMPLE
+When you visit a Web site or run an application that loads XHTML documents by using Microsoft 
+XML Core Services (MSXML), MSXML will send requests to the World Wide Web Consortium (W3C) to fetch 
+well-known Document Type Definition (DTD) files every time. This behavior may bring lots of traffic 
+to the W3C server. Sometimes, you may find the XHTML files are not loaded successfully because the 
+DTD requests are blocked by the W3C server. <br><br>For example, you have a JavaScript file (.js) 
+that contains the following code:
+<div class="kb_codebody"><div class="kb_codecontent">
+<code>
+<pre class="code">
+function pullXHtml() {
+  var xml = new ActiveXObject("Msxml2.DOMDocument.6.0");
+  xml.async = false;
+  xml.resolveExternals = true;
+  xml.validateOnParse = false;
+  xml.setProperty("ProhibitDTD", false);
+  xml.loadXML(
+    "&lt;!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Transitional//EN\" \"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd\"&gt;" +
+    "&lt;html xmlns='http://www.w3.org/1999/xhtml' xml:lang='en' lang='en'&gt;&lt;head&gt;&lt;title&gt;simple document&lt;/title&gt;&lt;/head&gt;" +
+    "&lt;body&gt;&lt;p&gt;a simple&amp;nbsp;paragraph&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;");
+  if (xml.parseError.errorCode != 0) {
+    var myErr = xml.parseError;
+    WScript.Echo("ERROR:" + myErr.reason);
+  } else {
+    WScript.echo("The XHTML document was loaded successfully.");
+  }
+}
+
+pullXHtml();
+
+</pre></code>
+</div></div>
+When you run the JavaScript file, the file loads an XHTML document by using MSXML. If you do not have 
+this update installed, you may receive the following error message when you run the JavaScript file 
+if the DTD requests are blocked by the W3C server:
+SAMPLE;
+      
       $_POST["Field1"] = $this->_kbTitle;
       $_POST["Field2"] = $this->_kbSubject;
       $_POST["Field3"] = $this->_kbProducts;

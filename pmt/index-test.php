@@ -44,7 +44,7 @@ if (DebugIndex == false)
 
   // print("path: " . PMT_PATH);
 
-  include_once "lib/pmt.php";
+  include_once "xpmt/pmt.php";
   PmtParseURL();
 
 
@@ -63,12 +63,12 @@ if (DebugIndex == false)
 
 
   /* OLD
-  /// Login Libary
-  include_once "lib/security.php";
+  /// Login class
+  include_once "xpmt/security.php";
   $class = new pmtSecurity();
   define("CLS_SECURITY", $class->isUserOffline());   // So we can access it inside of functions
 
-  require "lib/http.php"; /// Render main page
+  require "xpmt/http.php"; /// Render main page
 
   // In order of presidence
   // if (isset($_GET["wnd"]))
@@ -78,7 +78,7 @@ if (DebugIndex == false)
 
   define('PMT_PATH',str_replace(pathinfo(__FILE__,PATHINFO_BASENAME),'',__FILE__));
     // print("path: " . PMT_PATH);
-  require('lib/config.php');  // Core libary
+  require('xpmt/config.php');  // Core configuration
   */
 
 }

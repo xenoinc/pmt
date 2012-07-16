@@ -20,9 +20,9 @@ function IsInstalled()
   global $pmtConf;
 
   $installed = false;
-  if(file_exists("../lib/config.php"))
+  if(file_exists("../xpmt/config.php"))
   {
-    require_once "../lib/config.php";
+    require_once "../xpmt/config.php";
     $con = mysql_connect( $pmtConf["db"]["server"],
                           $pmtConf["db"]["user"],
                           $pmtConf["db"]["pass"]);

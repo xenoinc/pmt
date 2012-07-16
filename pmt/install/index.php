@@ -39,12 +39,12 @@
 if (!defined("DebugMode"))
 {
   define("DebugMode", TRUE);
-  require "../lib/phpConsole.php";
+  require "../xpmt/phpConsole.php";
   PhpConsole::start(true, true, dirname(__FILE__));
 }
 
 require_once "installer.php";
-require_once "../lib/common/pmt.db.php";
+require_once "../xpmt/common/pmt.db.php";
 
 if (DebugMode == true)
 {
@@ -67,7 +67,7 @@ if (isset($_GET["reset"]) && $_GET["reset"] == "full")
   CreateHeader("PMT System Reset - Full");
   print("<ul>\n");
 
-  if(file_exists("../lib/config.php"))
+  if(file_exists("../xpmt/config.php"))
   {
     p("CONFIG.PHP found.");
   }
@@ -96,7 +96,7 @@ if (isset($_GET["reset"]) && $_GET["reset"] == "full")
   // Delete config.php
   try
   {
-    unlink("../lib/config.php");
+    unlink("../xpmt/config.php");
     p("Delete <b>config.php</b> file.");
   }  catch(Exception $e) {
 
@@ -115,9 +115,9 @@ elseif (isset($_GET["reset"]) && $_GET["reset"] == "db")
   CreateHeader("PMT System Reset - Database Only");
   print("<ul>\n");
 
-  if (file_exists("../lib/config.php"))
+  if (file_exists("../xpmt/config.php"))
   {
-    require_once("../lib/config.php");
+    require_once("../xpmt/config.php");
 
     p("Server: " .    $pmtConf["db"]["server"]);
     p("Database: " .  $pmtConf["db"]["dbname"]);
@@ -247,9 +247,9 @@ switch ($step)
     {
       htmlMessage("xiPMT is already Installed");
     }
-    elseif(file_exists("../lib/config.php"))
+    elseif(file_exists("../xpmt/config.php"))
     {
-      htmlMessage("<code>lib/config.php</code> exists, unable to continue.");
+      htmlMessage("<code>xpmt/config.php</code> exists, unable to continue.");
     }
     else
     {
@@ -283,8 +283,8 @@ switch ($step)
       CreateHeader("Step 2.a");
 
       // There is no db connetion info. Let get some
-      if(file_exists("../lib/config.php"))
-        require_once "../lib/config.php";
+      if(file_exists("../xpmt/config.php"))
+        require_once "../xpmt/config.php";
 
       ?>
       <form action="index.php" method="post">
@@ -619,9 +619,9 @@ switch ($step)
     print("      </ul>");
     print("    </div>");
 
-    if(!file_exists("../lib/config.php") && is_writable("../lib"))
+    if(!file_exists("../xpmt/config.php") && is_writable("../xpmt"))
     {
-      $fh = fopen("../lib/config.php", "w+");
+      $fh = fopen("../xpmt/config.php", "w+");
       fwrite($fh, $cfgPHP);
       ?>
       <div align="center" class="message good">Installation Finished</div>
@@ -636,9 +636,9 @@ switch ($step)
     {
       ?>
       <div align="center" class="message error">
-        The config file ('/lib/config.php') was unable to be generated. Please make sure
+        The config file ('/xpmt/config.php') was unable to be generated. Please make sure
         that the folder has write permissions to complete this operation, otherwise create
-        this file manually from '/lib/config.default.php'.
+        this file manually from '/xpmt/config.default.php'.
       </div>
       <pre id="config_code">
         <?php print(htmlentities($cfgPHP)); ?>

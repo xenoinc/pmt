@@ -17,6 +17,7 @@
  *      that our system handles the default settings.
  *
  * Change Log:
+ * 2012-0716 + Added "config.default.php" to be accessed before user custom file is accessed
  * 2012-0709 + Added 'iModule.php' interface to {required} list. (old pmtModule interface) [DJS]
  * 2012-0112 - Initial Creation [DJS]
  */
@@ -24,8 +25,8 @@
 /* Step 1 - Make sure system is configured & db installed */
 
 // i) Set version (should be in array)
-$pmt_version = "0.0.2";
-$pmt_version_ex = "000002";
+$pmt_version = "0.0.3";
+$pmt_version_ex = "000003";
 $pmt_db_version = 0.2;
 define("PMT_VER",$pmt_version);
 
@@ -36,7 +37,7 @@ PhpConsole::start(true, true, dirname(__FILE__));
 //  debug("Debug Mode ON!");
 
 // iii) no config.php? then goto installer
-if(!file_exists(PMT_PATH."lib/config.php"))
+if(!file_exists(PMT_PATH."xpmt/config.php"))
 {
   header("Location: install/");
   exit; // suppress from falling through
@@ -54,16 +55,17 @@ $BREADCRUMB = array();
 /* Step 3 - Include the required classes */
 
 // Since the system is "configured" include the class now
-require(PMT_PATH."lib/config.php");             // Configuration Script
+require(PMT_PATH."xpmt/config.default.php");      // Default configuration script
+require(PMT_PATH."xpmt/config.php");              // Configuration Script
 
 // Require the core PMT files
-//require(PMT_PATH."lib/common/pmt.user.php");  // User Class
-require(PMT_PATH."lib/common/pmt.db.php");      // Database Class
-require(PMT_PATH."lib/common/pmt.member.php");  // Member (User) class
-require(PMT_PATH."lib/common/pmt.uri.php");     // URI Parsing class
-require(PMT_PATH."lib/pmt-functions.php");      // Common functions in system
-require(PMT_PATH."lib/modcontroller.php");      // module controller
-require(PMT_PATH."lib/iModule.php");            // module interface
+//require(PMT_PATH."xpmt/common/pmt.user.php");   // User Class
+require(PMT_PATH."xpmt/core/pmt.db.php");         // Database Class
+require(PMT_PATH."xpmt/core/pmt.member.php");     // Member (User) class
+require(PMT_PATH."xpmt/core/pmt.uri.php");        // URI Parsing class
+require(PMT_PATH."xpmt/core/pmt.i.module.php");   // module interface
+require(PMT_PATH."xpmt/pmt-functions.php");       // Common functions in system
+require(PMT_PATH."xpmt/modcontroller.php");       // module controller
 
 /* Step 4) - Initialize the classes
  * 1. Connect to database
@@ -82,10 +84,10 @@ $user = new Member;   // $user = new User;
 $uri = new URI;
 
 // undefined GetSetting
-define("THEME", $uri->Anchor("lib/themes", GetSetting("theme"))); // Set theme
+define("THEME", $uri->Anchor("xpmt/themes", GetSetting("theme"))); // Set theme
 
 /* Include language pack (v0.5) */
-// require(PMT_PATH."lib/lang/" . GetSetting("lang"));   // Setup language
+// require(PMT_PATH."xpmt/lang/" . GetSetting("lang"));   // Setup language
 
 
 // Used to generate the body of our skin
@@ -109,14 +111,15 @@ $PAGE_PATH="";      // Relative path to theme currently in use
 function PmtParseURL()
 {
   /**
-  * Possible Paths:
-  * /<root>                      Welcome page
-  * /project/<proj_name>         Project page (root=list all)
-  * /product/<prod_name>         Product page (root=list all)
-  * /user/<user_name>            User page (root=list all)
-  * /customer/<customer_number>  Customer page (root=list all)
-  * /admin/                      System admin page
-  */
+   * Possible Paths:
+   * /<root>                      Welcome page
+   * /kb/<kb-id>                  Knowledge Base
+   * /project/<proj_name>         Project page (root=list all)
+   * /product/<prod_name>         Product page (root=list all)
+   * /user/<user_name>            User page (root=list all)
+   * /customer/<customer_number>  Customer page (root=list all)
+   * /admin/                      System admin page
+   */
 
   global $uri;
   //$param = array();

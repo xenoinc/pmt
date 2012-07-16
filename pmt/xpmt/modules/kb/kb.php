@@ -28,6 +28,8 @@
  * [ ] Create GUI :: Search Articles
  *
  * Change Log:
+ *  2012-0716 * Moved Main and List pages to the KB-MAIN.PHP file
+ *            + Added command param, "list" for listing of article. Needs expanded on
  *  2012-0618 + Ground breaking
  *
  */
@@ -48,11 +50,12 @@ class ENUM_KBMode
 class kb implements iModule
 {
 
-  const MODULE = "kb";      // Module name
-  const cCMD = "cmd";       // view "1" (1-20), "21" (21-40)
-  const cVIEW = "view";     // view "1" (1-20), "21" (21-40)
-  const cNEW = "new";
-  const cEDIT = "edit";
+  const MODULE  = "kb";       // Module name
+  const cCMD    = "cmd";      // view "1" (1-20), "21" (21-40)
+  const cVIEW   = "view";     // view "1" (1-20), "21" (21-40)
+  const cLIST   = "list";     // List articles ** Needs Expanded on & sub-switch for range and start-id **
+  const cNEW    = "new";
+  const cEDIT   = "edit";
   const cREMOVE = "remove";
 
   // Module settings that pass pack data to xenoPMT core
@@ -127,6 +130,7 @@ class kb implements iModule
     switch (count($uri->seg))
     {
       /// Show KB Article welcome page ("/kb")
+      /// or List range of pages using parameter passed in (ENUM_KBMode::KBList:)
       case 1:
         if ($cmd == self::cNEW)         $mode = ENUM_KBMode::KBNew;     // Create New
         else{                           $mode = ENUM_KBMode::KBMain;}   // Display main page
@@ -141,9 +145,9 @@ class kb implements iModule
           case self::cNEW:      $mode = ENUM_KBMode::KBNew;     break;    // Create New
           case self::cEDIT:     $mode = ENUM_KBMode::KBEdit;    break;    // Edit KB Article
           case self::cREMOVE:   $mode = ENUM_KBMode::KBRemove;  break;    // Remove KB Article
-          default:              $mode = ENUM_KBMode::KBView;    break;   // View page
+          default:              $mode = ENUM_KBMode::KBView;    break;    // View page
         }
-        pmtDebug("KB Page Id: " . $kbPage . PHP_EOL . "Mode: " . $mode);
+        //pmtDebug("KB Page Id: " . $kbPage . PHP_EOL . "Mode: " . $mode);
         
         break;
 
@@ -201,58 +205,89 @@ class kb implements iModule
 
   private function EventHandler()
   {
+    /*
+     * ToDo:
+     * [ ] + Check if login is required by the module [2012-07-16]
+     *      For now, require it (by default)
+     * 
+     */
+    
     global $user;
     //global $uri;
     $html = "";
 
-
+    
+    // ToDo: Add logic to check if login is required
     if ($user->online == false)
+    {
       $html = $this->Page_UserOffline();
-    else {
-      switch ($this->_MODE) {
-
-        case ENUM_KBMode::KBNew:
-
-          require_once "kb-new.php";
-          // use xenoPMT\Module\KB\KBNew as kb;
-          // $k = new kb;
-          // $html = \xenoPMT\Module\KB\KBNew::DataHandler();
-
-          $k = new xenoPMT\Module\KB\Create;
-          $k->DataHandler();            // Handle $_POST & $_GET commands
-          $html .=  $k->PageLayout();
-
-          // pmtDebug("KB: New");
-          break;
+      return $html;
+    }
+    
+    switch ($this->_MODE)
+    {
+      case ENUM_KBMode::KBMain:
+        // pmtDebug("KB: Main");
+        
+        require_once "kb-main.php";
+        $k = new xenoPMT\Module\KB\Main;
+        $html .= $k->PageLayout(1);
+        
+        break;
 
 
-        case ENUM_KBMode::KBEdit:
-          pmtDebug("KB: Edit");
-          break;
+      case ENUM_KBMode::KBNew:
+
+        require_once "kb-new.php";
+        // use xenoPMT\Module\KB\KBNew as kb;
+        // $k = new kb;
+        // $html = \xenoPMT\Module\KB\KBNew::DataHandler();
+
+        $k = new xenoPMT\Module\KB\Create;
+        $k->DataHandler();            // Handle $_POST & $_GET commands
+        $html .=  $k->PageLayout();
+
+        // pmtDebug("KB: New");
+        break;
+
+      case ENUM_KBMode::KBView:
+
+        require_once "kb-view.php";
+        $k = new xenoPMT\Module\KB\View($this->_PAGE);
+        $html .=  $k->PageLayout();
+        //pmtDebug("KB: View");
+
+        break;
+
+      case ENUM_KBMode::KBEdit:
+        pmtDebug("KB: Edit");
+        break;
 
 
-        case ENUM_KBMode::KBRemove:
-          pmtDebug("KB: Remove");
-          break;
-
-        case ENUM_KBMode::KBView:
-          pmtDebug("KB: View");
-          break;
-
-        case ENUM_KBMode::KBList:
-          pmtDebug("KB: List");
-          break;
-
-        case ENUM_KBMode::KBMain:
-          // pmtDebug("KB: Main");
-          $html .= $this->Page_UserOffline();
-          break;
+      case ENUM_KBMode::KBRemove:
+        pmtDebug("KB: Remove");
+        break;
 
 
-        default:
-          $html .= $this->Page_UserOffline();
-          break;
-      }
+      case ENUM_KBMode::KBList:
+        pmtDebug("KB: List");
+        
+        require_once "kb-main.php";
+        $k = new xenoPMT\Module\KB\Main;
+        $html .= $k->PageLayout(2);
+        
+        break;
+
+      
+      // Show main page
+      default:
+        
+        pmtDebug("KB: Default");
+        require_once "kb-main.php";
+        $k = new xenoPMT\Module\KB\Main;
+        $html .= $k->PageLayout();
+
+        break;
     }
 
     return $html;
@@ -262,21 +297,21 @@ class kb implements iModule
 
   private function Page_UserOffline()
   {
+    // To Do:
+    
     $html = <<<"EOT"
         <h1>Knowledge Base</h1>
         <p>
-          This system is still under heavy development and is not
-          ready for live action use by any means. Soon enough you will
-          get to see what the future holds.  As the project develops the
-          user and engineering documentation will mature along with it.</p>
-        <p>Sit tight and enjoy the ride!</p>
+          Please sign in to use this module</p>
         <p>&nbsp;</p>
         <p>- Xeno Innovations, Inc. -</p>
         <p></p>
 EOT;
     return $html;
   }
+  
 
+  
   /*   * *[ Assisting members ]******* */
 
   private function AddLink($module, $text, $extLink = "")

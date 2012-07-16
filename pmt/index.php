@@ -26,14 +26,14 @@
  *
  */
 
-// Development Debug Mode
-define("DebugMode", true);
+// Development Debug Mode (case-insensitive)
+define("DebugMode", true, true);
 
 // Define absolute path
 define('PMT_PATH',str_replace(pathinfo(__FILE__,PATHINFO_BASENAME),'',__FILE__));
 
 // print("path: " . PMT_PATH);
-include_once "lib/pmt.php";
+include_once "xpmt/pmt.php";
 PmtParseURL();
 
 ?>

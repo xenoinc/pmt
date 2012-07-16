@@ -17,7 +17,7 @@
 class pmtSQL
 {
   const _dbName = "xipmtadmin";           // MySQL Database Name
-  const _ioPMTable = "db-main.sql";       // Database table definitions (use actual path '../lib/db-main.sql')
+  const _ioPMTable = "db-main.sql";       // Database table definitions (use actual path '../xpmt/db-main.sql')
   
   private $_dbServer;                     // DB Server
   private $_dbUser;                       // DB User Name
