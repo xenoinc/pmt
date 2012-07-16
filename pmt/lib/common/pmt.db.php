@@ -67,15 +67,6 @@ class Database {
   }
 
   /**
-   * Select the database
-   * @param string $db Database name
-   */
-  public function Select($db)
-  {
-    mysql_select_db($db, $this->_conn);
-  }
-
-  /**
    * Select database
    * @param string $dbName Database name
    */
@@ -110,28 +101,15 @@ class Database {
   }
 
   /**
-   * Escape the string
-   * @deprecated
+   * Query First
+   * Returns an array of the first row from the query result.
+   * @param string $query The query.
    */
-  /*
-  public function EscapeString($string)
+  public function QueryFirst($query)
   {
-    return mysql_escape_string($string);
+    return $this->FetchArray($this->Query($query));
   }
-  /*
 
-  /**
-   * Escape string shortcut - quick way to perform escapestring
-   *  @deprecated
-   */
-  /*
-  public function es($string)
-  {
-    return $this->EscapeString($string);
-  }
-  */
-  
-  
   /**
    * Fix query string of errors
    * @param string $string
@@ -162,19 +140,19 @@ class Database {
     return mysql_num_rows($result);
   }
 
-  /**
-   * Query First
-   * Returns an array of the first row from the query result.
-   * @param string $query The query.
-   */
-  public function QueryFirst($query)
-  {
-    return $this->FetchArray($this->Query($query));
-  }
 
 
 
   /* **[ Privates Members ]********************************** */
+
+  /**
+   * Select the database
+   * @param string $db Database name
+   */
+  private function Select($db)
+  {
+    mysql_select_db($db, $this->_conn);
+  }
 
   /**
    * Real Escape String
@@ -182,14 +160,14 @@ class Database {
    */
   private function Res($string)
   {
-    
+
     // Use this instead.. however it does prompt WARNINGS w/ PHPConsole
     // $string = function_exists("mysql_real_escape_string") ? mysql_real_escape_string($string,$this->_conn) : mysql_escape_string($string);
-    
+
     return mysql_real_escape_string($string,$this->_conn);
   }
 
-  
+
   // Display error message
   private function halt($query=null)
   {

@@ -49,18 +49,22 @@ CREATE TABLE IF NOT EXISTS `TBLPMT_KB_ARTICLE`
   KB Article Settings
   Simple settings for articles. When this feature becomes more mature
   and then the "_0" tag will be removed. Possible more dynamic column name.
+
+  Note:   (old setting)
+    `Visible`     SMALLINT DEFAULT 0          -- Is it public or private to user (Created_Uid / Admin)
   Version 0.3.0
   Created:  2012-04-19
   Last Update:  2012-04-22
-  2012-0422 + Added `Login Required` to help keep articles private
+    2012-0422 + Added `Login Required` to help keep articles private
+    2012-0715 * Changed `Visible` to type of BOOLEAN DEFAULT FALSE not SMALLINT DEFAULT 0
 */
 CREATE TABLE IF NOT EXISTS `TBLPMT_KB_ARTICLE_SETTING_0`
 (
-  `Article_Id`  INT UNSIGNED NOT NULL,
-  `Project_Id`  INT UNSIGNED DEFAULT 0,     -- Linked to project
-  `Product_Id`  INT UNSIGNED DEFAULT 0,     -- Linked to product
-  `Login_Required` BOOLEAN NOT NULL DEFAULT TRUE,
-  `Visible`     SMALLINT DEFAULT 0          -- Is it public or private to user (Created_Uid / Admin)
+  `Article_Id`  INT UNSIGNED NOT NULL,              -- Linked to Article Id
+  `Project_Id`  INT UNSIGNED DEFAULT 0,             -- Linked to project
+  `Product_Id`  INT UNSIGNED DEFAULT 0,             -- Linked to product
+  `Login_Required` BOOLEAN NOT NULL DEFAULT TRUE,   -- Login is required to view
+  `Visible`     BOOLEAN DEFAULT FALSE               -- Article is visible to others
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 

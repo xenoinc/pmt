@@ -1,5 +1,6 @@
 <?php
-//phpinfo();
+//p
+//hpinfo();
 //exit;
 
 
@@ -93,9 +94,14 @@ if (isset($_GET["reset"]) && $_GET["reset"] == "full")
   }
 
   // Delete config.php
-  unlink("../lib/config.php");
-  p("Delete <b>config.php</b> file.");
+  try
+  {
+    unlink("../lib/config.php");
+    p("Delete <b>config.php</b> file.");
+  }  catch(Exception $e) {
 
+    p("Issue deleting <b>config.php</b> file. Exception: $e");
+  }
 
   print("</ul>\n");
   CreateFooter();
@@ -128,8 +134,8 @@ elseif (isset($_GET["reset"]) && $_GET["reset"] == "db")
     p("<b>DB:</b> Removing database..");        $pmtDB->Query("DROP DATABASE ". $defVal['dbname'] . ";");
     p("<b>DB:</b> Creating database..<br />");  $pmtDB->Query("CREATE DATABASE ". $defVal['dbname'] . ";");
 
-    // remove and reset connection
-    $pmtDB->Select($pmtConf["db"]["dbname"]);
+    // Select Database by Name
+    $pmtDB->SelectDb($pmtConf["db"]["dbname"]);
     /*
     $pmtDB = null;
     $pmtDB = new Database(
@@ -183,12 +189,12 @@ else
 
   /*
    * Just some stupid beta testing
-   * 
+   *
   if (IsInstalled() == true)
     print "It is installed!";
   else
     print "NOT installed!";
-  
+
   try
   {
     // Config file found. Check for DB
@@ -202,7 +208,7 @@ else
     // $pmtDB->Query("list tables;");
     $pmtDB->Query("show tables;");
     print ("db works");
-   * 
+   *
   }
   catch (Exception $e)
   {
