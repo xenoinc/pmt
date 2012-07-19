@@ -167,10 +167,10 @@ class ProjExt_New
       // Project_Id, Project_Name, Project_Description, Created_Dttm, Updated_User_Id
       $q =  "INSERT INTO " . PMT_TBL . "PROJECT " .
             "(Project_Name, Project_Description, Created_Dttm, Updated_User_Id) VALUES " .
-            "('" .  trim($pmtDB->Res($valProjName)) .
-            "','".  trim($pmtDB->Res($valProjDesc)) .
-            "','".  trim($pmtDB->Res($valProjDTTM)) .
-            "','".  trim($pmtDB->Res($user->userInfo['User_Id'])).
+            "('" .  trim($pmtDB->FixString($valProjName)) .
+            "','".  trim($pmtDB->FixString($valProjDesc)) .
+            "','".  trim($pmtDB->FixString($valProjDTTM)) .
+            "','".  trim($pmtDB->FixString($user->userInfo['User_Id'])).
             "');";
 
       $pmtDB->Query($q);

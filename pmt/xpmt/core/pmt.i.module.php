@@ -10,6 +10,7 @@
  *  Interface to what the xenoPMT modules must contain.
  *
  * Change Log:
+ *  2012-0719 + Added comments for suggested members (Enable/Disable, Install/Uninstall)
  *  2012-0709 * Renamed from "pmtModule.php" to "iModule.php"
  *  2012-0619 + Added Install, Uninstall, Init functions. (NOT Implemented Yet)
  *  2012-0322 + Initial creation
@@ -23,10 +24,25 @@
 interface iModule
 {
   /**
-   * Generates the page data for the module
+   * Install Module
+   * This is only accessesable via the Administration console to add
+   * a module to your system. By default all modules are not installed
+   * except for the "Admin" module.
+   * 
+   * @param bool $install True=Install Module, False=Uninstall Module
    */
-  public function PageData();
+  //public function Installation(bool $install);
+  
+  
+  /**
+   * 
+   * @param bool $enable True=Perform enable module routine (if any). False=Disable routines (if any)
+   */
+  //public function Enabled(bool $enable);
+  
+  // public function Initialize();    // initialize data (basically the construct)
 
+  
   /**
    * Title of the generated page
    */
@@ -57,11 +73,13 @@ interface iModule
    */
   public function MiniBarRight();
 
-  // public function Install();       // Install module (create components and tables if needed)
-  // public function Uninstall();     // Uninstall this module (remove tables and settings if needed)
-  // public function Initialize();    // initialize data (basically the construct)
+  /**
+   * Generates the page data for the module
+   */
+  public function PageData();
 
 
+  
   /*
 
   private function GenerateToolbar()

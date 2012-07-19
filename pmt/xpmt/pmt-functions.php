@@ -78,7 +78,7 @@ function GetUserSetting($setting)
     return $CACHE['setting'][$setting];
 
   $tmpArr = $pmtDB->Query("SELECT Setting, Value FROM " . PMT_TBL . "SETTINGS" .
-                          " WHERE Setting='" . $pmtDB->Res($setting) . "' LIMIT 1;");
+                          " WHERE Setting='" . $pmtDB->FixString($setting) . "' LIMIT 1;");
   $ret = $pmtDB->FetchArray($tmpArr);
 
   // Save into cache now

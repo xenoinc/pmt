@@ -561,10 +561,10 @@ switch ($step)
     /*
     $pmtDB->Query( "INSERT INTO ".$dbase["prefix"]."USERS ".
                 "(Username, Password, Name, Email, Group_Id, Sesshash) VALUES " .
-                "('". $pmtDB->Res($admin['username'])."', '".
+                "('". $pmtDB->FixString($admin['username'])."', '".
                       sha1($admin['password'])."', '".
-                      $pmtDB->Res($admin['username'])."', '".
-                      $pmtDB->Res($admin['email'])."', 1, '');");
+                      $pmtDB->FixString($admin['username'])."', '".
+                      $pmtDB->FixString($admin['email'])."', 1, '');");
     */
     // TODO: Add protection against SQL Injection Attacks (http://snippets.dzone.com/posts/show/1507)
     // TODO: Use the USER Class to perform user insert

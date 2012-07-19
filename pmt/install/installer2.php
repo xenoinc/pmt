@@ -76,7 +76,7 @@ function InsertDefaults(Database $pmtDB, $dbcfg, $settings, $admin)
   // Plugin :: Textile
   $pmtDB->Query( "INSERT INTO `".$pfx."PLUGINS` (`Name`, `Author`, `Website`, `Version`, `Enabled`, `Install_Sql`, `Uninstall_Sql`) VALUES " .
               "('Textile Formatting', 'Jack', 'http://unknown/', '1.0', 1, '', '');");
-  $tmp =$pmtDB->Res
+  $tmp =$pmtDB->FixString
           ("
             global $textile;
             if(!isset($textile)) {
@@ -89,8 +89,8 @@ function InsertDefaults(Database $pmtDB, $dbcfg, $settings, $admin)
               " (" . $pmtDB->InsertId() . ", 'formattext', 'function_formattext', '" . $tmp . "', 0, 1);");
   */
 
-  //$pmtDB->Query("INSERT INTO ".$pfx."SETTINGS (`value`, `setting`) VALUES ('".$pmtDB->Res($settings["title"])."', 'title';" );
-  $pmtDB->Query("UPDATE ".$pfx."SETTINGS SET VALUE='".$pmtDB->Res($settings["title"])."' WHERE setting='title';" );
+  //$pmtDB->Query("INSERT INTO ".$pfx."SETTINGS (`value`, `setting`) VALUES ('".$pmtDB->FixString($settings["title"])."', 'title';" );
+  $pmtDB->Query("UPDATE ".$pfx."SETTINGS SET VALUE='".$pmtDB->FixString($settings["title"])."' WHERE setting='title';" );
 
 }
 
