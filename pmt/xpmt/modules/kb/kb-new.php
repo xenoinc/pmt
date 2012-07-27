@@ -309,7 +309,7 @@ EOT;
     {
 
       $link = "kb?cmd=new";
-      
+
       // Display test button if in debug mode
       if (defined("DebugMode") && DebugMode == true)
         $testBtn = "<input id=\"btnTest\" name=\"btnTest\" tabindex=\"20\" type=\"submit\" class=\"btTxt submit\" value=\"Test\" />";
@@ -317,7 +317,39 @@ EOT;
         $testBtn = "";
 
       return <<<"EOT"
+        <script type="text/javascript">
+        <!--
+        $(document).ready(function()	{
+          // Add markItUp! to your textarea in one line
+          // $('textarea').markItUp( { Settings }, { OptionalExtraSettings } );
+          $('#markItUp').markItUp(mySettings);
 
+          // You can add content from anywhere in your page
+          // $.markItUp( { Settings } );
+          $('.add').click(function() {
+            $.markItUp( { 	openWith:'<opening tag>',
+                    closeWith:'<\/closing tag>',
+                    placeHolder:"New content"
+                  }
+                );
+            return false;
+          });
+
+          // And you can add/remove markItUp! whenever you want
+          // $(textarea).markItUpRemove();
+          $('.toggle').click(function() {
+            if ($("#markItUp.markItUpEditor").length === 1) {
+              $("#markItUp").markItUpRemove();
+              $("span", this).text("Show Toolbar");
+            } else {
+              $('#markItUp').markItUp(mySettings);
+              $("span", this).text("Hide Toolbar");
+            }
+            return false;
+          });
+        });
+        -->
+        </script>
         <div>
           <fieldset>
             <legend>Create KB Article</legend>
@@ -383,9 +415,9 @@ EOT;
 
                 <!-- HTData -->
                 <li>
-                  <label class="desc" id="title4" for="Field4">Article Data:</label>
+                  <label class="desc" id="title4" for="Field4">Article Data:  <a href="#" class="toggle"> (<span>Hide Toolbar</span>)</a></label>
                   <div>
-                    <textarea id="Field4" name="Field4" class="field textarea medium"
+                    <textarea id="markItUp" name="Field4" class="field textarea medium"
                               spellcheck="true" rows="20"
                               cols="70" tabindex="4"
                               required="">{$this->_kbData}</textarea>
@@ -433,11 +465,11 @@ EOT;
       $this->_kbData      = "<p>This is a test article</p><p>And some <b>sample data</b>.</p>";
 
       $this->_kbData = <<<SAMPLE
-When you visit a Web site or run an application that loads XHTML documents by using Microsoft 
-XML Core Services (MSXML), MSXML will send requests to the World Wide Web Consortium (W3C) to fetch 
-well-known Document Type Definition (DTD) files every time. This behavior may bring lots of traffic 
-to the W3C server. Sometimes, you may find the XHTML files are not loaded successfully because the 
-DTD requests are blocked by the W3C server. <br><br>For example, you have a JavaScript file (.js) 
+When you visit a Web site or run an application that loads XHTML documents by using Microsoft
+XML Core Services (MSXML), MSXML will send requests to the World Wide Web Consortium (W3C) to fetch
+well-known Document Type Definition (DTD) files every time. This behavior may bring lots of traffic
+to the W3C server. Sometimes, you may find the XHTML files are not loaded successfully because the
+DTD requests are blocked by the W3C server. <br><br>For example, you have a JavaScript file (.js)
 that contains the following code:
 <div class="kb_codebody"><div class="kb_codecontent">
 <code>
@@ -464,11 +496,11 @@ pullXHtml();
 
 </pre></code>
 </div></div>
-When you run the JavaScript file, the file loads an XHTML document by using MSXML. If you do not have 
-this update installed, you may receive the following error message when you run the JavaScript file 
+When you run the JavaScript file, the file loads an XHTML document by using MSXML. If you do not have
+this update installed, you may receive the following error message when you run the JavaScript file
 if the DTD requests are blocked by the W3C server:
 SAMPLE;
-      
+
       $_POST["Field1"] = $this->_kbTitle;
       $_POST["Field2"] = $this->_kbSubject;
       $_POST["Field3"] = $this->_kbProducts;

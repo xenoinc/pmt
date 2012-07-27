@@ -15,12 +15,14 @@
  */
 
 // page data to display
-global $PAGE_TITLE;
-global $PAGE_TOOLBAR;
-global $PAGE_METABAR;
-global $PAGE_HTDATA;
-global $PAGE_PATH;
 global $pmtConf;
+global $PAGE_PATH;        // "http://pmt/xpmt/themes/default/"
+global $PAGE_TITLE;       // Page title
+global $PAGE_METABAR;     // Login & Search bar (right aligned)
+global $PAGE_TOOLBAR;     // Main toolbar
+global $PAGE_MINILEFT;    // Mini toolbar (Left aligned)
+global $PAGE_MINIRIGHT;   // Mini toolbar (Right aligned)
+global $PAGE_HTDATA;      // Page content
 
 // require ("skin-fctn.php");
 ?>
@@ -38,13 +40,21 @@ global $pmtConf;
     <title><?php print($PAGE_TITLE); ?></title>
     <link type="text/css" href="<?php print($PAGE_PATH); ?>skin.css" rel="stylesheet" />
     <link type="text/css" href="<?php print($PAGE_PATH); ?>kb.css" rel="stylesheet" />
-    
-    <script type="text/javascript" src="../../libraries/jquery/jquery-1.6.2.min.js"></script>             <!-- jQuery -->
-    <script type="text/javascript" src="../../libraries/markitup/jquery.markitup.js"></script>            <!-- markItUp! -->
-    <script type="text/javascript" src="../../libraries/markitup/sets/default/set.js"></script>           <!-- markItUp! toolbar settings -->
-    <link rel="stylesheet" type="text/css" href="../../libraries/markitup/skins/markitup/style.css" />    <!-- markItUp! skin -->
-    <link rel="stylesheet" type="text/css" href="../../libraries/markitup/sets/default/style.css" />      <!--  markItUp! toolbar skin -->
-    <?php  //print($PAGE_PATH . "skin.css"); ?>
+
+    <script type="text/javascript" src="<?php print($PAGE_PATH); ?>../../libraries/jquery/jquery-1.6.2.min.js"></script>
+    <script type="text/javascript" src="<?php print($PAGE_PATH); ?>../../libraries/markitup/jquery.markitup.js"></script>
+    <script type="text/javascript" src="<?php print($PAGE_PATH); ?>../../libraries/markitup/sets/default/set.js"></script>
+    <link rel="stylesheet" type="text/css" href="<?php print($PAGE_PATH); ?>../../libraries/markitup/skins/markitup/style.css" />
+    <link rel="stylesheet" type="text/css" href="<?php print($PAGE_PATH); ?>../../libraries/markitup/sets/default/style.css" />
+    <?php  //print($PAGE_PATH . "skin.css");
+    /*
+      <script type="text/javascript" src="../libraries/jquery/jquery-1.6.2.min.js"></script>             <!-- jQuery -->
+      <script type="text/javascript" src="../libraries/markitup/jquery.markitup.js"></script>            <!-- markItUp! -->
+      <script type="text/javascript" src="../libraries/markitup/sets/default/set.js"></script>           <!-- markItUp! toolbar settings -->
+      <link rel="stylesheet" type="text/css" href="../libraries/markitup/skins/markitup/style.css" />    <!-- markItUp! skin -->
+      <link rel="stylesheet" type="text/css" href="../libraries/markitup/sets/default/style.css" />      <!--  markItUp! toolbar skin -->
+    */
+    ?>
   </head>
   <body>
 

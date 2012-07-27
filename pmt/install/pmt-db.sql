@@ -40,14 +40,23 @@ create table if not exists `TBLPMT_SETTINGS`
 
 CREATE TABLE IF NOT EXISTS `TBLPMT_MODULE`
 (
-  `Module_Id`       AUTO_INCREMENT,
-  `Module_Path`     VARCHAR(), -- folder install path ("/module/kb" or "kb")
-  `Module_Name`     VARCHAR(), -- name of module "kb"
-  `Module_URN`      VARCHAR(16),  -- Uniform Resource Name (kb, p, customer, ..)
-  `Enabled`         BOOLEAN  -- true/false
-  `Description`     varchar(255)
+  `Module_Id`     AUTO_INCREMENT,
+  `Module_Name`   VARCHAR(64) collate utf8_unicode_ci not null, -- name of module "kb"
+  `Module_Path`   VARCHAR(255) collate utf8_unicode_ci not null, -- main install path ("/module/kb/kb.php" or "kb")
+  `Module_URN`    VARCHAR(16) NOT NULL,  -- BASE Uniform Resource Name (kb, p, customer, ..)
+  `Enabled`       BOOLEAN NOT NULL DEFAULT FALSE,  -- true/false - We got to set it to something
+  `Description`   VARCHAR(255) collate utf8_unicode_ci not null,
+  primary key (`Module_Id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci
 
-)
+-- Used in "pmt.php/PmtParseURL()" to accept "project/prj/p" as valid uri segments name
+-- This is an extenion of "_MODULE.Module_URN"
+CREATE TABLE IF NOT EXISTS `TBLPMT_MODULE_URN`
+(
+  `Module_URN`    VARCHAR(16), -- don't let people get crazy
+  `Module_Name`   VARCHAR(64) collate utf8_unicode_ci not null -- folder install path ("/module/kb" or "kb")
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci
+
 */
 
 /*
