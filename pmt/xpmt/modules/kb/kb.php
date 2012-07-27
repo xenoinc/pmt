@@ -16,6 +16,8 @@
  *    http://pmt/kb/<id>?cmd=edit     - Edit
  *    http://pmt/kb/<id>?cmd=remove   - Remove
  *
+ *    http://support.microsoft.com/kb/319401
+ *
  *    POST:
  *      Vote:#   - Rate article 0-5
  * ToDo:
@@ -148,7 +150,7 @@ class kb implements iModule
           default:              $mode = ENUM_KBMode::KBView;    break;    // View page
         }
         //pmtDebug("KB Page Id: " . $kbPage . PHP_EOL . "Mode: " . $mode);
-        
+
         break;
 
       default:
@@ -209,30 +211,30 @@ class kb implements iModule
      * ToDo:
      * [ ] + Check if login is required by the module [2012-07-16]
      *      For now, require it (by default)
-     * 
+     *
      */
-    
+
     global $user;
     //global $uri;
     $html = "";
 
-    
+
     // ToDo: Add logic to check if login is required
     if ($user->online == false)
     {
       $html = $this->Page_UserOffline();
       return $html;
     }
-    
+
     switch ($this->_MODE)
     {
       case ENUM_KBMode::KBMain:
         // pmtDebug("KB: Main");
-        
+
         require_once "kb-main.php";
         $k = new xenoPMT\Module\KB\Main;
         $html .= $k->PageLayout(1);
-        
+
         break;
 
 
@@ -271,17 +273,17 @@ class kb implements iModule
 
       case ENUM_KBMode::KBList:
         pmtDebug("KB: List");
-        
+
         require_once "kb-main.php";
         $k = new xenoPMT\Module\KB\Main;
         $html .= $k->PageLayout(2);
-        
+
         break;
 
-      
+
       // Show main page
       default:
-        
+
         pmtDebug("KB: Default");
         require_once "kb-main.php";
         $k = new xenoPMT\Module\KB\Main;
@@ -298,7 +300,7 @@ class kb implements iModule
   private function Page_UserOffline()
   {
     // To Do:
-    
+
     $html = <<<"EOT"
         <h1>Knowledge Base</h1>
         <p>
@@ -309,9 +311,9 @@ class kb implements iModule
 EOT;
     return $html;
   }
-  
 
-  
+
+
   /*   * *[ Assisting members ]******* */
 
   private function AddLink($module, $text, $extLink = "")

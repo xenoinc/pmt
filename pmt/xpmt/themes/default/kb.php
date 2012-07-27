@@ -38,6 +38,12 @@ global $pmtConf;
     <title><?php print($PAGE_TITLE); ?></title>
     <link type="text/css" href="<?php print($PAGE_PATH); ?>skin.css" rel="stylesheet" />
     <link type="text/css" href="<?php print($PAGE_PATH); ?>kb.css" rel="stylesheet" />
+    
+    <script type="text/javascript" src="../../libraries/jquery/jquery-1.6.2.min.js"></script>             <!-- jQuery -->
+    <script type="text/javascript" src="../../libraries/markitup/jquery.markitup.js"></script>            <!-- markItUp! -->
+    <script type="text/javascript" src="../../libraries/markitup/sets/default/set.js"></script>           <!-- markItUp! toolbar settings -->
+    <link rel="stylesheet" type="text/css" href="../../libraries/markitup/skins/markitup/style.css" />    <!-- markItUp! skin -->
+    <link rel="stylesheet" type="text/css" href="../../libraries/markitup/sets/default/style.css" />      <!--  markItUp! toolbar skin -->
     <?php  //print($PAGE_PATH . "skin.css"); ?>
   </head>
   <body>

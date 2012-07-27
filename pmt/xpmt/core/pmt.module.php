@@ -1,8 +1,8 @@
 <?php
-/************************************************************
- * Copyright 2010-12 (C) Xeno Innovations, Inc.
+/** **********************************************************
+ * @copyright (c) 2012, Xeno Innovations, Inc.
  * ALL RIGHTS RESERVED
- * Author:        Damian Suess
+ * @author        Damian Suess
  * Document:      pmt.module.php
  * Created Date:  2012-07-23
  *
@@ -16,11 +16,6 @@
  *  2012-07-23  * Added basic functionality
  ***********************************************************/
 
-/**
- * Description of pmt
- *
- * @author suessdam
- */
 class pmtModule implements iModule
 {
 
