@@ -41,7 +41,7 @@ $pmtConf = array(
   "general" => array(
     "auth_only" => true,            // Allow access to public or auth-only
     "title"     => "Corporate Management System",
-    "base_url"  => "http://pmt/"    // Must include '/' at the end.
+    "base_url"  => "http://pmt-test/"    // Must include '/' at the end.
   )
 );
 
