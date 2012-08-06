@@ -1,0 +1,8 @@
+Copyright 2012, Xeno Innovations, Inc.
+
+User's personal themes directory.
+
+This is to be used so that personal configuration do not get
+overwritten during the upgrade process.
+
+[2012-08-05 DJS]

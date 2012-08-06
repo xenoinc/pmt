@@ -8,7 +8,8 @@ the Customer module.
 Requirements:
   * Customer Module
   * PO Database Tables
-
+    * 
+    
 Module Saved Data:
   * Customer name
   * Shipping to name & address (if different from customer's info)
@@ -17,3 +18,7 @@ Module Saved Data:
   * Purchase price
   * Discounted price / percent
   * Notes (details)
+  ------------
+  * Product
+  * Product-Component
+  * Product (Component) Price

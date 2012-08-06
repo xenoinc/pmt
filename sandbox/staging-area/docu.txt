@@ -1,0 +1,82 @@
+Section 1 - Staging Area Setup
+
+  Note: Staging-Area does not contain an installer, this must be done by hand
+  
+  Steps:
+  1) Create User
+  2) Create Database
+  3) Grant access
+  4) Cleanup
+  
+  CREATE USER 'testuser2'@'localhost' IDENTIFIED BY 'testpass'; 
+  CREATE DATABASE PMT_TEST;
+  GRANT ALL ON PMT_TEST.* to testuser2@localhost;
+  FLUSH PRIVILEGES;
+
+
+Section 2 - New Features
+-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+
+[New Variables]
+
+$xpmtModule[]
+
+
+[New Folders]
+
+./custom/
+./custom/theme
+./custom/mod
+./custom/lib
+
+  * Contains the user's custom folder for Themes, Modules and Libaries
+  
+  * The system will one day pull from this directory as well as the standard
+    "xpmt" core folders.
+
+
+Section 3 - System Variables
+-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+
+[Core Variables]
+
+Configuration Variables
+=======================
+$pmt_RootUserEnabled
+$pmt_RootUserName
+$pmt_RootUserPass
+
+
+Global Variables
+================
+$pmtConf          array     Configuration Array
+$pmt_version      string    Version String (0.0.1)
+$pmt_version_ex   integer   Numerical version string ('000001' = 'x-xx-xxx')
+$pmt_db_version   string    maximum database version acceptable
+$pmt_cache        array     NOT USED  ::  array("setting"=>array());
+$pmt_breadcrumb   array     NOT USED  ::  array();
+
+Global Classes
+==============
+$pmtDB            class     Database class
+$user             class     Member class
+$uri              class     URI Parser class
+
+Define
+======
+PMT_VER           string    PMT Version number        $pmt_version
+PMT_PATH          string    Path to base install
+PMT_TBL           string    Database table prefix     $pmtConf["db"]["prefix"]
+THEME             string    NOT USED                  $uri->Anchor("xpmt/themes", GetSetting("theme"))
+
+
+Page Variables
+==============
+$PAGE_TITLE         // Page title
+$PAGE_LOGO          // Site image path  ** not used yet.
+$PAGE_METABAR       // User (login/usr-pref)/settings/logout/about
+$PAGE_TOOLBAR       // Main toolbar
+$PAGE_MINILEFT      // Mini-bar Left aligned (bread crumbs)
+$PAGE_MINIRIGHT     // Mini-bar Right aligned (module node options)
+$PAGE_HTDATA        // Main page html data
+$PAGE_PATH          // Relative path to theme currently in use

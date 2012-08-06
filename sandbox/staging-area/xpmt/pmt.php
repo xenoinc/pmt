@@ -31,32 +31,27 @@ $pmt_db_version = 0.2;
 define("PMT_VER",$pmt_version);
 
 // ii) Setup debugging
-require "phpConsole.php";
-PhpConsole::start(true, true, dirname(__FILE__));
+// require "phpConsole.php";
+// PhpConsole::start(true, true, dirname(__FILE__));
 //if (DebugMode == true)
 //  debug("Debug Mode ON!");
 
 // iii) no config.php? then goto installer
-if(!file_exists(PMT_PATH."xpmt/config.php"))
-{
-  header("Location: install/");
-  exit; // suppress from falling through
-}
-// else { [verify settings are valid] }
+///  ** Moved to index.php (2012-0805 - djs)
 
 
 /* Step 2 - Minor Init */
 // 1) set breadcrumbs
 // 2) strip magic quotes
-$CACHE = array("setting"=>array());
-$BREADCRUMB = array();
+$pmt_cache = array("setting"=>array());
+$pmt_breadcrumb = array();
 
 
 /* Step 3 - Include the required classes */
 
 // Since the system is "configured" include the class now
-require(PMT_PATH."xpmt/config.default.php");      // Default configuration script
-require(PMT_PATH."xpmt/config.php");              // Configuration Script
+//require(PMT_PATH."xpmt/config.default.php");      // Default configuration script
+//require(PMT_PATH."xpmt/config.php");              // Configuration Script
 
 // Require the core PMT files
 //require(PMT_PATH."xpmt/common/pmt.user.php");   // User Class

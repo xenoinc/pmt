@@ -28,9 +28,24 @@
 
 // Development Debug Mode (case-insensitive)
 define("DebugMode", true, true);
+require "xpmt/phpConsole.php";
+PhpConsole::start(true, true, dirname(__FILE__));
 
 // Define absolute path
 define('PMT_PATH',str_replace(pathinfo(__FILE__,PATHINFO_BASENAME),'',__FILE__));
+
+// ##[ Configuration Files ]###########
+require_once(PMT_PATH."xpmt/config.default.php");
+
+if(!file_exists("config.php"))
+{
+  header("Location: install/");
+  exit; // suppress from falling through
+} else {
+  require_once("config.php");
+}
+// else { [verify settings are valid] }
+
 
 // print("path: " . PMT_PATH);
 include_once "xpmt/pmt.php";
