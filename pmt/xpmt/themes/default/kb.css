@@ -116,3 +116,23 @@ input[type="button"], input[type="submit"], input[type="reset"]
   -webkit-margin-start: 0px;
   -webkit-margin-end: 0px;
 }
+
+/* div.id="kb-view" */
+#kb-view h2
+{
+  font-weight: bold;
+  color: #333333;
+  background-color: #d1d3d4;
+  /*overflow: hidden;*/
+  width: 100%;
+  box-shadow: 0 0.1em 0.6em 0 #666;
+  /* border-bottom: medium none; */
+  padding: 0.3em;
+}
+
+/* class="subTitle" */
+/*
+.subTitle
+{
+}
+*/

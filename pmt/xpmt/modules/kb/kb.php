@@ -193,9 +193,9 @@ class kb implements iModule
       else
       {
         $code .= "<li class='last'>Article:</li>";
-        $code .= "<li>" .             $this->AddLink(self::MODULE, "Create", "?cmd=new") . "</li>";
-        $code .= "<li>".              $this->AddLink(self::MODULE, "Edit", "?cmd=edit") . "</li>";
-        $code .= "<li class='last'>". $this->AddLink(self::MODULE, "Remove", "?cmd=remove") . "</li>";
+        $code .= "<li>" .             $this->AddLink(self::MODULE, "Create",  "?cmd=new") . "</li>";
+        $code .= "<li>".              $this->AddLink(self::MODULE, "Edit",    "?cmd=edit") . "</li>";
+        $code .= "<li class='last'>". $this->AddLink(self::MODULE, "Remove",  "?cmd=remove") . "</li>";
       }
       $code .= "</ul>";
     }
