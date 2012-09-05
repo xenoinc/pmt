@@ -134,13 +134,18 @@ class kb implements iModule
       /// Show KB Article welcome page ("/kb")
       /// or List range of pages using parameter passed in (ENUM_KBMode::KBList:)
       case 1:
-        if ($cmd == self::cNEW)         $mode = ENUM_KBMode::KBNew;     // Create New
-        else{                           $mode = ENUM_KBMode::KBMain;}   // Display main page
+        switch($cmd)
+        {
+          case self::cNEW:      $mode = ENUM_KBMode::KBNew;   break;  // Create New
+          case self::cLIST:     $mode = ENUM_KBMode::KBList;  break;  // List available pages
+          default:              $mode = ENUM_KBMode::KBMain;  break;  // Display main page
+        }
         break;
 
       /// Display KB page ("/kb/<kb-id>")
       case 2:
 
+        // Should perform (isNumeric)?
         $kbPage = $uri->seg[1];         // Get KB number to edit
         switch($cmd)
         {
@@ -149,6 +154,8 @@ class kb implements iModule
           case self::cREMOVE:   $mode = ENUM_KBMode::KBRemove;  break;    // Remove KB Article
           default:              $mode = ENUM_KBMode::KBView;    break;    // View page
         }
+        pmtDebug("0:". $uri->seg[0] . " 1: ". $uri->seg[1]);
+
         //pmtDebug("KB Page Id: " . $kbPage . PHP_EOL . "Mode: " . $mode);
 
         break;
@@ -168,7 +175,18 @@ class kb implements iModule
    */
   private function GenerateMiniLeft()
   {
-    return "";
+    global $user;
+    if ($user->online != false)
+    {
+      $code =   "<ul>";
+      $code .=  "<li>". $this->AddLink(self::MODULE, "Main", "?")  ."</li>";
+      $code .=  "<li>". $this->AddLink(self::MODULE, "List", "?cmd=".self::cLIST)  ."</li>";
+      $code .=  "</ul>";
+
+      return $code;
+    }
+    else
+      return "";
   }
 
   /**
@@ -274,8 +292,8 @@ class kb implements iModule
       case ENUM_KBMode::KBList:
         pmtDebug("KB: List");
 
-        require_once "kb-main.php";
-        $k = new xenoPMT\Module\KB\Main;
+        require_once "kb-list.php";
+        $k = new xenoPMT\Module\KB\ListItems;
         $html .= $k->PageLayout(2);
 
         break;
