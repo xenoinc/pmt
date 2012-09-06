@@ -15,6 +15,7 @@
  *    http://pmt/kb/?cmd=new          - New
  *    http://pmt/kb/<id>?cmd=edit     - Edit
  *    http://pmt/kb/<id>?cmd=remove   - Remove
+ *    http://pmt/kb/<id>?cmd=list     - List Articles
  *
  *    http://support.microsoft.com/kb/319401
  *
@@ -23,7 +24,6 @@
  * ToDo:
  * [ ] GenerateMiniRight() - Get user permissions
  * [ ] Create GUI :: Create New Article
- * [ ] Create GUI :: View Article
  * [ ] Create GUI :: Edit Article
  * [ ] Create GUI :: Remove Article  (Show article title, OK & Cancel button)
  * [ ] Create GUI :: List all articles
@@ -138,6 +138,7 @@ class kb implements iModule
         {
           case self::cNEW:      $mode = ENUM_KBMode::KBNew;   break;  // Create New
           case self::cLIST:     $mode = ENUM_KBMode::KBList;  break;  // List available pages
+          //case self::cSEARCH:     $mode = ENUM_KBMode::KBSearch;  break;  // Search articles
           default:              $mode = ENUM_KBMode::KBMain;  break;  // Display main page
         }
         break;
@@ -180,7 +181,8 @@ class kb implements iModule
     {
       $code =   "<ul>";
       $code .=  "<li>". $this->AddLink(self::MODULE, "Main", "?")  ."</li>";
-      $code .=  "<li>". $this->AddLink(self::MODULE, "List", "?cmd=".self::cLIST)  ."</li>";
+      $code .=  "<li class='last'>". $this->AddLink(self::MODULE, "List Articles", "?cmd=".self::cLIST)  ."</li>";
+      //$code .=  "<li class='last'>". $this->AddLink(self::MODULE, "KB Search", "?cmd=search")  ."</li>";
       $code .=  "</ul>";
 
       return $code;
@@ -290,11 +292,13 @@ class kb implements iModule
 
 
       case ENUM_KBMode::KBList:
-        pmtDebug("KB: List");
+        //pmtDebug("KB: List");
 
         require_once "kb-list.php";
         $k = new xenoPMT\Module\KB\ListItems;
-        $html .= $k->PageLayout(2);
+        $k->DataHandler();
+        //$html .= $k->ListArticles();
+        $html .= $k->PageLayout();
 
         break;
 
@@ -347,6 +351,12 @@ EOT;
    */
   private function GetCmd()
   {
+
+    /* To Do:
+     * [ ] + sub setting for "List" (startPos, maxResults)
+     * [ ] + sub setting for "Search" (search string, category).. though this can be apart of $_POST[]
+     */
+
     // self::cCMD = "cmd"
     if (isset($_GET[self::cCMD]) && $_GET[self::cCMD])
       return $_GET[self::cCMD];

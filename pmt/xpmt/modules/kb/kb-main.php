@@ -91,7 +91,9 @@ namespace xenoPMT\Module\KB
         <ul>
           <li><a href="http://pmt/kb/1">kb:1</a></li>
           <li><a href="http://pmt/kb/2">kb:2</a></li>
-          <li><a href="http://pmt/kb/2">kb:2</a></li>
+          <li><a href="http://pmt/kb/3">kb:3</a></li>
+          <li><a href="http://pmt/kb/4">kb:4</a></li>
+          <li><a href="http://pmt/kb/5">kb:5</a></li>
         </ul>
         <p>&nbsp;</p>
         <p>- Xeno Innovations, Inc. -</p>

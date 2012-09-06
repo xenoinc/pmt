@@ -57,6 +57,7 @@ namespace xenoPMT\Module\KB
 
     /// Article is valid and was saved (true). If so, Do NOT display preview & show "Article Submitted" message
     private $_flagSaved = false;
+    private $_flagError = false; // there was an error
 
 
     function __construct()
@@ -179,6 +180,12 @@ namespace xenoPMT\Module\KB
       $user_Name    = $user->userInfo["Display_Name"];  // xenoPMT Administrator
       // debug("id: '" . $user_id . "'  hanle: '" . $user_handle . "' nme: '" . $user_Name . "'");
 
+      // Date stamps
+      // Get Default Timezone from user profile
+      //  date_default_timezone_set('UTC');
+      $dttm_create = date( "Y-m-d H:i:s" );
+      $dttm_mod = date( "Y-m-d H:i:s" );
+
       // $url = str_replace("%3A", ":", $url);
       $dbPrefix = $pmtConf["db"]["prefix"];
       //$fixTitle = $pmtDB->FixString(str_replace(" ", "_", $this->_kbTitle));    // Use this for Wiki Articles
@@ -217,7 +224,7 @@ namespace xenoPMT\Module\KB
       $q = <<<SQL
 INSERT INTO {$dbPrefix}KB_ARTICLE
 (`Article_Type`, `Title`, `Subject`, `Article_Data`, `Created_Uid`, `Created_Dttm`, `Modified_Dttm`) VALUES
-('General', '{$title}', '{$subject}', '{$data}', {$user_id}, null, null);
+('General', '{$title}', '{$subject}', '{$data}', {$user_id}, '{$dttm_create}', '{$dttm_mod}');
 
 SQL;
 
@@ -225,13 +232,15 @@ SQL;
       try
       {
         $pmtDB->Query($q);
+        return "0";
       }
       catch (Exception $e)
       {
         pmtDebug ("Error inserting KB article. Exception: $e");
+        return "1";
       }
 
-      return "0";
+
     }
 
 
@@ -243,7 +252,9 @@ SQL;
      */
     private function ArticleSaved()
     {
+      $link = "";
       $htdata = <<<EOT
+        <!-- <META HTTP-EQUIV="refresh" CONTENT="5;URL={$link}"> -->
         <center><h1>Your article has been saved!</h1>
         <div>
           <header id="header">
