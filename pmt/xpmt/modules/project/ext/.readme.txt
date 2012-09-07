@@ -1,10 +1,10 @@
-./pmt/lib/modules/ext
+./xpmt/modules/project/ext
 
 This directory is used as an Extension for the modules so we don't cludder
-up the main path. Rather than having your module and 'X' other files, for now
+up the main path with your numerous other files. For now
 we are putting them in this sub-directory.
 
-In the future each module will be contained in its own directory to keep
+The goal is so that each each module will be contained in its own directory to keep
 things nice and neat. That change is coming soon, just hasn't been tested yet.
 
 

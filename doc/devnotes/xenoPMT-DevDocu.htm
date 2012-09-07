@@ -507,6 +507,26 @@ Also see [[AdvancedOptions]]</pre>
 </div>
 <!--POST-SHADOWAREA-->
 <div id="storeArea">
+<div title="Admin (mod)" creator="d.suess" modifier="d.suess" created="201209061627" modified="201209061632" changecount="3">
+<pre>!Sections to create
+* Module Editor
+** Change URI
+** Install/Uninstall - Add/Rmv database entries using module's code
+** Enable/Disable - Toggle switch in DB
+* User Editor
+** Link to customer
+** Edit simple details - //Name, Group_Id, Password, Email//
+** Enable/Disable - (Active) - 
+** Set &quot;Terminitation Dttm&quot;
+** Set &quot;Receive email notifications&quot; - (Receive_Updates) 
+** 
+* Group Editor
+** Group Names (//ADMIN, DEVMNGR, PRJMNGR, DEV, CUSTOMER, CUSTOMERADMIN//)
+** Group Members
+** Group Permissions
+*** //Permissions items should be added from module install process// (PMT_S_GROUP_PERMISSION)
+** Default toolbar view - //See Group_Permissions//</pre>
+</div>
 <div title="AdvancedOptions" creator="d.suess" modifier="d.suess" created="201209012235" changecount="1">
 <pre>&lt;&lt;options&gt;&gt;</pre>
 </div>
@@ -730,7 +750,7 @@ You are free to use this however you like.  I place this code into the public do
 <pre>[[ToDoList]]
 [[Modules]]</pre>
 </div>
-<div title="KB (mod)" creator="d.suess" modifier="d.suess" created="201209031656" modified="201209060339" changecount="5">
+<div title="KB (mod)" creator="d.suess" modifier="d.suess" created="201209031656" modified="201209061549" changecount="6">
 <pre>!Knowledge Base
 
 One of the first module to get created. The initiative is to create a simple module at first as the skeleton &amp; then expand on it later.  So if you are wondering why this hasn't matured quickly, that's why.
@@ -739,12 +759,23 @@ One of the first module to get created. The initiative is to create a simple mod
 * List created items
 * Add DIV section to auto hide
 
+|!Sub-Section &amp;nbsp;               |!Type  |!Description |h
+|[[Main|KB (mod) - Main]]     |Add    |Search |
+|[[Main|KB (mod) - Main]]     |Add    |Show latest additions (top 10) |
+|[[View|KB (mod) - View]]     |Fix    |Details section font smaller and gray. Use DIV |
+|[[View|KB (mod) - View]]     |Add    |Create Edit |
+|[[View|KB (mod) - View]]     |Add    |Remove |
+|[[Edit|KB (mod) - Edit]]     |Add    |Add side banner to editor |
+|[[Create|KB (mod) - Create]] |Add    |Add side banner to editor |
+|[[Create|KB (mod) - Create]] |Add    |Make create article run on ajax to handle error messages properly |
 
-!! To Do (Later)
-* KB-New :: Make create article run on ajax to handle error messages properly
-* KB-View :: Details section font smaller and gray. Use DIV
+</pre>
+</div>
+<div title="KB (mod) - View" creator="d.suess" modifier="d.suess" created="201209061550" changecount="1">
+<pre>!To Do
+* Use XSTL for articles. Makes things easier to manage
 
-! KB View
+!Sample - KB Article View
 {{{
 &lt;a name=&quot;kb-top&quot;&gt;&lt;/a&gt;
 
@@ -779,14 +810,15 @@ One of the first module to get created. The initiative is to create a simple mod
 &lt;!-- &lt;h2&gt;Feedback&lt;/h2&gt; --&gt;
 }}}</pre>
 </div>
-<div title="MainMenu" creator="d.suess" modifier="d.suess" created="201209011745" modified="201209012351" changecount="15">
+<div title="MainMenu" creator="d.suess" modifier="d.suess" created="201209011745" modified="201209061558" changecount="17">
 <pre>! Components
 * [[Core2-Workflow]]
 * [[Reports]]
 * [[Modules]]
 ! Modules
-* [[Module Configuration]]
-* [[Module Sample]]
+* [[List of Mods|Module - List]]
+* [[Workflow|Module - Loader Workflow]]
+* [[v0.4 Config|Module - v0.4 Configuration]]
 ! Unsorted
 * [[Welcome Email]]
 ! Config
@@ -800,7 +832,68 @@ One of the first module to get created. The initiative is to create a simple mod
 * [[MyPlugins]]
 * [[MarkUp | http://oldwiki.tiddlywiki.org/wiki/TiddlyWiki_Markup]]</pre>
 </div>
-<div title="Module Configuration" creator="d.suess" modifier="d.suess" created="201209012256" modified="201209012310" tags="sample, configuration" changecount="5">
+<div title="Module - List" creator="d.suess" modifier="d.suess" created="201209061537" modified="201209062255" changecount="9">
+<pre>! xenoPMT v1.0 Concept List
+| # |Name                | %   | Core |URI    |C|D|A|Description                   |Customer Access |h
+| 5 |[[KB (mod)]]        | 75% | No   |kb     |X|X|/|Knowledge Base Articles       |
+| 5 |[[Customer (mod)]]  | 0%  | No   |c      |X|X| |Customer information system   |Access their site details and open tickets |
+| 5 |[[Ticket (mod)]]    | 0%  | No   |ticket |X|X|/|Issue Ticketing tracker       |View only their open items. Only CstmrAdmin can view Old  |
+| 4 |[[Bug (mod)]]       | 0%  | No   |bug    | |X| |Bug tracker                   |  |
+| 4 |[[Task (mod)]]      | 0%  | No   |task   | |X| |Technical request tracker     |  |
+| 4 |[[Project (mod)]]   | 10% | No   |p      | |X| |Project overview page (//dev only//) |  |
+| 3 |[[Product (mod)]]   | 0%  | No   |prod   |X|X|/|Product overview and tracking |Can view all projects ''or'' only their own registered ones  |
+| 4 |[[Admin (mod)]]     | 0%  | Yes  |admin  | | | |Administration and Config Panel (//admin only//) |  |
+| 3 |[[Dashboard (mod)]] | 0%  | Yes  |main   |X|X|X|Welcome page                  |Display open tickets, list of products, reg/warranty info and Announcements  |
+| 3 |[[User (mod)]]      | 0%  | Yes  |user   |X|X| |Product overview and tracking |Can view/edit basic info. CstmrAdmin can make (limited) colleague accounts  |
+| 2 |[[Wiki (mod)]]      | 0%  | No   |wiki   |X|X|/|Self-contained wiki system    |Can view but not edit  |
+//Help://
+''C''ustomer, ''D''evelopment, ''A''nonymous
+! Concept Modules
+|Name           |URI  |Description |h
+|[[Purchase Order|PO (mod)]] |po   |Track orders created for customers and pricing |
+|Svn            |svn  |Source Code Viewer |
+|Git            |git  |Source Code Viewer |
+</pre>
+</div>
+<div title="Module - Loader Workflow" creator="d.suess" modifier="d.suess" created="201209061540" modified="201209062047" changecount="9">
+<pre>!Phase 1
+Currently each module is controlled and launched via the following workflow steps
+
+# index.php &gt; xpmt/pmt.php
+# xpmt/pmt.php::PmtParseURL()
+## Get $uri-&gt;seg[0]
+## call LoadModule(&quot;uri&quot;, $uri-&gt;seg) based upon hard coded URI input
+### //Phase-2 will load available URI_to_Mod requests from database//
+# LoadModule($module, $arrParams) - (//xpmt/modcontroller.php//)
+** This will create the $PAGE_XXX data params for displaying.
+## Manually convert $module (p) to class name (project)
+## call GetSetting(&quot;''theme''&quot;) - (pmtFunctions :: //TBL_SETTINGS where setting='theme'//)
+*** //$page = $skin_path . $skin_file;//
+*** Set $skin_file to &quot;main.php&quot;. it will LATER check if module has //custom skin//
+## ''Get module code'' via REQUIRE() command
+*** First check if base path exists (xpmt/module/$module.php)
+*** If not check ~Module-SubFolder (xpmt/module/$module/$module.php)
+*** If ''NO MODULE'' display &quot;''base_url''&quot;
+## Search if ''Custom Skin file'' exists
+*** (''//$page = $skin_path . $module.php//'')
+## ''Create module object'' - (//$obj = new $module();//)
+*** $PAGE_PATH
+*** $PAGE_TITLE
+*** $PAGE_METABAR
+*** $PAGE_MINILEFT
+*** $PAGE_MINIRIGHT
+*** $PAGE_TOOLBAR
+## ''Display Webpage'' - REQUIRE ($page)
+
+
+!Phase 2
+In the future each module will be registered in the database and included via user or system config.php (&quot;./config.php&quot; or &quot;./xpmt/config.default.php&quot;). During execution the system checks the manually included modules' header file and tests against the database if it was installed and enabled. If it was not then through the Administrative Panel (admin mod) the admin may install and enable the module as well as set group permission levels.
+
+
+
+</pre>
+</div>
+<div title="Module - v0.4 Configuration" creator="d.suess" modifier="d.suess" created="201209012256" modified="201209061556" tags="sample, configuration" changecount="6">
 <pre>Below is a sample of the configuration file
 
 ! Database Structure
@@ -837,43 +930,28 @@ $xpmtModule[&quot;uri&quot;][&quot;sample&quot;] = &quot;samp&quot;;
 ?&gt;
 }}}</pre>
 </div>
-<div title="Modules" creator="d.suess" modifier="d.suess" created="201209020115" modified="201209031653" tags="module" changecount="15">
+<div title="Modules" creator="d.suess" modifier="d.suess" created="201209020115" modified="201209061557" tags="module" changecount="18">
 <pre>Below is the list of modules and their statuses
 
-! Module List
-| # |Name                | %   | Core |URI    |Description |h
-| 5 |[[KB (mod)]]        | 75% | No   |kb     |Knowledge Base Articles |
-| 5 |[[Customer (mod)]]  | 0%  | No   |c      |Customer information system |
-| 5 |[[Ticket (mod)]]    | 0%  | No   |ticket |Issue Ticketing tracker |
-| 4 |[[Project (mod)]]   | 10% | No   |p      |Project overview page (//dev only//) |
-| 4 |[[Bug (mod)]]       | 0%  | No   |bug    |Bug tracker |
-| 4 |[[Task (mod)]]      | 0%  | No   |task   |Technical request tracker |
-| 4 |[[Admin (mod)]]     | 0%  | Yes  |admin  |Administration and Config Panel (//admin only//) |
-| 3 |[[Product (mod)]]   | 0%  | No   |prod   |Product overview and tracking |
-| 3 |[[Dashboard (mod)]] | 0%  | Yes  |main   |Welcome page |
-| 3 |[[User (mod)]]      | 0%  | Yes  |user   |Product overview and tracking |
-| 2 |[[Wiki (mod)]]      | 0%  | No   |wiki   |Self-contained wiki system |
-
-
-! Customer Modules
-|Module    |Access Level |h
-|Customer  |Details page, Open tickets  |
-|KB        |View articles    |
-|Product   |View product details and wiki pages |
-|Ticket    |View only those assigned to customer |
-
-
-! Concept Modules
-|Name           |URI  |Description |h
-|[[Purchase Order|PO (mod)]] |po   |Track orders created for customers and pricing |
-|Svn            |svn  |Source Code Viewer |
-|Git            |git  |Source Code Viewer |
-
+!Topics
+* [[Module - List]]
+* [[Module - Loader Workflow]]
 </pre>
 </div>
 <div title="MyPlugins" creator="d.suess" modifier="d.suess" created="201209012343" modified="201209020106" changecount="5">
 <pre>* [[BackupOptionsPlugin]]
 * [[SortableGridPlugin]]</pre>
+</div>
+<div title="Project (mod)" creator="d.suess" modifier="d.suess" created="201209061526" modified="201209061539" changecount="8">
+<pre>The project module is more-so used for behind the scenes and not intended for customers or anonymous [[user groups|User Group]].
+
+!Features and Workflows
+* [[Project (mod) - Create]]
+* [[Project (mod) - Wiki]] (main page)
+* [[Project (mod) - Milestones]]
+* [[Project (mod) - TBT]]
+* [[Project (mod) - Reports]]
+* [[Project (mod) - Admin]] - Setup user access level and details</pre>
 </div>
 <div title="Reports" creator="d.suess" modifier="d.suess" created="201209011737" modified="201209012351" changecount="6">
 <pre>Reports will be created using a pix of PHP and XSTL
@@ -1489,18 +1567,60 @@ table.listView th, table.listView td, table.listView tr {padding:0 3px 0 3px;}
 txtBackupFolder: bak
 txtUserName: d.suess</pre>
 </div>
-<div title="ToDoList" creator="d.suess" modifier="d.suess" created="201209031640" modified="201209031716" changecount="5">
-<pre>!ASAP
+<div title="Ticket (mod)" creator="d.suess" modifier="d.suess" created="201209062239" modified="201209062258" changecount="2">
+<pre>
+! Design
+Check out [[http://www.geekzone.co.nz/vs2008/6283]] for pointers to use Visual Studio as an XSLT debugger for the designs. Inputs XML and XSLT, Outputs display
 
+! Test Code
+{{{
+&lt;?php 
+
+$myArray = array(&quot;Dave&quot;,&quot;Bill&quot;,&quot;Brian&quot;,&quot;Mike&quot;,&quot;Jason&quot;,&quot;Eric&quot;,&quot;Phil&quot;,&quot;Ben&quot;,&quot;Chris&quot;,&quot;Larry&quot;); # Our table fill data 
+
+$i = 1; # Our row counter 
+?&gt; 
+
+&lt;p&gt;Here's our table with alternating row colors. The second column is the row  
+   number for your reference.&lt;/p&gt; 
+
+&lt;table align=&quot;left&quot; width=&quot;25%&quot; cellpadding=&quot;3&quot; cellspacing=&quot;0&quot;&gt; 
+
+&lt;?php 
+
+foreach ($myArray as $row) 
+{ 
+  if ($i % 2 != 0) # An odd row 
+    $rowColor = &quot;green&quot;; 
+  else # An even row 
+    $rowColor = &quot;orange&quot;; 
+   
+  echo '&lt;tr bgcolor=&quot;' . $rowColor . '&quot;&gt;' .
+         '&lt;td align=&quot;left&quot;&gt;&lt;font color=&quot;white&quot;&gt;&lt;b&gt;' . $row . '&lt;/b&gt;&lt;/font&gt;&lt;/td&gt;' .
+         '&lt;td align=&quot;right&quot;&gt;&lt;font color=&quot;white&quot;&gt;&lt;b&gt;' . $i . '&lt;/b&gt;&lt;/font&gt;&lt;/td&gt;' .
+       '&lt;/tr&gt;' . &quot;\r\n&quot;; 
+  $i++; # Increment our row counter 
+} 
+
+?&gt; 
+
+&lt;/table&gt;
+}}}</pre>
+</div>
+<div title="ToDoList" creator="d.suess" modifier="d.suess" created="201209031640" modified="201209061742" changecount="11">
+<pre>!ASAP
 |!Module            |!Sub-Section  |!Description |h
 |[[KB (mod)]]       |Main   |List items |
-|[[KB (mod)]]       |View   |Add DIV to hide sections |
+|[[Ticket (mod)]]   |Create |Create tickets |
+|[[Ticket (mod)]]   |View   |View tickets |
+|[[Ticket (mod)]]   |List   |List tickets |
 |[[Customer (mod)]] |       |Create skeleton |
-
+|[[Project (mod)]]  |List   |Add links to TBT, Milestones, Wiki (main) |
 
 !Later
-
 |!Module      |!Sub-Section  |!Description |h
+|Core         |       |[[xenoPMT Core - To Do List]]  |
+|[[KB (mod)]] |View   |Add DIV to hide sections |
 |[[KB (mod)]] |Main   |Search |
 |[[KB (mod)]] |Main   |Show latest additions (top 10) |
 |[[KB (mod)]] |View   |Edit |
@@ -1541,6 +1661,28 @@ txtUserName: d.suess</pre>
   The xenoPMT Team
 &lt;/p&gt;
 }}}</pre>
+</div>
+<div title="xenoPMT Core - To Do List" creator="d.suess" modifier="d.suess" created="201209061605" modified="201209061613" changecount="3">
+<pre>Even the core has a todo-list. Some of it crosses into modules to operate its core functionality.
+
+!Unsorted
+* User and Groups
+** Generate custom toolbar depending on personal and user group level
+** ''Examples'': Admin, Dev, Customer, ProjectManager, ProductManager, Anonymous
+* [[Admin (mod)]]
+** User group editor
+** User editor - Link user to cusomter
+* [[User (mod)]]
+** Edit user details :: email, display name, phone, address, password, etc.
+* [[Customer (mod)]]
+** Show customer details
+** Customer contact list
+** Customer products and registration detail
+** [[Customer Bulletin Board | Customer (mod) - Bulletin Board]]
+
+
+!v0.4
+* Dynamic module loader</pre>
 </div>
 </div>
 <!--POST-STOREAREA-->

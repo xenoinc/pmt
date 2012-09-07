@@ -69,7 +69,7 @@ class kb implements iModule
   // Internal module setup
   private $_MODE;         // ENUM_ProjMode from parser
   private $_PAGE;         // name of KB page to display/add/edit/remove
-  private $_SWITCH;       // Switch: new, edit, remove, <blank>
+  private $_SWITCH;       // Switch: new, edit, remove, list, search, <blank>
 
   /*   * *********************************************** */
 

@@ -16,8 +16,28 @@
  *  2012-0805 * Initial Creation
  ***********************************************************/
 
-class sample extends pmtModule
+class sample implements iModule
 {
+  function __construct()
+  {
+
+  }
+  
+  function Title() {
+    return "";
+  }
+  function PageData() {
+    return "";
+  }
+  function Toolbar() {
+    return "";
+  }
+  function MiniBarLeft() {
+    return "";
+  }
+  function MiniBarRight() {
+    return "";
+  }
 
 }
 
