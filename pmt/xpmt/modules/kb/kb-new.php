@@ -175,9 +175,9 @@ namespace xenoPMT\Module\KB
        */
 
       // Create vars to use
-      $user_id      = $user->userInfo["User_Id"];       // 1
-      $user_handle  = $user->userInfo["User_Name"];     // admin
-      $user_Name    = $user->userInfo["Display_Name"];  // xenoPMT Administrator
+      $user_id      = $user->UserInfo["User_Id"];       // 1
+      $user_handle  = $user->UserInfo["User_Name"];     // admin
+      $user_Name    = $user->UserInfo["Display_Name"];  // xenoPMT Administrator
       // debug("id: '" . $user_id . "'  hanle: '" . $user_handle . "' nme: '" . $user_Name . "'");
 
       // Date stamps

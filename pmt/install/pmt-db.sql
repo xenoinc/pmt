@@ -10,6 +10,8 @@
  *   Core tables for the PMT system
  *
  * Change Log:
+ * 2012-0907  + (djs) Enabled TBLPMT_MODULE and added UUID column
+ *            -       Removed TBLPMT_MODULE_URI (not currently needed)
  * 2012-0619  + (djs) Added outline for new table TBLPMT_MODULE
  * 2012-0224  * (djs) Consulidating tables for Milestone 0.1 to this file.
  **********************************************************************/
@@ -37,30 +39,51 @@ create table if not exists `TBLPMT_SETTINGS`
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 /*
+  Module registry
+  Created: 2012-0619
+  Updated:
+    2012-0907 + Added column UUID to identify modules and their forks
+*/
 
 CREATE TABLE IF NOT EXISTS `TBLPMT_MODULE`
 (
-  `Module_Id`     AUTO_INCREMENT,
-  `Module_Name`   VARCHAR(64) collate utf8_unicode_ci not null, -- name of module "kb"
-  `Module_Path`   VARCHAR(255) collate utf8_unicode_ci not null, -- main install path ("/module/kb/kb.php" or "kb")
-  `Module_URN`    VARCHAR(16) NOT NULL,  -- BASE Uniform Resource Name (kb, p, customer, ..)
-  `Enabled`       BOOLEAN NOT NULL DEFAULT FALSE,  -- true/false - We got to set it to something
-  `Description`   VARCHAR(255) collate utf8_unicode_ci not null,
+  `Module_Id`       INT UNSIGNED NOT NULL AUTO_INCREMENT,
+  `Core`            BOOLEAN NOT NULL DEFAULT FALSE,                 -- Is this a core module? DEFAULT=FALSE
+  `Enabled`         BOOLEAN NOT NULL DEFAULT FALSE,                 -- Disable all new modules by default
+  `Module_Name`     VARCHAR(64) collate utf8_unicode_ci not null,   -- name of module "kb"
+  `Module_Version`  VARCHAR(16),                                    -- Version number/Name (0.2 nighthawk)
+  `Module_Path`     VARCHAR(255) collate utf8_unicode_ci not null,  -- main install path ("/module/kb/kb.php" or "kb.php")
+  `Module_Class`    VARCHAR(255) collate utf8_unicode_ci not null,  -- class name to be called
+  `Module_URN`      VARCHAR(16) NOT NULL,                           -- BASE Uniform Resource Name (kb, p, customer, ..)
+  `Module_UUID`     VARCHAR(36),                                    -- Unique Identifer of registered module. No two should be the same
+  `Description`     VARCHAR(255) collate utf8_unicode_ci not null,
   primary key (`Module_Id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
--- Used in "pmt.php/PmtParseURL()" to accept "project/prj/p" as valid uri segments name
--- This is an extenion of "_MODULE.Module_URN"
+/*
+  Module Uniform Resource Identifier - Give your module a home!
+  This is only used for modules with multiple URN IDs.. currently deprecated
+
+    Used in "pmt.php/PmtParseURL()" to accept the 'p' in "project/prj/p" as valid uri segments name
+    This is an extenion of "_MODULE.Module_URN"
+
+  Note: DO NOT allow'/' in your name when identifying the URN (uniform resource identifier)
+  Created: 2012-0619
+  Updated:
+    2012-0907 * Removed `Module_Name` and replaced it with `Module_UUID`
+*/
+/*
 CREATE TABLE IF NOT EXISTS `TBLPMT_MODULE_URN`
 (
-  `Module_URN`    VARCHAR(16), -- don't let people get crazy
-  `Module_Name`   VARCHAR(64) collate utf8_unicode_ci not null -- folder install path ("/module/kb" or "kb")
+  `Module_UUID`   VARCHAR(36) NOT NULL,                             -- This is better than using Module_Id
+  `Module_URN`    VARCHAR(16)                                       -- don't let people get crazy with lengths
+  -- `Module_Name`   VARCHAR(64) collate utf8_unicode_ci not null   -- folder install path ("/module/kb" or "kb")
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci
-
 */
 
 /*
   * NOT IN USE *
+  Intention was for the dynamic naming structure of modules or other (wiki) pages. Deprecated.
 
   Uniform resource identifier.
   A uniform resource name (URN) functions like a person's name, while
@@ -71,16 +94,17 @@ CREATE TABLE IF NOT EXISTS `TBLPMT_MODULE_URN`
   [-URL-] [-URN-]
 
   Created: 2012-0306
-*/
+* /
+
 CREATE TABLE IF NOT EXISTS `TBLPMT_URI`
 (
   `Uri_Id` INT UNSIGNED NOT NULL AUTO_INCREMENT,
   `Uri_Name`  VARCHAR(256),   -- URN Name
   `Enabled`   BOOLEAN,        -- Under Construnction
   PRIMARY KEY (`Uri_Id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci
 
-
+*/
 
 
 

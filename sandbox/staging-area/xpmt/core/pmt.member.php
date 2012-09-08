@@ -62,8 +62,8 @@ class Member {
    *
    */
   // Usage:
-  // $user->userInfo["User_Name"]
-  public $userInfo = array(
+  // $user->UserInfo["User_Name"]
+  public $UserInfo = array(
       "User_Id"   => "0",
       "User_Name" => "Guest",
       "Display_Name" => "Anonymous",
@@ -93,16 +93,16 @@ class Member {
     if($pmtDB->NumRows($q))
     {
       // We're logged in still
-      $this->userInfo = $pmtDB->FetchArray($q);
-      $this->userInfo["online"] = true;
+      $this->UserInfo = $pmtDB->FetchArray($q);
+      $this->UserInfo["Online"] = true;
       $this->online = true;
     }
 
     // TOD: Finish Group setup
     // Get user Group Info (Anon or Logged in)
-    //print_r($this->userInfo);
+    //print_r($this->UserInfo);
 
-    $grp = $this->userInfo["Group_Id"];
+    $grp = $this->UserInfo["Group_Id"];
     $tmp =
         "SELECT * FROM ".PMT_TBL."USER_GROUP WHERE " .
         "Group_Id='" . $grp . "' LIMIT 1";

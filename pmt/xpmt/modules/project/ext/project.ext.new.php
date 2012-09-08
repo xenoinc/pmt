@@ -170,7 +170,7 @@ class ProjExt_New
             "('" .  trim($pmtDB->FixString($valProjName)) .
             "','".  trim($pmtDB->FixString($valProjDesc)) .
             "','".  trim($pmtDB->FixString($valProjDTTM)) .
-            "','".  trim($pmtDB->FixString($user->userInfo['User_Id'])).
+            "','".  trim($pmtDB->FixString($user->UserInfo['User_Id'])).
             "');";
 
       $pmtDB->Query($q);

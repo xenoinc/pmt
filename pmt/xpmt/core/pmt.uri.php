@@ -34,6 +34,7 @@
  *
  */
 
+// namespace xenoPMT\Core {
 
 class URI
 {

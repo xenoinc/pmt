@@ -13,6 +13,8 @@
  *
  */
 
+// namespace xenoPMT\Core {
+
 class Log {
 
   /*

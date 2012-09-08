@@ -4,15 +4,14 @@
  * Author:
  * Document:      pmt-db-user.sql
  * Created Date:  Oct 31, 2010, 11:03:17 PM
- * Last Update:   2012-0304
- * Version:       0.2.2
+ * Last Update:   2012-0908
+ * Version:       0.2.3
  * Description:
  *   User tables.
- *  
- * To Do:
- * [ ]  2012-0603 - Remove [_USER.Group_Id] and refer only to _GROUP via JOIN
+ *
  *
  * Change Log:
+ * 2012-0908  - (djs) removed _USER.Group_Id (use _GROUP and _USER_GROUP here on)
  * 2012-0320  + (djs) Added table, _USER_SETTINGS
  * 2012-0309  + (djs) added Changed USER_GROUP to GROUP and created new USER_GROUP
  * 2012-0306  * (djs) fixed error 'unsigned int' to 'int unsigned'
@@ -25,11 +24,14 @@
 
 /*
   Used for customer logins
-  Version 0.2.2
-  Last Update:  2010-11-07
+  Version 0.2.3
+  Created:  2010-11-07
   Note:  Accounts should not be active until they verify their Email address
-  2012-0603 * Changed `Session_Hash` from NOT NULL to NULL (stupid mistake)
-            * Changed `Name` to `Display_Name`
+  Changes:
+    2012-0908 - Removed `Group_Id` - its been deprecated to TBL_USER_GROUP
+                ** THIS IS GOING TO BREAK A LOT OF SHIT!!
+    2012-0603 * Changed `Session_Hash` from NOT NULL to NULL (stupid mistake)
+              * Changed `Name` to `Display_Name`
 */
 
 CREATE TABLE IF NOT EXISTS `TBLPMT_USER`
@@ -38,7 +40,7 @@ CREATE TABLE IF NOT EXISTS `TBLPMT_USER`
   `User_Name`     VARCHAR(50) COLLATE utf8_unicode_ci NOT NULL,
   `Password`      VARCHAR(255) COLLATE utf8_unicode_ci NOT NULL,  -- encrypted user password
   `Email`         VARCHAR(255) COLLATE utf8_unicode_ci NOT NULL,
-  `Group_Id`      INT UNSIGNED NOT NULL DEFAULT '0',              -- Deprecated, use table
+--`Group_Id`      INT UNSIGNED NOT NULL DEFAULT '0',              -- Deprecated, use table
   `Display_Name`  VARCHAR(255) COLLATE utf8_unicode_ci NOT NULL,  -- Name the world sees
   `Name_First`    VARCHAR(75) COLLATE utf8_unicode_ci NULL,   -- First Name
   `Name_Last`     VARCHAR(75) COLLATE utf8_unicode_ci NULL,   -- Last Name
@@ -203,10 +205,10 @@ CREATE TABLE IF NOT EXISTS `TBLPMT_USER_TEAM_MEMBERS`
   List the different permissions allowed for the group users
   Version 0.2.0
   Created:  2010-11-07
-  
+
   Updates:
   * 2010-11-07  * Proposed format for easier debugging / editing
- 
+
 INSERT INTO `TBLPMT_S_GROUP_PERMISSION` (Priv_Name, Description, Sort_Order) VALUES
     ('ADMIN',                   'User will have access to all components', 0),
     ('REPO_BROWSER_VIEW',       'User is able to view the project files',  '0'),
