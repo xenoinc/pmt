@@ -207,7 +207,7 @@ function GenerateMetabar($module)
   $t = "        ";
   //$ret = $t . "<ul>" . PHP_EOL;
   $ret = $t . "<ul>" . PHP_EOL;
-  if ($user->online)
+  if ($user->Online)
   {
     $ret .= $t . "  ";
     // ONLINE

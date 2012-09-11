@@ -48,6 +48,7 @@ create table if not exists `TBLPMT_SETTINGS`
 CREATE TABLE IF NOT EXISTS `TBLPMT_MODULE`
 (
   `Module_Id`       INT UNSIGNED NOT NULL AUTO_INCREMENT,
+  `Module_UUID`     VARCHAR(36),                                    -- Unique Identifer of registered module. No two should be the same
   `Core`            BOOLEAN NOT NULL DEFAULT FALSE,                 -- Is this a core module? DEFAULT=FALSE
   `Enabled`         BOOLEAN NOT NULL DEFAULT FALSE,                 -- Disable all new modules by default
   `Module_Name`     VARCHAR(64) collate utf8_unicode_ci not null,   -- name of module "kb"
@@ -55,10 +56,27 @@ CREATE TABLE IF NOT EXISTS `TBLPMT_MODULE`
   `Module_Path`     VARCHAR(255) collate utf8_unicode_ci not null,  -- main install path ("/module/kb/kb.php" or "kb.php")
   `Module_Class`    VARCHAR(255) collate utf8_unicode_ci not null,  -- class name to be called
   `Module_URN`      VARCHAR(16) NOT NULL,                           -- BASE Uniform Resource Name (kb, p, customer, ..)
-  `Module_UUID`     VARCHAR(36),                                    -- Unique Identifer of registered module. No two should be the same
   `Description`     VARCHAR(255) collate utf8_unicode_ci not null,
   primary key (`Module_Id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+/* Test table */
+create table if not exists `TBLPMT_CONFIG_MODULE`
+(
+  `Module_UUID`   VARCHAR(36),
+  `Setting` varchar(255) collate utf8_unicode_ci not null,
+  `Value`   longtext collate utf8_unicode_ci not null,
+  primary key (`Module_UUID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+/*
+CREATE TABLE IF NOT EXISTS `TBLPMT_S_MODULE_PRIV`
+(
+  `Module_UUID`   VARCHAR(36),
+  `Priv_Name`     VARCHAR(32),
+  `Priv_Name`     VARCHAR(32),
+);
+
+*/
 
 /*
   Module Uniform Resource Identifier - Give your module a home!

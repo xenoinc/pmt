@@ -83,12 +83,7 @@ class ticket implements iModule
     /*
      * OFFLINE
      * Member Object (
-     *  [username] => Guest             * DEFAULT: "Guest"
-     *  [userid] => 0                   * DEFAULT: 0
-     *  [fullname] =>                   * DEFAULT: NULL
-     *  [password] =>                   * DEFAULT: NULL
-     *  [group] =>                      * DEFAULT: NULL
-     *  [online] =>                     * DEFAULT: NULL
+     *  [Online] =>                     * DEFAULT: NULL
      *  [errors] => Array ( )           * DEFAULT: Empty Array
      *  [userInfo] => Array (
      *    [User_Id] => 0                * DEFAULT: 0
@@ -100,8 +95,7 @@ class ticket implements iModule
      *
      * User logged in (ADMIN)
      * Member Object (
-     *  [group] =>                      * ?? NULL
-     *  [online] => 1                   * ONLINE: 1
+     *  [Online] => 1                   * ONLINE: 1
      *  [errors] => Array ( )
      *  [userInfo] => Array (
      *    [User_Id] => 1            * Integer - (id > 0) - User_Id number
@@ -146,7 +140,7 @@ QUERY;
   {
     /*
     global $user;
-    if ($user->online != false)
+    if ($user->Online != false)
     {
       $code =   "<ul>";
       $code .=  "<li>". $this->AddLink(self::MODULE, "Main", "")  ."</li>";
@@ -163,7 +157,7 @@ QUERY;
   {
     /*
     global $user;
-    if ($user->online != false)
+    if ($user->Online != false)
     {
       $code =   "<ul>";
       $code .=  "<li>". $this->AddLink(self::MODULE, "Main", "")  ."</li>";

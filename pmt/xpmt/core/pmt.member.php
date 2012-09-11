@@ -57,7 +57,7 @@ class Member
   //public $group = null;
 
 
-  public $online = false;
+  public $Online = false;
   public $errors = array();
 
   /* Array (
@@ -111,7 +111,7 @@ class Member
       // We're logged in still
       $this->UserInfo = $pmtDB->FetchArray($q);
       $this->UserInfo["Online"] = true;         // use this for now on
-      $this->online = true;                     // Kept for legacy purposes
+      $this->Online = true;                     // Kept for legacy purposes
 
       /**
        * Old way [pre 2012-0908]

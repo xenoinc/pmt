@@ -177,7 +177,7 @@ class kb implements iModule
   private function GenerateMiniLeft()
   {
     global $user;
-    if ($user->online != false)
+    if ($user->Online != false)
     {
       $code =   "<ul>";
       $code .=  "<li>". $this->AddLink(self::MODULE, "Main", "?")  ."</li>";
@@ -202,7 +202,7 @@ class kb implements iModule
      */
     global $user;
 
-    if ($user->online != false)
+    if ($user->Online != false)
     {
       $code = "<ul>";
       if ($this->_PAGE == "0")
@@ -240,7 +240,7 @@ class kb implements iModule
 
 
     // ToDo: Add logic to check if login is required
-    if ($user->online == false)
+    if ($user->Online == false)
     {
       $html = $this->Page_UserOffline();
       return $html;

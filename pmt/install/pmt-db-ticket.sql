@@ -145,35 +145,39 @@ INSERT INTO `TBLPMT_S_REFERENCE_TYPE` (`Reference_Type`,`Description`) VALUES ('
   Ticket / TechRequest being issued
   TRs will be branched to its own table in the future
   Request "Ticket Type" on the PMT Ticket page, "Enhancement, Deficet, TechRequest, Bug Report, etc.)
-  Last Update: 2010-11-07
+  Created: 2010-11-07
+  Updates:
+    2012-0911 + Added customer viewable (bool)
 */
 CREATE TABLE IF NOT EXISTS `TBLPMT_TICKET`
 (
   `Ticket_Id`         INT UNSIGNED NOT NULL AUTO_INCREMENT,
   `Ticket_Type`       VARCHAR(15) COLLATE utf8_unicode_ci,  -- Ticket Type:  enhancement, deficet, inquiry, etc.  (Ask this on the Ticket Page)
-  `Created_Dttm`      DATETIME,               -- When was it created
-  `Updated_Dttm`      DATETIME,               -- Main Items last update
+  `Created_Dttm`      DATETIME,                             -- When was it created
+  `Updated_Dttm`      DATETIME,                             -- Main Items last update
   `Priority_Enum`     VARCHAR(15) COLLATE utf8_unicode_ci,  -- Priority Name:  major, minor, critical  [TBLPMT_S_TBT_ENUM.enum_name]
   `Status_Enum`       VARCHAR(24) COLLATE utf8_unicode_ci,  -- Ticket status (from ENUM table)
   `Priority_Score`    INT,                                  -- low-high (0-999) Used to rate within the Priority_Enum
 
+  `Customer_Viewable` BOOLEAN NOT NULL DEFAULT FALSE,       -- Can a customer see this ticket
   `Customer_Id`       VARCHAR(256) COLLATE utf8_unicode_ci, -- Customer Id Number (if specified)
-  `Reporter_Uid`      INT UNSIGNED,           -- UserID of who reported the issue (this can be handwritten if 'anon_user' is checked) <-- To allow Annon, set in ProjCONFIG.PHP
-  `Reporter_Ip`       INT UNSIGNED,           -- User's IP, used for anonymous submitions
-  `Owner_Gid`         INT UNSIGNED,           -- Not Needed :: Name of the general group assigned the Inquiry
-  `Owner_Uid`         INT UNSIGNED,           -- UserID of who it addressing the ticket request
+  `Reporter_Uid`      INT UNSIGNED,                         -- UserID of who reported the issue (this can be handwritten if 'anon_user' is checked) <-- To allow Annon, set in ProjCONFIG.PHP
+  `Reporter_Ip`       INT UNSIGNED,                         -- User's IP, used for anonymous submitions
+  `Owner_Gid`         INT UNSIGNED,                         -- Not Needed :: Name of the general group assigned the Inquiry
+  `Owner_Uid`         INT UNSIGNED,                         -- UserID of who it addressing the ticket request
   `Cc_Addr`           VARCHAR(255) COLLATE utf8_unicode_ci, -- UserID or series of email addresses
 
-  `Reference_Type_Id` INT NOT NULL,           -- Product or Project (pmt_s_ptype)
-  `Pro_Id`            INT UNSIGNED NOT NULL,  -- Reference (Project/Product) Id  (xi_product.product_name)
-  `Pro_Version_Id`    INT UNSIGNED,           -- Name of the Project Version (xi_product_version.version)
-  `Component_Id`      INT UNSIGNED,           -- Name of the Project Component (xi_project_component.component_id)
+  `Reference_Type_Id` INT NOT NULL,                         -- Product or Project (pmt_s_ptype)
+  `Pro_Id`            INT UNSIGNED NOT NULL,                -- Reference (Project/Product) Id  (xi_product.product_name)
+  `Pro_Version_Id`    INT UNSIGNED,                         -- Name of the Project Version (xi_product_version.version)
+  `Component_Id`      INT UNSIGNED,                         -- Name of the Project Component (xi_project_component.component_id)
   `Component_Version` VARCHAR(24) COLLATE utf8_unicode_ci,  -- Component Revision
   `Milestone_Id`      VARCHAR(64) COLLATE utf8_unicode_ci,  -- Attatch to Milestone (Dev only, can be null)
 
   `Resolution_Enum`   VARCHAR(20) COLLATE utf8_unicode_ci,  -- Resolution description (from ENUM table TBLPMT_S_TBT_ENUM.enum_name = 'resolution')
   `Subject`           VARCHAR(64) COLLATE utf8_unicode_ci,  -- Short Description
   `Summary`           MEDIUMBLOB,                           -- Description of the ticket
+  `Resolution`        MEDIUMBLOB,                           -- Resolution (if used)
   PRIMARY KEY (`Ticket_Id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
