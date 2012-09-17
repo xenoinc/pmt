@@ -55,7 +55,7 @@
       </div>
 
       <div class="attatchment">
-        <table boarder="0">
+        <table boarder="0" width="100%">
 
           <xsl:for-each select="ticket/attachment">
             <tr>

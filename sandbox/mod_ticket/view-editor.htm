@@ -1,5 +1,12 @@
-<html>
-
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta content="text/html; charset=UTF-8" http-equiv="Content-Type">
+  </head>
+<!--
+  A class name of "indexable" notes that this is
+  a searchable filed by the system search engine.
+-->
   <style type="text/css">
 
     /*
@@ -7,6 +14,24 @@
     #id{}
     #id .MainClass {}
     */
+    /* Generic Settings */
+    body{
+      font-size: 13px;
+      color: #0;
+    }
+    body, th, tr {
+      font: normal 13px Verdana, Arial, 'Bitstream Vera Sans';
+    }
+    :link, :visited {
+      text-decoration: none;
+      color: #003399;
+      border-bottom: 1px dotted #CCCCCC;
+    }
+    /* Ticket settings */
+
+    .indexable {
+      font-family: Consolas, monospace;
+    }
 
     #ticket-body.ticket
     {
@@ -50,15 +75,82 @@
     }
     h2 { font-size: 16px; }
     h2 {
-display: block;
-font-size: 1.5em;
--webkit-margin-before: 0.83em;
--webkit-margin-after: 0.83em;
--webkit-margin-start: 0px;
--webkit-margin-end: 0px;
-font-weight: bold;
-}
+      display: block;
+      font-size: 1.5em;
+      -webkit-margin-before: 0.83em;
+      -webkit-margin-after: 0.83em;
+      -webkit-margin-start: 0px;
+      -webkit-margin-end: 0px;
+      font-weight: bold;
+      }
+
+      /* Ticket details table */
+      #overview table.details {
+        clear: both;
+        border-top: 1px solid #DD9;
+        border-collapse: collapse;
+        table-layout: fixed;
+        width: 100%;
+      }
+      #overview table.details tr {
+        border-bottom: 1px dotted #eed;
+      }
+      #overview table.details th {
+        color: #0;
+        font-weight: normal;
+        text-align: left;
+        width: 20%;
+      }
+      #overview table.details td,
+      #overview table.details th {
+        font-size: 80%;
+        padding: .5em 1em;
+        vertical-align: top;
+      }
+      #overview table.details th.missing {
+        color: #d3d398;
+      }
+      /* --[ END: Table ]--- */
+
+      /* Description heading */
+      #overview .description h3 {
+        border-bottom: 1px solid #DD9;
+        color: #663;
+      }
+      /* Description heading */
+      #overview .attachment h3 {
+        border-bottom: 1px solid #DD9;
+        color: #663;
+      }
+
   </style>
+
+  <style type="text/css">
+    /* Diary Entries */
+    /*
+      .class {}
+      #id{}
+      #id .MainClass {}
+    */
+    .dDUTDetails {
+      font-size: 85%;
+      float: right;
+    }
+    #dHistory {
+      /* background-color: #D4E6FB; */
+    }
+    #dHistory h3 {
+      border-bottom: 1px dotted #d7d7d7;
+      box-shadow: 0.1em 0.4em 0.7em 0 #F2F2F2;
+      color: #777777;
+      font-size: 100%;
+      font-weight: normal;
+      margin-bottom: 0.4em;
+      padding: 0 0.2em;
+    }
+
+  </style>
+
   <body>
     <div id="ticket-body" class="ticket">
 
@@ -66,48 +158,132 @@ font-weight: bold;
       <div id="overview" class="ticket-content">
 
         <div class="status">
-          <p>Status: 2012-09-11</p>
-          <p>Type: Defect</p>
-        </div>
+          <p>Status: Open <!-- <xsl:value-of select="Status_Enum" /> --></p>
+          <p>Type: Defect       <!-- <xsl:value-of select="Ticket_Type" /> --></p>
+        </div> <!-- end:status -->
 
-        <h2>#101</h2>
+        <h2 class="indexable">#101 <!-- <xsl:value-of select="Ticket_Id" /> --></h2>
 
         <table class="details" style="border-top:1px solid #DD9; border-collapse:collapse; table-layout:fixed; width:100%;">
           <tr>
-            <td></td>
+            <th>Created:</th>     <td><a href="#">anonymous</a></td>  <!-- href="xpmt/lib/lookup?username=anonymous"  or "?userid=0" (id is static) -->
+            <th>Modified:</th>    <td>2012-09-14 22:35:07</td>
           </tr>
-        </table>
 
-        <div class="complaint">
-          <table>
-          </table>
-        </div>
+          <tr>  <th>Reported by:</th>     <td>&nbsp;</td>
+                <th>Owned by:</th>    <td>&nbsp;</td> </tr>
 
-        <div class="attatchment">
+          <tr>  <th>Priority:</th>     <td>&nbsp;</td>
+                <th>&nbsp;</th>    <td>&nbsp;</td> </tr>
+          <!-- PROJECT / PRODUCT -->
+          <tr>  <th>Project:</th>     <td>&nbsp;</td>
+                <th>Version:</th>    <td>&nbsp;</td> </tr>
 
+          <tr>  <th>Component:</th>     <td>&nbsp;</td>
+                <th>Component Version:</th>    <td>&nbsp;</td> </tr>
+
+          <tr>  <th>Milestone</th>     <td colspan="3">&nbsp;</td>
+          </tr>
+
+          <tr>  <th class="missing">CC:</th>     <td colspan="3">&nbsp;</td>
+          </tr>
+
+        </table> <!-- end:details table -->
+
+        <!-- Ticket Description Box -->
+        <div class="description">
+          <h3 class="description-headding">Description:</h3>
+          <div class="indexable">
+            <p>
+            This is a sample complaint for a ticket. <b>That is <i>HTML</i></b> ready.
+            </p>
+            <p>
+              And it has easy to read numbers: 0123456789!
+            </p>
+            <!-- <xsl:value-of select="Summary" /> -->
+          </div>
+
+        </div> <!-- end:complaint -->
+
+
+
+        <!-- Ticket Attachments -->
+        <div class="attachment">
+          <h3 class="foldable"><a>Attachments:</a></h3>
           <table border="0">
             <!--<xsl:for-each select="ticket/attachment">-->
             <tr>
-              <td>
-              <td>asdf <!-- <xsl:value-of select="title" />--> </td>
-              <td>adsf <!-- <xsl:value-of select="path" />--> </td>
+              <td>FileName.exe (0 kb)<!-- <xsl:value-of select="File_Name" /> (<xsl:value-of select="File_Size" />)--> </td>
+              <td>Short Description <!-- <xsl:value-of select="Description" />--> </td>
             </tr>
             <!--</xsl:for-each>-->
           </table>
-        </div>
-      </div>
+        </div><!-- end:attachment -->
+      </div> <!-- end:ticket-content -->
 
-      <div id="diary" class="collapsed">
-        <table>
-          <xsl:for-each select="ticket/diary">
+      <!-- ########## -->
 
-          </xsl:for-each>
-        </table>
-      </div>
+      <!-- Diary Entry History -->
+      <!-- <div class="collapsed">-->
+      <div class="">
+        <h3 class="foldable"><a>Diary History</a></h3>
 
+        <div id="dHistory"> <!-- collapsible item-->
+          <!--  <xsl:for-each select="ticket/diary">
+                </xsl:for-each> -->
+          <div class="dUpdate" id="diary-ticketUpdateIdNum1">
+            <h3 class="dUTitle">
+              <span class="dDUTDetails">
+                <span>YYYY-MM-DD HH:MM:SS</span>
+                <span><b>Rating:</b> 5</span>
+                <span><b>Vote:</b> ↑ / ↓</span>
+              </span>
+              dType - <a>UserName</a>
+            </h3>
+            <!--<div>Reply buttons (right aligned)</div>-->
+            <div class="dUBody searchable">
+              body of the diary entry
+            </div>
+          </div>
+
+          <div class="dUpdate" id="diary-ticketUpdateIdNum2">
+            <h3 class="dUTitle">
+              <span class="dDUTDetails">
+                <span>YYYY-MM-DD HH:MM:SS</span>
+                <span><b>Rating:</b> 5</span>
+                <span><b>Vote:</b> ↑ / ↓</span>
+              </span>
+              dType - <a>UserName</a>
+            </h3>
+            <!--<div>Reply buttons (right aligned)</div>-->
+            <div class="dUBody searchable">
+              body of the diary entry
+            </div>
+          </div>
+
+          <div class="dUpdate" id="diary-ticketUpdateIdNum3">
+            <h3 class="dUTitle">
+              <span class="dDUTDetails">
+                <span>YYYY-MM-DD HH:MM:SS</span>
+                <span><b>Rating:</b> 5</span>
+                <span><b>Vote:</b> ↑ / ↓</span>
+              </span>
+              dType - <a>UserName</a>
+            </h3>
+            <!--<div>Reply buttons (right aligned)</div>-->
+            <div class="dUBody searchable">
+              body of the diary entry
+            </div>
+          </div>
+        </div> <!-- end:diaryhistory -->
+      </div> <!-- end:diary entries -->
+
+
+      <!-- New Diary Entry Text Box -->
       <div id="newdiary" class="collapsed">
+      </div> <!-- end:newDiary entry -->
 
-      </div>
-  </div>
+    </div> <!-- end:ticket -->
+
   </body>
 </html>
