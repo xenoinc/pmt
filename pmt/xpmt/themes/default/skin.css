@@ -6,6 +6,8 @@
     Default theme style sheet
 
   Change Log:
+  2012-0920 * Center and slim mode
+            + Moved "container" to incompase entire page & not just main body
   2012-0904 + Added hack to allow inline-block lists to display properly in
               IE (damn IE). It may not be proper, but it works.
       zoom: 1;
@@ -20,6 +22,8 @@ body{
   margin: 10px;
   padding: 0;
   font: 13px Verdana,Arial,'Bitstream Vera Sans',Helvetica,sans-serif;
+  /* 2012-0920 - center and slim */
+  text-align: center;
 }
 body, th, tr {
     font: 13px Verdana,Arial,'Bitstream Vera Sans',Helvetica,sans-serif;
@@ -40,6 +44,16 @@ body, th, tr {
 .buttons form,
 .buttons form div { display: inline; }
 .buttons input {    margin: 1em 0.5em 0.1em 0; }
+
+/* **[ Skin Stuff ]************************************ */
+
+#container {
+  /* width: 100%; */
+  /* 2012-0920 - center and slim */
+  width: 1024px;
+  margin: 0 auto;
+  text-align: left;
+}
 
 /* ** Header ** */
 #header
@@ -164,6 +178,10 @@ body, th, tr {
 /* ################################### */
 /* ** Main Window ** */
 
+/* holder of Module gui */
+#pagebody {
+
+}
 
 #main {
  position: relative; /* reference for absolute positioning of children */
@@ -232,11 +250,11 @@ body, th, tr {
 
 
 /* right aligned */
-  /* float: right; */
-  /* font-size: 10px; */
 #minibar_right {
- min-height: 1em;
- padding: .4em 0;
+  /* float: right; */   /* if this is used, it will combine #miniBar_ with #main */
+  font-size: 10px;
+  min-height: 1em;
+  padding: .4em 0;
 }
 #minibar_right li ul {
  background: #f7f7f7;

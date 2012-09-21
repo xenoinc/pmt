@@ -14,6 +14,14 @@
  *
  */
 
+class ENUM_TicketMode
+{
+  const TMain = 0;    // Welcome page. Search box, Create New, My Queue, [Group/Customer Queue], [Filter Listing (proj, ver, severity, date, status)]
+  const TView = 10;
+  const TNew  = 11;
+  const TEdit = 12;
+}
+
 class ticket implements iModule
 {
 

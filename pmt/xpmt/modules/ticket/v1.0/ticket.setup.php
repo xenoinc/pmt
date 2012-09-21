@@ -23,6 +23,14 @@ namespace xenoPMT\Module\Ticket
     {
       // 1) Verify if prev-installed / compatable
       // 2) Execute the code in (ext/pmt-db-ticket.sql)
+
+      /*
+       * Gui Options:
+       *  [ ] Insert test data
+       *      * Group: "Active" - "dev1-active"
+       *      * Group: "Backlog" - "dev1-backlog"
+       */
+
     }
 
     function uninstall()

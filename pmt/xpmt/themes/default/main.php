@@ -12,6 +12,10 @@
  *  currently based upon Trac13 for its clean looks
  *
  * Change Log:
+ *  2012-0920 * Modified id locations (moved Container to WHOLE page, body to main body)
+ *            * Moved #container to sourround the entire page
+ *            + Added #pagebody
+ *            + Added entry for $PAGE_CSS to be used in the future
  *  2012-0424 + Added handling for 'global $errors'
  */
 
@@ -19,12 +23,16 @@
 // which will handle all of the display features
 
 // page data to display
-global $PAGE_TITLE;
-global $PAGE_TOOLBAR;
-global $PAGE_METABAR;
-global $PAGE_HTDATA;
-global $PAGE_PATH;
 global $pmtConf;
+global $PAGE_PATH;        // "http://pmt/xpmt/themes/default/"
+global $PAGE_TITLE;       // Page title
+global $PAGE_CSS;         // todo: Add to global var list
+//global $PAGE_CUSTHEADER;// Custom Header for module
+global $PAGE_METABAR;     // Login & Search bar (right aligned)
+global $PAGE_TOOLBAR;     // Main toolbar
+global $PAGE_MINILEFT;    // Mini toolbar (Left aligned)
+global $PAGE_MINIRIGHT;   // Mini toolbar (Right aligned)
+global $PAGE_HTDATA;      // Page content
 
 // require ("skin-fctn.php");
 ?>
@@ -42,62 +50,69 @@ global $pmtConf;
     <title><?php print($PAGE_TITLE); ?></title>
     <link type="text/css" href="<?php print($PAGE_PATH); ?>skin.css" rel="stylesheet" />
     <link type="text/css" href="<?php print($PAGE_PATH); ?>proj.css" rel="stylesheet" />
-    <?php  //print($PAGE_PATH . "skin.css"); ?>
+    <?php
+      if (isset($PAGE_CSS) && $PAGE_CSS != "")
+        print (
+          "    <link type\"text/css\" href=\"" . $PAGE_PATH . $PAGE_CSS . "\" rel=\"stylesheet\" />\n"
+        );
+      // if (isset($PAGE_CUSTHEADER)) print($PAGE_CUSTHEADER);
+    ?>
   </head>
   <body>
 
-    <div id="header">
-      <div id="logo">
-        <!-- logo -->
-        <a id="logo" href="/" alt="xenoPMT Dashboard">
-          <img height="61" width="214" alt="xenoPMT Dashboard"
-              src="<?php print($PAGE_PATH . 'gfx/logo.png'); ?>" />
-        </a>
-      </div>
-      <div id="metabar" class="metanav">
-        <!-- (Login / View Profile), Account Settings, Logout -->
-<?php print($PAGE_METABAR); ?>
-      </div>
-    </div>
-    <div id="mainbar" class="tbar">
-      <!-- toolbar -->
-      <?php print($PAGE_TOOLBAR); ?>
-    </div>
-
-
     <div id="container">
-    <?php
-    global $errors;
-    if(isset($errors) && count($errors))
-    { ?>
-      <div class="message error">
-      <?php foreach($errors as $error) { ?>
-        <?php echo $error?><br />
+      <div id="header">
+        <div id="logo">
+          <!-- logo -->
+          <a id="logoimg" href="/">
+            <img height="61" width="214" alt="xenoPMT Dashboard"
+                src="<?php print($PAGE_PATH . 'gfx/logo.png'); ?>" />
+          </a>
+        </div>
+        <div id="metabar" class="metanav">
+          <!-- (Login / View Profile), Account Settings, Logout -->
+  <?php print($PAGE_METABAR); ?>
+        </div>
+      </div>
+      <div id="mainbar" class="tbar">
+        <!-- toolbar -->
+        <?php print($PAGE_TOOLBAR); ?>
+      </div>
+
+
+      <div id="pagebody">
+      <?php
+      global $errors;
+      if(isset($errors) && count($errors))
+      { ?>
+        <div class="message error">
+        <?php foreach($errors as $error) { ?>
+          <?php echo $error?><br />
+        <?php } ?>
+        </div>
       <?php } ?>
-      </div>
-    <?php } ?>
 
-      <div id="minibar_left" class="nav_left">
-        <!-- breadcrumbs left --><?php print($PAGE_MINILEFT); ?>
+        <div id="minibar_left" class="nav_left">
+          <!-- breadcrumbs left --><?php print($PAGE_MINILEFT); ?>
 
-      </div>
-      <div id="minibar_right" class="nav_right">
-        <!-- mini toolbar for module -->
-        <?php print($PAGE_MINIRIGHT); ?>
+        </div><!-- end:minibar_left -->
+        <div id="minibar_right" class="nav_right">
+          <!-- mini toolbar for module -->
+          <?php print($PAGE_MINIRIGHT); ?>
 
-      </div>
+        </div> <!-- end:#minibar_right -->
 
-      <div id="main">
-<?php
-  print($PAGE_HTDATA);
-  print("\n");
-?>
-      </div>
-    </div>
+        <div id="main">
+  <?php
+    print($PAGE_HTDATA);
+    print("\n");
+  ?>
+        </div> <!-- end:#main -->
+      </div> <!-- end:#body -->
 
-    <div id="footer">
+      <div id="footer">
 
-    </div>
-
+      </div> <!-- end:footer -->
+    </div> <!-- end:container -->
   </body>
 </html>
