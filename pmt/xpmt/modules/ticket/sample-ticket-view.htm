@@ -1,0 +1,370 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta content="text/html; charset=UTF-8" http-equiv="Content-Type" />
+    <!--
+      A class name of "indexable" notes that this is
+      a searchable filed by the system search engine.
+    -->
+    <style type="text/css">
+
+      /*
+      .class {}
+      #id{}
+      #id .MainClass {}
+      */
+
+      /**[ Color Schema ]*********
+
+        Overview Shadow:  #BBBBFF
+        Button Shadow:    #8888FF
+        Section Shadows:  #
+        Links:            #003399
+
+      **************************/
+
+      /* Generic Settings */
+      body{
+        font-size: 13px;
+        color: #0;
+      }
+      body, th, tr {
+        font: normal 13px Verdana, Arial, 'Bitstream Vera Sans';
+      }
+      :link, :visited {
+        text-decoration: none;
+        color: #003399;
+        border-bottom: 1px dotted #CCCCCC;
+      }
+      /* Ticket settings */
+
+      .indexable {
+        font-family: Consolas, monospace;
+      }
+
+      #ticket-body.ticket
+      {
+        width: 58em;
+        max-width: 100%;
+        margin-left: auto;
+        margin-right: auto;
+      }
+      #overview {
+        background: #FFD;
+        border: 1px solid #DD9;
+        border-radius: .4em;
+        margin-top: 1em;
+        padding: .5em 1em;
+        position: relative;
+      }
+
+      .overview-box {
+        padding: .5em 1em;
+        margin: .3em auto;
+        border: 1px solid #E4E4E4;
+        border-radius: .5em;
+        /*box-shadow: .2em .3em 1.5em #EEE; */
+        box-shadow: .2em .3em 1.2em #BBBBFF;
+      }
+
+
+      #overview .status {
+        color: #996;
+        float: right;
+        font-size: 85%;
+        position: relative;
+        top: -.2em;
+      }
+      #overview .status p {
+        margin: .3em;
+      }
+
+      #overview > h2 {
+        color: #3D5FE7;
+        margin: .3em 0 .4em 0;
+      }
+      h2 { font-size: 16px; }
+      h2 {
+        display: block;
+        font-size: 1.5em;
+        -webkit-margin-before: 0.83em;
+        -webkit-margin-after: 0.83em;
+        -webkit-margin-start: 0px;
+        -webkit-margin-end: 0px;
+        font-weight: bold;
+        }
+
+        /* Ticket details table */
+        #overview table.details {
+          clear: both;
+          border-top: 1px solid #DD9;
+          border-collapse: collapse;
+          table-layout: fixed;
+          width: 100%;
+        }
+        #overview table.details tr {
+          border-bottom: 1px dotted #eed;
+        }
+        #overview table.details th {
+          color: #000000;
+          font-weight: normal;
+          text-align: left;
+          width: 20%;
+        }
+        #overview table.details td,
+        #overview table.details th {
+          font-size: 80%;
+          padding: .5em 1em;
+          vertical-align: top;
+        }
+        #overview table.details th.missing {
+          color: #d3d398;
+        }
+        /* --[ END: Table ]--- */
+
+        /* Description heading */
+        #overview .heading {
+          border-bottom: 1px solid #DD9;
+          color: #663;
+        }
+        #overview .heading2 {
+          color: #663;
+        }
+
+        #overview .oEdit {
+          float: right;
+          display: block;
+        }
+        #overview form input{
+          border: 2px solid #DDD;
+          border-radius: 1em;
+          cursor: pointer;
+          font-size: 80%;
+          margin: 0 0.1em 0.1em;
+          padding: 0 0.4em 0.1em;
+        }
+        input[type="button"]:hover,
+        input[type="submit"]:hover {
+          background: #F5F5F5;
+          color: #000000;
+          text-shadow: 0.1em 0.1em #FCFCFC;
+          box-shadow: 0.1em 0.1em  0.6em 0.1em #8888FF;
+        }
+    </style>
+
+    <style type="text/css">
+      /* Diary Entries */
+      /*
+        .class {}
+        #id{}
+        #id .MainClass {}
+      */
+      .dDUTDetails {
+        font-size: 85%;
+        float: right;
+      }
+      #dHistory {
+        /* background-color: #D4E6FB; */
+      }
+      #dHistory h3 {
+        border-bottom: 1px dotted #d7d7d7;
+        box-shadow: 0.2em 0.4em 0.7em 0.0em #afafd5;
+        color: #777777;
+        font-size: 100%;
+        font-weight: normal;
+        margin-bottom: 0.4em;
+        padding: 0 0.2em;
+      }
+      .comment {
+        margin-left: 1em;
+        margin-right: 1em;
+      }
+    </style>
+
+    <title>#101 [Ticket] - xenoPMT</title>
+    <!-- <title>#_pageNum_ [TBT] - PMT_TITLE</title> -->
+
+  </head>
+
+  <body>
+    <div id="ticket-body" class="ticket">
+
+
+      <div id="overview" class="overview-box">
+
+        <div class="status">
+          <p>Status: Open <!-- <xsl:value-of select="Status_Enum" /> --></p>
+          <p>Type: Defect       <!-- <xsl:value-of select="Ticket_Type" /> --></p>
+        </div> <!-- end:status -->
+
+        <h2 class="indexable">#101 <!-- <xsl:value-of select="Ticket_Id" /> --></h2>
+        <h3 class="heading2">
+          This is a sample subject line
+        </h3>
+        <table class="details">
+          <tr>
+            <th>Created:</th>     <td><a href="#">anonymous</a></td>  <!-- href="xpmt/lib/lookup?username=anonymous"  or "?userid=0" (id is static) -->
+            <th>Modified:</th>    <td>2012-09-14 22:35:07</td>
+          </tr>
+
+          <tr>  <th>Reported by:</th>     <td>&nbsp;</td>
+                <th>Owned by:</th>    <td>&nbsp;</td> </tr>
+
+          <tr>  <th>Priority:</th>     <td>&nbsp;</td>
+                <th>&nbsp;</th>    <td>&nbsp;</td> </tr>
+          <!-- PROJECT / PRODUCT -->
+          <tr>  <th>Project:</th>     <td>&nbsp;</td>
+                <th>Version:</th>    <td>&nbsp;</td> </tr>
+
+          <tr>  <th>Component:</th>     <td>&nbsp;</td>
+                <th>Component Version:</th>    <td>&nbsp;</td> </tr>
+
+          <tr>  <th>Milestone</th>     <td colspan="3">&nbsp;</td>
+          </tr>
+
+          <tr>  <th class="missing">CC:</th>     <td colspan="3">&nbsp;</td>
+          </tr>
+
+        </table> <!-- end:details table -->
+
+        <!-- Ticket Description Box -->
+        <div class="description">
+          <h3 class="heading">Description:</h3>
+          <div class="indexable">
+            <p>
+            This is a sample complaint for a ticket. <b>That is <i>HTML</i></b> ready.
+            </p>
+            <p>
+              And it has easy to read numbers: 0123456789!
+            </p>
+            <!-- <xsl:value-of select="Summary" /> -->
+          </div>
+
+        </div> <!-- end:complaint -->
+
+        <!-- Ticket Attachments -->
+        <div class="attachment">
+
+          <!-- Right align Overview Edit button to enable/disable editing of fields -->
+          <div class="oEdit" style="visibility: visible;">
+            <form method="post" action="#">
+              <div>
+                <input type="submit" value="+" title="Add File" />
+              </div>
+            </form>
+          </div> <!-- end:overviewEditer -->
+
+          <h3 class="heading"><a>Attachments:</a></h3>
+          <table border="0">
+            <!--<xsl:for-each select="ticket/attachment">-->
+            <tr>
+              <td>FileName.exe (0 kb)<!-- <xsl:value-of select="File_Name" /> (<xsl:value-of select="File_Size" />)--> </td>
+              <td>Short Description <!-- <xsl:value-of select="Description" />--> </td>
+            </tr>
+            <!--</xsl:for-each>-->
+          </table>
+        </div><!-- end:attachment -->
+
+        <!-- Right align Overview Edit button to enable/disable editing of fields -->
+        <div class="oEdit" style="visibility: visible;">
+          <form method="get" action="#">
+            <div>
+              <input type="hidden" name="editTicketDetails" value="1" />
+              <input type="submit" value="Edit" title="Edit ticket details" />
+            </div>
+          </form>
+        </div> <!-- end:overviewEditer -->
+
+      </div> <!-- end:ticket-content -->
+
+
+      <!-- ##[ Resolution ]############  -->
+
+      <div class="resolution">
+        <div id="resolution" class="collapsed" style="visibility: visible;"> <!-- autostart collapsed (set user options elsewhere) -->
+          <h3 class="foldable"><a>Resolution</a></h3>
+          <div class="comment searchable">
+            <p>
+              Resolution Resolution Resolution Resolution Resolution Resolution Resolution Resolution
+              Resolution Resolution Resolution Resolution Resolution Resolution Resolution Resolution
+            </p>
+          </div>
+        </div> <!-- end:newDiary entry -->
+      </div> <!-- end:newdiary section -->
+
+
+      <!-- ##[ New Diary ]############  -->
+
+      <div class="">
+        <!-- New Diary Entry Text Box -->
+        <div id="newdiary" class="collapsed"> <!-- autostart collapsed (set user options elsewhere) -->
+          <h3 class="foldable"><a>New Diary Entry</a></h3>
+          <form method="post" id="ticketForm">
+            <div>
+
+            </div>
+          </form>
+        </div> <!-- end:newDiary entry -->
+
+      </div> <!-- end:newdiary section -->
+
+      <!-- ##[ Diary Entry History ]############ -->
+      <!-- <div class="collapsed">-->
+      <div class="">
+        <h3 class="foldable"><a>Diary History</a></h3>
+
+        <div id="dHistory"> <!-- collapsible item-->
+          <!--  <xsl:for-each select="ticket/diary">
+                </xsl:for-each> -->
+          <div class="dUpdate" id="diary-ticketUpdateIdNum1">
+            <h3 class="dUTitle">
+              <span class="dDUTDetails">
+                <span>YYYY-MM-DD HH:MM:SS</span>
+                <span><b>Rating:</b> 5</span>
+                <span><b>Vote:</b> ↑ / ↓</span>
+              </span>
+              dType - <a>UserName</a>
+            </h3>
+            <!--<div>Reply buttons (right aligned)</div>-->
+            <div class="comment searchable">
+              body of the diary entry
+            </div>
+          </div>
+
+          <div class="dUpdate" id="diary-ticketUpdateIdNum2">
+            <h3 class="dUTitle">
+              <span class="dDUTDetails">
+                <span>YYYY-MM-DD HH:MM:SS</span>
+                <span><b>Rating:</b> 5</span>
+                <span><b>Vote:</b> ↑ / ↓</span>
+              </span>
+              dType - <a>UserName</a>
+            </h3>
+            <!--<div>Reply buttons (right aligned)</div>-->
+            <div class="comment searchable">
+              body of the diary entry
+            </div>
+          </div>
+
+          <div class="dUpdate" id="diary-ticketUpdateIdNum3">
+            <h3 class="dUTitle">
+              <span class="dDUTDetails">
+                <span>YYYY-MM-DD HH:MM:SS</span>
+                <span><b>Rating:</b> 5</span>
+                <span><b>Vote:</b> ↑ / ↓</span>
+              </span>
+              dType - <a>UserName</a>
+            </h3>
+            <!--<div>Reply buttons (right aligned)</div>-->
+            <div class="comment searchable">
+              body of the diary entry
+            </div>
+          </div>
+        </div> <!-- end:diaryhistory -->
+      </div> <!-- end:diary entries -->
+
+
+    </div> <!-- end:ticket -->
+
+  </body>
+</html>

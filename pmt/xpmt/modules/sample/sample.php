@@ -52,11 +52,11 @@ class sample implements iModule
     // Get the segments and the mode to be used
     $this->ParseData();
 
-    $this->_title = "Sample Module - [xenoPMT]";
-    $this->_toolbar = ""; //$this->GenerateToolbar();
-    $this->_minileft = "(test-left)";       // Usually used for breadcrumbs
+    $this->_title     = "Sample Module - [xenoPMT]";
+    $this->_toolbar   = ""; //$this->GenerateToolbar();
+    $this->_minileft  = $this->GenerateMiniLeft();   // Usually used for breadcrumbs or other
     $this->_miniright = $this->GenerateMiniRight();  // "&nbsp; (test-right)";
-    $this->_pagedata = $this->GeneratePage();
+    $this->_pagedata  = $this->GeneratePage();
   }
 
   public function Title() { return $this->_title; }             /* Title of the generated page */
@@ -119,6 +119,17 @@ class sample implements iModule
 
   }
 
+  private function GenerateMiniLeft()
+  {
+    $code = "<ul>".
+            "<li>".  $this->AddLink(self::MODULE, "Item1", "?cmd=action1") ."</li>".
+            "<li>".  $this->AddLink(self::MODULE, "Item2", "?cmd=action2") ."</li>".
+            "<li class='last'>".  $this->AddLink(self::MODULE, "Item3", "?cmd=action3") ."</li>".
+            "</ul>";
+
+    return $code;
+  }
+
   private function GenerateMiniRight()
   {
     $code = "<ul>".
@@ -136,7 +147,7 @@ class sample implements iModule
     //global $uri;
     $html = "";
 
-    if($user->online == false)
+    if($user->Online == false)
       $html = $this->Page_UserOffline();
     else
     {

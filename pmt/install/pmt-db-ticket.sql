@@ -4,11 +4,12 @@
  * Author:        Damian J. Suess
  * Document:      pmt-db-ticket.sql
  * Created Date:  2010-11-07
- * Version:       0.2.0
+ * Version:       0.2.1
  * Description:
  *   Project tables provides the basic layout of the database tables used by project files
  *
  * Change Log:
+ * 2012-0907  * Updated TBL_S_TBT_ENUM and definitions
  * 2012-0305  * Updated all IP Address columns from width 15 to 45 (IPv6)
  *            * Formatted column names to camel case, tables to caps
  * 2012-0304  * Included into PMT 0.2 (djs)
@@ -27,38 +28,34 @@
 /*
   Project Enumerations
   (Custom for each project)
-  Version 1.0
-  Last Update:  2010-11-12
+  Version 1.2
+  Last Update:  2012-0907
+  * 2012-0907 * Changed priority levels for status to separate departments
+              * Separated ticket and bug Enum_Type to be unique for modules
+              * Changed Enum_Type(16) and Enum_Name(24) to VARCHAR(32)
   * 2012-0306 - emum_isdefault int,-- 1/0 to mark what the default setting should be
   *           - unique( `Enum_Type`, `Enum_Name` )
+  * 2010-1112 * initial creation
 */
 CREATE TABLE IF NOT EXISTS `TBLPMT_S_TBT_ENUM`
 (
-  `Enum_Type` VARCHAR(16) COLLATE utf8_unicode_ci NOT NULL, -- List Item Type  (ticket_type, resolution, priority)
-  `Enum_Name` VARCHAR(24) COLLATE utf8_unicode_ci NOT NULL, -- List Item Description
+  `Enum_Type` VARCHAR(32) COLLATE utf8_unicode_ci NOT NULL, -- List Item Type  (ticket_type, resolution, priority)
+  `Enum_Name` VARCHAR(32) COLLATE utf8_unicode_ci NOT NULL, -- List Item Description
   `Enum_Priority` INTEGER NOT NULL,                         -- List Item Priority Level
   unique( `Enum_Type`, `Enum_Name` )
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 
 -- Type of ticket being created
-INSERT INTO TBLPMT_S_TBT_ENUM VALUES ('ticket_type',    'Defect',               1);
-INSERT INTO TBLPMT_S_TBT_ENUM VALUES ('ticket_type',    'Enhancement',          2);
-INSERT INTO TBLPMT_S_TBT_ENUM VALUES ('ticket_type',    'Task',                 3); /* tech request */
--- Ticket Resolutions
-INSERT INTO TBLPMT_S_TBT_ENUM VALUES ('resolution',     'Fixed',                1);
-INSERT INTO TBLPMT_S_TBT_ENUM VALUES ('resolution',     'Completed',            2);
-INSERT INTO TBLPMT_S_TBT_ENUM VALUES ('resolution',     'Next-Release',         3);
-INSERT INTO TBLPMT_S_TBT_ENUM VALUES ('resolution',     'Duplicate',            4);
-INSERT INTO TBLPMT_S_TBT_ENUM VALUES ('resolution',     'Invalid',              5);
-INSERT INTO TBLPMT_S_TBT_ENUM VALUES ('resolution',     'Unable to Reproduce',  6);
--- Ticket and Bug Priority Levels
-INSERT INTO TBLPMT_S_TBT_ENUM VALUES ('priority',       'Trivial',              1);
-INSERT INTO TBLPMT_S_TBT_ENUM VALUES ('priority',       'Minor',                2);
-INSERT INTO TBLPMT_S_TBT_ENUM VALUES ('priority',       'Major',                3);
-INSERT INTO TBLPMT_S_TBT_ENUM VALUES ('priority',       'Critical',             4);
-INSERT INTO TBLPMT_S_TBT_ENUM VALUES ('priority',       'Blocker',              5);
--- -----------------------------------------------------------------------------
+INSERT INTO TBLPMT_S_TBT_ENUM VALUES ('ticket_type',    'Defect',               1); /* issue with system */
+INSERT INTO TBLPMT_S_TBT_ENUM VALUES ('ticket_type',    'Enhancement',          2); /* product change request */
+INSERT INTO TBLPMT_S_TBT_ENUM VALUES ('ticket_type',    'Task',                 3); /* tech request (data maint) */
+-- Ticket Severity Levels
+INSERT INTO TBLPMT_S_TBT_ENUM VALUES ('ticket_severity', 'Trivial',             1);
+INSERT INTO TBLPMT_S_TBT_ENUM VALUES ('ticket_severity', 'Minor',               2);
+INSERT INTO TBLPMT_S_TBT_ENUM VALUES ('ticket_severity', 'Major',               3);
+INSERT INTO TBLPMT_S_TBT_ENUM VALUES ('ticket_severity', 'Critical',            4);
+INSERT INTO TBLPMT_S_TBT_ENUM VALUES ('ticket_severity', 'Blocker',             5);
 -- Ticket Status
 INSERT INTO TBLPMT_S_TBT_ENUM VALUES ('ticket_status',  'Open',                 10);  -- New/Unassigned  [1x]
 INSERT INTO TBLPMT_S_TBT_ENUM VALUES ('ticket_status',  'Reopened',             11);
@@ -70,17 +67,31 @@ INSERT INTO TBLPMT_S_TBT_ENUM VALUES ('ticket_status',  'Closed',               
 INSERT INTO TBLPMT_S_TBT_ENUM VALUES ('ticket_status',  'Closed-Duplicate',     52);
 INSERT INTO TBLPMT_S_TBT_ENUM VALUES ('ticket_status',  'Closed-Bug',           53);
 INSERT INTO TBLPMT_S_TBT_ENUM VALUES ('ticket_status',  'Closed-Canceled',      54);
+-- Ticket Resolutions
+INSERT INTO TBLPMT_S_TBT_ENUM VALUES ('ticket_resolution', 'Fixed',               1);
+INSERT INTO TBLPMT_S_TBT_ENUM VALUES ('ticket_resolution', 'Completed',           2);
+INSERT INTO TBLPMT_S_TBT_ENUM VALUES ('ticket_resolution', 'Next-Release',        3);
+INSERT INTO TBLPMT_S_TBT_ENUM VALUES ('ticket_resolution', 'Duplicate',           4);
+INSERT INTO TBLPMT_S_TBT_ENUM VALUES ('ticket_resolution', 'Invalid',             5);
+INSERT INTO TBLPMT_S_TBT_ENUM VALUES ('ticket_resolution', 'Unable to Reproduce', 6);
 -- -----------------------------------------------------------------------------
 -- Bug Status
-INSERT INTO TBLPMT_S_TBT_ENUM VALUES ('bug_status',     'Submitted',            1);
-INSERT INTO TBLPMT_S_TBT_ENUM VALUES ('bug_status',     'Accepted',             2);
-INSERT INTO TBLPMT_S_TBT_ENUM VALUES ('bug_status',     'Dev-Unverified',       3);
-INSERT INTO TBLPMT_S_TBT_ENUM VALUES ('bug_status',     'Dev-Investigation',    4);
-INSERT INTO TBLPMT_S_TBT_ENUM VALUES ('bug_status',     'Dev-In Progress',      5);
-INSERT INTO TBLPMT_S_TBT_ENUM VALUES ('bug_status',     'Dev-Restesting',       6);
-INSERT INTO TBLPMT_S_TBT_ENUM VALUES ('bug_status',     'Closed',               7);
-INSERT INTO TBLPMT_S_TBT_ENUM VALUES ('bug_status',     'Closed-Deferred',      8);
-INSERT INTO TBLPMT_S_TBT_ENUM VALUES ('bug_status',     'Closed-Rejected',      9);
+INSERT INTO TBLPMT_S_TBT_ENUM VALUES ('bug_status',     'Submitted',            10);
+INSERT INTO TBLPMT_S_TBT_ENUM VALUES ('bug_status',     'Accepted',             11);
+INSERT INTO TBLPMT_S_TBT_ENUM VALUES ('bug_status',     'Dev-Unverified',       20);
+INSERT INTO TBLPMT_S_TBT_ENUM VALUES ('bug_status',     'Dev-Investigation',    21);
+INSERT INTO TBLPMT_S_TBT_ENUM VALUES ('bug_status',     'Dev-In Progress',      22);
+INSERT INTO TBLPMT_S_TBT_ENUM VALUES ('bug_status',     'Dev-Restesting',       23);
+INSERT INTO TBLPMT_S_TBT_ENUM VALUES ('bug_status',     'Closed',               90);
+INSERT INTO TBLPMT_S_TBT_ENUM VALUES ('bug_status',     'Closed-Deferred',      91);
+INSERT INTO TBLPMT_S_TBT_ENUM VALUES ('bug_status',     'Closed-Rejected',      92);
+-- Bug Priority
+INSERT INTO TBLPMT_S_TBT_ENUM VALUES ('bug_severity',   'Trivial',              1);
+INSERT INTO TBLPMT_S_TBT_ENUM VALUES ('bug_severity',   'Minor',                2);
+INSERT INTO TBLPMT_S_TBT_ENUM VALUES ('bug_severity',   'Major',                3);
+INSERT INTO TBLPMT_S_TBT_ENUM VALUES ('bug_severity',   'Critical',             4);
+INSERT INTO TBLPMT_S_TBT_ENUM VALUES ('bug_severity',   'Blocker',              5);
+
 -- -----------------------------------------------------------------------------
 -- Task Type
 INSERT INTO TBLPMT_S_TBT_ENUM VALUES ('task_type',      'TechRequest',          1); -- Technical Request
@@ -100,8 +111,8 @@ INSERT INTO TBLPMT_S_TBT_ENUM VALUES ('task_status',    'Task-In Progress',     
 INSERT INTO TBLPMT_S_TBT_ENUM VALUES ('task_status',    'Completed',            40);  -- Task completed, waiting managment verfication
 INSERT INTO TBLPMT_S_TBT_ENUM VALUES ('task_status',    'Review-Pending',       41);  -- Task completed, waiting review verfication
 INSERT INTO TBLPMT_S_TBT_ENUM VALUES ('task_status',    'Review-Mgmt',          42);  -- Task completed, waiting review verfication
-INSERT INTO TBLPMT_S_TBT_ENUM VALUES ('task_status',    'Closed',               50);  -- Closed :: General
-INSERT INTO TBLPMT_S_TBT_ENUM VALUES ('task_status',    'Closed-Declined',      51);  -- Closed :: Never worked on
+INSERT INTO TBLPMT_S_TBT_ENUM VALUES ('task_status',    'Closed',               90);  -- Closed :: General
+INSERT INTO TBLPMT_S_TBT_ENUM VALUES ('task_status',    'Closed-Declined',      91);  -- Closed :: Never worked on
 -- "Tech Request"    :: [New] > [Assigned] > [In Progress] > [Completed] > (Review-Mgmt) > [Closed]
 -- "Purchase Orders" :: [New] > [Mgmt-Pending-Approv] > [PO-...] > [Closed]
 -- "Custom Report"   :: [New] > []
@@ -134,35 +145,39 @@ INSERT INTO `TBLPMT_S_REFERENCE_TYPE` (`Reference_Type`,`Description`) VALUES ('
   Ticket / TechRequest being issued
   TRs will be branched to its own table in the future
   Request "Ticket Type" on the PMT Ticket page, "Enhancement, Deficet, TechRequest, Bug Report, etc.)
-  Last Update: 2010-11-07
+  Created: 2010-11-07
+  Updates:
+    2012-0911 + Added customer viewable (bool)
 */
 CREATE TABLE IF NOT EXISTS `TBLPMT_TICKET`
 (
   `Ticket_Id`         INT UNSIGNED NOT NULL AUTO_INCREMENT,
   `Ticket_Type`       VARCHAR(15) COLLATE utf8_unicode_ci,  -- Ticket Type:  enhancement, deficet, inquiry, etc.  (Ask this on the Ticket Page)
-  `Created_Dttm`      DATETIME,               -- When was it created
-  `Updated_Dttm`      DATETIME,               -- Main Items last update
+  `Created_Dttm`      DATETIME,                             -- When was it created
+  `Updated_Dttm`      DATETIME,                             -- Main Items last update
   `Priority_Enum`     VARCHAR(15) COLLATE utf8_unicode_ci,  -- Priority Name:  major, minor, critical  [TBLPMT_S_TBT_ENUM.enum_name]
   `Status_Enum`       VARCHAR(24) COLLATE utf8_unicode_ci,  -- Ticket status (from ENUM table)
   `Priority_Score`    INT,                                  -- low-high (0-999) Used to rate within the Priority_Enum
 
+  `Customer_Viewable` BOOLEAN NOT NULL DEFAULT FALSE,       -- Can a customer see this ticket
   `Customer_Id`       VARCHAR(256) COLLATE utf8_unicode_ci, -- Customer Id Number (if specified)
-  `Reporter_Uid`      INT UNSIGNED,           -- UserID of who reported the issue (this can be handwritten if 'anon_user' is checked) <-- To allow Annon, set in ProjCONFIG.PHP
-  `Reporter_Ip`       INT UNSIGNED,           -- User's IP, used for anonymous submitions
-  `Owner_Gid`         INT UNSIGNED,           -- Not Needed :: Name of the general group assigned the Inquiry
-  `Owner_Uid`         INT UNSIGNED,           -- UserID of who it addressing the ticket request
+  `Reporter_Uid`      INT UNSIGNED,                         -- UserID of who reported the issue (this can be handwritten if 'anon_user' is checked) <-- To allow Annon, set in ProjCONFIG.PHP
+  `Reporter_Ip`       INT UNSIGNED,                         -- User's IP, used for anonymous submitions
+  `Owner_Gid`         INT UNSIGNED,                         -- Not Needed :: Name of the general group assigned the Inquiry
+  `Owner_Uid`         INT UNSIGNED,                         -- UserID of who it addressing the ticket request
   `Cc_Addr`           VARCHAR(255) COLLATE utf8_unicode_ci, -- UserID or series of email addresses
 
-  `Reference_Type_Id` INT NOT NULL,           -- Product or Project (pmt_s_ptype)
-  `Pro_Id`            INT UNSIGNED NOT NULL,  -- Reference (Project/Product) Id  (xi_product.product_name)
-  `Pro_Version_Id`    INT UNSIGNED,           -- Name of the Project Version (xi_product_version.version)
-  `Component_Id`      INT UNSIGNED,           -- Name of the Project Component (xi_project_component.component_id)
+  `Reference_Type_Id` INT NOT NULL,                         -- Product or Project (pmt_s_ptype)
+  `Pro_Id`            INT UNSIGNED NOT NULL,                -- Reference (Project/Product) Id  (xi_product.product_name)
+  `Pro_Version_Id`    INT UNSIGNED,                         -- Name of the Project Version (xi_product_version.version)
+  `Component_Id`      INT UNSIGNED,                         -- Name of the Project Component (xi_project_component.component_id)
   `Component_Version` VARCHAR(24) COLLATE utf8_unicode_ci,  -- Component Revision
   `Milestone_Id`      VARCHAR(64) COLLATE utf8_unicode_ci,  -- Attatch to Milestone (Dev only, can be null)
 
   `Resolution_Enum`   VARCHAR(20) COLLATE utf8_unicode_ci,  -- Resolution description (from ENUM table TBLPMT_S_TBT_ENUM.enum_name = 'resolution')
   `Subject`           VARCHAR(64) COLLATE utf8_unicode_ci,  -- Short Description
   `Summary`           MEDIUMBLOB,                           -- Description of the ticket
+  `Resolution`        MEDIUMBLOB,                           -- Resolution (if used)
   PRIMARY KEY (`Ticket_Id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 

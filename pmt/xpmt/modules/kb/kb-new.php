@@ -57,6 +57,7 @@ namespace xenoPMT\Module\KB
 
     /// Article is valid and was saved (true). If so, Do NOT display preview & show "Article Submitted" message
     private $_flagSaved = false;
+    private $_flagError = false; // there was an error
 
 
     function __construct()
@@ -174,10 +175,16 @@ namespace xenoPMT\Module\KB
        */
 
       // Create vars to use
-      $user_id      = $user->userInfo["User_Id"];       // 1
-      $user_handle  = $user->userInfo["User_Name"];     // admin
-      $user_Name    = $user->userInfo["Display_Name"];  // xenoPMT Administrator
+      $user_id      = $user->UserInfo["User_Id"];       // 1
+      $user_handle  = $user->UserInfo["User_Name"];     // admin
+      $user_Name    = $user->UserInfo["Display_Name"];  // xenoPMT Administrator
       // debug("id: '" . $user_id . "'  hanle: '" . $user_handle . "' nme: '" . $user_Name . "'");
+
+      // Date stamps
+      // Get Default Timezone from user profile
+      //  date_default_timezone_set('UTC');
+      $dttm_create = date( "Y-m-d H:i:s" );
+      $dttm_mod = date( "Y-m-d H:i:s" );
 
       // $url = str_replace("%3A", ":", $url);
       $dbPrefix = $pmtConf["db"]["prefix"];
@@ -217,7 +224,7 @@ namespace xenoPMT\Module\KB
       $q = <<<SQL
 INSERT INTO {$dbPrefix}KB_ARTICLE
 (`Article_Type`, `Title`, `Subject`, `Article_Data`, `Created_Uid`, `Created_Dttm`, `Modified_Dttm`) VALUES
-('General', '{$title}', '{$subject}', '{$data}', {$user_id}, null, null);
+('General', '{$title}', '{$subject}', '{$data}', {$user_id}, '{$dttm_create}', '{$dttm_mod}');
 
 SQL;
 
@@ -225,13 +232,15 @@ SQL;
       try
       {
         $pmtDB->Query($q);
+        return "0";
       }
       catch (Exception $e)
       {
         pmtDebug ("Error inserting KB article. Exception: $e");
+        return "1";
       }
 
-      return "0";
+
     }
 
 
@@ -243,7 +252,9 @@ SQL;
      */
     private function ArticleSaved()
     {
+      $link = "";
       $htdata = <<<EOT
+        <!-- <META HTTP-EQUIV="refresh" CONTENT="5;URL={$link}"> -->
         <center><h1>Your article has been saved!</h1>
         <div>
           <header id="header">
@@ -309,7 +320,7 @@ EOT;
     {
 
       $link = "kb?cmd=new";
-      
+
       // Display test button if in debug mode
       if (defined("DebugMode") && DebugMode == true)
         $testBtn = "<input id=\"btnTest\" name=\"btnTest\" tabindex=\"20\" type=\"submit\" class=\"btTxt submit\" value=\"Test\" />";
@@ -317,7 +328,39 @@ EOT;
         $testBtn = "";
 
       return <<<"EOT"
+        <script type="text/javascript">
+        <!--
+        $(document).ready(function()	{
+          // Add markItUp! to your textarea in one line
+          // $('textarea').markItUp( { Settings }, { OptionalExtraSettings } );
+          $('#markItUp').markItUp(mySettings);
 
+          // You can add content from anywhere in your page
+          // $.markItUp( { Settings } );
+          $('.add').click(function() {
+            $.markItUp( { 	openWith:'<opening tag>',
+                    closeWith:'<\/closing tag>',
+                    placeHolder:"New content"
+                  }
+                );
+            return false;
+          });
+
+          // And you can add/remove markItUp! whenever you want
+          // $(textarea).markItUpRemove();
+          $('.toggle').click(function() {
+            if ($("#markItUp.markItUpEditor").length === 1) {
+              $("#markItUp").markItUpRemove();
+              $("span", this).text("Show Toolbar");
+            } else {
+              $('#markItUp').markItUp(mySettings);
+              $("span", this).text("Hide Toolbar");
+            }
+            return false;
+          });
+        });
+        -->
+        </script>
         <div>
           <fieldset>
             <legend>Create KB Article</legend>
@@ -383,9 +426,9 @@ EOT;
 
                 <!-- HTData -->
                 <li>
-                  <label class="desc" id="title4" for="Field4">Article Data:</label>
+                  <label class="desc" id="title4" for="Field4">Article Data:  <a href="#" class="toggle"> (<span>Hide Toolbar</span>)</a></label>
                   <div>
-                    <textarea id="Field4" name="Field4" class="field textarea medium"
+                    <textarea id="markItUp" name="Field4" class="field textarea medium"
                               spellcheck="true" rows="20"
                               cols="70" tabindex="4"
                               required="">{$this->_kbData}</textarea>
@@ -433,11 +476,11 @@ EOT;
       $this->_kbData      = "<p>This is a test article</p><p>And some <b>sample data</b>.</p>";
 
       $this->_kbData = <<<SAMPLE
-When you visit a Web site or run an application that loads XHTML documents by using Microsoft 
-XML Core Services (MSXML), MSXML will send requests to the World Wide Web Consortium (W3C) to fetch 
-well-known Document Type Definition (DTD) files every time. This behavior may bring lots of traffic 
-to the W3C server. Sometimes, you may find the XHTML files are not loaded successfully because the 
-DTD requests are blocked by the W3C server. <br><br>For example, you have a JavaScript file (.js) 
+When you visit a Web site or run an application that loads XHTML documents by using Microsoft
+XML Core Services (MSXML), MSXML will send requests to the World Wide Web Consortium (W3C) to fetch
+well-known Document Type Definition (DTD) files every time. This behavior may bring lots of traffic
+to the W3C server. Sometimes, you may find the XHTML files are not loaded successfully because the
+DTD requests are blocked by the W3C server. <br><br>For example, you have a JavaScript file (.js)
 that contains the following code:
 <div class="kb_codebody"><div class="kb_codecontent">
 <code>
@@ -464,11 +507,11 @@ pullXHtml();
 
 </pre></code>
 </div></div>
-When you run the JavaScript file, the file loads an XHTML document by using MSXML. If you do not have 
-this update installed, you may receive the following error message when you run the JavaScript file 
+When you run the JavaScript file, the file loads an XHTML document by using MSXML. If you do not have
+this update installed, you may receive the following error message when you run the JavaScript file
 if the DTD requests are blocked by the W3C server:
 SAMPLE;
-      
+
       $_POST["Field1"] = $this->_kbTitle;
       $_POST["Field2"] = $this->_kbSubject;
       $_POST["Field3"] = $this->_kbProducts;
