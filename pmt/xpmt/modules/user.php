@@ -79,7 +79,7 @@ class user implements iModule
     else  $proj_url = self::MODULE;
 
 
-    if ($user->online)
+    if ($user->Online)
     {
       $mode = "";
       switch (count($uri->seg))

@@ -1,0 +1,82 @@
+<style type="text/css">
+  #headerDivImg {
+      background-color: #0037DB;
+      color: #9EB6FF;
+  }
+#headerDivImg, #contentDivImg, #contentDivImg_ {
+    float: left;
+    width: 510px;
+}
+
+#titleTextImg {
+    float: left;
+    font-size: 1.2em;
+    font-weight: bold;
+    margin: 5px;
+}
+
+p {
+    margin-bottom: 1.625em;
+}
+
+#headerDivImg img {
+    float: right;
+    margin: 10px 10px 5px 5px;
+}
+
+
+  #headerDiv, #contentDiv {
+  float: left;
+  width: 510px;
+  }
+  #titleText {
+  float: left;
+  font-size: 1.1em;
+  font-weight: bold;
+  margin: 5px;
+  }
+  #myHeader {
+  font-size: 1.1em;
+  font-weight: bold;
+  margin: 5px;
+  }
+  #headerDiv {
+  background-color: #0037DB;
+  color: #9EB6FF;
+  }
+  #contentDiv {
+  background-color: #FFE694;
+  }
+  #myContent {
+  margin: 5px 10px;
+  }
+  #headerDiv a {
+  float: right;
+  margin: 10px 10px 5px 5px;
+  }
+  #headerDiv a:hover {
+  color: #FFFFFF;
+  }
+</style>
+
+<script language="javascript"> 
+function toggle5(showHideDiv, switchImgTag) {
+  var ele = document.getElementById(showHideDiv);
+  var imageEle = document.getElementById(switchImgTag);
+  if(ele.style.display == "block") {
+    ele.style.display = "none";
+    imageEle.innerHTML = '<img src="plus.png">';
+  }
+  else {
+    ele.style.display = "block";
+    imageEle.innerHTML = '<img src="minus.png">';
+  }
+}
+</script>
+<div id="headerDivImg">
+    <div id="titleTextImg">Let's use images!</div>
+    <a id="imageDivLink" href="javascript:toggle5('contentDivImg', 'imageDivLink');"><img src="minus.png"></a>
+</div>
+<div id="contentDivImg" style="display: block;">
+  This demo uses plus and minus images for hiding and showing your div dynamically via JavaScript.
+</div>

@@ -1,7 +1,6 @@
 <!--
   Copyright 2012 Xeno Innovations, Inc.
-  This is a sample of the main dashboard "default" template
-  currently based upon Trac13 for its clean looks
+
 -->
 <!DOCTYPE html
     PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
@@ -9,28 +8,59 @@
 
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
-    test header
+    <meta content="text/html;charset=utf-8" http-equiv="content-type" />
+    <title>Page Title</title>
+    <link type="text/css" href="skin.css" rel="stylesheet" />
+    <link type="text/css" href="proj.css" rel="stylesheet" />
   </head>
   <body>
 
-    <div id="header">
-      <div id="logo">
-        <!-- logo -->
+    <div id="container">
+
+      #container
+
+
+      <div id="header">
+        <div id="logo">
+          <!-- logo -->
+          <a id="logoimg" href="/">
+            <img height="61" width="214" alt="xenoPMT Dashboard"
+                src="gfx/logo.png" />
+          </a>
+        </div>
+        <div id="metabar" class="metanav">
+          #metabar (.metanav)
+        </div>
       </div>
-      <div id="headertbar">
-        <!-- (Login / View Profile), Account Settings, Logout -->
+      <div id="mainbar" class="tbar">
+        #mainbar (.tbar)
+      </div>
+
+
+      <div id="pagebody">
+
+        #pagebody
+
+        <div class="message error">
+        .message_error
+        </div>
+
+        <div id="minibar_left" class="nav_left">
+          #minibar_left (.nav_left)
+
+        </div>
+        <div id="minibar_right" class="nav_right">
+          #minibar_right (.nav_right)
+        </div>
+
+        <div id="main">
+          #main
+        </div>
+      </div>
+
+      <div id="footer">
+        #footer
       </div>
     </div>
-    <div id="maintbar">
-      <!-- toolbar -->
-    </div>
-    <div id="main">
-      Main body
-    </div>
-
-    <div id="footer">
-
-    </div>
-
   </body>
 </html>

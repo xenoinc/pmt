@@ -20,20 +20,20 @@ namespace xenoPMT\Module\KB
 {
   class Main
   {
-    
+
     /**
      * KB Article HTML data
      * @var string HTML Data
      */
     private $_htData = "";
-    
+
     private $_layout = 1;       // Layout to display (see enum below)
-    
+
     // *********************
     // Makeshift Enum for Layout type
     const Layout_Main = 1;      // Display layout: search, top article
     const Layout_List = 2;      // Display a list of articles (1-50, 51-100, etc)
-    
+
     // *********************
     // List Layout Parameters
     private $_listStart = 1;        // Start at KB-Id #
@@ -42,12 +42,12 @@ namespace xenoPMT\Module\KB
     // *********************
     // Main Layout Parameters
     private $_searchText = "";      // Text to search for
-    
-    
-    
+
+
+
     /* -------------------------------------------------- */
-    
-    
+
+
     public function __construct($layout = 1)
     {
       $this->_layout = $layout;
@@ -61,11 +61,11 @@ namespace xenoPMT\Module\KB
       }
       else
         $this->_htData = $this->Generate_DefaultMain();
-        
-      
+
+
     }
-    
-    
+
+
     /**
      * Return page data
      */
@@ -73,10 +73,10 @@ namespace xenoPMT\Module\KB
     {
       return $this->_htData;
     }
-    
-    
+
+
     /* ################################################## */
-    
+
     private function Generate_DefaultMain()
     {
       $html = <<<"EOT"
@@ -87,13 +87,21 @@ namespace xenoPMT\Module\KB
           get to see what the future holds.  As the project develops the
           user and engineering documentation will mature along with it.</p>
         <p>Sit tight and enjoy the ride!</p>
+        <h2>Test Items</h2>
+        <ul>
+          <li><a href="http://pmt/kb/1">kb:1</a></li>
+          <li><a href="http://pmt/kb/2">kb:2</a></li>
+          <li><a href="http://pmt/kb/3">kb:3</a></li>
+          <li><a href="http://pmt/kb/4">kb:4</a></li>
+          <li><a href="http://pmt/kb/5">kb:5</a></li>
+        </ul>
         <p>&nbsp;</p>
         <p>- Xeno Innovations, Inc. -</p>
         <p></p>
 EOT;
       return $html;
     }
-    
+
     private function Generate_List()
     {
       $html = <<<"EOT"
@@ -106,7 +114,6 @@ EOT;
 EOT;
       return $html;
     }
-  
   }
 }
 ?>

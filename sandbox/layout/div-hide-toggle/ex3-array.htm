@@ -1,0 +1,84 @@
+<style type="text/css">
+#headerDiv, #contentDiv {
+float: left;
+width: 510px;
+}
+#titleText {
+float: left;
+font-size: 1.1em;
+font-weight: bold;
+margin: 5px;
+}
+#myHeader {
+font-size: 1.1em;
+font-weight: bold;
+margin: 5px;
+}
+#headerDiv {
+background-color: #0037DB;
+color: #9EB6FF;
+}
+#contentDiv {
+background-color: #FFE694;
+}
+#myContent {
+margin: 5px 10px;
+}
+#headerDiv a {
+float: right;
+margin: 10px 10px 5px 5px;
+}
+#headerDiv a:hover {
+color: #FFFFFF;
+}
+</style>
+
+<script language="javascript"> 
+function toggle2(showHideDiv, switchTextDiv) {
+	var ele = document.getElementById(showHideDiv);
+	var text = document.getElementById(switchTextDiv);
+	if(ele.style.display == "block") {
+    		ele.style.display = "none";
+		text.innerHTML = "restore";
+  	}
+	else {
+		ele.style.display = "block";
+		text.innerHTML = "collapse";
+	}
+}
+
+function toggle3(contentDiv, controlDiv) {
+        if (contentDiv.constructor == Array) {
+                for(i=0; i < contentDiv.length; i++) {
+                     toggle2(contentDiv[i], controlDiv[i]);
+                }
+        }
+        else {
+               toggle2(contentDiv, controlDiv);
+        }
+}
+</script>
+
+<table>
+   <tr>
+      <td>
+         <div style="border: 1px solid blue; background-color: #99CCFF; padding: 5px; width: 150px;">
+            <a id="myHeader1" href="javascript:toggle2('myContent1','myHeader1');" >collapse</a>
+         </div>
+         <div id="myContent1" style="border: 1px solid black; background-color: #CCCCCC; display: block;padding: 5px; width: 150px;">Div #1</div>
+      </td>
+      <td>
+         <div style="border: 1px solid blue; background-color: #99CCFF; padding: 5px; width: 150px;">
+            <a id="myHeader2" href="javascript:toggle2('myContent2','myHeader2');" >collapse</a>
+         </div>
+         <div id="myContent2" style="border: 1px solid black; background-color: #CCCCCC; display: block;padding: 5px; width: 150px;">Div #2</div
+      </td>
+      <td>
+         <div style="border: 1px solid blue; background-color: #99CCFF; padding: 5px; width: 150px;">
+            <a id="myHeader3" href="javascript:toggle2('myContent3', 'myHeader3');" >collapse</a>
+         </div>
+         <div id="myContent3" style="border: 1px solid black; background-color: #CCCCCC; display: block;padding: 5px; width: 150px;">Div #3</div
+      </td>
+   </tr>
+</table>
+<input type="button" value="Press me to toggle all 3 DIVs" onClick="toggle3(['myContent1', 'myContent2', 'myContent3'], ['myHeader1', 'myHeader2', 'myHeader3']);">

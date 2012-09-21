@@ -170,6 +170,11 @@ elseif (isset($_GET["reset"]) && $_GET["reset"] == "db")
             "''" .                        // Session_Hash
             ");");
 
+    // Add TBL_USER_GROUP (User_Id, Group_Id) = (1, 1) = ("Admin", "ADMIN")
+    $pmtDB->Query(
+            "INSERT INTO ".$pmtConf["db"]["prefix"]."USER_GROUP ".
+            "(`User_Id`, `Group_Id`) VALUES (1, 1);");
+
     p("You may now <a href='../'>start over</a>");
 
   }

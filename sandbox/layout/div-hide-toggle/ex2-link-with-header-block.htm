@@ -1,0 +1,96 @@
+<style type="text/css">
+#headerDiv, #contentDiv {
+float: left;
+width: 510px;
+}
+#titleText {
+float: left;
+font-size: 1.1em;
+font-weight: bold;
+margin: 5px;
+}
+#myHeader {
+font-size: 1.1em;
+font-weight: bold;
+margin: 5px;
+}
+#headerDiv {
+background-color: #0037DB;
+color: #9EB6FF;
+}
+#contentDiv {
+background-color: #FFE694;
+}
+#myContent {
+margin: 5px 10px;
+}
+#headerDiv a {
+float: right;
+margin: 10px 10px 5px 5px;
+}
+#headerDiv a:hover {
+color: #FFFFFF;
+}
+</style>
+
+<script language="javascript"> 
+function toggle2(showHideDiv, switchTextDiv) {
+	var ele = document.getElementById(showHideDiv);
+	var text = document.getElementById(switchTextDiv);
+	if(ele.style.display == "block") {
+    		ele.style.display = "none";
+		text.innerHTML = "restore";
+  	}
+	else {
+		ele.style.display = "block";
+		text.innerHTML = "collapse";
+	}
+}
+</script>
+ 
+<div id="headerDiv">
+     <div id="titleText">Hide/Show Div Demo - Click here ==></div><a id="myHeader" href="javascript:toggle2('myContent','myHeader');" >collapse</a>
+</div>
+<div style="clear:both;"></div>
+<div id="contentDiv">
+    <div id="myContent" style="display: block;">
+      
+      <p>This example demonstrates how CSS styling can make this look like a window that you can <b>collapse</b> and <b>restore</b>.  How cool is that?!</p>
+      <p>Here is what the CSS styling looks like:</p>
+      <p><code><br>
+      #headerDiv, #contentDiv {<br>
+           float: left;<br>
+           width: 510px;<br>
+      }<br>
+      #titleText {<br>
+           float: left;<br>
+           font-size: 1.1em;<br>
+           font-weight: bold;<br>
+           margin: 5px;<br>
+      }<br>
+      #myHeader {<br>
+           font-size: 1.1em;<br>
+           font-weight: bold;<br>
+           margin: 5px;<br>
+      }<br>
+      #headerDiv {<br>
+           background-color: #0037DB;<br>
+           color: #9EB6FF;<br>
+      }<br>
+      #contentDiv {<br>
+           background-color: #FFE694;<br>
+      }<br>
+      #myContent {<br>
+           margin: 5px 10px;<br>
+      }<br>
+      #headerDiv a {<br>
+           float: right;<br>
+           margin: 10px 10px 5px 5px;<br>
+      }<br>
+      #headerDiv a:hover {<br>
+           color: #FFFFFF;<br>
+      }<br>
+      </code></p>
+      
+    </div>
+</div>

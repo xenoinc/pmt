@@ -255,7 +255,7 @@ class project implements pmtModule
      */
     global $user;
 
-    if($user->online == false)
+    if($user->Online == false)
     {
       $html = $this->Page_UserOffline();
     }else{

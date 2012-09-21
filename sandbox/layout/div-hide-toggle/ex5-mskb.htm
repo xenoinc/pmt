@@ -1,0 +1,842 @@
+
+
+<div id="mainRow">
+  <div class="primaryTable">
+    <table cellpadding="0" cellspacing="0" class="primaryTable">
+      <tr>
+        <td class="primaryMainColumn">
+          <div id="mainColumn">
+            <div id="kb" class="kb">
+              <div id="kb_default" class="kb_default ltr">
+                <!-- - -KB 3 start- - -->
+                <a id="top">
+                </a>
+                <h1 class="title" id="mt_title">How to sort a ListView control by a column in Visual C#</h1>
+                <div class="articleProperty" id="mt_article_properties" translate="false">
+                  Article ID: 319401 -
+                  <a href="#appliesto" onclick="return ScrollToSection('.articleProperties');">View products that this article applies to.</a>
+                </div>
+                <script type="text/javascript">if (!loadTOCNode) {var loadTOCNode = function(){}}</script>
+                <div class="notice">This article was previously published under Q319401</div>
+                <div id="kb_section" class="section">
+                  <div id="kb_expandcollapseall" class="expandcollapseall" translate="false">
+                    <a
+                      href="javascript:void(0);" class="expandalltext"
+                      id="expandAll">Expand all</a> |
+                    <a href="javascript:void(0);" class="collapsealltext" id="collapseAll">Collapse all</a>
+                    <script type="text/javascript">
+                      if (kb_page_object)
+                      {
+                        kb_page_object.kb_imageExpandHoverText = 'Click to expand this image';
+                      }
+                    </script>
+                  </div>
+                  <h2 class="subTitle tocTitle" id="tocHeadRef" translate="false">
+                    <span>
+                      <a href="javascript:void(0);" id="mt_toc_title">On This Page</a>
+                    </span>
+                  </h2>
+                  <div class="sbody" id="tocDiv">
+                  </div>
+                  <script type="text/javascript">
+
+                    var sectionFilter = "type != 'notice' && type != 'securedata' && type != 'querywords'";
+                    var tocArrow = "/library/images/support/kbgraphics/public/en-us/downarrow.gif";
+                    var depthLimit = 10;
+                    var depth3Limit = 10;
+                    var depth4Limit = 5;
+                    var depth5Limit = 3;
+                    var tocEntryMinimum = 1;
+                  </script>
+                  <noscript>
+                  <style>.tocTitle, #tocDiv{display: none;}</style>
+                  </noscript>
+                  <h2 class="subTitle" id="tocHeadRef" translate="false">
+                    <span>
+                      <a href="javascript:void(0);">SUMMARY</a>
+                    </span>
+                  </h2>
+                  <script type="text/javascript">
+                    loadTOCNode(1, 'summary');
+                  </script>
+                  <div class="sbody" id="mt">
+                    This step-by-step article describes how to sort a <b>ListView</b> control by a column in your Visual C# application.
+                    <br>
+                    <br>
+                    When you are working with the <b>ListView</b> control, you may want to sort its contents based on a specific column. An example of this kind of functionality occurs in a Windows Explorer program when you view the contents of a folder on your hard disk. In Details view, Windows Explorer displays information about the files in that folder. For example, you see the file name, the file size, the file type, and the date that the file was modified. When you click one of the column headers, the list is sorted in ascending order based on that column. When you click the same column header again, the column is sorted in descending order.
+                    <br>
+                    <br>
+
+                    The example in this article defines a class that inherits from the <b>IComparer</b> interface. Additionally, this example uses the <b>Compare</b> method of the <b>CaseInsenstiveComparer</b> class to perform the actual comparison of the items. Note that this method of comparison is not case sensitive ("Apple" is considered to be the same as "apple"). Also, note that all of the columns in this example are sorted in a "text" manner. If you want to sort in a different manner (such as numerically), you can replace the following line of code with whichever approach to sorting that you want to use:
+                    <div class="kb_codebody">
+                      <div class="kb_codecontent">
+                        <code>
+                          <pre class="code">
+ObjectCompare.Compare(listviewX.SubItems[ColumnToSort].Text,listviewY.SubItems[ColumnToSort].Text);
+                          </pre>
+                        </code>
+                      </div>
+                    </div>
+                    <h3 id="tocHeadRef">
+                      <span id="mt">
+                        <a id="2">
+                        </a>
+                      </span>How to Build the Sample Project</h3>
+                    <script type="text/javascript">
+                      loadTOCNode(2, 'summary');
+                    </script>
+                    <ol>
+                      <li>Create a new Visual C#  Windows application project. Form1 is created by default.</li>
+                      <li>Add a <b>ListView</b> control to Form1. Size the form to be several inches wide by several inches tall.</li>
+                      <li>Paste the following code into the class for the form:<div class="kb_codebody">
+                          <div class="kb_codecontent">
+                            <code>
+                              <pre class="code">
+private ListViewColumnSorter lvwColumnSorter;
+                              </pre>
+                            </code>
+                          </div>
+                        </div>
+                      </li>
+                      <li>
+                        Paste the following code into the constructor for the form, after the call to the <b>InitializeComponent</b> method:<div class="kb_codebody">
+                          <div class="kb_codecontent">
+                            <code>
+                              <pre class="code">
+// Create an instance of a ListView column sorter and assign it
+// to the ListView control.
+lvwColumnSorter = new ListViewColumnSorter();
+this.listView1.ListViewItemSorter = lvwColumnSorter;
+                              </pre>
+                            </code>
+                          </div>
+                        </div>
+                      </li>
+                      <li>Paste the following code into the <b>Load</b> event for the form:<div class="kb_codebody">
+                          <div class="kb_codecontent">
+                            <code>
+                              <pre class="code">
+ColumnHeader columnheader;		// Used for creating column headers.
+ListViewItem listviewitem;		// Used for creating listview items.
+
+// Ensure that the view is set to show details.
+listView1.View = View.Details;
+
+// Create some listview items consisting of first and last names.
+listviewitem = new ListViewItem("John");
+listviewitem.SubItems.Add("Smith");
+this.listView1.Items.Add(listviewitem);
+
+listviewitem = new ListViewItem("Bob");
+listviewitem.SubItems.Add("Taylor");
+this.listView1.Items.Add(listviewitem);
+
+listviewitem = new ListViewItem("Kim");
+listviewitem.SubItems.Add("Zimmerman");
+this.listView1.Items.Add(listviewitem);
+
+listviewitem = new ListViewItem("Olivia");
+listviewitem.SubItems.Add("Johnson");
+this.listView1.Items.Add(listviewitem);
+
+// Create some column headers for the data.
+columnheader = new ColumnHeader();
+columnheader.Text = "First Name";
+this.listView1.Columns.Add(columnheader);
+
+columnheader = new ColumnHeader();
+columnheader.Text = "Last Name";
+this.listView1.Columns.Add(columnheader);
+
+// Loop through and size each column header to fit the column header text.
+foreach (ColumnHeader ch in this.listView1.Columns)
+{
+	ch.Width = -2;
+}
+                              </pre>
+                            </code>
+                          </div>
+                        </div>
+                        <b>Note</b> The code should be changed in Visual Studio 2005. When you create a Windows Forms project, Visual C# adds one form to the project by default. This form is named Form1. The two files that represent the form are named Form1.cs and Form1.designer.cs. You write your code in Form1.cs. The Designer.cs file is where the Windows Forms Designer writes the code that implements all the actions that you performed by adding controls.
+
+                        For more information about the Windows Forms Designer in Visual C# 2005, visit the following Microsoft Web site:<div class="indent">
+                          <a href="http://msdn2.microsoft.com/en-us/library/ms173077.aspx">http://msdn2.microsoft.com/en-us/library/ms173077.aspx</a>
+                          <div class="pLink">
+                            (http://msdn2.microsoft.com/en-us/library/ms173077.aspx)
+                          </div>
+                        </div>
+                      </li>
+                      <li>Paste the following code into the <b>ColumnClick</b> event for the <b>ListView</b> control:<div class="kb_codebody">
+                          <div class="kb_codecontent">
+                            <code>
+                              <pre class="code">
+// Determine if clicked column is already the column that is being sorted.
+if ( e.Column == lvwColumnSorter.SortColumn )
+{
+	// Reverse the current sort direction for this column.
+	if (lvwColumnSorter.Order == SortOrder.Ascending)
+	{
+		lvwColumnSorter.Order = SortOrder.Descending;
+	}
+	else
+	{
+		lvwColumnSorter.Order = SortOrder.Ascending;
+	}
+}
+else
+{
+	// Set the column number that is to be sorted; default to ascending.
+	lvwColumnSorter.SortColumn = e.Column;
+	lvwColumnSorter.Order = SortOrder.Ascending;
+}
+
+// Perform the sort with these new sort options.
+this.listView1.Sort();
+                              </pre>
+                            </code>
+                          </div>
+                        </div>
+                      </li>
+                      <li>On the <b>Project</b> menu, click <b>Add Class</b> to add a new class to the project.</li>
+                      <li>Replace all of the default code in the new class with the following code:<div class="kb_codebody">
+                          <div class="kb_codecontent">
+                            <code>
+                              <pre class="code">
+using System.Collections;
+using System.Windows.Forms;
+
+/// &lt;summary&gt;
+/// This class is an implementation of the 'IComparer' interface.
+/// &lt;/summary&gt;
+public class ListViewColumnSorter : IComparer
+{
+	/// &lt;summary&gt;
+	/// Specifies the column to be sorted
+	/// &lt;/summary&gt;
+	private int ColumnToSort;
+	/// &lt;summary&gt;
+	/// Specifies the order in which to sort (i.e. 'Ascending').
+	/// &lt;/summary&gt;
+	private SortOrder OrderOfSort;
+	/// &lt;summary&gt;
+	/// Case insensitive comparer object
+	/// &lt;/summary&gt;
+	private CaseInsensitiveComparer ObjectCompare;
+
+	/// &lt;summary&gt;
+	/// Class constructor.  Initializes various elements
+	/// &lt;/summary&gt;
+	public ListViewColumnSorter()
+	{
+		// Initialize the column to '0'
+		ColumnToSort = 0;
+
+		// Initialize the sort order to 'none'
+		OrderOfSort = SortOrder.None;
+
+		// Initialize the CaseInsensitiveComparer object
+		ObjectCompare = new CaseInsensitiveComparer();
+	}
+
+	/// &lt;summary&gt;
+	/// This method is inherited from the IComparer interface.  It compares the two objects passed using a case insensitive comparison.
+	/// &lt;/summary&gt;
+	/// &lt;param name="x"&gt;First object to be compared&lt;/param&gt;
+	/// &lt;param name="y"&gt;Second object to be compared&lt;/param&gt;
+	/// &lt;returns&gt;The result of the comparison. "0" if equal, negative if 'x' is less than 'y' and positive if 'x' is greater than 'y'&lt;/returns&gt;
+	public int Compare(object x, object y)
+	{
+		int compareResult;
+		ListViewItem listviewX, listviewY;
+
+		// Cast the objects to be compared to ListViewItem objects
+		listviewX = (ListViewItem)x;
+		listviewY = (ListViewItem)y;
+
+		// Compare the two items
+		compareResult = ObjectCompare.Compare(listviewX.SubItems[ColumnToSort].Text,listviewY.SubItems[ColumnToSort].Text);
+
+		// Calculate correct return value based on object comparison
+		if (OrderOfSort == SortOrder.Ascending)
+		{
+			// Ascending sort is selected, return normal result of compare operation
+			return compareResult;
+		}
+		else if (OrderOfSort == SortOrder.Descending)
+		{
+			// Descending sort is selected, return negative result of compare operation
+			return (-compareResult);
+		}
+		else
+		{
+			// Return '0' to indicate they are equal
+			return 0;
+		}
+	}
+
+	/// &lt;summary&gt;
+	/// Gets or sets the number of the column to which to apply the sorting operation (Defaults to '0').
+	/// &lt;/summary&gt;
+	public int SortColumn
+	{
+		set
+		{
+			ColumnToSort = value;
+		}
+		get
+		{
+			return ColumnToSort;
+		}
+	}
+
+	/// &lt;summary&gt;
+	/// Gets or sets the order of sorting to apply (for example, 'Ascending' or 'Descending').
+	/// &lt;/summary&gt;
+	public SortOrder Order
+	{
+		set
+		{
+			OrderOfSort = value;
+		}
+		get
+		{
+			return OrderOfSort;
+		}
+	}
+
+}
+
+                              </pre>
+                            </code>
+                          </div>
+                        </div>
+                      </li>
+                      <li>Save, build, and then run the sample project.</li>
+                      <li>Click the various column headers in the <b>ListView</b> control. When you click the header, the contents of the <b>ListView</b> control are sorted in ascending order based on the column that you click. When you click the same column header again, that column is sorted in descending order.</li>
+                    </ol>
+                    <div class="topOfPage" translate="false">
+                      <a href="#top">
+                        <img src="/library/images/support/en-us/uparrow.gif" alt="">
+                        <span>Back to the top</span>
+                      </a>
+                      <font class="noShow"> | </font>
+                      <a href="#survey" class="noShow" onclick="return ScrollToSection('.kbfeedback');">Give Feedback</a>
+                    </div>
+                  </div>
+                  <h2 class="subTitle articleProperties" id="tocHeadRef" translate="false">
+                    <span>
+                      <a href="javascript:void(0);" id="mt_propertyHead">Properties</a>
+                    </span>
+                  </h2>
+                  <script type="text/javascript">
+                    loadTOCNode(1, 'Properties');
+                  </script>
+                  <div class="sbody" translate="false">
+                    <div class="articlePropertyBottom">Article ID: 319401 - Last Review: March 13, 2008 - Revision: 3.1</div>
+                    <div class="appliesTo">
+                      <a id="appliesto">
+                      </a>
+                      <h5>APPLIES TO</h5>
+                      <ul>
+                        <li>Microsoft Visual C# .NET 2002 Standard Edition</li>
+                        <li>Microsoft Visual C# 2005 Express Edition</li>
+                        <li>Microsoft Visual C# 2008 Express Edition</li>
+                      </ul>
+                    </div>
+                    <div class="keywords">
+                      <table>
+                        <tr>
+                          <td class="header">
+                            <h5>Keywords:
+                            </h5>
+                          </td>
+                          <td class="text">kbctrl kbhowtomaster kblistview KB319401</td>
+                        </tr>
+                      </table>
+                    </div>
+                    <div class="topOfPage" translate="false">
+                      <a href="#top">
+                        <img src="/library/images/support/en-us/uparrow.gif" alt="">
+                        <span>Back to the top</span>
+                      </a>
+                      <font class="noShow"> | </font>
+                      <a href="#survey" class="noShow" onclick="return ScrollToSection('.kbfeedback');">Give Feedback</a>
+                    </div>
+                  </div>
+                </div>
+                <script type="text/javascript">addMtSpan();</script>
+                <!-- - -KB 3 end- - -->
+              </div>
+            </div>
+            <div class="kbSurvey noShow">
+              <h2 class="subTitle kbfeedback" id="tocHeadRef">
+                <span>
+                  <a href="javascript:void(0);">Give Feedback</a>
+                </span>
+              </h2>
+              <script type="text/javascript">
+                loadTOCNode(1, 'Give Feedback');
+              </script>
+              <div class="sbody">
+                <span class="bookmark">
+                  <a id="survey" name="survey">&nbsp;</a>
+                </span>
+                <div class="wp" id="fmsSurvey" style="display:none;">
+                  <div class="fms">
+                    <noscript>
+                    <div class="SURVEYNOSCRIPT">
+                    </div>
+                    </noscript>
+                    <input type="hidden" id="surveyname" name="surveyname" value="">
+                    <input type="hidden" id="showpage" name="showpage" value="1">
+                    <div id="SURVEYSECTIONCONTAINER">
+                      <div id="SURVEYSECTION_132" class="SURVEYSECTION" style="display:none;" xmlns:sw="urn:schemas-microsoft-com/PSS/PSS_Survey01">
+                        <input type="hidden" name="id" value="132">
+                        <div name="CompoundingBranchRules" style="display:none;">
+                        </div>
+                        <input type="hidden" name="NextSectionByTopicRef" value="0">
+                        <div id="SURVEYQUESTION_12616" class="QUESTIONCONTAINER">
+                          <input type="hidden" name="id" value="12616">
+                          <input type="hidden" name="type" value="CHOICE">
+                          <input type="hidden" name="required" value="0">
+                          <div class="QUESTIONTEXT">Was this information helpful?</div>
+                          <div class="QUESTIONINSTRUCTION">
+                          </div>
+                          <div class="QUESTIONREQUIRED">
+                          </div>
+                          <input type="hidden" name="randomization" value="">
+                          <table cellspacing="0" cellpadding="0" border="0">
+                            <tr>
+                              <td valign="top">
+                                <table cellspacing="0" cellpadding="0" border="0">
+                                  <tr>
+                                    <td valign="top" class="CHOICEROW">
+                                      <input type="radio" name="QUESTION_132_1261612616" id="125" value="0">
+                                    </td>
+                                    <td class="ANSWERTEXT">Yes</td>
+                                  </tr>
+                                </table>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td valign="top">
+                                <table cellspacing="0" cellpadding="0" border="0">
+                                  <tr>
+                                    <td valign="top" class="CHOICEROW">
+                                      <input type="radio" name="QUESTION_132_1261612616" id="126" value="1">
+                                    </td>
+                                    <td class="ANSWERTEXT">No</td>
+                                  </tr>
+                                </table>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td valign="top">
+                                <table cellspacing="0" cellpadding="0" border="0">
+                                  <tr>
+                                    <td valign="top" class="CHOICEROW">
+                                      <input type="radio" name="QUESTION_132_1261612616" id="18874" value="2">
+                                    </td>
+                                    <td class="ANSWERTEXT">Somewhat</td>
+                                  </tr>
+                                </table>
+                              </td>
+                            </tr>
+                          </table>
+                        </div>
+                        <div id="SURVEYQUESTION_10576" class="QUESTIONCONTAINER">
+                          <input type="hidden" name="id" value="10576">
+                          <input type="hidden" name="type" value="CHOICE">
+                          <input type="hidden" name="required" value="0">
+                          <div class="QUESTIONTEXT">How much effort did you personally put forth to use this article?</div>
+                          <div class="QUESTIONINSTRUCTION">
+                          </div>
+                          <div class="QUESTIONREQUIRED">
+                          </div>
+                          <input type="hidden" name="randomization" value="">
+                          <table cellspacing="0" cellpadding="0" border="0">
+                            <tr>
+                              <td valign="top">
+                                <table cellspacing="0" cellpadding="0" border="0">
+                                  <tr>
+                                    <td valign="top" class="CHOICEROW">
+                                      <input type="radio" name="QUESTION_132_1057610576" id="16305" value="1">
+                                    </td>
+                                    <td class="ANSWERTEXT">Very low</td>
+                                  </tr>
+                                </table>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td valign="top">
+                                <table cellspacing="0" cellpadding="0" border="0">
+                                  <tr>
+                                    <td valign="top" class="CHOICEROW">
+                                      <input type="radio" name="QUESTION_132_1057610576" id="16306" value="2">
+                                    </td>
+                                    <td class="ANSWERTEXT">Low</td>
+                                  </tr>
+                                </table>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td valign="top">
+                                <table cellspacing="0" cellpadding="0" border="0">
+                                  <tr>
+                                    <td valign="top" class="CHOICEROW">
+                                      <input type="radio" name="QUESTION_132_1057610576" id="16307" value="3">
+                                    </td>
+                                    <td class="ANSWERTEXT">Moderate</td>
+                                  </tr>
+                                </table>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td valign="top">
+                                <table cellspacing="0" cellpadding="0" border="0">
+                                  <tr>
+                                    <td valign="top" class="CHOICEROW">
+                                      <input type="radio" name="QUESTION_132_1057610576" id="16308" value="4">
+                                    </td>
+                                    <td class="ANSWERTEXT">High</td>
+                                  </tr>
+                                </table>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td valign="top">
+                                <table cellspacing="0" cellpadding="0" border="0">
+                                  <tr>
+                                    <td valign="top" class="CHOICEROW">
+                                      <input type="radio" name="QUESTION_132_1057610576" id="16309" value="5">
+                                    </td>
+                                    <td class="ANSWERTEXT">Very high</td>
+                                  </tr>
+                                </table>
+                              </td>
+                            </tr>
+                          </table>
+                        </div>
+                        <div id="SURVEYQUESTION_12617" class="QUESTIONCONTAINER">
+                          <input type="hidden" name="id" value="12617">
+                          <input type="hidden" name="type" value="TEXT-BLOCK">
+                          <input type="hidden" name="required" value="0">
+                          <div class="QUESTIONTEXT">Tell us why and what can we do to improve this information</div>
+                          <div class="QUESTIONINSTRUCTION">
+                          </div>
+                          <div class="QUESTIONREQUIRED">
+                          </div>
+                          <textarea class="ANSWERBOX" name="TEXTBLOCK_12617" rows="12" cols="80" onpaste="enforceMaxLength(this,1024,event)" onkeyup="enforceMaxLength(this,1024,event)">
+                          </textarea>
+                        </div>
+                        <div class="NAVIGATION">
+                          <table class="NAVBUTTONCONTAINER">
+                            <tr>
+                              <td class="PADDINGCELL">
+                              </td>
+                              <td class="NAVBUTTONCELL" id="PreviousButton">
+                              </td>
+                              <td class="NAVBUTTONCELL">
+                                <input class="NAVBUTTON" type="button" name="next" data-nav="true" data-name="btnNext" value="Submit" id="&#xA;                      SURVEYSECTION_132_next&#xA;                    " onclick="kbSurvey.next();this.blur();">
+                              </td>
+                              <td class="ENDPADDINGCELL">
+                              </td>
+                            </tr>
+                          </table>
+                        </div>
+                      </div>
+                      <div ID="DIV_CLOSE" style="display:none" xmlns:sw="urn:schemas-microsoft-com/PSS/PSS_Survey01">
+                        <div class="SURVEYTHANKYOUCONTAINER">
+                          <div class="SURVEYINTROTEXT">Thank you! Your feedback is used to help us improve our support content. For more assistance options, please visit the <a href="http://support.microsoft.com">Help and Support Home Page</a>.</div>
+                        </div>
+                        <div class="NAVIGATION">
+                          <table class="NAVBUTTONCONTAINER" nowrap="yes">
+                            <tr>
+                              <td class="PADDINGCELL">
+                              </td>
+                              <td class="NAVBUTTONCELL">
+                              </td>
+                              <td class="ENDPADDINGCELL">
+                              </td>
+                            </tr>
+                          </table>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <script type="text/javascript">
+                  var kbSurvey = new MS.Support.Fms.Survey("fmsSurvey");
+                  kbSurvey.isKBEmbedded = true;
+                  kbSurvey.addSubmitField('REGIONID', 'en-us');
+                  kbSurvey.addSubmitField('SITE', 'gn');
+                  kbSurvey.addSubmitField('SURVEYSCID', 'sw;en;1809');
+                  kbSurvey.addSubmitField('SURVEYID', '1809');
+                  kbSurvey.addSubmitField('SURVEYNAME', '');
+                  kbSurvey.addSubmitField('BROWSERLANGCODE', 'en-us,en\x3bq\x3d0.5');
+                  kbSurvey.addSubmitField('SURVEYLANGCODE', 'en');
+                  kbSurvey.addSubmitField('FMSURL', '%252fdefault.aspx%252fkb%252f319401');
+                  kbSurvey.parameters = ['kb','en-us','319401','','','','','','',''];
+                  kbSurvey.maxKBsInCookie = '10';
+                  kbSurvey.kbvisited = '';
+                </script>
+                <div class="topOfPage">
+                  <a href="#top">
+                    <img src="/library/images/support/en-us/upArrow.gif" alt="Back to the top">
+                    </img>Back to the top
+                  </a>
+                </div>
+              </div>
+            </div>
+          </div>
+        </td>
+        <td class="primaryThinColumn">
+          <div id="thinColumn" style="float: none;">
+            <div class="SocialMedia">
+              <a class="ShareButton" href="#">Share</a>
+              <div class="MediaContent">
+                <ul class="MediaLinks">
+                  <li>
+                    <a title="Share on Twitter" rel="nofollow" href="Javascript:AddtoSocialMedia('Twitter','smcsocialbookmark','http://twitter.com/share/?url=','&text=');">
+                      <img src="/library/images/support/en-AU/twitter_16.png" alt="Share on Twitter"/>Twitter</a>
+                  </li>
+                  <li>
+                    <a title="Share on Facebook" rel="nofollow" href="Javascript:AddtoSocialMedia('Facebook','smcsocialbookmark','http://www.facebook.com/share.php?u=','');">
+                      <img src="/library/images/support/en-AU/facebook_16.png" alt="Share on Facebook"/>Facebook</a>
+                  </li>
+                  <li>
+                    <a title="Share with Messenger" rel="nofollow" href="Javascript:AddtoSocialMedia('Live','smcsocialbookmark','http://profile.live.com/badge/?url=','&title=');">
+                      <img src="/library/images/support/CN/SharingBadge16x16White.png" alt="Share with Messenger"/>Windows Live</a>
+                  </li>
+                  <li>
+                    <a title="Share on LinkedIn" rel="nofollow" href="Javascript:AddtoSocialMedia('linkedin','smcsocialbookmark','http://www.linkedin.com/shareArticle?url=','&title=');">
+                      <img src="/library/images/support/en-AU/linkedin_16.png" alt="Share on LinkedIn"/>LinkedIn</a>
+                  </li>
+                  <li>
+                    <a title="Share on Digg it" rel="nofollow" href="Javascript:AddtoSocialMedia('diggit','smcsocialbookmark','http://digg.com/submit?url=','&title=');">
+                      <img src="/library/images/support/en-AU/digg_alt_16.png" alt="Share on Digg it"/>Digg it</a>
+                  </li>
+                  <li>
+                    <a title="Share on Yahoo" rel="nofollow" href="Javascript:AddtoSocialMedia('Yahoo','smcsocialbookmark','http://bookmarks.yahoo.com/toolbar/savebm?u=','&t=');">
+                      <img src="/library/images/support/en-AU/yahoo_16.png" alt="Share on Yahoo"/>Yahoo</a>
+                  </li>
+                  <li>
+                    <a title="Share on Delicious" rel="nofollow" href="Javascript:AddtoSocialMedia('delicious','smcsocialbookmark','http://www.delicious.com/save?url=','&title=');">
+                      <img src="/library/images/support/en-AU/delicious_16.png" alt="Share on Delicious"/>Delicious</a>
+                  </li>
+                  <li>
+                    <a title="Share on StumbleUpon" rel="nofollow" href="Javascript:AddtoSocialMedia('StumbleUpon','smcsocialbookmark','http://www.stumbleupon.com/submit?url=','&title=');">
+                      <img src="/library/images/support/en-AU/stumbleupon_16.png" alt="Share on StumbleUpon"/>StumbleUpon</a>
+                  </li>
+                  <li>
+                    <a title="Share on Yammer" rel="nofollow" href="Javascript:AddtoSocialMedia('yammer','smcsocialbookmark','https://www.yammer.com/home/bookmarklet?v=1&u=','&t=');">
+                      <img src="/library/images/support/en-AU/yammer_16.png" alt="Share on Yammer"/>Yammer</a>
+                  </li>
+                  <li>
+                    <a title="Share on Reddit" rel="nofollow" href="Javascript:AddtoSocialMedia('Reddit','smcsocialbookmark','http://www.reddit.com/submit?url=','&title=');">
+                      <img src="/library/images/support/en-AU/reddit_16.png" alt="Share on Reddit"/>Reddit</a>
+                  </li>
+                  <li>
+                    <a title="Share on Technorati" rel="nofollow" href="Javascript:AddtoSocialMedia('technorati','smcsocialbookmark','http://technorati.com/faves?add=','');">
+                      <img src="/library/images/support/en-AU/technorati_16.png" alt="Share on Technorati"/>Technorati</a>
+                  </li>
+                  <li>
+                    <a title="Share on FriendFeed" rel="nofollow" href="Javascript:AddtoSocialMedia('FriendFeed','smcsocialbookmark','http://friendfeed.com/share?url=','');">
+                      <img src="/library/images/support/en-AU/friendfeed_16.png" alt="Share on FriendFeed"/>FriendFeed</a>
+                  </li>
+                  <li>
+                    <a title="Share on Email" rel="nofollow" href="Javascript:AddtoSocialMedia('Email','smcsocialbookmark','mailto:?subject=How%20to%20sort%20a%20ListView%20control%20by%20a%20column%20in%20Visual%20C%23&amp;body=','');">
+                      <img src="/library/images/support/CN/email_20x.png" alt="Share on Email"/>Email</a>
+                  </li>
+                </ul>
+              </div>
+            </div>
+            <div class="clearBoth">
+            </div>
+            <div class="wp" id="RelatedSupportCenters">
+              <table cellspacing="0" class="LCT" style="width:100%">
+                <tr>
+                  <td class="textColumn">
+                    <table cellSpacing="0">
+                      <tr>
+                        <td>
+                          <h3>
+                            <span class="linkCon">Related Support Centers</span>
+                            <span class="linkConTop">
+                            </span>
+                          </h3>
+                        </td>
+                      </tr>
+                    </table>
+                    <table cellSpacing="0">
+                      <tr>
+                        <td>
+                          <ul>
+                            <li id="_tr">
+                              <span>
+                                <a href="/ph/3041">Visual Studio 2005</a>
+                              </span>
+                            </li>
+                            <li id="_tr">
+                              <span>
+                                <a href="/ph/1117">Visual Studio</a>
+                              </span>
+                            </li>
+                            <li id="_tr">
+                              <span>
+                                <a href="/ph/12913">Visual Studio 2008</a>
+                              </span>
+                            </li>
+                          </ul>
+                        </td>
+                      </tr>
+                    </table>
+                  </td>
+                </tr>
+              </table>
+            </div>
+            <div id="MiniRouter">
+              <h3>
+                <span>Other Support Sites</span>
+              </h3>
+              <ul id="OSS_MR">
+                <li>
+                  <a href="/select/?target=hub" id="L_206797">Solution Centers</a>
+                </li>
+                <li>
+                  <a href="/fixit" id="L_206798">Microsoft Fix It Solutions</a>
+                </li>
+                <li>
+                  <a href="http://windows.microsoft.com/en-US/help" id="L_206799">Windows Help and How-to</a>
+                </li>
+                <li>
+                  <a href="http://office.microsoft.com" id="L_206800">Office Online</a>
+                </li>
+                <li>
+                  <a href="https://partner.microsoft.com/" id="L_206801">Microsoft Partner Network</a>
+                </li>
+              </ul>
+              <h3>
+                <span>Community</span>
+              </h3>
+              <ul id="Community_MR">
+                <li>
+                  <a href="http://answers.microsoft.com/" id="L_206802">Answers Forums</a>
+                </li>
+                <li>
+                  <a href="http://social.technet.microsoft.com/Forums" id="L_206803">Technet Forums</a>
+                </li>
+                <li>
+                  <a href="http://social.msdn.microsoft.com/Forums" id="L_206804">Microsoft Developer Network (MSDN)</a>
+                </li>
+              </ul>
+              <h3>
+                <span>Get Help Now</span>
+              </h3>
+              <div class="gethelp" id="GetHelp_MR">
+                <a href="/gethelp/default.aspx?content=kb;en-us;319401" id="L_206805" class="imglink">
+                  <img title="" alt="" class="gsfx_img_png" src="/library/images/support/CN/GetHelpNow.png" />
+                </a>
+                <a href="/gethelp/default.aspx?content=kb;en-us;319401" id="L_206805" class="txtlink">Contact a Support Professional by Email, Online, or Phone</a>
+                <div class='clearBoth'>
+                </div>
+              </div>
+              <div class="space">
+              </div>
+            </div>
+            <script type="text/javascript">GSS.Utility.DisplaySsbAd();</script>
+            <div id="divSsbAdContent">
+              <a href="http://smallbusiness.support.microsoft.com/en-us">
+                <center>
+                  <img src="/library/images/support/en-US/180x150-SMB-ENUS1-Alicia.jpg"/>
+                </center>
+              </a>
+            </div>
+            <div class="wp articleTrans">
+              <h3>
+                <span class="linkCon">Article Translations</span>
+                <span class="linkConTop">
+                </span>
+              </h3>
+            </div>
+            <div id="ArticleTranslations">
+              <div onclick="DisplayATList()" class="ATtext">
+                <span>
+                  <a href="/kb/319401/ar" onclick="ATClick('29803',this)" title="(????? ?????? (???????">(????? ?????? (???????</a>
+                </span>
+                <a style="background-image:url(/library/images/support/CN/kb_dropdown_icon.png);" href="javascript:void(0)">
+                </a>
+              </div>
+              <div id="ATList" name="scid">
+                <ul>
+                  <li>
+                    <a href="/kb/319401/pt-br" onclick="ATClick('29803',this)" title="Brasil (Português)">Brasil (Português)</a>
+                  </li>
+                  <li>
+                    <a href="/kb/319401/cs" onclick="ATClick('29803',this)" title="Ceská republika (Ceština)">Ceská republika (Ceština)</a>
+                  </li>
+                  <li>
+                    <a href="/kb/319401/de" onclick="ATClick('29803',this)" title="Deutschland (Deutsch)">Deutschland (Deutsch)</a>
+                  </li>
+                  <li>
+                    <a href="/kb/319401/es" onclick="ATClick('29803',this)" title="España, Latinoamérica (Español)">España, Latinoamérica (Español)</a>
+                  </li>
+                  <li>
+                    <a href="/kb/319401/fr" onclick="ATClick('29803',this)" title="France (Français)">France (Français)</a>
+                  </li>
+                  <li>
+                    <a href="/kb/319401/id-id" onclick="ATClick('29803',this)" title="Indonesia (Bahasa Indonesia)">Indonesia (Bahasa Indonesia)</a>
+                  </li>
+                  <li>
+                    <a href="/kb/319401/it" onclick="ATClick('29803',this)" title="Italia (Italiano)">Italia (Italiano)</a>
+                  </li>
+                  <li>
+                    <a href="/kb/319401/pt" onclick="ATClick('29803',this)" title="Portugal (Português)">Portugal (Português)</a>
+                  </li>
+                  <li>
+                    <a href="/kb/319401/tr" onclick="ATClick('29803',this)" title="Türkiye (Türkçe)">Türkiye (Türkçe)</a>
+                  </li>
+                  <li>
+                    <a href="/kb/319401/vi-vn" onclick="ATClick('29803',this)" title="Vi?t Nam (Ti?ng Vi?t)">Vi?t Nam (Ti?ng Vi?t)</a>
+                  </li>
+                  <li>
+                    <a href="/kb/319401/el" onclick="ATClick('29803',this)" title="????da (????????)">????da (????????)</a>
+                  </li>
+                  <li>
+                    <a href="/kb/319401/ru" onclick="ATClick('29803',this)" title="?????? (???????)">?????? (???????)</a>
+                  </li>
+                  <li>
+                    <a href="/kb/319401/uk-ua" onclick="ATClick('29803',this)" title="??????? (??????????)">??????? (??????????)</a>
+                  </li>
+                  <li>
+                    <a href="/kb/319401/hi" onclick="ATClick('29803',this)" title="???? (?????)">???? (?????)</a>
+                  </li>
+                  <li>
+                    <a href="/kb/319401/th" onclick="ATClick('29803',this)" title="??? (???)">??? (???)</a>
+                  </li>
+                  <li>
+                    <a href="/kb/319401/ko" onclick="ATClick('29803',this)" title="???? (???)">???? (???)</a>
+                  </li>
+                  <li>
+                    <a href="/kb/319401/zh-cn" onclick="ATClick('29803',this)" title="?? (????)">?? (????)</a>
+                  </li>
+                  <li>
+                    <a href="/kb/319401/zh-tw" onclick="ATClick('29803',this)" title="?? (????)">?? (????)</a>
+                  </li>
+                  <li>
+                    <a href="/kb/319401/ja" onclick="ATClick('29803',this)" title="?? (???)">?? (???)</a>
+                  </li>
+                </ul>
+              </div>
+            </div>
+            <div id="divRelContent" style="display:none">
+            </div>
+            <div id="divRelTags" style="display:none">
+            </div>
+          </div>
+        </td>
+      </tr>
+    </table>
+  </div>
+</div>
+

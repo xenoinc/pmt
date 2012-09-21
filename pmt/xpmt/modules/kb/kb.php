@@ -15,13 +15,15 @@
  *    http://pmt/kb/?cmd=new          - New
  *    http://pmt/kb/<id>?cmd=edit     - Edit
  *    http://pmt/kb/<id>?cmd=remove   - Remove
+ *    http://pmt/kb/<id>?cmd=list     - List Articles
+ *
+ *    http://support.microsoft.com/kb/319401
  *
  *    POST:
  *      Vote:#   - Rate article 0-5
  * ToDo:
  * [ ] GenerateMiniRight() - Get user permissions
  * [ ] Create GUI :: Create New Article
- * [ ] Create GUI :: View Article
  * [ ] Create GUI :: Edit Article
  * [ ] Create GUI :: Remove Article  (Show article title, OK & Cancel button)
  * [ ] Create GUI :: List all articles
@@ -67,7 +69,7 @@ class kb implements iModule
   // Internal module setup
   private $_MODE;         // ENUM_ProjMode from parser
   private $_PAGE;         // name of KB page to display/add/edit/remove
-  private $_SWITCH;       // Switch: new, edit, remove, <blank>
+  private $_SWITCH;       // Switch: new, edit, remove, list, search, <blank>
 
   /*   * *********************************************** */
 
@@ -132,13 +134,19 @@ class kb implements iModule
       /// Show KB Article welcome page ("/kb")
       /// or List range of pages using parameter passed in (ENUM_KBMode::KBList:)
       case 1:
-        if ($cmd == self::cNEW)         $mode = ENUM_KBMode::KBNew;     // Create New
-        else{                           $mode = ENUM_KBMode::KBMain;}   // Display main page
+        switch($cmd)
+        {
+          case self::cNEW:      $mode = ENUM_KBMode::KBNew;   break;  // Create New
+          case self::cLIST:     $mode = ENUM_KBMode::KBList;  break;  // List available pages
+          //case self::cSEARCH:     $mode = ENUM_KBMode::KBSearch;  break;  // Search articles
+          default:              $mode = ENUM_KBMode::KBMain;  break;  // Display main page
+        }
         break;
 
       /// Display KB page ("/kb/<kb-id>")
       case 2:
 
+        // Should perform (isNumeric)?
         $kbPage = $uri->seg[1];         // Get KB number to edit
         switch($cmd)
         {
@@ -147,8 +155,10 @@ class kb implements iModule
           case self::cREMOVE:   $mode = ENUM_KBMode::KBRemove;  break;    // Remove KB Article
           default:              $mode = ENUM_KBMode::KBView;    break;    // View page
         }
+        pmtDebug("0:". $uri->seg[0] . " 1: ". $uri->seg[1]);
+
         //pmtDebug("KB Page Id: " . $kbPage . PHP_EOL . "Mode: " . $mode);
-        
+
         break;
 
       default:
@@ -166,7 +176,19 @@ class kb implements iModule
    */
   private function GenerateMiniLeft()
   {
-    return "";
+    global $user;
+    if ($user->Online != false)
+    {
+      $code =   "<ul>";
+      $code .=  "<li>". $this->AddLink(self::MODULE, "Main", "?")  ."</li>";
+      $code .=  "<li class='last'>". $this->AddLink(self::MODULE, "List Articles", "?cmd=".self::cLIST)  ."</li>";
+      //$code .=  "<li class='last'>". $this->AddLink(self::MODULE, "KB Search", "?cmd=search")  ."</li>";
+      $code .=  "</ul>";
+
+      return $code;
+    }
+    else
+      return "";
   }
 
   /**
@@ -180,7 +202,7 @@ class kb implements iModule
      */
     global $user;
 
-    if ($user->online != false)
+    if ($user->Online != false)
     {
       $code = "<ul>";
       if ($this->_PAGE == "0")
@@ -191,9 +213,9 @@ class kb implements iModule
       else
       {
         $code .= "<li class='last'>Article:</li>";
-        $code .= "<li>" .             $this->AddLink(self::MODULE, "Create", "?cmd=new") . "</li>";
-        $code .= "<li>".              $this->AddLink(self::MODULE, "Edit", "?cmd=edit") . "</li>";
-        $code .= "<li class='last'>". $this->AddLink(self::MODULE, "Remove", "?cmd=remove") . "</li>";
+        $code .= "<li>" .             $this->AddLink(self::MODULE, "Create",  "?cmd=new") . "</li>";
+        $code .= "<li>".              $this->AddLink(self::MODULE, "Edit",    "?cmd=edit") . "</li>";
+        $code .= "<li class='last'>". $this->AddLink(self::MODULE, "Remove",  "?cmd=remove") . "</li>";
       }
       $code .= "</ul>";
     }
@@ -209,30 +231,30 @@ class kb implements iModule
      * ToDo:
      * [ ] + Check if login is required by the module [2012-07-16]
      *      For now, require it (by default)
-     * 
+     *
      */
-    
+
     global $user;
     //global $uri;
     $html = "";
 
-    
+
     // ToDo: Add logic to check if login is required
-    if ($user->online == false)
+    if ($user->Online == false)
     {
       $html = $this->Page_UserOffline();
       return $html;
     }
-    
+
     switch ($this->_MODE)
     {
       case ENUM_KBMode::KBMain:
         // pmtDebug("KB: Main");
-        
+
         require_once "kb-main.php";
         $k = new xenoPMT\Module\KB\Main;
         $html .= $k->PageLayout(1);
-        
+
         break;
 
 
@@ -270,18 +292,20 @@ class kb implements iModule
 
 
       case ENUM_KBMode::KBList:
-        pmtDebug("KB: List");
-        
-        require_once "kb-main.php";
-        $k = new xenoPMT\Module\KB\Main;
-        $html .= $k->PageLayout(2);
-        
+        //pmtDebug("KB: List");
+
+        require_once "kb-list.php";
+        $k = new xenoPMT\Module\KB\ListItems;
+        $k->DataHandler();
+        //$html .= $k->ListArticles();
+        $html .= $k->PageLayout();
+
         break;
 
-      
+
       // Show main page
       default:
-        
+
         pmtDebug("KB: Default");
         require_once "kb-main.php";
         $k = new xenoPMT\Module\KB\Main;
@@ -298,7 +322,7 @@ class kb implements iModule
   private function Page_UserOffline()
   {
     // To Do:
-    
+
     $html = <<<"EOT"
         <h1>Knowledge Base</h1>
         <p>
@@ -309,9 +333,9 @@ class kb implements iModule
 EOT;
     return $html;
   }
-  
 
-  
+
+
   /*   * *[ Assisting members ]******* */
 
   private function AddLink($module, $text, $extLink = "")
@@ -327,6 +351,12 @@ EOT;
    */
   private function GetCmd()
   {
+
+    /* To Do:
+     * [ ] + sub setting for "List" (startPos, maxResults)
+     * [ ] + sub setting for "Search" (search string, category).. though this can be apart of $_POST[]
+     */
+
     // self::cCMD = "cmd"
     if (isset($_GET[self::cCMD]) && $_GET[self::cCMD])
       return $_GET[self::cCMD];

@@ -200,21 +200,21 @@ function GenerateMetabar($module)
   //$user_online = true;
   //$user_name = "fuct";
 
-  //if ($user->userInfo["online"]  == true)
+  //if ($user->UserInfo["Online"]  == true)
 
 
   /* II) Generate page */
   $t = "        ";
   //$ret = $t . "<ul>" . PHP_EOL;
   $ret = $t . "<ul>" . PHP_EOL;
-  if ($user->online)
+  if ($user->Online)
   {
     $ret .= $t . "  ";
     // ONLINE
     // Login / Welcome, %USER%.   <-- Welcome screen take to user stats page
-    //$ret .= AddLI('Welcome, <a href="/user" alt="User\'s Dashboard">' .$user->userInfo["username"] . '</a>', "first");
-    $ret .= AddLI('Welcome, <a href="/user" alt="User\'s Dashboard">' .$user->userInfo["Display_Name"] . '</a>', "first");
-    // $ret .= AddLI('Welcome, <a href="/user" alt="User\'s Dashboard">' .$user->userInfo["User_Name"] . '</a>', "first");
+    //$ret .= AddLI('Welcome, <a href="/user" alt="User\'s Dashboard">' .$user->UserInfo["username"] . '</a>', "first");
+    $ret .= AddLI('Welcome, <a href="/user" alt="User\'s Dashboard">' .$user->UserInfo["Display_Name"] . '</a>', "first");
+    // $ret .= AddLI('Welcome, <a href="/user" alt="User\'s Dashboard">' .$user->UserInfo["User_Name"] . '</a>', "first");
     $ret .= AddLI("Preferences");         //
     $ret .= AddLI("About xenoPMT");       // "pmt/wiki/about"
     $ret .= AddLI(AddLink("user", "Logoff", "?cmd=logoff" ), "last");
