@@ -17,14 +17,21 @@
 class ENUM_TicketMode
 {
   const TMain = 0;    // Welcome page. Search box, Create New, My Queue, [Group/Customer Queue], [Filter Listing (proj, ver, severity, date, status)]
-  const TView = 10;
-  const TNew  = 11;
+  const TNew  = 10;
+  const TView = 11;
   const TEdit = 12;
 }
 
 class ticket implements iModule
 {
+  // Internal module commands
+  const MODULE  = "ticket";   // Module Name (Don't use this! pull from DB)
+  const cCMD    = "cmd";      // (new, edit, view)
+  const cNEW    = "new";      // new ticket
+  const cVIEW   = "view";     // view ticket
+  const cEDIT   = "edit";     // Edit ticket
 
+  // Module settings to pass back to xenoPMT core
   private $_title;
   private $_toolbar;
   private $_minileft;
@@ -37,15 +44,18 @@ class ticket implements iModule
 
   function __construct()
   {
+    global $uri;
+    //if (count($uri->seg) > 1)
+    //  $this->_
+
+    // Set default title because this will change after ParseData()
+    $this->_title = "Ticket Viewer - [xenoPMT]";
+
     $this->ParseData();
-
-    $this->_title = "";
-    $this->_toolbar = "";
-
+    $this->_toolbar = "";                           // We're not overriding the toolbar
     $this->_minileft = $this->GenerateMiniLeft();
     $this->_miniright = $this->GenerateMiniRight();
-    $this->_pagedata = "";
-
+    $this->_pagedata = $this->EventHandler();
   }
 
   public function Title() {         return $this->_title; }       /* Title of the generated page */
@@ -87,7 +97,8 @@ class ticket implements iModule
   {
     global $user;
     global $pmtConf;
-
+    global $message;
+    $message = "blah";
     /*
      * OFFLINE
      * Member Object (
@@ -121,10 +132,8 @@ class ticket implements iModule
 
     if ($user->UserInfo["User_Id"] < 0 || $user->UserInfo["Online"] == false)
     {
-
       $dbPrefix = $pmtConf["db"]["prefix"];
       $groupId = $user->UserInfo["Group_Id"];   // User Group Id
-
 
       // Look up the user group and see if it has access to perform
       // the requested action
@@ -141,8 +150,6 @@ QUERY;
     return $ret;
 
   }
-
-
 
   private function GenerateMiniLeft()
   {
@@ -178,6 +185,14 @@ QUERY;
     return "";
   }
 
+  /**
+   * Generate page data baised upon events & inputs from constructor
+   * and ParseData() method.
+   */
+  private function EventHandler()
+  {
+
+  }
 }
 
 ?>

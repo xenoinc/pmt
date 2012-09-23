@@ -28,6 +28,8 @@
   Created:  2010-11-07
   Note:  Accounts should not be active until they verify their Email address
   Changes:
+    2012-0923 - Removed commented out section for `Group_Id`.. Thid did break a lot of shit!
+                --`Group_Id` INT UNSIGNED NOT NULL DEFAULT '0', -- Deprecated, use table
     2012-0908 - Removed `Group_Id` - its been deprecated to TBL_USER_GROUP
                 ** THIS IS GOING TO BREAK A LOT OF SHIT!!
     2012-0603 * Changed `Session_Hash` from NOT NULL to NULL (stupid mistake)
@@ -40,7 +42,6 @@ CREATE TABLE IF NOT EXISTS `TBLPMT_USER`
   `User_Name`     VARCHAR(50) COLLATE utf8_unicode_ci NOT NULL,
   `Password`      VARCHAR(255) COLLATE utf8_unicode_ci NOT NULL,  -- encrypted user password
   `Email`         VARCHAR(255) COLLATE utf8_unicode_ci NOT NULL,
---`Group_Id`      INT UNSIGNED NOT NULL DEFAULT '0',              -- Deprecated, use table
   `Display_Name`  VARCHAR(255) COLLATE utf8_unicode_ci NOT NULL,  -- Name the world sees
   `Name_First`    VARCHAR(75) COLLATE utf8_unicode_ci NULL,   -- First Name
   `Name_Last`     VARCHAR(75) COLLATE utf8_unicode_ci NULL,   -- Last Name
@@ -141,6 +142,12 @@ INSERT INTO `TBLPMT_GROUP` (Group_Name, Description) VALUES ('CUSTOMERADMIN', 'C
 /*
   User Group Permissions
   List the different groups via "GROUP BY group_name"
+
+  2012-0923 :: v0.4 revamp notes
+  Used along side of XIPMT_S_MODULE_PRIV. Get definitions from there?
+  So this means XIPMT_S_GROUP_PERMISSIONS is to be replaced by S_Module_Priv
+
+
   Version 0.2.0
   Last Update:  2010-11-07
 */
@@ -215,6 +222,10 @@ INSERT INTO `TBLPMT_S_GROUP_PERMISSION` (Priv_Name, Description, Sort_Order) VAL
     ('REPO_CHANGESET_VIEW',     'User is able to view each revision desciption and compare source differences', 0)
 */
 
+
+/*
+  REMOVE THIS!!!  This should be inserted by the Modules during the installation process
+*/
 INSERT INTO `TBLPMT_S_GROUP_PERMISSION` VALUES ('ADMIN',                   'User will have access to all components', 0);
 INSERT INTO `TBLPMT_S_GROUP_PERMISSION` VALUES ('REPO_BROWSER_VIEW',       'User is able to view the project files',  '0');
 INSERT INTO `TBLPMT_S_GROUP_PERMISSION` VALUES ('REPO_CHANGESET_VIEW',     'User is able to view each revision desciption and compare source differences', 0);

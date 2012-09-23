@@ -27,6 +27,7 @@
  *      [ ] Remove usage of so many _POSTs and use ajax
  *
  * Change Log:
+ *  2012-0923 + Added default value for System Title
  *  2012-0603 * Updated XIPMT_USER table column `Name` to `Display_Name`
  *  2012-0424 * Repaired Reset links & prompt message
  *  2012-0403 * Fixed warning messages from _GET command. Added "isset(_GET[..])"
@@ -44,7 +45,7 @@ if (!defined("DebugMode"))
 }
 
 require_once "installer.php";
-require_once "../xpmt/common/pmt.db.php";
+require_once "../xpmt/core/pmt.db.php";
 
 if (DebugMode == true)
 {
@@ -409,7 +410,7 @@ switch ($step)
         <h3>xiPMT Settings</h3>
         <table class="inputForm">
           <tbody>
-            <tr><td class="label">xiPMT Title</td><td><input type="text" name="settings[title]" autocomplete="off" value="" /></td></tr>
+            <tr><td class="label">xiPMT Title</td><td><input type="text" name="settings[title]" autocomplete="off" value="xenoPMT" /></td></tr>
             <tr>
               <td class="label">Clean URI</td>
               <td>
@@ -574,18 +575,23 @@ switch ($step)
     // TODO: Add protection against SQL Injection Attacks (http://snippets.dzone.com/posts/show/1507)
     // TODO: Use the USER Class to perform user insert
     $q ="INSERT INTO ".$dbase["prefix"]."USER ".
-        "(User_Name, Password, Display_Name, Email, Group_Id, Active, Session_Hash) VALUES (" .
+        // "(User_Name, Password, Display_Name, Email, Group_Id, Active, Session_Hash) VALUES (" .
+        "(User_Name, Password, Display_Name, Email, Active, Session_Hash) VALUES (" .
         "'". $pmtDB->FixString($admin['username'])."', ". // User
         "'". sha1($admin['password'])       ."', ". // Password
         "'". $pmtDB->FixString($admin['username'])."', ". // Display name the world sees
         "'". $pmtDB->FixString($admin['email'])   ."', ". // Email
-        "1, " .                                     // Group_Id (ADMIN)
+        //"1, " .                                     // Group_Id (ADMIN)
         "true," .                                   // Active (YES)
         "'');";                                      // Session_Hash
 
     // print("<li><b>[query]</b> - ".$q."</li>\n");
     $pmtDB->Query($q);
 
+    // Add user to Group ADMIN
+    $q ="INSERT INTO ".$dbase["prefix"]."USER_GROUP (User_Id, Group_Id) VALUES (1,, 1);";
+    // print("<li><b>[query]</b> - ".$q."</li>\n");
+    $pmtDB->Query($q);
 
     print("<li><b>[PMT]</b> - Generating 'config.php'</li>\n");
     // Generate Config file

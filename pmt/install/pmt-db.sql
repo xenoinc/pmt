@@ -68,15 +68,26 @@ create table if not exists `TBLPMT_CONFIG_MODULE`
   `Value`   longtext collate utf8_unicode_ci not null,
   primary key (`Module_UUID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
 /*
+  During the install of Modules data is insert into this.
+  This is to used for User/Group permissions and is setup by the Administrators
+  Used with XIPMT_GROUP_PRIV and/or XIPMT_USER_MODULE_PRIV table (if one exists)
+
+  Created: 2012-0901
+  2012-0923 + Added missing columns and partial description
+            + Added to standard install
+*/
 CREATE TABLE IF NOT EXISTS `TBLPMT_S_MODULE_PRIV`
 (
-  `Module_UUID`   VARCHAR(36),
-  `Priv_Name`     VARCHAR(32),
-  `Priv_Name`     VARCHAR(32),
-);
+  `Module_UUID`       VARCHAR(36) NOT NULL,
+  `Priv_Name`         VARCHAR(32),
+  `Priv_Description`  VARCHAR(64),
+  `DataType`          VARCHAR(8),     -- 'string', 'integer'
+  `DefaultValue`      VARCHAR(64),    -- Default setting suggested to user
+  primary key (`Module_UUID`)
+)
 
-*/
 
 /*
   Module Uniform Resource Identifier - Give your module a home!
@@ -88,16 +99,17 @@ CREATE TABLE IF NOT EXISTS `TBLPMT_S_MODULE_PRIV`
   Note: DO NOT allow'/' in your name when identifying the URN (uniform resource identifier)
   Created: 2012-0619
   Updated:
+    2012-0923 - Removed Module_Name comment. This was breaking the installer
+              -- `Module_Name`  VARCHAR(64) collate utf8_unicode_ci not null -- folder install path ("/module/kb" or "kb")
     2012-0907 * Removed `Module_Name` and replaced it with `Module_UUID`
 */
-/*
+
 CREATE TABLE IF NOT EXISTS `TBLPMT_MODULE_URN`
 (
   `Module_UUID`   VARCHAR(36) NOT NULL,                             -- This is better than using Module_Id
   `Module_URN`    VARCHAR(16)                                       -- don't let people get crazy with lengths
-  -- `Module_Name`   VARCHAR(64) collate utf8_unicode_ci not null   -- folder install path ("/module/kb" or "kb")
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci
-*/
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
 
 /*
   * NOT IN USE *
