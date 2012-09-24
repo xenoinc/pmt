@@ -722,7 +722,7 @@ You are free to use this however you like.  I place this code into the public do
 ***/
 </pre>
 </div>
-<div title="Core2-Workflow" creator="d.suess" modifier="d.suess" created="201209012314" modified="201209012351" changecount="6">
+<div title="Core2-Workflow" creator="d.suess" modifier="d.suess" created="201209012314" modified="201209241852" changecount="10">
 <pre>Below describes the default core loading workflow.
 
 ! Core Workflow
@@ -744,7 +744,13 @@ You are free to use this however you like.  I place this code into the public do
 # Load module from URI request
 ## Prompt if module doesn't exist or enabled
 ## Prompt if user doesn't have access
-# Display HTML output for user</pre>
+# Display HTML output for user
+
+!Core Change Suggestions
+* 2012-0924
+**Should use something like, $PAGE[&quot;&quot;] and not $PAGE_XXX for the page context. this will manage only 1 global.
+*** $PAGE[&lt;definitions&gt;]
+*** path, title, header, tbar_meta, tbar_main, tbar_minileft, tbar_miniright, htdata, footer |</pre>
 </div>
 <div title="DefaultTiddlers" creator="d.suess" modifier="d.suess" created="201209012237" modified="201209020109" changecount="3">
 <pre>[[ToDoList]]
@@ -1568,8 +1574,7 @@ txtBackupFolder: bak
 txtUserName: d.suess</pre>
 </div>
 <div title="Ticket (mod)" creator="d.suess" modifier="d.suess" created="201209062239" modified="201209062258" changecount="2">
-<pre>
-! Design
+<pre>! Design
 Check out [[http://www.geekzone.co.nz/vs2008/6283]] for pointers to use Visual Studio as an XSLT debugger for the designs. Inputs XML and XSLT, Outputs display
 
 ! Test Code
@@ -1607,7 +1612,7 @@ foreach ($myArray as $row)
 &lt;/table&gt;
 }}}</pre>
 </div>
-<div title="ToDoList" creator="d.suess" modifier="d.suess" created="201209031640" modified="201209061742" changecount="11">
+<div title="ToDoList" creator="d.suess" modifier="d.suess" created="201209031640" modified="201209241851" changecount="15">
 <pre>!ASAP
 |!Module            |!Sub-Section  |!Description |h
 |[[KB (mod)]]       |Main   |List items |
@@ -1619,7 +1624,8 @@ foreach ($myArray as $row)
 
 !Later
 |!Module      |!Sub-Section  |!Description |h
-|Core         |       |[[xenoPMT Core - To Do List]]  |
+|Core         |       |[[xenoPMT Core - To Do List]] |
+|Core         |$page  | * Should use something like, $PAGE[&quot;&quot;] and not $PAGE_XXX for the page context. this will manage only 1 global. |
 |[[KB (mod)]] |View   |Add DIV to hide sections |
 |[[KB (mod)]] |Main   |Search |
 |[[KB (mod)]] |Main   |Show latest additions (top 10) |

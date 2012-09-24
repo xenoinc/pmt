@@ -589,7 +589,7 @@ switch ($step)
     $pmtDB->Query($q);
 
     // Add user to Group ADMIN
-    $q ="INSERT INTO ".$dbase["prefix"]."USER_GROUP (User_Id, Group_Id) VALUES (1,, 1);";
+    $q ="INSERT INTO ".$dbase["prefix"]."USER_GROUP (User_Id, Group_Id) VALUES (1,1);";
     // print("<li><b>[query]</b> - ".$q."</li>\n");
     $pmtDB->Query($q);
 

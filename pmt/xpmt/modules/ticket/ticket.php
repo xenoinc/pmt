@@ -44,12 +44,12 @@ class ticket implements iModule
 
   function __construct()
   {
-    global $uri;
+    global $uri, $pmtConf;
     //if (count($uri->seg) > 1)
     //  $this->_
 
     // Set default title because this will change after ParseData()
-    $this->_title = "Ticket Viewer - [xenoPMT]";
+    $this->_title = "Ticket Viewer" . " - " . $pmtConf["general"]["title"] ;//" - [xenoPMT]";
 
     $this->ParseData();
     $this->_toolbar = "";                           // We're not overriding the toolbar

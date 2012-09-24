@@ -86,7 +86,7 @@ CREATE TABLE IF NOT EXISTS `TBLPMT_S_MODULE_PRIV`
   `DataType`          VARCHAR(8),     -- 'string', 'integer'
   `DefaultValue`      VARCHAR(64),    -- Default setting suggested to user
   primary key (`Module_UUID`)
-)
+);
 
 
 /*

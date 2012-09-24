@@ -99,12 +99,30 @@ class Member
     if(!isset($_COOKIE["xenopmt_user"])) $_COOKIE["xenopmt_user"] = "";
     if(!isset($_COOKIE["xenopmt_hash"])) $_COOKIE["xenopmt_hash"] = "";
 
+
+    $t__tbl = PMT_TBL;
+    $t__usr = $pmtDB->FixString($_COOKIE['xenopmt_user']);
+    $t__pas = $pmtDB->FixString($_COOKIE['xenopmt_hash']);
+    $tmp = <<<QUERY
+  SELECT u.User_Id, u.User_Name, u.Display_Name, g.Group_Id
+  FROM {$t__tbl}USER u
+    JOIN {$t__tbl}USER_GROUP ug
+      ON u.User_Id = ug.User_Id
+    JOIN {$t__tbl}GROUP g
+      ON g.Group_Id = ug.Group_Id
+  WHERE
+    u.User_Name='{$t__usr}' and Session_Hash='{$t__pas}'
+  LIMIT 1;
+QUERY;
+
+    /*
     $tmp =
         "SELECT User_Id, User_Name, Display_Name, Group_Id FROM ".PMT_TBL."USER WHERE " .
         //"User_Name='" . $pmtDB->es($_COOKIE['xenopmt_user']) . "' AND " .
         //"Session_Hash='" . $pmtDB->es($_COOKIE['xenopmt_hash']) . "' LIMIT 1;";
         "User_Name='" . $pmtDB->FixString($_COOKIE['xenopmt_user']) . "' AND " .
         "Session_Hash='" . $pmtDB->FixString($_COOKIE['xenopmt_hash']) . "' LIMIT 1;";
+    */
     $q = $pmtDB->Query($tmp);
     if($pmtDB->NumRows($q))
     {

@@ -258,13 +258,17 @@ function MakeToolbar($module)
 {
   // pmtDebug("Module: " . $module);
   /* Steps:
-  * 1) [deprecated] Get user profile permissions to see what items we can draw on the screen.
+  * 1) Get user profile permissions to see what items we can draw on the screen.
   * 2) Generate toolbar
   */
 
   /* Step 1 - Get user permissions */
   // This should possibly be handled by the module itself considering
   // that the modules will be dynamic plug-ins in future versions.
+
+  // (currently not in use)
+
+  
 
   /* Step 2 - Generate Toolbar */
   // List of all the available modules

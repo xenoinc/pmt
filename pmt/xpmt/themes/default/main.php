@@ -33,6 +33,12 @@ global $PAGE_TOOLBAR;     // Main toolbar
 global $PAGE_MINILEFT;    // Mini toolbar (Left aligned)
 global $PAGE_MINIRIGHT;   // Mini toolbar (Right aligned)
 global $PAGE_HTDATA;      // Page content
+/*
+ * Should use something like, $PAGE[""]; for the page context. this will manage only 1 global.
+ * $PAGE[<definitions>]
+ * - path, title, header, tbar_meta, tbar_main, tbar_minileft, tbar_miniright, htdata, footer
+ *
+ */
 
 // require ("skin-fctn.php");
 ?>
@@ -111,8 +117,8 @@ global $PAGE_HTDATA;      // Page content
       </div> <!-- end:#body -->
 
       <div id="footer">
-
-      </div> <!-- end:footer -->
+        <img src="https://www.ohloh.net/p/pmt/widgets/project_thin_badge.gif" />
+    </div> <!-- end:footer -->
     </div> <!-- end:container -->
   </body>
 </html>
