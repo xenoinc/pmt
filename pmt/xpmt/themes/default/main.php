@@ -44,7 +44,6 @@ global $PAGE_HTDATA;      // Page content
 ?>
 <!--
   Copyright 2012 Xeno Innovations, Inc.
-
 -->
 <!DOCTYPE html
     PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
@@ -118,7 +117,7 @@ global $PAGE_HTDATA;      // Page content
 
       <div id="footer">
         <img src="https://www.ohloh.net/p/pmt/widgets/project_thin_badge.gif" />
-    </div> <!-- end:footer -->
-    </div> <!-- end:container -->
+      </div> <!-- end:#footer -->
+    </div> <!-- end:#container -->
   </body>
 </html>

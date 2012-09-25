@@ -16,9 +16,9 @@
 date_default_timezone_set('America/New_York');        // [DJS] Added to fix warning in PHP & PhpConsole
 
 // System admin bypass account (NOT IMPLIMENTED)
-$pmt_RootUserEnabled = true;
-$pmt_RootUserName    = "rootadmin";
-$pmt_RootUserPass    = "testing";
+$pmtRootUserEnabled = true;
+$pmtRootUserName    = "rootadmin";
+$pmtRootUserPass    = "testing";
 
 
 $pmtConf = array(
