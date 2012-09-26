@@ -129,7 +129,7 @@ class kb implements iModule
     $mode = ENUM_KBMode::KBMain;        // What is KB suppose to do
     $kbPage = 0;                        // Default no kb page (0)
 
-    switch (count($uri->seg))
+    switch (count($uri->Count))
     {
       /// Show KB Article welcome page ("/kb")
       /// or List range of pages using parameter passed in (ENUM_KBMode::KBList:)

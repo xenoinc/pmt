@@ -14,13 +14,8 @@
  *
  */
 
-class ENUM_TicketMode
-{
-  const TMain = 0;    // Welcome page. Search box, Create New, My Queue, [Group/Customer Queue], [Filter Listing (proj, ver, severity, date, status)]
-  const TNew  = 10;
-  const TView = 11;
-  const TEdit = 12;
-}
+// class definitions and enums used for ticketing system
+requre ("ext/ticket.extras.php");
 
 class ticket implements iModule
 {
@@ -30,6 +25,9 @@ class ticket implements iModule
   const cNEW    = "new";      // new ticket
   const cVIEW   = "view";     // view ticket
   const cEDIT   = "edit";     // Edit ticket
+
+  private $_userAccess = false; // Does user have access to view Module
+
 
   // Module settings to pass back to xenoPMT core
   private $_title;
@@ -48,8 +46,11 @@ class ticket implements iModule
     //if (count($uri->seg) > 1)
     //  $this->_
 
+    // Does user have access to view module
+    $this->_userAccess =   $this->UserAllowed();
+
     // Set default title because this will change after ParseData()
-    $this->_title = "Ticket Viewer" . " - " . $pmtConf["general"]["title"] ;//" - [xenoPMT]";
+    $this->_title = "Ticket System" . " - " . $pmtConf["general"]["title"] ;//" - [xenoPMT]";
 
     $this->ParseData();
     $this->_toolbar = "";                           // We're not overriding the toolbar
@@ -79,11 +80,13 @@ class ticket implements iModule
     //$mode = ENUM_TicketMode
     $tId = null;
 
-    /* To Do:
-     * 1) Get user access
+    /* Steps / To Do:
+     * 1) Get user access - If no access, don't waste time
      *    i.  Get user group
      *    ii. does group have permission (pmt_s_
-     *
+     * 2) Get URI information
+     *    > ticket number ?
+     *    > cmd=  Editing [desc, entry, new entry], Viewing, New
      */
 
     if ($this->UserAllowed())
@@ -95,10 +98,19 @@ class ticket implements iModule
 
   private function UserAllowed()
   {
+    //private function UserAllowed($authType) {}
+
     global $user;
     global $pmtConf;
     global $message;
     $message = "blah";
+    /* To Do
+     * [ ] Pull user/group permissions for module
+     * [ ] Use these permissions and compare against parameter passed into member
+     *     UserAllowed("View_Ticket") >> "Add_Attachments", "View_Attachments"
+     *
+     */
+
     /*
      * OFFLINE
      * Member Object (
