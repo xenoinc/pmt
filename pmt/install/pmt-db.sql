@@ -10,6 +10,7 @@
  *   Core tables for the PMT system
  *
  * Change Log:
+ * 2012-1004  * (djs) Renamed TBLPMT_MODULE_CONFIG (from _config_module)
  * 2012-0907  + (djs) Enabled TBLPMT_MODULE and added UUID column
  *            -       Removed TBLPMT_MODULE_URI (not currently needed)
  * 2012-0619  + (djs) Added outline for new table TBLPMT_MODULE
@@ -48,7 +49,7 @@ create table if not exists `TBLPMT_SETTINGS`
 CREATE TABLE IF NOT EXISTS `TBLPMT_MODULE`
 (
   `Module_Id`       INT UNSIGNED NOT NULL AUTO_INCREMENT,
-  `Module_UUID`     VARCHAR(36),                                    -- Unique Identifer of registered module. No two should be the same
+  `Module_UUID`     VARCHAR(36) NOT NULL,                           -- Unique Identifer of registered module. No two should be the same
   `Core`            BOOLEAN NOT NULL DEFAULT FALSE,                 -- Is this a core module? DEFAULT=FALSE
   `Enabled`         BOOLEAN NOT NULL DEFAULT FALSE,                 -- Disable all new modules by default
   `Module_Name`     VARCHAR(64) collate utf8_unicode_ci not null,   -- name of module "kb"
@@ -61,7 +62,7 @@ CREATE TABLE IF NOT EXISTS `TBLPMT_MODULE`
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 /* Test table */
-create table if not exists `TBLPMT_CONFIG_MODULE`
+create table if not exists `TBLPMT_MODULE_CONFIG`
 (
   `Module_UUID`   VARCHAR(36),
   `Setting` varchar(255) collate utf8_unicode_ci not null,

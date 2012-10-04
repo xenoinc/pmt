@@ -11,6 +11,7 @@
  *
  *
  * Change Log:
+ * 2012-1004  * (djs) Increased `Priv_Name` from 25 to 64 (ie: admin-edit-permissions)
  * 2012-0908  - (djs) removed _USER.Group_Id (use _GROUP and _USER_GROUP here on)
  * 2012-0320  + (djs) Added table, _USER_SETTINGS
  * 2012-0309  + (djs) added Changed USER_GROUP to GROUP and created new USER_GROUP
@@ -154,7 +155,7 @@ INSERT INTO `TBLPMT_GROUP` (Group_Name, Description) VALUES ('CUSTOMERADMIN', 'C
 create table `TBLPMT_GROUP_PRIV`
 (
   `Group_Id`    INT UNSIGNED NOT NULL,                   -- Name of the group
-  `Priv_Name`   VARCHAR(25) COLLATE utf8_unicode_ci NOT NULL  -- Available Privilege
+  `Priv_Name`   VARCHAR(64) COLLATE utf8_unicode_ci NOT NULL  -- Available Privilege
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 /*
@@ -164,7 +165,7 @@ create table `TBLPMT_GROUP_PRIV`
 */
 CREATE TABLE IF NOT EXISTS `TBLPMT_S_GROUP_PERMISSION`
 (
-  `Priv_Name`   VARCHAR(25) COLLATE utf8_unicode_ci NOT NULL,
+  `Priv_Name`   VARCHAR(64) COLLATE utf8_unicode_ci NOT NULL,
   `Description` VARCHAR(255) COLLATE utf8_unicode_ci NOT NULL,
   `Sort_Order`  INT
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
