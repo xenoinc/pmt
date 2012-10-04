@@ -15,7 +15,7 @@
  */
 
 // class definitions and enums used for ticketing system
-requre ("ext/ticket.extras.php");
+require_once ("ext/ticket.extras.php");
 
 class ticket implements iModule
 {

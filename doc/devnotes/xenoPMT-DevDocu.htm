@@ -752,9 +752,8 @@ You are free to use this however you like.  I place this code into the public do
 *** $PAGE[&lt;definitions&gt;]
 *** path, title, header, tbar_meta, tbar_main, tbar_minileft, tbar_miniright, htdata, footer |</pre>
 </div>
-<div title="DefaultTiddlers" creator="d.suess" modifier="d.suess" created="201209012237" modified="201209020109" changecount="3">
-<pre>[[ToDoList]]
-[[Modules]]</pre>
+<div title="DefaultTiddlers" creator="d.suess" modifier="d.suess" created="201209012237" modified="201210032135" changecount="4">
+<pre></pre>
 </div>
 <div title="KB (mod)" creator="d.suess" modifier="d.suess" created="201209031656" modified="201209061549" changecount="6">
 <pre>!Knowledge Base
@@ -816,15 +815,23 @@ One of the first module to get created. The initiative is to create a simple mod
 &lt;!-- &lt;h2&gt;Feedback&lt;/h2&gt; --&gt;
 }}}</pre>
 </div>
-<div title="MainMenu" creator="d.suess" modifier="d.suess" created="201209011745" modified="201209061558" changecount="17">
-<pre>! Components
+<div title="MainMenu" creator="d.suess" modifier="d.suess" created="201209011745" modified="201210032304" changecount="23">
+<pre>! xenoPMT
 * [[Core2-Workflow]]
-* [[Reports]]
 * [[Modules]]
+* [[Reports]]
+* [[ToDoList]]
 ! Modules
+* [[Modules]]
 * [[List of Mods|Module - List]]
 * [[Workflow|Module - Loader Workflow]]
 * [[v0.4 Config|Module - v0.4 Configuration]]
+!Milestones
+* [[Milestones]]
+* [[Milestone-0]]
+* [[Milestone-1]]
+* [[Milestone-2]]
+* [[Milestone-3]]
 ! Unsorted
 * [[Welcome Email]]
 ! Config
@@ -838,8 +845,95 @@ One of the first module to get created. The initiative is to create a simple mod
 * [[MyPlugins]]
 * [[MarkUp | http://oldwiki.tiddlywiki.org/wiki/TiddlyWiki_Markup]]</pre>
 </div>
-<div title="Module - List" creator="d.suess" modifier="d.suess" created="201209061537" modified="201209062255" changecount="9">
-<pre>! xenoPMT v1.0 Concept List
+<div title="Milestone 0.0.1" creator="d.suess" modifier="d.suess" created="201210032306" changecount="1">
+<pre>* Written Concept
+* Folder and File Structure
+* Basic GUI</pre>
+</div>
+<div title="Milestone 0.0.2" creator="d.suess" modifier="d.suess" created="201210032306" changecount="1">
+<pre>* Basic Core to load modules (pre-definied module URIs)
+* Make GUI look a little better
+* Basic Module structure
+* Module - Project
+** Create Project
+** View list of projects
+** View project description page</pre>
+</div>
+<div title="Milestone 0.0.3" creator="d.suess" modifier="d.suess" created="201210032307" modified="201210032307" changecount="2">
+<pre>* Fix bugs in GUI
+* Draw outline for new module loader
+* Create staging area for new core
+* + Add space for new Core variables: $PMT_HEADER, $PMT_CSS (not used yet)
+* Module - Ticket
+** Added outline
+** Created Ticket View template
+** Push back to Trunk</pre>
+</div>
+<div title="Milestone 0.0.4" creator="d.suess" modifier="d.suess" created="201210032308" modified="201210032310" changecount="5">
+<pre>''Started:'' 2012-0922
+''Completed:'' 2012-1031
+* Core System
+** Enhance module loader
+** Separate Core-System from User-Space
+* Fix installer (errors with PHP 5.3.6 but not later versions)
+* Update database structure</pre>
+</div>
+<div title="Milestone 0.0.5" creator="d.suess" modifier="d.suess" created="201210032309" changecount="1">
+<pre>''Started:'' 2012-1101
+''Completed:'' 2012-1130
+* Core System
+** Rewrite module loader</pre>
+</div>
+<div title="Milestone-0" creator="d.suess" modifier="d.suess" created="201210032137" modified="201210032309" changecount="4">
+<pre>
+!0.0.1
+* Written Concept
+* Folder and File Structure
+* Basic GUI
+
+!0.0.2
+* Basic Core to load modules (pre-definied module URIs)
+* Make GUI look a little better
+* Basic Module structure
+* Module - Project
+** Create Project
+** View list of projects
+** View project description page
+
+!0.0.3 - (xiPMT v0.4 branch) - {unknown to 2012-0922}
+* Fix bugs in GUI
+* Draw outline for new module loader
+* Create staging area for new core
+* + Add space for new Core variables: $PMT_HEADER, $PMT_CSS (not used yet)
+* Module - Ticket
+** Added outline
+** Created Ticket View template
+## Push back to Trunk
+
+!0.0.4 - {2012-0922 to 2012-1031}
+* Core System
+** Enhance module loader
+** Separate Core-System from User-Space
+* Fix installer (errors with PHP 5.3.6 but not later versions)
+* Update database structure
+
+!0.0.5 - {2012-1101 - 2012-1130}
+* Core System
+** Rewrite module loader
+</pre>
+</div>
+<div title="Milestones" creator="d.suess" modifier="d.suess" created="201210032306" modified="201210032333" changecount="6">
+<pre>|!Milestone Series   |!Milestone 1    |!Milestone 2    |!Milestone 3    |h
+|[[Milestone-0]]     |[[Milestone-1]] |[[Milestone-2]] |[[Milestone-3]] |
+|[[Milestone 0.0.1]] |  |
+|[[Milestone 0.0.2]] |  |
+|[[Milestone 0.0.3]] |  |
+|[[Milestone 0.0.4]] |  |
+|[[Milestone 0.0.5]] |  |
+</pre>
+</div>
+<div title="Module - List" creator="d.suess" modifier="d.suess" created="201209061537" modified="201210032121" changecount="12">
+<pre>! v1.0 - Modules
 | # |Name                | %   | Core |URI    |C|D|A|Description                   |Customer Access |h
 | 5 |[[KB (mod)]]        | 75% | No   |kb     |X|X|/|Knowledge Base Articles       |
 | 5 |[[Customer (mod)]]  | 0%  | No   |c      |X|X| |Customer information system   |Access their site details and open tickets |
@@ -854,7 +948,8 @@ One of the first module to get created. The initiative is to create a simple mod
 | 2 |[[Wiki (mod)]]      | 0%  | No   |wiki   |X|X|/|Self-contained wiki system    |Can view but not edit  |
 //Help://
 ''C''ustomer, ''D''evelopment, ''A''nonymous
-! Concept Modules
+
+! v1.5 - New Additions
 |Name           |URI  |Description |h
 |[[Purchase Order|PO (mod)]] |po   |Track orders created for customers and pricing |
 |Svn            |svn  |Source Code Viewer |

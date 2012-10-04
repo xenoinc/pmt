@@ -74,7 +74,7 @@ class URI
     if(@$this->seg["0"] == "index.php")
       array_shift($this->seg);
 
-    $this->Count = count($this->uri->seg);
+    $this->Count = count($this->seg);
   }
 
   /**
