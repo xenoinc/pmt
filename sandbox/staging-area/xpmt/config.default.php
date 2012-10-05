@@ -35,8 +35,8 @@ $pmtConf = array(
     "server"  => "localhost",   // Database server
     "user"    => "root",        // Database username
     "pass"    => "testing123",  // Database password
-    "dbname"  => "PMT_DATA",    // Database name
-    "prefix"  => "PMT_"         // Table prefix
+    "dbname"  => "PMT_BETA",    // Database name
+    "prefix"  => "XI_"          // Table prefix
   ),
   "general" => array(
     "auth_only" => true,            // Allow access to public or auth-only

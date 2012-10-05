@@ -27,6 +27,7 @@
  */
 
 // Development Debug Mode (case-insensitive)
+// (2012-0805) Moved debuggin here because we are accessing config files prior to exec pmt.core.php
 define("DebugMode", true, true);
 require "xpmt/phpConsole.php";
 PhpConsole::start(true, true, dirname(__FILE__));

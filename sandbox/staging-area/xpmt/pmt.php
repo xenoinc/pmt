@@ -25,14 +25,14 @@
 /* Step 1 - Make sure system is configured & db installed */
 
 // i) Set version (should be in array)
-$pmt_version = "0.0.3";
-$pmt_version_ex = "000003";
+$pmt_version = "0.0.5";
+$pmt_version_ex = "000005";
 $pmt_db_version = 0.2;
 define("PMT_VER",$pmt_version);
 
-// ii) Setup debugging
-// require "phpConsole.php";
-// PhpConsole::start(true, true, dirname(__FILE__));
+// ii) Setup debugging - (2012-0805) Moved debugging to index for immediate results
+//require "phpConsole.php";
+//PhpConsole::start(true, true, dirname(__FILE__));
 //if (DebugMode == true)
 //  debug("Debug Mode ON!");
 
