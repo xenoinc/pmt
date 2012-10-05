@@ -15,6 +15,8 @@
  *
  */
 
+// namespace xenoPMT\Core {
+
 class Database {
   private $_conn = null;
   private $last_query = null;
@@ -90,13 +92,25 @@ class Database {
   }
 
   /**
-   * Reutrns array contained in fetched row
+   * Returns array contained in fetched row
    * @param string $ret - SQL Result Array[]
+   * @param int $result_type [optional] <p>
+   *  The type of array that is to be fetched. It's a constant and can
+   *  take the following values: <b>MYSQL_ASSOC</b>, <b>MYSQL_NUM</b>,
+   *  and <b>MYSQL_BOTH</b>.</p>
    * @return string
+   *
+   * Change Log:
+   *  2012-0908 * Added parameter, $result_type and defaulted to "MYSQL_ASSOC".
+   *              Now it only returns column names as the indices
    */
-  public function FetchArray($ret)
+  public function FetchArray($ret, $result_type=MYSQL_ASSOC)
   {
-    $retArr = mysql_fetch_array($ret);
+    $retArr = mysql_fetch_array($ret, $result_type);   // associative keys as indexes
+
+    //$retArr = mysql_fetch_assoc($ret);              // Return column names
+    //$retArr = mysql_fetch_array($ret, MYSQL_NUM);   // numeric indexes
+    //$retArr = mysql_fetch_row($ret);                // same as using, MYSQL_NUM
     return $retArr;
   }
 

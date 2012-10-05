@@ -38,39 +38,55 @@
  *  2012-0309 + Added code to constructor
  */
 
-class Member {
-//class User {
-  public $username = "Guest";
-  public $userid = "0";
-  public $fullname = "";
-  public $password = "";
+// namespace xenoPMT\Core {
+class Member
+{
 
-  public $group = null;
-  public $online = false;
+  // -=-[ Properties ]-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+  //
+  // [2012-0908]-(djs)
+  // Old method was to use these properties so that they would be easily
+  // accessable when typing out the class variable "$user->..". However it
+  // may be best to contain propertity values inside of an array and keep the
+  // functions out in the open?
+  //
+  //public $username = "Guest";
+  //public $userid = "0";
+  //public $fullname = "";
+  //public $password = "";
+  //public $group = null;
+
+
+  public $Online = false;
   public $errors = array();
 
   /* Array (
-   * [0] => 1
-   * [User_Id] => 1
-   * [1] => admin
-   * [User_Name] => admin
-   * [2] => Test Administrator
-   * [Name] => Test Administrator
-   * [3] => 1
-   * [Group_Id] => 1
-   * [online] => 1 )
+   * [User_Id]    => 1
+   * [User_Name]  => admin
+   * [Name]       => Test Administrator
+   * [Group_Id]   => 1
+   * [Online]     => 1 )
    *
    */
   // Usage:
   // $user->UserInfo["User_Name"]
   public $UserInfo = array(
-      "User_Id"   => "0",
-      "User_Name" => "Guest",
-      "Display_Name" => "Anonymous",
-      "Group_Id"  => "0",         // Anon should be setup as Group "2"
-      "Online"    => false
+      "User_Id"       => "0",
+      "User_Name"     => "Guest",
+      "Display_Name"  => "Anonymous",
+      "Group_Id"      => "0",             // Anon should be setup as Group "2"
+      //"Group_Name"    => null,
+      "Online"        => false
   );
 
+  // Added 2012-0908
+  // List of all groups this user is apart of
+  public $GroupInfo = array(
+      "Group_Id"      => 0,
+      "Group_Name"    => null
+  );
+
+  // -=-[ Members ]-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
 
   public function __construct()
   {
@@ -83,30 +99,93 @@ class Member {
     if(!isset($_COOKIE["xenopmt_user"])) $_COOKIE["xenopmt_user"] = "";
     if(!isset($_COOKIE["xenopmt_hash"])) $_COOKIE["xenopmt_hash"] = "";
 
+
+    $t__tbl = PMT_TBL;
+    $t__usr = $pmtDB->FixString($_COOKIE['xenopmt_user']);
+    $t__pas = $pmtDB->FixString($_COOKIE['xenopmt_hash']);
+    $tmp = <<<QUERY
+  SELECT u.User_Id, u.User_Name, u.Display_Name, g.Group_Id
+  FROM {$t__tbl}USER u
+    JOIN {$t__tbl}USER_GROUP ug
+      ON u.User_Id = ug.User_Id
+    JOIN {$t__tbl}GROUP g
+      ON g.Group_Id = ug.Group_Id
+  WHERE
+    u.User_Name='{$t__usr}' and Session_Hash='{$t__pas}'
+  LIMIT 1;
+QUERY;
+
+    /*
     $tmp =
         "SELECT User_Id, User_Name, Display_Name, Group_Id FROM ".PMT_TBL."USER WHERE " .
         //"User_Name='" . $pmtDB->es($_COOKIE['xenopmt_user']) . "' AND " .
         //"Session_Hash='" . $pmtDB->es($_COOKIE['xenopmt_hash']) . "' LIMIT 1;";
         "User_Name='" . $pmtDB->FixString($_COOKIE['xenopmt_user']) . "' AND " .
         "Session_Hash='" . $pmtDB->FixString($_COOKIE['xenopmt_hash']) . "' LIMIT 1;";
+    */
     $q = $pmtDB->Query($tmp);
     if($pmtDB->NumRows($q))
     {
       // We're logged in still
       $this->UserInfo = $pmtDB->FetchArray($q);
-      $this->UserInfo["Online"] = true;
-      $this->online = true;
+      $this->UserInfo["Online"] = true;         // use this for now on
+      $this->Online = true;                     // Kept for legacy purposes
+
+      /**
+       * Old way [pre 2012-0908]
+
+        $grp = $this->UserInfo["Group_Id"];
+        $tmp =
+            "SELECT * FROM ".PMT_TBL."USER_GROUP WHERE " .
+            "Group_Id='" . $grp . "' LIMIT 1";
+        $this->group = $pmtDB->QueryFirst($tmp);
+      */
+
+      // Version 1 ]======================================
+      /*
+      $gid = $this->UserInfo["Group_Id"];
+      $tmp =
+          "SELECT `Group_Id`, `Group_Name` FROM ".PMT_TBL."GROUP WHERE " .
+          "Group_Id=" . $gid . " LIMIT 1";
+
+      try
+      {
+        $q = $pmtDB->Query($tmp);
+        if($pmtDB->NumRows($q))
+          $this->GroupInfo = $pmtDB->FetchArray($q);
+
+      } catch (Exception $e) {
+        pmtDebug("Exception:' $e'");
+      }
+      */
+
+      // VERSION 2 (USE THIS) ]======================================
+      // First, mod TBL_USER to work in the absence of TBL_USER.Group_Id
+      // and to rely on TBL_User_Group.Group_Id
+
+      $dbPrefix = PMT_TBL;
+      $uid = $this->UserInfo["User_Id"];
+      $tmp = <<<"EOT"
+SELECT `g`.`Group_Id`, `g`.`Group_Name`
+FROM {$dbPrefix}USER_GROUP ug
+  join {$dbPrefix}GROUP g
+  on ug.Group_Id = g.Group_Id
+WHERE
+  ug.User_Id = {$uid};
+EOT;
+
+      try{
+        $q = $pmtDB->Query($tmp);
+        if($pmtDB->NumRows($q))
+          $this->GroupInfo = $pmtDB->FetchArray($q);
+      } catch (Exception $e) {
+        pmtDebug("Exception:' $e'");
+      }
+
+
     }
 
-    // TOD: Finish Group setup
-    // Get user Group Info (Anon or Logged in)
-    //print_r($this->UserInfo);
-
-    $grp = $this->UserInfo["Group_Id"];
-    $tmp =
-        "SELECT * FROM ".PMT_TBL."USER_GROUP WHERE " .
-        "Group_Id='" . $grp . "' LIMIT 1";
-    $this->group = $pmtDB->QueryFirst($tmp);
+    // -=-=-=-=-=-=-=-=-=-=-=-=
 
     // TODO: Setup user SystemHook
     //($hook = SystemHook::Hook("User_Construction")) ? eval($hook) : false;
