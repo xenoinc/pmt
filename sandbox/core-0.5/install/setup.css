@@ -1,0 +1,75 @@
+/*
+  Document   : setup.css
+  Created on : Oct 8, 2012, 8:01:42 PM
+  Author     : Damian Suess
+  Description:
+      Purpose of the stylesheet follows.
+*/
+
+body {
+  background: #F8F8F8;
+  font-size: 12px;
+  font-family: Arial, sans-serif, Helvitica;
+  color: #000000;
+}
+
+h1 {
+  font-family: Arial, sans-serif Helvitica;
+  font-size: 24px;
+  padding: 0;
+  font-weight: normal;
+  /*margin: 0 0 5px 2px; */
+  margin-bottom: 20px;
+}
+
+/* Form design */
+.Buttons {
+  cursor: pointer;
+  /* background:url("") repeat-x; */
+  padding: 2px 4px;
+}
+
+.ButtonDisabled { color: #999999; }
+
+.panelMain, #title {
+  width: 100%;
+  max-width: 740px;
+  margin: 10px auto;
+}
+
+.panelMain {
+ clear: both;
+ border-color: #E4ECEC;
+ border: 1px solid #E4ECEC; /*none; */
+ padding: 10px;
+ background: #E4ECEC url("pix/bodybk.png")  bottom left repeat-x;
+
+}
+
+#panelLeft {
+  float: left;
+  width: 190px;
+}
+
+#panelRight {
+  margin-left: 200px;
+  min-height: 400px;
+  border-left: 1px solid #CCCCCC;
+  padding-left: 8px;
+}
+
+/* other */
+.Fail {
+  color: #BB0000;
+  line-height: 16px;
+  background: url("pix/fail.gif") no-repeat left;
+  padding: 2px 0 2px 20px;
+}
+
+.Success {
+  color: #00AA00;
+  line-height: 16px;
+  background: url("pix/success.gif") no-repeat left;
+  padding: 2px 0 2px 20px;
+}
+
