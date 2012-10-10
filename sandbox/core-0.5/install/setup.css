@@ -58,14 +58,15 @@ h1 {
   padding-left: 8px;
 }
 
-/* other */
-.Fail {
-  color: #BB0000;
-  line-height: 16px;
-  background: url("pix/fail.gif") no-repeat left;
-  padding: 2px 0 2px 20px;
+/* *** Form Items ** */
+
+#tblSystemReq td {
+  border-bottom: 1px solid #CCCCCC;
+  padding: 5px 10px;
 }
 
+
+/* other */
 .Success {
   color: #00AA00;
   line-height: 16px;
@@ -73,3 +74,16 @@ h1 {
   padding: 2px 0 2px 20px;
 }
 
+.Warning {
+  color: #FF8F00;
+  line-height: 16px;
+  background: url("pix/warning.gif") no-repeat left;
+  padding: 2px 0 2px 20px;
+}
+
+.Fail {
+  color: #BB0000;
+  line-height: 16px;
+  background: url("pix/fail.gif") no-repeat left;
+  padding: 2px 0 2px 20px;
+}
