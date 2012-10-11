@@ -152,6 +152,12 @@ DebugDisplay();
 ?>
 
     <h1 id="title">xenoPMT Installer </h1>
+    <div>
+      <input name="step" id="stepNdx" type="hidden" value="2" />
+      <div id="testStep">
+      <!-- data displayed here -->
+      </div>
+    </div>
     <div class="panelMain">
 
       <div id="panelLeft">

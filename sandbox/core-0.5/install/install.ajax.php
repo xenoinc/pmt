@@ -13,5 +13,15 @@
  *
  */
 
+if(isset($_POST["updateStep"]))
+{
 
+  $value = $_POST["updateStep"]+1;
+  echo json_encode(array("returnValue" => "$value"));
+}
+else
+{
+  $value = "99";
+  echo json_encode(array("returnValue" => "$value"));
+}
 ?>

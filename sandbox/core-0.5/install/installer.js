@@ -30,15 +30,30 @@ $(document).ready(function() {
 
   /**[ Event Handlers ]************************ */
 
+  // List index changed
   $("#lstStep").change(function() {
     // alert($(this).val());
   });
 
-  /**
-   *  Add event handler to capture the current panel we are at
-   *  by tracking the "button" event
-   *
-   */
+  // a button was pressed
+  $("button").click(function() {
+    // $(this).text(); = Button Caption
+    // $(".myclass).attr("class"); = String Value
+    // $("").hasClass("divhover"); = BOOL_VAL
+
+    if ($(this).hasClass("btnNext"))
+      alert("next was clicked");
+
+    if ($(this).hasClass("btnPrev"))
+      alert("prev was clicked");
+
+    var num = $("#stepNdx").val();    // get Value setting
+    //alert(num);
+    //alert("enter with num: " + num);
+    updateStep(num);
+    //alert("exit");
+  });
+
 
 
   /**[ Functions ]****************************** */
@@ -83,3 +98,17 @@ $(document).ready(function() {
 });
 
 
+function updateStep(str)
+{
+    $.post(
+      "install.ajax.php",
+      {updateStep: str},
+      function(data) {
+        //alert("pre update step");
+        $("#stepNdx").html(data.returnValue);
+        //alert("pre update disp");
+        $("testDisplay").html(data.returnValue);
+        alert("done with funciton");
+      }
+      ,"json");
+}

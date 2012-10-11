@@ -31,7 +31,9 @@
         //          Function call on data return,
         //          How i want data formatted on return from server
         //       );
-        $.post("install.ajax.php", {sendValue: str },
+        $.post(
+          "install.ajax.php",
+          {sendValue: str },
           function(data){
             $('#display').html(data.returnValue);
           }
