@@ -30,6 +30,9 @@
  *
  */
 
+require "../xpmt/phpConsole.php";
+PhpConsole::start(true, true, dirname(__FILE__));
+
 // Setup requirements
 
 /**
@@ -77,8 +80,7 @@ else
 
 function DebugDisplay() {
   //pmtDebug();
-  global $_reqMySQL;
-  global $_phpVerValid;
+  global $_reqMySQL, $_reqPhpVer;
 
   print("PhpVer(): " . phpversion() . "<br />\n");
   print("WebServer: " . $_SERVER['SERVER_SOFTWARE'] . "<br />\n");
@@ -94,11 +96,12 @@ function DebugDisplay() {
  */
 function MakeNav($bak="", $cur="", $fwd="")
 {
-  if ($bak == "") { $classBak = "ButtonDisabled"; $idBak=""; } else { $classBak = "Buttons"; $idBak="btnBak".$bak; }
-  if ($fwd == "") { $classFwd = "ButtonDisabled"; $idFwd=""; } else { $classFwd = "Buttons"; $idFwd="btnFwd".$fwd; }
+  if ($bak == "") { $classBak = "ButtonDisabled"; $idBak=""; $disB="disabled "; } else { $classBak = "Buttons"; $idBak="btnBak".$bak; $disB="";}
+  if ($fwd == "") { $classFwd = "ButtonDisabled"; $idFwd=""; $disF="disabled "; } else { $classFwd = "Buttons"; $idFwd="btnFwd".$fwd; $disF="";}
+
   print(PHP_EOL);
-  print('          <button type="button" id="'.$idBak.'" class="'. $classBak .' btnPrev">Back</button>' . PHP_EOL);
-  print('          <button type="button" id="'.$idFwd.'" class="'. $classFwd .' btnNext">Next</button>' . PHP_EOL);
+  print('          <button type="button" '.$disB.'id="'.$idBak.'" class="'. $classBak .' btnPrev">Back</button>' . PHP_EOL);
+  print('          <button type="button" '.$disF.'id="'.$idFwd.'" class="'. $classFwd .' btnNext">Next</button>' . PHP_EOL);
 
   print('          <script>' . PHP_EOL);
   if ($bak != "") print('            $("#'.$idBak.'").click(function () { $.ChangePanel('.$cur.', '.$bak.'); });' . PHP_EOL);
@@ -168,6 +171,7 @@ DebugDisplay();
           <option value="3">Create Database</option>
           <option value="4">Setup System</option>
           <option value="5">Install Modules</option>
+          <option value="6">Install Modules</option>
           <!-- Secure your install (remove files) -->
         </select>
 
@@ -177,6 +181,7 @@ DebugDisplay();
           <tr><td>3</td><td>description</td></tr>
           <tr><td>4</td><td>description</td></tr>
           <tr><td>5</td><td>description</td></tr>
+          <tr><td>6</td><td>description</td></tr>
         </table>
 
       </div>
@@ -258,8 +263,53 @@ DebugDisplay();
           <h1>Database Setup</h1>
 
           <p>
-            step 2
+            Please have your database configured prior to testing out your connection
+            and proceeding below.
           </p>
+
+
+          <table id="tblSystemReq" border="0" cellpadding="0" cellspacing="0" width="100%">
+            <thread>
+              <tr>
+                <td><b></b></td>
+                <td><b>Required Input</b></td>
+              </tr>
+            </thread>
+            <tbody>
+              <tr>
+                <td>Database Server:</td>
+                <td><input type="text" id="txtDbServer" name="dbserver" value="localhost" /></td>
+              </tr>
+              <tr>
+                <td>Database Name:</td>
+                <td><input type="text" id="txtDbName" name="dbname" value="PMT_DATA" /></td>
+              </tr>
+              <tr>
+                <td>Table Prefix:</td>
+                <td><input type="text" id="txtDbPrefix" name="dbname" value="XI_" /></td>
+              </tr>
+              <tr>
+                <td>User Name:</td>
+                <td><input type="text" id="txtDbUser" name="dbuser" value="" autocomplete="off" /></td>
+              </tr>
+              <tr>
+                <td>Password:</td>
+                <td><input type="text" id="txtDbPass" name="dbpass" value="" autocomplete="off" /></td>
+              </tr>
+              <tr>
+                <td></td>
+                <td>
+                  <button type="button" id="btnDbTestConn" class="Buttons">Test Connection</button>
+                  <span id="spnDbConnectionTest" class=""><i>(untested)</i></span>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+
+          <p>&nbsp;</p>
+
+          <div>
+          </div>
 
         </div> <!-- end:step2 -->
 

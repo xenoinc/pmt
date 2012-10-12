@@ -37,21 +37,41 @@ $(document).ready(function() {
 
   // a button was pressed
   $("button").click(function() {
+
+
+    if ($(this).hasClass("btnNext"))
+    {
+      // Tell PHP to +1
+      //alert("+1");
+    }
+    else if ($(this).hasClass("btnPrev"))
+    {
+      // Tell PHP to -1
+      //alert("-1");
+    }
+    else
+    {
+      // Handle all other button events
+      switch($(this).attr("id"))
+      {
+        // Test Database Connection
+        case "btnDbTestConn":
+          alert("test conn!");
+          DbTestConnection();
+        break;
+
+        default:
+          alert("unknown button");
+          break;
+      }
+    }
+
+    var num = $("#stepNdx").val();    // get Value setting
+    updateStep(num);
+
     // $(this).text(); = Button Caption
     // $(".myclass).attr("class"); = String Value
     // $("").hasClass("divhover"); = BOOL_VAL
-
-    if ($(this).hasClass("btnNext"))
-      alert("next was clicked");
-
-    if ($(this).hasClass("btnPrev"))
-      alert("prev was clicked");
-
-    var num = $("#stepNdx").val();    // get Value setting
-    //alert(num);
-    //alert("enter with num: " + num);
-    updateStep(num);
-    //alert("exit");
   });
 
 
@@ -65,7 +85,6 @@ $(document).ready(function() {
     };
 
   });
-
 
   /* ** Hide/Show Toggle Test ***
    *
@@ -94,21 +113,53 @@ $(document).ready(function() {
       });
    */
 
-
 });
 
-
+/*
+ * update system with install step we're up (list box and display)
+ */
 function updateStep(str)
 {
-    $.post(
-      "install.ajax.php",
-      {updateStep: str},
-      function(data) {
-        //alert("pre update step");
-        $("#stepNdx").html(data.returnValue);
-        //alert("pre update disp");
-        $("testDisplay").html(data.returnValue);
-        alert("done with funciton");
-      }
-      ,"json");
+  $.post(
+    "install.ajax.php",
+    {updateStep: str},
+    function(data) {
+      //alert("pre update step");
+      $("#stepNdx").html(data.returnValue);
+      //alert("pre update disp");
+      $("testDisplay").html(data.returnValue);
+      //alert("done with funciton");
+    }
+    ,"json");
+}
+
+function DbTestConnection()
+{
+  // Test
+
+  $.ajax({
+    type: "POST",
+    url:  "install.ajax.php",
+    data: {var1: "blah", var2: "oops"},
+    beforeSend: function() {
+      $("#spnDbConnectionTest").html("<img src='pix/spinner.gif' />");  // loading img during request
+    },
+    success: function(data) { // html = server response code
+      $("#spnDbConnectionTest").html(data.dbTestRet + "");
+      $("#spnDbConnectionTest").addClass(data.dbTestRetClass)
+      // $("#spnDbConnectionTest").remove();    // remove the div
+    }
+
+  });
+
+  /*
+  $.post(
+    "install.ajax.php",
+    {DbTestConnection: str},
+    function(data) {
+      $("#spnDbConnectionTest").html(data.dbTestRet);
+      $("$spnDbConnectionTest").addClass(data.dbTestRetClass);
+    }
+    ,"json");
+    */
 }

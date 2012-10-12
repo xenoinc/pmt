@@ -13,15 +13,35 @@
  *
  */
 
+require "../xpmt/phpConsole.php";
+PhpConsole::start(true, true, dirname(__FILE__));
+
 if(isset($_POST["updateStep"]))
 {
+  debug("Button Pressed");
+  $ret = $_POST["updateStep"]+1;
+  echo json_encode(array("returnValue" => "$ret"));
+  // } else {
+  // $ret = "99";
+  // echo json_encode(array("returnValue" => "$ret"));
+}
 
-  $value = $_POST["updateStep"]+1;
-  echo json_encode(array("returnValue" => "$value"));
-}
-else
+//if (isset($_POST["btnDbTestConn"]))
+if (isset($_POST["DbTestConnection"]))
 {
-  $value = "99";
-  echo json_encode(array("returnValue" => "$value"));
+  debug("Testing db conn");
+
+//  if ($_POST["btnDbTestConnection"] == "1")
+//  {
+    $ret = "Test-Fail";
+    echo json_encode(array("dbTestRet" => "$ret"));
+    /*
+    echo json_encode(
+      array(
+        "dbTestRet" => "$ret",
+        "dbTestRetClass" => "Fail"));
+    */
+//  }
 }
+
 ?>

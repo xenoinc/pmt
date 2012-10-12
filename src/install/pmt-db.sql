@@ -30,7 +30,7 @@
  * Addon_Customer         = 1/0   - Enable customer admin
  * Addon_Product          = 1/0   - Enable product admin
  */
-
+ 
 /* Test table */
 create table if not exists `TBLPMT_SETTINGS`
 (
