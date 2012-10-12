@@ -155,42 +155,46 @@ DebugDisplay();
 ?>
 
     <h1 id="title">xenoPMT Installer </h1>
+
     <div>
-      <input name="step" id="stepNdx" type="hidden" value="2" />
-      <div id="testStep">
+      <input name="step" id="stepNdx" type="hidden" value="1" />
+      <div id="debugStep">
       <!-- data displayed here -->
       </div>
     </div>
+
     <div class="panelMain">
 
       <div id="panelLeft">
         <select name="lstStep" id="lstStep" size="10">
           <!-- Welcome page & cfg suggestions -->
-          <option value="1" selected="selected">Verify Requirements</option>
-          <option value="2">Database Setup</option>
-          <option value="3">Create Database</option>
-          <option value="4">Setup System</option>
-          <option value="5">Install Modules</option>
+          <option value="1" selected="selected">Welcome!</option>
+          <option value="2">Verify Requirements</option>
+          <option value="3">Database Setup</option>
+          <option value="4">Create Database</option>
+          <option value="5">Setup System</option>
           <option value="6">Install Modules</option>
+          <option value="7">Finished</option>
           <!-- Secure your install (remove files) -->
         </select>
 
         <table width="90%">
-          <tr><td>1</td><td>description</td></tr>
-          <tr><td>2</td><td>description</td></tr>
-          <tr><td>3</td><td>description</td></tr>
-          <tr><td>4</td><td>description</td></tr>
-          <tr><td>5</td><td>description</td></tr>
-          <tr><td>6</td><td>description</td></tr>
+          <tr><td>1</td><td>Welcome!</td></tr>
+          <tr><td>2</td><td>Verify Requirements</td></tr>
+          <tr><td>3</td><td>Database Setup</td></tr>
+          <tr><td>4</td><td>Create Database</td></tr>
+          <tr><td>5</td><td>Setup System</td></tr>
+          <tr><td>6</td><td>Install Modules</td></tr>
+          <tr><td>7</td><td>Finished</td></tr>
         </table>
 
       </div>
 
       <div id="panelRight">
 
-        <!-- Step 0 - Welcome Screen -->
-        <div class="steps" id="step0">
-          <?php MakeNav("", 0, 1); ?>
+        <!-- Step 1 - Welcome Screen -->
+        <div class="steps" id="step1">
+          <?php MakeNav("", 1, 2); ?>
           <h1> Welcome to xenoPMT! </h1>
 
           <p>
@@ -212,12 +216,12 @@ DebugDisplay();
           </div>
           <img id="imgSpinner" src="pix/spinner.gif" alt="" width="100" height="100" />
           -->
-        </div><!-- end:step0 -->
+        </div><!-- end:step1 -->
 
 
-        <!-- Step 1 - Check requirements -->
-        <div class="steps" id="step1">
-          <?php MakeNav("0",1,2); ?>
+        <!-- Step 2 - Check requirements -->
+        <div class="steps" id="step2">
+          <?php MakeNav(1,2,3); ?>
           <h1>Verifying Requirements</h1>
           <p>
             We will do our best to provide as much proactive support to
@@ -250,16 +254,16 @@ DebugDisplay();
 
           </p>
 
-        </div> <!-- end:step1 -->
+        </div> <!-- end:step2 -->
 
 
-        <!-- Step 2 - User DB Input -->
-        <div class="steps" id="step2">
+        <!-- Step 3 - Test User DB Input -->
+        <div class="steps" id="step3">
           <!--
            DB: Server, User, Pass, Database, TablePrefix
           ?? Info: Site Name, Admin Name, Admin Pass, Admin Email, Admin Display Name
           -->
-          <?php MakeNav(1,2,3); ?>
+          <?php MakeNav(2,3,4); ?>
           <h1>Database Setup</h1>
 
           <p>
@@ -311,25 +315,13 @@ DebugDisplay();
           <div>
           </div>
 
-        </div> <!-- end:step2 -->
-
-
-        <!-- Step 3 - Create Database -->
-        <div class="steps" id="step3">
-          <?php MakeNav(2,3,4); ?>
-          <h1>Create Database</h1>
-
-          <p>
-            step 3
-          </p>
-
         </div> <!-- end:step3 -->
 
-        <!-- Step 4 - Name your system -->
+
+        <!-- Step 4 - Create Database -->
         <div class="steps" id="step4">
-          <!-- Info: Site Name, Admin Name, Admin Pass, Admin Email, Admin Display Name -->
           <?php MakeNav(3,4,5); ?>
-          <h1>Configure your System</h1>
+          <h1>Create Database</h1>
 
           <p>
             step 4
@@ -337,11 +329,11 @@ DebugDisplay();
 
         </div> <!-- end:step4 -->
 
-
-        <!-- Step 5 - Install Modules -->
+        <!-- Step 5 - Name your system -->
         <div class="steps" id="step5">
-          <?php MakeNav(4, 5, 6); ?>
-          <h1>Install Modules</h1>
+          <!-- Info: Site Name, Admin Name, Admin Pass, Admin Email, Admin Display Name -->
+          <?php MakeNav(4,5,6); ?>
+          <h1>Configure your System</h1>
 
           <p>
             step 5
@@ -352,7 +344,19 @@ DebugDisplay();
 
         <!-- Step 6 - Install Modules -->
         <div class="steps" id="step6">
-          <?php MakeNav(5, 6); ?>
+          <?php MakeNav(5, 6, 7); ?>
+          <h1>Install Modules</h1>
+
+          <p>
+            step 6
+          </p>
+
+        </div> <!-- end:step6 -->
+
+
+        <!-- Step 7 - Finished -->
+        <div class="steps" id="step7">
+          <?php MakeNav(6, 7); ?>
           <h1>Finished!</h1>
 
           <p>
@@ -368,7 +372,7 @@ DebugDisplay();
             <i>Xeno Innovations Development Team</i>
           </p>
 
-        </div> <!-- end:step6 -->
+        </div> <!-- end:step7 -->
 
       </div> <!-- end:panelRight -->
     </div> <!-- end:panelmain -->

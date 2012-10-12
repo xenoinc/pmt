@@ -19,13 +19,13 @@ $(document).ready(function() {
   /**[ Start visible ]****************************** */
   $('#imgSpinner').show();
 
-  $('#step0').hide(); // $('#step0').show();
-  $("#step1").show(); // $("#step1").hide();
+  $('#step1').show();
   $("#step2").hide();
   $("#step3").hide();
   $("#step4").hide();
   $("#step5").hide();
   $("#step6").hide();
+  $("#step7").hide();
 
 
   /**[ Event Handlers ]************************ */
@@ -35,19 +35,23 @@ $(document).ready(function() {
     // alert($(this).val());
   });
 
-  // a button was pressed
+  //Button Click Events
   $("button").click(function() {
+    // $(this).text(); = Button Caption
+    // $(".myclass).attr("class"); = String Value
+    // $("").hasClass("divhover"); = BOOL_VAL
 
+    var num;
 
     if ($(this).hasClass("btnNext"))
-    {
-      // Tell PHP to +1
-      //alert("+1");
+    { // alert("Tell PHP +1");
+      num = $("#stepNdx").val();    // get Value setting
+      UpdateStep(num, num+1);
     }
     else if ($(this).hasClass("btnPrev"))
-    {
-      // Tell PHP to -1
-      //alert("-1");
+    { // alert("Tell PHP -1");
+      num = $("#stepNdx").val();    // get Value setting
+      UpdateStep(num, num-1);
     }
     else
     {
@@ -56,7 +60,7 @@ $(document).ready(function() {
       {
         // Test Database Connection
         case "btnDbTestConn":
-          alert("test conn!");
+          //alert("test conn!");
           DbTestConnection();
         break;
 
@@ -65,13 +69,6 @@ $(document).ready(function() {
           break;
       }
     }
-
-    var num = $("#stepNdx").val();    // get Value setting
-    updateStep(num);
-
-    // $(this).text(); = Button Caption
-    // $(".myclass).attr("class"); = String Value
-    // $("").hasClass("divhover"); = BOOL_VAL
   });
 
 
@@ -118,34 +115,56 @@ $(document).ready(function() {
 /*
  * update system with install step we're up (list box and display)
  */
-function updateStep(str)
+function UpdateStep(ndxCurrent, ndxMove)
 {
+  var MAX_STEPS=7;  //(1-7)
+  // 1. Get current step from #stepNdx=ndxCurrent
+  if(ndxMove> (MAX_STEPS))
+  {
+
+  }
+
+  var iStep = 1;  // Go to this step
+
+  //$("#lstStep").val(3);
+
+  //
   $.post(
     "install.ajax.php",
-    {updateStep: str},
+    {UpdateStep: iStep},              // post data ($_POST["updateStep"] = iStep)
     function(data) {
       //alert("pre update step");
       $("#stepNdx").html(data.returnValue);
       //alert("pre update disp");
-      $("testDisplay").html(data.returnValue);
+      $("debugStep").html(data.returnValue);
       //alert("done with funciton");
     }
     ,"json");
 }
 
+/**
+ * [Step 3] Test Database Connection
+ */
 function DbTestConnection()
 {
-  // Test
+  // 1) Get info params
+  var dbHost     = $("#txtDbServer").val();
+  var dbDatabase = $("#txtDbName").val();
+  var dbPrefix   = $("#txtDbPrefix").val();
+  var dbUser     = $("#txtDbUser").val();
+  var dbPass     = $("#txtDbPass").val();
+  alert(dbHost);
 
+  // 2) Call PHP to test connection
   $.ajax({
     type: "POST",
     url:  "install.ajax.php",
-    data: {var1: "blah", var2: "oops"},
+    data: {step3: "1", db_host: "**"+dbHost },
     beforeSend: function() {
       $("#spnDbConnectionTest").html("<img src='pix/spinner.gif' />");  // loading img during request
     },
     success: function(data) { // html = server response code
-      $("#spnDbConnectionTest").html(data.dbTestRet + "");
+      $("#spnDbConnectionTest").html(data.dbTestRet + "!");
       $("#spnDbConnectionTest").addClass(data.dbTestRetClass)
       // $("#spnDbConnectionTest").remove();    // remove the div
     }

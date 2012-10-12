@@ -54,7 +54,7 @@ if (DebugMode == true)
   $defVal["dbname"] = "PMT_DATA";
   $defVal["user"]   = "testuser";
   $defVal["pass"]   = "testpass";
-  $defVal["prefix"] = "XIPMT_";
+  $defVal["prefix"] = "XI_";
 }
 
 
