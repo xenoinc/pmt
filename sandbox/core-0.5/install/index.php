@@ -77,8 +77,8 @@ else
 }
 
 
-
 function DebugDisplay() {
+/*
   //pmtDebug();
   global $_reqMySQL, $_reqPhpVer;
 
@@ -86,7 +86,9 @@ function DebugDisplay() {
   print("WebServer: " . $_SERVER['SERVER_SOFTWARE'] . "<br />\n");
   print("PHP Version: " . $_reqPhpVer . "<br />\n");
   print("PHP MySQL: " . $_reqMySQL . "<br />\n");
+*/
 }
+
 
 /**
  * Generate Back and Forward buttons
@@ -294,25 +296,23 @@ DebugDisplay();
               </tr>
               <tr>
                 <td>User Name:</td>
-                <td><input type="text" id="txtDbUser" name="dbuser" value="" autocomplete="off" /></td>
+                <td><input type="text" id="txtDbUser" name="dbuser" value="testadmin" autocomplete="off" /></td>
               </tr>
               <tr>
                 <td>Password:</td>
-                <td><input type="text" id="txtDbPass" name="dbpass" value="" autocomplete="off" /></td>
+                <td><input type="text" id="txtDbPass" name="dbpass" value="testpass" autocomplete="off" /></td>
               </tr>
               <tr>
                 <td></td>
                 <td>
                   <button type="button" id="btnDbTestConn" class="Buttons">Test Connection</button>
-                  <span id="spnDbConnectionTest" class=""><i>(untested)</i></span>
                 </td>
               </tr>
             </tbody>
           </table>
 
-          <p>&nbsp;</p>
-
-          <div>
+          <div id="spnDbConnectionTest" class="" style="padding-top: 10px;">
+            <i>(untested)</i>
           </div>
 
         </div> <!-- end:step3 -->

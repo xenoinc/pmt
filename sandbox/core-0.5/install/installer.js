@@ -41,17 +41,23 @@ $(document).ready(function() {
     // $(".myclass).attr("class"); = String Value
     // $("").hasClass("divhover"); = BOOL_VAL
 
-    var num;
+    var num = new Number;
+    var iNdxGoTo = new Number;
 
     if ($(this).hasClass("btnNext"))
-    { // alert("Tell PHP +1");
-      num = $("#stepNdx").val();    // get Value setting
-      UpdateStep(num, num+1);
+    {
+      // Sometimes it appends 1+1 = "11" not=2.. stupid javascript
+      num = new Number($("#stepNdx").val());    // get Value setting
+      //alert("next: " + num);
+      iNdxGoTo = num+1;
+      UpdateStep(num, iNdxGoTo);
     }
     else if ($(this).hasClass("btnPrev"))
     { // alert("Tell PHP -1");
-      num = $("#stepNdx").val();    // get Value setting
-      UpdateStep(num, num-1);
+      num = new Number($("#stepNdx").val());    // get Value setting
+      //alert("prev: " + num);
+      iNdxGoTo = num-1;
+      UpdateStep(num, iNdxGoTo);
     }
     else
     {
@@ -117,27 +123,34 @@ $(document).ready(function() {
  */
 function UpdateStep(ndxCurrent, ndxMove)
 {
-  var MAX_STEPS=7;  //(1-7)
-  // 1. Get current step from #stepNdx=ndxCurrent
-  if(ndxMove> (MAX_STEPS))
-  {
+  var MAX_STEPS=7;  // (1-7)
+  var iStep = 0;    // Go to this step
 
+  /* 1. Get current step from #stepNdx=ndxCurrent */
+  //alert("Move To: " + ndxMove + "\n Max: " + MAX_STEPS);
+  // We're doing this incase we allow jumping of steps later
+  if(ndxMove > MAX_STEPS)  {
+    iStep = ndxCurrent;
+    //alert("US.ndxMove=OOB_MAX");
+  } else if (ndxMove < 1) {
+    iStep = ndxCurrent;       // ndxMove = 1;
+    //alert("US.ndxMove=OOB_low");
+  } else {
+    iStep = ndxMove;
+    //alert("US.ndxMove=good");
   }
 
-  var iStep = 1;  // Go to this step
+  //alert("US.iStep: " + iStep);
 
   //$("#lstStep").val(3);
 
-  //
+  //Actually we dont even need PHP!
   $.post(
     "install.ajax.php",
     {UpdateStep: iStep},              // post data ($_POST["updateStep"] = iStep)
     function(data) {
-      //alert("pre update step");
-      $("#stepNdx").html(data.returnValue);
-      //alert("pre update disp");
+      $("#stepNdx").val(data.returnValue);
       $("debugStep").html(data.returnValue);
-      //alert("done with funciton");
     }
     ,"json");
 }
@@ -153,22 +166,34 @@ function DbTestConnection()
   var dbPrefix   = $("#txtDbPrefix").val();
   var dbUser     = $("#txtDbUser").val();
   var dbPass     = $("#txtDbPass").val();
-  alert(dbHost);
+
+  //alert(dbHost+"\n"+dbDatabase+"\n"+dbPrefix+"\n"+dbUser+"\n"+dbPass);
 
   // 2) Call PHP to test connection
   $.ajax({
     type: "POST",
     url:  "install.ajax.php",
-    data: {step3: "1", db_host: "**"+dbHost },
+    cache: false,
+    dataType: "json",
+    data: {step3: "1",
+            db_host: dbHost,
+            db_name: dbDatabase,
+            db_pref: dbPrefix,
+            db_user: dbUser,
+            db_pass: dbPass
+          },
     beforeSend: function() {
       $("#spnDbConnectionTest").html("<img src='pix/spinner.gif' />");  // loading img during request
     },
-    success: function(data) { // html = server response code
-      $("#spnDbConnectionTest").html(data.dbTestRet + "!");
-      $("#spnDbConnectionTest").addClass(data.dbTestRetClass)
+    success: function(data)
+    {
+      $("#spnDbConnectionTest").html(data.dbRet_msg);
+      $("#spnDbConnectionTest").addClass(data.dbRet_class)
       // $("#spnDbConnectionTest").remove();    // remove the div
     }
 
+  }).error(function() {
+    alert("DbTestConnection Error");
   });
 
   /*
