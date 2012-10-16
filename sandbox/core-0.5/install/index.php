@@ -2,14 +2,17 @@
 /** * *********************************************************
  * Copyright 2012 (C) Xeno Innovations, Inc.
  * ALL RIGHTS RESERVED
- * @Author:      Damian Suess
- * Document:     index.php
- * Created Date: Oct 4, 2012
- *
+ * @Author:       Damian Suess
+ * Document:      index.php
+ * Created Date:  Oct 4, 2012
+ * Status:        {unstable}
  * Description:
  *  Installer (v0.0.5)
  *
  * Change Log:
+ *  2012-1015 * A lot of updates occurred
+ *            + Added BETA_TESTING boolean switch
+ *  2012-1013 + Fixed DB Connection Tester. Using:  mysqli(..) not mysql_connect(..)
  *  2012-1004 + Initial creation
  */
 /* Steps
@@ -32,6 +35,26 @@
 
 require "../xpmt/phpConsole.php";
 PhpConsole::start(true, true, dirname(__FILE__));
+
+/* ******************** */
+$BETA_TESTING = true;
+if ($BETA_TESTING)
+{
+  $_txtDBServer = "localhost";
+  $_txtDBName   = "PMT_TEST";
+  $_txtDBPrefix = "XI_";
+  $_txtDBUser   = "betauser";
+  $_txtDBPass   = "betapass";
+}
+else
+{
+  $_txtDBServer = "localhost";
+  $_txtDBName   = "PMT_DATA";
+  $_txtDBPrefix = "XI_";          // $_txtDBPrefix = "XPMT_";
+  $_txtDBUser   = "betauser";
+  $_txtDBPass   = "betapass";
+}
+/* ******************** */
 
 // Setup requirements
 
@@ -168,26 +191,18 @@ DebugDisplay();
     <div class="panelMain">
 
       <div id="panelLeft">
-        <select name="lstStep" id="lstStep" size="10">
-          <!-- Welcome page & cfg suggestions -->
-          <option value="1" selected="selected">Welcome!</option>
-          <option value="2">Verify Requirements</option>
-          <option value="3">Database Setup</option>
-          <option value="4">Create Database</option>
-          <option value="5">Setup System</option>
-          <option value="6">Install Modules</option>
-          <option value="7">Finished</option>
-          <!-- Secure your install (remove files) -->
-        </select>
 
         <table width="90%">
-          <tr><td>1</td><td>Welcome!</td></tr>
-          <tr><td>2</td><td>Verify Requirements</td></tr>
-          <tr><td>3</td><td>Database Setup</td></tr>
-          <tr><td>4</td><td>Create Database</td></tr>
-          <tr><td>5</td><td>Setup System</td></tr>
-          <tr><td>6</td><td>Install Modules</td></tr>
-          <tr><td>7</td><td>Finished</td></tr>
+          <tbody>
+
+            <tr id="tblItem1"><td> 1 -</td><td>Welcome!</td></tr>
+            <tr id="tblItem2"><td> 2 -</td><td>Verify Requirements</td></tr>
+            <tr id="tblItem3"><td> 3 -</td><td>Database Setup</td></tr>
+            <tr id="tblItem4"><td> 4 -</td><td>Create Database</td></tr>
+            <tr id="tblItem5"><td> 5 -</td><td>Setup System</td></tr>
+            <tr id="tblItem6"><td> 6 -</td><td>Install Modules</td></tr>
+            <tr id="tblItem7"><td> 7 -</td><td>Finished</td></tr>
+          </tbody>
         </table>
 
       </div>
@@ -284,23 +299,23 @@ DebugDisplay();
             <tbody>
               <tr>
                 <td>Database Server:</td>
-                <td><input type="text" id="txtDbServer" name="dbserver" value="localhost" /></td>
+                <td><input type="text" id="txtDbServer" name="dbserver" value="<?php print($_txtDBServer); ?>" /></td>
               </tr>
               <tr>
                 <td>Database Name:</td>
-                <td><input type="text" id="txtDbName" name="dbname" value="PMT_DATA" /></td>
+                <td><input type="text" id="txtDbName" name="dbname" value="<?php print($_txtDBName); ?>" /></td>
               </tr>
               <tr>
                 <td>Table Prefix:</td>
-                <td><input type="text" id="txtDbPrefix" name="dbname" value="XI_" /></td>
+                <td><input type="text" id="txtDbPrefix" name="dbname" value="<?php print($_txtDBPrefix); ?>" /></td>
               </tr>
               <tr>
                 <td>User Name:</td>
-                <td><input type="text" id="txtDbUser" name="dbuser" value="testadmin" autocomplete="off" /></td>
+                <td><input type="text" id="txtDbUser" name="dbuser" value="<?php print($_txtDBUser); ?>" autocomplete="off" /></td>
               </tr>
               <tr>
                 <td>Password:</td>
-                <td><input type="text" id="txtDbPass" name="dbpass" value="testpass" autocomplete="off" /></td>
+                <td><input type="text" id="txtDbPass" name="dbpass" value="<?php print($_txtDBPass); ?>" autocomplete="off" /></td>
               </tr>
               <tr>
                 <td></td>
@@ -324,8 +339,14 @@ DebugDisplay();
           <h1>Create Database</h1>
 
           <p>
-            step 4
+            Click the button to begin installing by first creating the Core xenoPMT Database.
           </p>
+          <div alignment="center">
+            <button type="button" id="btnInstallDb" class="Buttons">Install xenoPMT Core Database</button>
+          </div>
+          <div id="divDbInstallMsg">
+            <!-- Display error messages here -->
+          </div>
 
         </div> <!-- end:step4 -->
 
@@ -336,7 +357,7 @@ DebugDisplay();
           <h1>Configure your System</h1>
 
           <p>
-            step 5
+
           </p>
 
         </div> <!-- end:step5 -->

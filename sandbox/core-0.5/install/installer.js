@@ -19,14 +19,13 @@ $(document).ready(function() {
   /**[ Start visible ]****************************** */
   $('#imgSpinner').show();
 
-  $('#step1').show();
-  $("#step2").hide();
-  $("#step3").hide();
-  $("#step4").hide();
-  $("#step5").hide();
-  $("#step6").hide();
-  $("#step7").hide();
-
+  $('#step1').show(); $("#tblItem1").css("font-weight", "bold");
+  $("#step2").hide(); $("#tblItem2").css("font-weight", "normal");
+  $("#step3").hide(); $("#tblItem3").css("font-weight", "normal");
+  $("#step4").hide(); $("#tblItem4").css("font-weight", "normal");
+  $("#step5").hide(); $("#tblItem5").css("font-weight", "normal");
+  $("#step6").hide(); $("#tblItem6").css("font-weight", "normal");
+  $("#step7").hide(); $("#tblItem7").css("font-weight", "normal");
 
   /**[ Event Handlers ]************************ */
 
@@ -66,12 +65,16 @@ $(document).ready(function() {
       {
         // Test Database Connection
         case "btnDbTestConn":
-          //alert("test conn!");
           DbTestConnection();
         break;
 
+        // Install database
+        case "btnInstallDb":
+          DbInstall();
+        break;
+
         default:
-          alert("unknown button");
+          alert("Unknown button pressed!");
           break;
       }
     }
@@ -141,9 +144,17 @@ function UpdateStep(ndxCurrent, ndxMove)
   }
 
   //alert("US.iStep: " + iStep);
-
+  //alert("#tblItem" + iStep);
   //$("#lstStep").val(3);
 
+  // Step 2) Switch item to bold
+  $("#tblItem" + ndxCurrent).css("font-weight", "normal");
+  $("#tblItem" + iStep).css("font-weight", "bold");
+  //$("#tblItem3").css("font-weight", "Bold");
+
+  //$("#tblItem" + iStep).hide();
+
+  // Step 3) Update PHP - Not really needed
   //Actually we dont even need PHP!
   $.post(
     "install.ajax.php",
@@ -167,6 +178,9 @@ function DbTestConnection()
   var dbUser     = $("#txtDbUser").val();
   var dbPass     = $("#txtDbPass").val();
 
+  // Clear old rules so we properly display spinner
+  $("#spnDbConnectionTest").removeClass();
+  //
   //alert(dbHost+"\n"+dbDatabase+"\n"+dbPrefix+"\n"+dbUser+"\n"+dbPass);
 
   // 2) Call PHP to test connection
@@ -188,6 +202,7 @@ function DbTestConnection()
     success: function(data)
     {
       $("#spnDbConnectionTest").html(data.dbRet_msg);
+      $("#spnDbConnectionTest").removeClass();            // Remove all previous classes to reload load new update
       $("#spnDbConnectionTest").addClass(data.dbRet_class)
       // $("#spnDbConnectionTest").remove();    // remove the div
     }
@@ -206,4 +221,30 @@ function DbTestConnection()
     }
     ,"json");
     */
+}
+
+/**
+ * Calls PHP to install the database
+ */
+function DbInstall()
+{
+  $.ajax({
+    type: "POST",
+    url:  "install.ajax.php",
+    cache: false,
+    dataType: "json",
+    data: { step4: "1",
+            db_host: dbHost,
+            db_name: dbDatabase,
+            db_pref: dbPrefix,
+            db_user: dbUser,
+            db_pass: dbPass
+          },
+    beforeSend: function() {
+
+    },
+    success: function(data) {
+
+    }
+  });
 }

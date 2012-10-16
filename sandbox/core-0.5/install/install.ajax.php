@@ -16,13 +16,44 @@
 require "../xpmt/phpConsole.php";
 PhpConsole::start(true, true, dirname(__FILE__));
 
+// setup variables
+$dbHost = ""; $dbName = ""; $dbPref = ""; $dbUser = ""; $dbPass = "";
 
+
+// Get where we are suppose to go
+if(isset($_POST["ClearDB"]) && $_POST["ClearDB"]=="1")  ajaxClearDB();
 if(isset($_POST["UpdateStep"]))                         ajaxUpdateStep();
 if(isset($_POST["step3"]) && $_POST["step3"]=="1")      ajaxDatabaseTest();
+if(isset($_POST["step4"]) && $_POST["step4"]=="1")      ajaxInstallXenoPMT();
 
 
 /* ############################################ */
 
+function GetDbParams()
+{
+  global $dbHost, $dbName, $dbPref, $dbUser, $dbPass;
+  if (isset($_POST["db_host"])) $dbHost = $_POST['db_host']; else $dbHost = "";
+  if (isset($_POST["db_name"])) $dbName = $_POST['db_name']; else $dbName = "";
+  if (isset($_POST["db_pref"])) $dbPref = $_POST['db_pref']; else $dbPref = "";
+  if (isset($_POST["db_user"])) $dbUser = $_POST['db_user']; else $dbUser = "";
+  if (isset($_POST["db_pass"])) $dbPass = $_POST['db_pass']; else $dbPass = "";
+
+}
+/* ############################################ */
+
+/**
+ * Remove database tables and prep for recreation
+ */
+function ajaxClearDB()
+{
+
+}
+
+
+/**
+ * Useless function, just use the JQuery shit.
+ * This was setup as an Ajax test.
+ */
 function ajaxUpdateStep()
 {
   //debug("UpdateStep()");
@@ -53,17 +84,21 @@ function ajaxDatabaseTest()
   $retClass = "Fail";         // pre-populate
 
   // 1) Extract variables (safely pull from POST)
-  if (isset($_POST["db_host"])) $dbHost = $_POST['db_host']; else $dbHost = "";
-  if (isset($_POST["db_name"])) $dbName = $_POST['db_name']; else $dbName = "";
-  if (isset($_POST["db_pref"])) $dbPref = $_POST['db_pref']; else $dbPref = "";
-  if (isset($_POST["db_user"])) $dbUser = $_POST['db_user']; else $dbUser = "";
-  if (isset($_POST["db_pass"])) $dbPass = $_POST['db_pass']; else $dbPass = "";
-
+  global $dbHost, $dbName, $dbPref, $dbUser, $dbPass;
+  GetDbParams();
+  /*
+    if (isset($_POST["db_host"])) $dbHost = $_POST['db_host']; else $dbHost = "";
+    if (isset($_POST["db_name"])) $dbName = $_POST['db_name']; else $dbName = "";
+    if (isset($_POST["db_pref"])) $dbPref = $_POST['db_pref']; else $dbPref = "";
+    if (isset($_POST["db_user"])) $dbUser = $_POST['db_user']; else $dbUser = "";
+    if (isset($_POST["db_pass"])) $dbPass = $_POST['db_pass']; else $dbPass = "";
+  */
 
   // Stepp 2) Test Database HOST connection (localhost)
   try
   {
     $mysqli = new mysqli($dbHost, $dbUser, $dbPass, $dbName);
+    //$mysqli = new mysqli("127.0.0.1", "testuser", "testpass", "PMT_DATA");
     if ($mysqli->connect_errno)
     {
       //$retMsg = "<p>Connection Failed</p><p>[". $mysqli->connect_errno ."]: ". $mysqli->connect_error ."</p>";
@@ -73,7 +108,8 @@ function ajaxDatabaseTest()
     }
     else
     {
-
+      $retMsg   = "Connection Successful!";
+      $retClass = "Success";
     }
 
     // Old code
@@ -103,6 +139,18 @@ function ajaxDatabaseTest()
   //debug(json_encode($retArr));
   echo json_encode($retArr);
 
+
+}
+
+
+/**
+ * Create database tables
+ */
+function ajaxInstallXenoPMT()
+{
+  // setup variables
+  global $dbHost, $dbName, $dbPref, $dbUser, $dbPass;
+  GetDbParams();
 
 }
 
