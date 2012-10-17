@@ -22,14 +22,24 @@ h1 {
   margin-bottom: 20px;
 }
 
-/* Form design */
-.Buttons {
+button {
   cursor: pointer;
   /* background:url("") repeat-x; */
-  padding: 2px 4px;
+  /* padding: 2px 4px; */
+
+  /* Style from xenoPMT 0.0.4*/
+  background: #E0E0E0;
+  color: #000000;
+  border: 1px outset #eee;
+  border-radius: .3em;
+  padding: .1em .5em .2em;
+  box-shadow: .1em .1em .4em 0 #888;
+  text-shadow: .1em .1em #d0d0d0;
 }
 
-.ButtonDisabled { color: #999999; }
+/* Form design */
+
+.ButtonDisabled { color: #888888; }
 
 .panelMain, #title {
   width: 100%;

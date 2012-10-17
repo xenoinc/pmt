@@ -7,7 +7,7 @@
  *
  * Description:
  *  Installer (v0.0.5)
- *  JQuery handler
+ *  jQuery handler
  *
  * Change Log:
  *  2012-1005 + Initial creation
@@ -16,23 +16,26 @@
 // Move this to install.js
 $(document).ready(function() {
 
-  /**[ Start visible ]****************************** */
-  $('#imgSpinner').show();
 
-  $('#step1').show(); $("#tblItem1").css("font-weight", "bold");
-  $("#step2").hide(); $("#tblItem2").css("font-weight", "normal");
-  $("#step3").hide(); $("#tblItem3").css("font-weight", "normal");
-  $("#step4").hide(); $("#tblItem4").css("font-weight", "normal");
-  $("#step5").hide(); $("#tblItem5").css("font-weight", "normal");
-  $("#step6").hide(); $("#tblItem6").css("font-weight", "normal");
-  $("#step7").hide(); $("#tblItem7").css("font-weight", "normal");
+  // ######################################################################
+  /**[ jQuery Entry ]******** */
 
+
+  init();
+
+
+
+  // ######################################################################
   /**[ Event Handlers ]************************ */
 
   // List index changed
   $("#lstStep").change(function() {
     // alert($(this).val());
   });
+  $("#btnClearDb").click(function() {
+    DbRemoveTables();
+  });
+
 
   //Button Click Events
   $("button").click(function() {
@@ -73,6 +76,10 @@ $(document).ready(function() {
           DbInstall();
         break;
 
+        case "btnSysConfig":
+          // Create procedure to handle this!!!
+        break;
+
         default:
           alert("Unknown button pressed!");
           break;
@@ -81,7 +88,7 @@ $(document).ready(function() {
   });
 
 
-
+  // ######################################################################
   /**[ Functions ]****************************** */
   $(function() {
 
@@ -92,41 +99,38 @@ $(document).ready(function() {
 
   });
 
-  /* ** Hide/Show Toggle Test ***
-   *
-  $('#TestSpinner').click(function() {
-    $("#imgSpinner").toggle();
-  });
-
-  Animate hiding
-  $('#TestSpinner').click(function() {
-    $('#imgSpinner').hide('slow', function() {
-      alert('animation done!');
-    });
-  });
-   */
-
-  /* ** Call PHP Functions **
-    // Call php function directly
-    $.ajax({url: "install.ajax.php?arg1=value1&arg2=anotherval"});
-
-    // Call PHP via POST and passing values
-    $.post(
-      "phpscript.php",
-      { name: "testUser", user_Id: 1234 },  // Data to send
-      function(data) {                      // Function to handle returned info
-        $("body".append(data);
-      });
-   */
-
 });
+
+
+/* ############################################################################ */
+/* ############################################################################ */
+
+/**
+ * Page Initialization
+ */
+function init() {
+  //$('#imgSpinner').hide();  // beta testing
+
+  $('#step1').show(); $("#tblItem1").css("font-weight", "bold");
+  $("#step2").hide(); $("#tblItem2").css("font-weight", "normal");
+  $("#step3").hide(); $("#tblItem3").css("font-weight", "normal");
+  $("#step4").hide(); $("#tblItem4").css("font-weight", "normal");
+  $("#step5").hide(); $("#tblItem5").css("font-weight", "normal");
+  $("#step6").hide(); $("#tblItem6").css("font-weight", "normal");
+  $("#step7").hide(); $("#tblItem7").css("font-weight", "normal");
+
+  $("#btnInstallDb").hide();
+  $("#btnDbConnectionTest").show();
+
+}
+
 
 /*
  * update system with install step we're up (list box and display)
  */
 function UpdateStep(ndxCurrent, ndxMove)
 {
-  var MAX_STEPS=7;  // (1-7)
+  var MAX_STEPS=6;  // (1-6)
   var iStep = 0;    // Go to this step
 
   /* 1. Get current step from #stepNdx=ndxCurrent */
@@ -179,7 +183,7 @@ function DbTestConnection()
   var dbPass     = $("#txtDbPass").val();
 
   // Clear old rules so we properly display spinner
-  $("#spnDbConnectionTest").removeClass();
+  $("#spnDbConnectionStatus").removeClass();
   //
   //alert(dbHost+"\n"+dbDatabase+"\n"+dbPrefix+"\n"+dbUser+"\n"+dbPass);
 
@@ -197,14 +201,19 @@ function DbTestConnection()
             db_pass: dbPass
           },
     beforeSend: function() {
-      $("#spnDbConnectionTest").html("<img src='pix/spinner.gif' />");  // loading img during request
+      $("#spnDbConnectionStatus").html("<img src='pix/spinner.gif' />");  // loading img during request
     },
     success: function(data)
     {
-      $("#spnDbConnectionTest").html(data.dbRet_msg);
-      $("#spnDbConnectionTest").removeClass();            // Remove all previous classes to reload load new update
-      $("#spnDbConnectionTest").addClass(data.dbRet_class)
-      // $("#spnDbConnectionTest").remove();    // remove the div
+      $("#spnDbConnectionStatus").html(data.dbRet_msg);
+      $("#spnDbConnectionStatus").removeClass();            // Remove all previous classes to reload load new update
+      $("#spnDbConnectionStatus").addClass(data.dbRet_class)
+      // $("#spnDbConnectionStatus").remove();    // remove the div
+      //alert ('"'+ data.dbRet_class +'"');
+      if(data.dbRet_class == "Success")
+        { $("#btnInstallDb").show(); }
+      else
+        { $("#btnInstallDb").hide(); }
     }
 
   }).error(function() {
@@ -216,18 +225,29 @@ function DbTestConnection()
     "install.ajax.php",
     {DbTestConnection: str},
     function(data) {
-      $("#spnDbConnectionTest").html(data.dbTestRet);
-      $("$spnDbConnectionTest").addClass(data.dbTestRetClass);
+      $("#spnDbConnectionStatus").html(data.dbTestRet);
+      $("spnDbConnectionStatus").addClass(data.dbTestRetClass);
     }
     ,"json");
     */
 }
+
 
 /**
  * Calls PHP to install the database
  */
 function DbInstall()
 {
+
+  var dbHost     = $("#txtDbServer").val();
+  var dbDatabase = $("#txtDbName").val();
+  var dbPrefix   = $("#txtDbPrefix").val();
+  var dbUser     = $("#txtDbUser").val();
+  var dbPass     = $("#txtDbPass").val();
+
+  // Clear old rules so we properly display spinner
+  $("#spnDbConnectionStatus").removeClass();
+
   $.ajax({
     type: "POST",
     url:  "install.ajax.php",
@@ -241,10 +261,84 @@ function DbInstall()
             db_pass: dbPass
           },
     beforeSend: function() {
-
+      $("#spnDbConnectionStatus").removeClass();
+      $("#spnDbConnectionStatus").html("<img src='pix/spinner.gif' /> Installing...");
     },
     success: function(data) {
-
+      $("#spnDbConnectionStatus").html(data.dbRet_msg);
+      $("#spnDbConnectionStatus").removeClass();            // Remove all previous classes to reload load new update
+      $("#spnDbConnectionStatus").addClass(data.dbRet_class)
     }
   });
 }
+
+
+/**
+ * Calls PHP to install the database
+ */
+function DbRemoveTables()
+{
+
+  var dbHost     = $("#txtDbServer").val();
+  var dbDatabase = $("#txtDbName").val();
+  var dbPrefix   = $("#txtDbPrefix").val();
+  var dbUser     = $("#txtDbUser").val();
+  var dbPass     = $("#txtDbPass").val();
+
+  // Clear old rules so we properly display spinner
+  $("#spnDbConnectionStatus").removeClass();
+
+  $.ajax({
+    type: "POST",
+    url:  "install.ajax.php",
+    cache: false,
+    dataType: "json",
+    data: { ClearDB: "1",
+            db_host: dbHost,
+            db_name: dbDatabase,
+            db_pref: dbPrefix,
+            db_user: dbUser,
+            db_pass: dbPass
+          },
+    beforeSend: function() {
+      $("#spnDbConnectionStatus").html("<img src='pix/spinner.gif' /> Removing database...");
+    },
+    success: function(data) {
+      $("#spnDbConnectionStatus").html(data.dbRet_msg);
+      $("#spnDbConnectionStatus").removeClass();            // Remove all previous classes to reload load new update
+      $("#spnDbConnectionStatus").addClass(data.dbRet_class)
+    }
+  });
+}
+
+
+/* ######################################################### */
+/* ##[ Unused Code ]######################################## */
+/* ######################################################### */
+
+  /* ** Hide/Show Toggle Test ***
+   *
+  $('#TestSpinner').click(function() {
+    $("#imgSpinner").toggle();
+  });
+
+  Animate hiding
+  $('#TestSpinner').click(function() {
+    $('#imgSpinner').hide('slow', function() {
+      alert('animation done!');
+    });
+  });
+   */
+
+  /* ** Call PHP Functions **
+    // Call php function directly
+    $.ajax({url: "install.ajax.php?arg1=value1&arg2=anotherval"});
+
+    // Call PHP via POST and passing values
+    $.post(
+      "phpscript.php",
+      { name: "testUser", user_Id: 1234 },  // Data to send
+      function(data) {                      // Function to handle returned info
+        $("body".append(data);
+      });
+   */

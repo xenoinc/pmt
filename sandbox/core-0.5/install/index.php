@@ -45,14 +45,28 @@ if ($BETA_TESTING)
   $_txtDBPrefix = "XI_";
   $_txtDBUser   = "betauser";
   $_txtDBPass   = "betapass";
+
+  $_txtCfgSiteName = "xenoPMT 0.0.5";
+  //$_optCfgCleanURI    = true;
+  $_txtCfgAdminDisp   = "Administrator";
+  $_txtCfgAdminUser   = "admin";
+  $_txtCfgAdminPass   = "pass";
+  $_txtCfgAdminEmail  = "noreply@localhost";
 }
 else
 {
   $_txtDBServer = "localhost";
   $_txtDBName   = "PMT_DATA";
   $_txtDBPrefix = "XI_";          // $_txtDBPrefix = "XPMT_";
-  $_txtDBUser   = "betauser";
-  $_txtDBPass   = "betapass";
+  $_txtDBUser   = "";
+  $_txtDBPass   = "";
+
+  $_txtCfgSiteName    = "xenoPMT";
+  //$_optCfgCleanURI    = true;
+  $_txtCfgAdminDisp   = "Administrator";
+  $_txtCfgAdminUser   = "";
+  $_txtCfgAdminPass   = "";
+  $_txtCfgAdminEmail  = "";
 }
 /* ******************** */
 
@@ -198,10 +212,10 @@ DebugDisplay();
             <tr id="tblItem1"><td> 1 -</td><td>Welcome!</td></tr>
             <tr id="tblItem2"><td> 2 -</td><td>Verify Requirements</td></tr>
             <tr id="tblItem3"><td> 3 -</td><td>Database Setup</td></tr>
-            <tr id="tblItem4"><td> 4 -</td><td>Create Database</td></tr>
-            <tr id="tblItem5"><td> 5 -</td><td>Setup System</td></tr>
-            <tr id="tblItem6"><td> 6 -</td><td>Install Modules</td></tr>
-            <tr id="tblItem7"><td> 7 -</td><td>Finished</td></tr>
+            <tr id="tblItem4"><td> 4 -</td><td>Configure your System</td></tr>
+            <tr id="tblItem5"><td> 5 -</td><td>Install Modules</td></tr>
+            <tr id="tblItem6"><td> 6 -</td><td>Finished</td></tr>
+            <!--<tr id="tblItem7"><td> 7 -</td><td></td></tr>-->
           </tbody>
         </table>
 
@@ -318,66 +332,188 @@ DebugDisplay();
                 <td><input type="text" id="txtDbPass" name="dbpass" value="<?php print($_txtDBPass); ?>" autocomplete="off" /></td>
               </tr>
               <tr>
-                <td></td>
                 <td>
                   <button type="button" id="btnDbTestConn" class="Buttons">Test Connection</button>
+                </td>
+                <td>
+                  <button type="button" id="btnInstallDb" class="Buttons">Install xenoPMT Core</button>
                 </td>
               </tr>
             </tbody>
           </table>
-
-          <div id="spnDbConnectionTest" class="" style="padding-top: 10px;">
-            <i>(untested)</i>
+          <div id="spnDbConnectionStatus" class="" style="padding-top: 10px;">
+            <i>(Click, "Test Connection" to continue)</i>
           </div>
 
         </div> <!-- end:step3 -->
 
 
-        <!-- Step 4 - Create Database -->
+        <!-- Step 4 - Configure the Admin Account -->
         <div class="steps" id="step4">
-          <?php MakeNav(3,4,5); ?>
-          <h1>Create Database</h1>
+          <!-- Info: Site Name, Admin Name, Admin Pass, Admin Email, Admin Display Name -->
 
-          <p>
-            Click the button to begin installing by first creating the Core xenoPMT Database.
-          </p>
-          <div alignment="center">
-            <button type="button" id="btnInstallDb" class="Buttons">Install xenoPMT Core Database</button>
-          </div>
-          <div id="divDbInstallMsg">
+          <?php MakeNav(3,4,5); ?>
+          <h1>Configure your System</h1>
+
+          <table id="tblSystemReq" border="0" cellpadding="0" cellspacing="0" width="100%">
+            <thread>
+              <tr>
+                <td><b></b></td>
+                <td><b>Required Input</b></td>
+              </tr>
+            </thread>
+            <tbody>
+              <tr>
+                <td>System Name:</td>
+                <td><input type="text" id="txtCfgSiteName" name="" value="<?php print($_txtCfgSiteName); ?>" /></td>
+              </tr>
+              <tr>
+                <td>Clean URI:</td>
+                <td>
+                  <input type="radio" id="optCfgCleanURI1" name="" value="1" checked="checked" /><label for="optCfgCleanURI1">Yes</label>
+                  <input type="radio" id="optCfgCleanURI2" name="" value="0" /><label for="optCfgCleanURI2">No</label>
+                </td>
+              </tr>
+              <tr>
+                <td>Admin Display Name:</td>
+                <td><input type="text" id="txtCfgAdminDisp" name="" value="<?php print($_txtCfgAdminDisp); ?>" /></td>
+              </tr>
+              <tr>
+                <td>Admin User Name:</td>
+                <td><input type="text" id="txtCfgAdminUser" name="" value="<?php print($_txtCfgAdminUser); ?>" /></td>
+              </tr>
+              <tr>
+                <td>Admin Password:</td>
+                <td><input type="text" id="txtCfgAdminPass" name="" value="<?php print($_txtCfgAdminPass); ?>" autocomplete="off" /></td>
+              </tr>
+              <tr>
+                <td>Admin Email:</td>
+                <td><input type="text" id="txtCfgAdminEmail" name="" value="<?php print($_txtCfgAdminEmail); ?>" autocomplete="off" /></td>
+              </tr>
+              <tr>
+                <td></td>
+                <td>
+                  <button type="button" id="btnSysConfig" class="Buttons">Configure System</button>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+
+          <div id="divDbInstallMsg" class="" style="padding-top: 10px;">
             <!-- Display error messages here -->
+            <i>(Click, "Continue to accept settings")</i>
           </div>
 
         </div> <!-- end:step4 -->
 
-        <!-- Step 5 - Name your system -->
+        <!-- Step 5 - Install Modules -->
         <div class="steps" id="step5">
-          <!-- Info: Site Name, Admin Name, Admin Pass, Admin Email, Admin Display Name -->
+
           <?php MakeNav(4,5,6); ?>
-          <h1>Configure your System</h1>
+          <h1>Install Modules</h1>
 
-          <p>
+          <table id="tblSystemReq" border="0" cellpadding="0" cellspacing="0" width="100%">
+            <thread>
+              <tr>
+                <td><b>Module Name</b></td>
+                <td><b>Select Module to install</b></td>
+              </tr>
+            </thread>
+            <tbody>
+              <tr>
+                <td>
+                  Administrator
+                </td>
+                <td>X</td>
+              </tr>
+              <tr>
+                <td>
+                  Dashboard<br />
+                  <small><i>Default xenoPMT dashboard</i></small>
+                </td>
+                <td>X</td>
+              </tr>
+              <tr>
+                <td>
+                  Customer Manager<br />
+                  <small><i>(no dependencies)</i></small>
+                </td>
+                <td></td>
+              </tr>
+              <tr>
+                <td>
+                  Knowledge Base<br />
+                  <small><i></i></small>
+                </td>
+                <td></td>
+              </tr>
+              <tr>
+                <td>
+                  Product<br />
+                  <small><i> </i></small>
+                </td>
+                <td></td>
+              </tr>
+              <tr>
+                <td>
+                  Project<br />
+                  <small><i> </i></small>
+                </td>
+                <td></td>
+              </tr>
+              <tr>
+                <td>
+                  Ticket System<br />
+                  <small><i>Issue ticketing system</i></small>
+                </td>
+                <td></td>
+              </tr>
+              <tr>
+                <td>
+                  Bug Manager<br />
+                  <small><i> </i></small>
+                </td>
+                <td></td>
+              </tr>
+              <tr>
+                <td>
+                  Task Manager<br />
+                  <small><i> </i></small>
+                </td>
+                <td></td>
+              </tr>
+              <tr>
+                <td>
+                  Wiki System<br />
+                  <small><i> </i></small>
+                </td>
+                <td></td>
+              </tr>
+              <tr>
+                <td>
+                  Purchase Order Manager<br />
+                  <small><i> </i></small>
+                </td>
+                <td></td>
+              </tr>
+              <tr>
+                <td></td>
+                <td><button type="button" id="btnSysConfig" class="Buttons">Install Modules</button></td>
+              </tr>
+            </tbody>
+          </table>
 
-          </p>
+          <div id="divModuleInstallStatus" class="" style="padding-top: 10px;">
+            <!-- Display status messages here -->
+            <i></i>
+          </div>
 
         </div> <!-- end:step5 -->
 
 
         <!-- Step 6 - Install Modules -->
         <div class="steps" id="step6">
-          <?php MakeNav(5, 6, 7); ?>
-          <h1>Install Modules</h1>
-
-          <p>
-            step 6
-          </p>
-
-        </div> <!-- end:step6 -->
-
-
-        <!-- Step 7 - Finished -->
-        <div class="steps" id="step7">
-          <?php MakeNav(6, 7); ?>
+          <?php MakeNav(5, 6);  //MakeNav(5, 6, 7); ?>
           <h1>Finished!</h1>
 
           <p>
@@ -393,9 +529,29 @@ DebugDisplay();
             <i>Xeno Innovations Development Team</i>
           </p>
 
+        </div> <!-- end:step6 -->
+
+
+        <!-- Step 7 - Finished -->
+        <div class="steps" id="step7">
+          <?php MakeNav(6, 7); ?>
+          <h1>Step 7</h1>
+
+          <p>
+            Step 7
+          </p>
+
         </div> <!-- end:step7 -->
 
       </div> <!-- end:panelRight -->
     </div> <!-- end:panelmain -->
+    <?PHP
+    if ($BETA_TESTING)
+    {?>
+    <div align="center">
+      <a href="#" id="btnClearDb">Clear Database</a>
+    </div>
+    <?php }
+    ?>
   </body>
 </html>
