@@ -81,8 +81,7 @@ function ajaxClearDB()
  * Useless function, just use the jQuery shit.
  * This was setup as an Ajax test.
  */
-/* Removed 2012-1018
- *
+/** 2012-1018 - Removed, this is not needed. jQuery is doing all the work
 function ajaxUpdateStep()
 {
   //debug("UpdateStep()");

@@ -95,8 +95,8 @@ $(document).ready(function() {
 
   // ######################################################################
   /**[ Functions ]****************************** */
-  $(function() {
-
+  $(function()
+  {
     $.ChangePanel = function(old, next) {
 
       // 2012-1018 :: Added (-1) logic to quickly move to database installer after clearning tables
@@ -113,11 +113,8 @@ $(document).ready(function() {
         $("#step"+old).hide("fast");
         $("#step"+next).show("normal");
       }
-
     };
-
   });
-
 });
 
 
@@ -127,9 +124,8 @@ $(document).ready(function() {
 /**
  * Page Initialization
  */
-function init() {
-  //$('#imgSpinner').hide();  // beta testing
-
+function init()
+{
   $('#step1').show(); $("#tblItem1").css("font-weight", "bold");
   $("#step2").hide(); $("#tblItem2").css("font-weight", "normal");
   $("#step3").hide(); $("#tblItem3").css("font-weight", "normal");
@@ -140,7 +136,6 @@ function init() {
 
   $("#btnInstallDb").hide();
   $("#btnDbConnectionTest").show();
-
 }
 
 
@@ -153,22 +148,16 @@ function UpdateStep(ndxCurrent, ndxMove)
   var iStep = 0;    // Go to this step
 
   /* 1. Get current step from #stepNdx=ndxCurrent */
-  //alert("Move To: " + ndxMove + "\n Max: " + MAX_STEPS);
+  //alert("Move To: " + ndxMove +
+  //"\n Max: " + MAX_STEPS);
   // We're doing this incase we allow jumping of steps later
   if(ndxMove > MAX_STEPS)  {
-    iStep = ndxCurrent;
-    //alert("US.ndxMove=OOB_MAX");
+    iStep = ndxCurrent;           //alert("US.ndxMove=OOB_MAX");
   } else if (ndxMove < 1) {
-    iStep = ndxCurrent;       // ndxMove = 1;
-    //alert("US.ndxMove=OOB_low");
+    iStep = ndxCurrent;           //alert("US.ndxMove=OOB_low");
   } else {
-    iStep = ndxMove;
-    //alert("US.ndxMove=good");
+    iStep = ndxMove;              //alert("US.ndxMove=good");
   }
-
-  //alert("US.iStep: " + iStep);
-  //alert("#tblItem" + iStep);
-  //$("#lstStep").val(3);
 
   // Step 2) Switch item to bold
   // 2012-1018 + Added (-1) logic for ClearTables to quickly move to Db Installer
@@ -184,14 +173,10 @@ function UpdateStep(ndxCurrent, ndxMove)
     $("#tblItem" + ndxCurrent).css("font-weight", "normal");
     $("#tblItem" + iStep).css("font-weight", "bold");
   }
-  //$("#tblItem3").css("font-weight", "Bold");
-
-  //$("#tblItem" + iStep).hide();
 
   // Step 3) Update PHP - Not really needed
-  // 2012-1018 - Removed (djs)
-  //  This is a useless step & is only here to provide
-  //  and example for ajax, jquery & PHP
+  // 2012-1018 - Removed (djs) - Let jQuery do all the work, not PHP
+  $("#stepNdx").val(iStep);
   /*
   $.post(
     "install.ajax.php",
@@ -201,7 +186,7 @@ function UpdateStep(ndxCurrent, ndxMove)
       $("debugStep").html(data.returnValue);
     }
     ,"json");
-    */
+  */
 }
 
 /**
@@ -218,7 +203,6 @@ function DbTestConnection()
 
   // Clear old rules so we properly display spinner
   $("#spnDbConnectionStatus").removeClass();
-  //
   //alert(dbHost+"\n"+dbDatabase+"\n"+dbPrefix+"\n"+dbUser+"\n"+dbPass);
 
   // 2) Call PHP to test connection
@@ -234,8 +218,8 @@ function DbTestConnection()
             db_user: dbUser,
             db_pass: dbPass
           },
-    beforeSend: function() {
-      // $("#spnDbConnectionStatus").html("<img src='pix/spinner.gif' />");  // loading img during request
+    beforeSend: function()
+    {
       $("#spnDbConnectionStatus").html("<img src='pix/busy.gif' />");  // loading img during request
     },
     success: function(data)
@@ -250,21 +234,10 @@ function DbTestConnection()
       else
         { $("#btnInstallDb").hide(); }
     }
-
-  }).error(function() {
+  }).error(function()
+  {
     alert("DbTestConnection Error");
   });
-
-  /*
-  $.post(
-    "install.ajax.php",
-    {DbTestConnection: str},
-    function(data) {
-      $("#spnDbConnectionStatus").html(data.dbTestRet);
-      $("spnDbConnectionStatus").addClass(data.dbTestRetClass);
-    }
-    ,"json");
-    */
 }
 
 

@@ -61,7 +61,10 @@ CREATE TABLE IF NOT EXISTS `TBLPMT_CORE_MODULE`
   primary key (`Module_Id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
-/* Test table */
+/*
+  Module Configuration Settings
+
+*/
 create table if not exists `TBLPMT_CORE_MODULE_CONFIG`
 (
   `Module_UUID`   VARCHAR(36),
@@ -91,7 +94,7 @@ CREATE TABLE IF NOT EXISTS `TBLPMT_S_CORE_MODULE_PRIV`
 
 
 /*
-  Module Uniform Resource Identifier - Give your module a home!
+  Module Uniform Resource Name  - Give your module a home!
   This is only used for modules with multiple URN IDs.. currently deprecated
 
     Used in "pmt.php/PmtParseURL()" to accept the 'p' in "project/prj/p" as valid uri segments name

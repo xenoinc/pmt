@@ -25,9 +25,18 @@
 /* Step 1 - Make sure system is configured & db installed */
 
 // i) Set version (should be in array)
-$pmt_version = "0.0.5";
-$pmt_version_ex = "000005";
-$pmt_db_version = 0.2;
+$pmt_version      = "0.0.5";      // Core Version      (maj.min.rev)
+$pmt_version_ex   = 000005;       // Integer friendly  (00 00 05)
+$pmt_version_ex2  = "000005";     // String  friendly  (00 00 05)
+$pmt_db_version   = 0.2;
+
+// Added 2012-1019 - to replace old crap
+$xpmtCore["info"]["version"]     = "0.0.5";
+$xpmtCore["info"]["version_ex"]  = 000005;
+$xpmtCore["info"]["version_ex2"] = "000005";
+$xpmtCore["info"]["db_version"]  = 0.2;
+
+
 define("PMT_VER",$pmt_version);
 
 // ii) Setup debugging - (2012-0805) Moved debugging to index for immediate results
@@ -45,6 +54,10 @@ define("PMT_VER",$pmt_version);
 // 2) strip magic quotes
 $pmt_cache = array("setting"=>array());
 $pmt_breadcrumb = array();
+
+// Added 2012-1019 - keep one home for many variables
+$xpmtCore["page"]["cache"]      = array("setting"=>array());
+$xpmtCore["page"]["breadcrumb"] = array();
 
 
 /* Step 3 - Include the required classes */
@@ -87,7 +100,6 @@ define("THEME", $uri->Anchor("xpmt/themes", GetSetting("theme"))); // Set theme
 
 // Used to generate the body of our skin
 
-
 $PAGE_TITLE="";     // Page title
 $PAGE_LOGO="";      // Site image path  ** not used yet.
 $PAGE_METABAR="";   // User (login/usr-pref)/settings/logout/about
@@ -97,6 +109,20 @@ $PAGE_MINIRIGHT=""; // Mini-bar Right aligned (module node options)
 $PAGE_HTDATA="";    // Main page html data
 $PAGE_PATH="";      // Relative path to theme currently in use
 
+// Proposal 2012-1019 - keep one home for many variables
+//
+//  $xpmtCore["page"]["title"]="";
+//  or
+//  $xpmtPage["title"]="";      <<<< use this
+//
+// $xpmtCore["page"]["title"]="";
+// $xpmtCore["page"]["logo"]="";
+// $xpmtCore["page"]["metabar"]="";
+// $xpmtCore["page"]["toolbar"]="";
+// $xpmtCore["page"]["minileft"]="";
+// $xpmtCore["page"]["miniright"]="";
+// $xpmtCore["page"]["htdata"]="";
+// $xpmtCore["page"]["path"]="";
 
 
 /* ################################################################################ */
