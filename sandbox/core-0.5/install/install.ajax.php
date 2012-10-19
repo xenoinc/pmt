@@ -78,9 +78,11 @@ function ajaxClearDB()
 
 
 /**
- * Useless function, just use the JQuery shit.
+ * Useless function, just use the jQuery shit.
  * This was setup as an Ajax test.
  */
+/* Removed 2012-1018
+ *
 function ajaxUpdateStep()
 {
   //debug("UpdateStep()");
@@ -93,6 +95,8 @@ function ajaxUpdateStep()
   // $ret = "99";
   // echo json_encode(array("returnValue" => "$ret"));
 }
+*/
+
 
 /**
  * DatabaseTest via Ajax

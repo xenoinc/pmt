@@ -9,6 +9,12 @@
  * Description:
  *   User tables.
  *
+ * Proposal:
+ * 2012-1018  + #1 Change _USER_GROUP to _USER_GROUP_LIST and _GROUP to _USER_GROUP.
+ *                 This change will properly organize table naming convention.
+ *            + #2 Prefix all tables with _CORE. Since the user syste is apart of
+ *                 xenoPMT Core system.
+ *            * Implement in Core 0.0.6
  *
  * Change Log:
  * 2012-1004  * (djs) Increased `Priv_Name` from 25 to 64 (ie: admin-edit-permissions)
@@ -20,8 +26,6 @@
  * 2012-0304  * (djs) Cleaned semicolons from comments. Causing issues with parser.
  * 2012-0302  * (djs) Created file to have final user db changes.
  **********************************************************************/
-
-
 
 /*
   Used for customer logins
@@ -36,22 +40,21 @@
     2012-0603 * Changed `Session_Hash` from NOT NULL to NULL (stupid mistake)
               * Changed `Name` to `Display_Name`
 */
-
 CREATE TABLE IF NOT EXISTS `TBLPMT_USER`
 (
   `User_Id`       INT UNSIGNED NOT NULL AUTO_INCREMENT,
-  `User_Name`     VARCHAR(50) COLLATE utf8_unicode_ci NOT NULL,
-  `Password`      VARCHAR(255) COLLATE utf8_unicode_ci NOT NULL,  -- encrypted user password
-  `Email`         VARCHAR(255) COLLATE utf8_unicode_ci NOT NULL,
-  `Display_Name`  VARCHAR(255) COLLATE utf8_unicode_ci NOT NULL,  -- Name the world sees
-  `Name_First`    VARCHAR(75) COLLATE utf8_unicode_ci NULL,   -- First Name
-  `Name_Last`     VARCHAR(75) COLLATE utf8_unicode_ci NULL,   -- Last Name
-  `Name_Middle`   VARCHAR(75) COLLATE utf8_unicode_ci NULL,   -- Middle Name
-  `Name_Title`    VARCHAR(4) COLLATE utf8_unicode_ci NULL,    -- Dr, Mr, Mrs, Ms
-  `Name_Salu`     VARCHAR(4) COLLATE utf8_unicode_ci NULL,    -- Sr, Jr, III, IV, Esq(uire)
-  `Customer_Id`   VARCHAR(256) COLLATE utf8_unicode_ci NULL,  -- Only used if it's a customer
+  `User_Name`     VARCHAR(50)   COLLATE utf8_unicode_ci NOT NULL,
+  `Password`      VARCHAR(255)  COLLATE utf8_unicode_ci NOT NULL, -- encrypted user password
+  `Email`         VARCHAR(255)  COLLATE utf8_unicode_ci NOT NULL,
+  `Display_Name`  VARCHAR(255)  COLLATE utf8_unicode_ci NOT NULL, -- Name the world sees
+  `Name_First`    VARCHAR(75)   COLLATE utf8_unicode_ci NULL,     -- First Name
+  `Name_Last`     VARCHAR(75)   COLLATE utf8_unicode_ci NULL,     -- Last Name
+  `Name_Middle`   VARCHAR(75)   COLLATE utf8_unicode_ci NULL,     -- Middle Name
+  `Name_Title`    VARCHAR(4)    COLLATE utf8_unicode_ci NULL,     -- Dr, Mr, Mrs, Ms
+  `Name_Salu`     VARCHAR(4)    COLLATE utf8_unicode_ci NULL,     -- Sr, Jr, III, IV, Esq(uire)
+  `Customer_Id`   VARCHAR(256)  COLLATE utf8_unicode_ci NULL,     -- Only used if it's a customer
   `Active`        BOOLEAN,      -- Account is active
-  `Image_File`    VARCHAR(255) COLLATE  utf8_unicode_ci,      -- User picture
+  `Image_File`    VARCHAR(255)  COLLATE  utf8_unicode_ci,         -- User picture
 
   `Termination_Dttm`    DATETIME,           -- used for interns, etc
   `Created_Dttm`        DATETIME,           -- when was user created
@@ -90,10 +93,10 @@ create table if not exists `TBLPMT_USER_SETTINGS`
 */
 CREATE TABLE IF NOT EXISTS `TBLPMT_USER_INFO`
 (
-  `User_Info_Id` INT UNSIGNED NOT NULL AUTO_INCREMENT,
-  `User_Id` INT UNSIGNED NOT NULL,
-  `Detail_Data` VARCHAR(255) COLLATE utf8_unicode_ci NOT NULL,
-  `Detail_Type` VARCHAR(10) NOT NULL,
+  `User_Info_Id`  INT UNSIGNED  NOT NULL AUTO_INCREMENT,
+  `User_Id`       INT UNSIGNED  NOT NULL,
+  `Detail_Data`   VARCHAR(255)  COLLATE utf8_unicode_ci NOT NULL,
+  `Detail_Type`   VARCHAR(10)   NOT NULL,
   PRIMARY KEY (`User_Info_Id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
@@ -124,11 +127,12 @@ CREATE TABLE IF NOT EXISTS `TBLPMT_USER_AUTH_COOKIE`
     WHERE g.pmt_group.group_id = p.pmt_group_priv.group_id
   2012-03-09: - Changed from PMT_USER_GROUP to PMT_GROUP
 */
+/* 2012-1018  * Proposed name change: _GROUP to _USER_GROUP */
 create table `TBLPMT_GROUP`
 (
-  `Group_Id`    INT UNSIGNED NOT NULL AUTO_INCREMENT,
-  `Group_Name`  VARCHAR(20) COLLATE utf8_unicode_ci NOT NULL,   -- Name of the group
-  `Description` VARCHAR(255) COLLATE utf8_unicode_ci NOT NULL,  -- Description of what this group does
+  `Group_Id`    INT UNSIGNED  NOT NULL AUTO_INCREMENT,
+  `Group_Name`  VARCHAR(20)   COLLATE utf8_unicode_ci NOT NULL,   -- Name of the group
+  `Description` VARCHAR(255)  COLLATE utf8_unicode_ci NOT NULL,   -- Description of what this group does
   PRIMARY KEY (`Group_Id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
@@ -148,14 +152,14 @@ INSERT INTO `TBLPMT_GROUP` (Group_Name, Description) VALUES ('CUSTOMERADMIN', 'C
   Used along side of XIPMT_S_MODULE_PRIV. Get definitions from there?
   So this means XIPMT_S_GROUP_PERMISSIONS is to be replaced by S_Module_Priv
 
-
   Version 0.2.0
   Last Update:  2010-11-07
 */
+/* 2012-1018  * Proposed name change: _GROUP_PRIV to _USER_GROUP_PRIV */
 create table `TBLPMT_GROUP_PRIV`
 (
-  `Group_Id`    INT UNSIGNED NOT NULL,                   -- Name of the group
-  `Priv_Name`   VARCHAR(64) COLLATE utf8_unicode_ci NOT NULL  -- Available Privilege
+  `Group_Id`    INT UNSIGNED  NOT NULL,                         -- Name of the group
+  `Priv_Name`   VARCHAR(64)   COLLATE utf8_unicode_ci NOT NULL  -- Available Privilege
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 /*
@@ -163,10 +167,11 @@ create table `TBLPMT_GROUP_PRIV`
   Version 0.2.0
   Last Update:  2010-11-07
 */
+/* 2012-1018  * Proposed name change: _S_GROUP_PERMISSION to _S_USER_GROUP_PERMISSION */
 CREATE TABLE IF NOT EXISTS `TBLPMT_S_GROUP_PERMISSION`
 (
-  `Priv_Name`   VARCHAR(64) COLLATE utf8_unicode_ci NOT NULL,
-  `Description` VARCHAR(255) COLLATE utf8_unicode_ci NOT NULL,
+  `Priv_Name`   VARCHAR(64)   COLLATE utf8_unicode_ci NOT NULL,
+  `Description` VARCHAR(255)  COLLATE utf8_unicode_ci NOT NULL,
   `Sort_Order`  INT
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
@@ -177,6 +182,7 @@ CREATE TABLE IF NOT EXISTS `TBLPMT_S_GROUP_PERMISSION`
   Created:  2012-03-09
   ** NOT USED YET (v1.5)
 */
+/* 2012-1018  * Proposed name change: _USER_GROUP to _USER_GROUP_LIST */
 CREATE TABLE `TBLPMT_USER_GROUP`
 (
   `User_Id`  INT UNSIGNED NOT NULL,
@@ -191,7 +197,7 @@ CREATE TABLE `TBLPMT_USER_GROUP`
 */
 CREATE TABLE IF NOT EXISTS `TBLPMT_USER_TEAM`
 (
-  `Team_Id` INT UNSIGNED NOT NULL AUTO_INCREMENT,
+  `Team_Id`   INT UNSIGNED NOT NULL AUTO_INCREMENT,
   `Team_Name` VARCHAR(255) COLLATE utf8_unicode_ci NOT NULL,
   `Active` BOOLEAN,
   PRIMARY KEY (`Team_Id`)
@@ -227,6 +233,7 @@ INSERT INTO `TBLPMT_S_GROUP_PERMISSION` (Priv_Name, Description, Sort_Order) VAL
 /*
   REMOVE THIS!!!  This should be inserted by the Modules during the installation process
 */
+/* 2012-1018  * Proposed name change: _GROUP to _USER_GROUP */
 INSERT INTO `TBLPMT_S_GROUP_PERMISSION` VALUES ('ADMIN',                   'User will have access to all components', 0);
 INSERT INTO `TBLPMT_S_GROUP_PERMISSION` VALUES ('REPO_BROWSER_VIEW',       'User is able to view the project files',  '0');
 INSERT INTO `TBLPMT_S_GROUP_PERMISSION` VALUES ('REPO_CHANGESET_VIEW',     'User is able to view each revision desciption and compare source differences', 0);
@@ -264,10 +271,5 @@ INSERT INTO `TBLPMT_S_GROUP_PERMISSION` VALUES ('WIKI_CREATE',             '', 0
 INSERT INTO `TBLPMT_S_GROUP_PERMISSION` VALUES ('WIKI_DELETE',             '', 0);
 INSERT INTO `TBLPMT_S_GROUP_PERMISSION` VALUES ('WIKI_MODIFY',             '', 0);
 INSERT INTO `TBLPMT_S_GROUP_PERMISSION` VALUES ('WIKI_VIEW',               '', 0);
-
-
-
-
-
 
 

@@ -173,6 +173,7 @@ function MakeNav($bak="", $cur="", $fwd="")
 
     <link href="setup.css" rel="stylesheet" type="text/css" />
     <script language="JavaScript" src="js/jquery-1.8.2.min.js" type="text/javascript"></script>
+    <script language="JavaScript" src="js/jquery-ui-1.9.0.custom.min.js" type="text/javascript"></script>
     <script language="JavaScript" src="installer.js" type="text/javascript"></script>
     <script type="text/javascript" language="JavaScript">
 
@@ -428,17 +429,22 @@ DebugDisplay();
               </tr>
               <tr>
                 <td>
-                  Dashboard<br />
+                  <h3>Dashboard</h3>
+                  <h6>Version: 0.0.5</h6>
                   <small><i>Default xenoPMT dashboard</i></small>
                 </td>
-                <td>X</td>
+                <td>
+                  <i>not available</i>
+                </td>
               </tr>
               <tr>
                 <td>
                   Customer Manager<br />
                   <small><i>(no dependencies)</i></small>
                 </td>
-                <td></td>
+                <td>
+
+                </td>
               </tr>
               <tr>
                 <td>

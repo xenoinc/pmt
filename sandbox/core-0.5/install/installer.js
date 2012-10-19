@@ -32,7 +32,12 @@ $(document).ready(function() {
   $("#lstStep").change(function() {
     // alert($(this).val());
   });
+
+  // Clear ALL tables in database
   $("#btnClearDb").click(function() {
+
+    $.ChangePanel(-1, 3);
+    UpdateStep(-1, 3);
     DbRemoveTables();
   });
 
@@ -93,8 +98,22 @@ $(document).ready(function() {
   $(function() {
 
     $.ChangePanel = function(old, next) {
-      $("#step"+old).hide("fast");
-      $("#step"+next).show("normal");
+
+      // 2012-1018 :: Added (-1) logic to quickly move to database installer after clearning tables
+      if (old == -1)
+      {
+        $("#step1").hide(0);
+        $("#step2").hide(0);
+        $("#step4").hide(0);
+        $("#step5").hide(0);
+        $("#step6").hide(0);
+        $("#step7").hide(0);
+        $("#step3").show("normal");
+      } else {
+        $("#step"+old).hide("fast");
+        $("#step"+next).show("normal");
+      }
+
     };
 
   });
@@ -152,14 +171,28 @@ function UpdateStep(ndxCurrent, ndxMove)
   //$("#lstStep").val(3);
 
   // Step 2) Switch item to bold
-  $("#tblItem" + ndxCurrent).css("font-weight", "normal");
-  $("#tblItem" + iStep).css("font-weight", "bold");
+  // 2012-1018 + Added (-1) logic for ClearTables to quickly move to Db Installer
+  if (ndxCurrent == -1)
+  {
+    $("#tblItem1").css("font-weight", "normal");
+    $("#tblItem2").css("font-weight", "normal");
+    $("#tblItem4").css("font-weight", "normal");
+    $("#tblItem5").css("font-weight", "normal");
+    $("#tblItem6").css("font-weight", "normal");
+    $("#tblItem3" ).css("font-weight", "bold");
+  }else{
+    $("#tblItem" + ndxCurrent).css("font-weight", "normal");
+    $("#tblItem" + iStep).css("font-weight", "bold");
+  }
   //$("#tblItem3").css("font-weight", "Bold");
 
   //$("#tblItem" + iStep).hide();
 
   // Step 3) Update PHP - Not really needed
-  //Actually we dont even need PHP!
+  // 2012-1018 - Removed (djs)
+  //  This is a useless step & is only here to provide
+  //  and example for ajax, jquery & PHP
+  /*
   $.post(
     "install.ajax.php",
     {UpdateStep: iStep},              // post data ($_POST["updateStep"] = iStep)
@@ -168,6 +201,7 @@ function UpdateStep(ndxCurrent, ndxMove)
       $("debugStep").html(data.returnValue);
     }
     ,"json");
+    */
 }
 
 /**
@@ -201,7 +235,8 @@ function DbTestConnection()
             db_pass: dbPass
           },
     beforeSend: function() {
-      $("#spnDbConnectionStatus").html("<img src='pix/spinner.gif' />");  // loading img during request
+      // $("#spnDbConnectionStatus").html("<img src='pix/spinner.gif' />");  // loading img during request
+      $("#spnDbConnectionStatus").html("<img src='pix/busy.gif' />");  // loading img during request
     },
     success: function(data)
     {
@@ -262,7 +297,8 @@ function DbInstall()
           },
     beforeSend: function() {
       $("#spnDbConnectionStatus").removeClass();
-      $("#spnDbConnectionStatus").html("<img src='pix/spinner.gif' /> Installing...");
+      // $("#spnDbConnectionStatus").html("<img src='pix/spinner.gif' />");
+      $("#spnDbConnectionStatus").html("<img src='pix/busy.gif' /> Installing...");
     },
     success: function(data) {
       $("#spnDbConnectionStatus").html(data.dbRet_msg);
@@ -301,7 +337,8 @@ function DbRemoveTables()
             db_pass: dbPass
           },
     beforeSend: function() {
-      $("#spnDbConnectionStatus").html("<img src='pix/spinner.gif' /> Removing database...");
+      //$("#spnDbConnectionStatus").html("<img src='pix/spinner.gif' /> Removing database...");
+      $("#spnDbConnectionStatus").html("<img src='pix/busy.gif' Removing database... />");
     },
     success: function(data) {
       $("#spnDbConnectionStatus").html(data.dbRet_msg);

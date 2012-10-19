@@ -32,7 +32,7 @@
  */
 
 /* Test table */
-create table if not exists `TBLPMT_SETTINGS`
+create table if not exists `TBLPMT_CORE_SETTINGS`
 (
   `Setting` varchar(255) collate utf8_unicode_ci not null,
   `Value`   longtext collate utf8_unicode_ci not null,
@@ -46,7 +46,7 @@ create table if not exists `TBLPMT_SETTINGS`
     2012-0907 + Added column UUID to identify modules and their forks
 */
 
-CREATE TABLE IF NOT EXISTS `TBLPMT_MODULE`
+CREATE TABLE IF NOT EXISTS `TBLPMT_CORE_MODULE`
 (
   `Module_Id`       INT UNSIGNED NOT NULL AUTO_INCREMENT,
   `Module_UUID`     VARCHAR(36) NOT NULL,                           -- Unique Identifer of registered module. No two should be the same
@@ -62,7 +62,7 @@ CREATE TABLE IF NOT EXISTS `TBLPMT_MODULE`
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 /* Test table */
-create table if not exists `TBLPMT_MODULE_CONFIG`
+create table if not exists `TBLPMT_CORE_MODULE_CONFIG`
 (
   `Module_UUID`   VARCHAR(36),
   `Setting` varchar(255) collate utf8_unicode_ci not null,
@@ -79,7 +79,7 @@ create table if not exists `TBLPMT_MODULE_CONFIG`
   2012-0923 + Added missing columns and partial description
             + Added to standard install
 */
-CREATE TABLE IF NOT EXISTS `TBLPMT_S_MODULE_PRIV`
+CREATE TABLE IF NOT EXISTS `TBLPMT_S_CORE_MODULE_PRIV`
 (
   `Module_UUID`       VARCHAR(36) NOT NULL,
   `Priv_Name`         VARCHAR(32),
@@ -105,7 +105,7 @@ CREATE TABLE IF NOT EXISTS `TBLPMT_S_MODULE_PRIV`
     2012-0907 * Removed `Module_Name` and replaced it with `Module_UUID`
 */
 
-CREATE TABLE IF NOT EXISTS `TBLPMT_MODULE_URN`
+CREATE TABLE IF NOT EXISTS `TBLPMT_CORE_MODULE_URN`
 (
   `Module_UUID`   VARCHAR(36) NOT NULL,                             -- This is better than using Module_Id
   `Module_URN`    VARCHAR(16)                                       -- don't let people get crazy with lengths
@@ -127,7 +127,7 @@ CREATE TABLE IF NOT EXISTS `TBLPMT_MODULE_URN`
   Created: 2012-0306
 * /
 
-CREATE TABLE IF NOT EXISTS `TBLPMT_URI`
+CREATE TABLE IF NOT EXISTS `TBLPMT_CORE_URI`
 (
   `Uri_Id` INT UNSIGNED NOT NULL AUTO_INCREMENT,
   `Uri_Name`  VARCHAR(256),   -- URN Name
