@@ -2,13 +2,15 @@ Copyright (c) 2010-2012 Xeno Innovations, Inc.
 -----------------------------------------------
 Readme-Dev.txt consist of general documentation which outlines
 the items which you need to get you going
+
   1) Creating a Test Database
   2) PMT Project Pages (overview)
   3) Basic Folder structure
   4) Example: Mulitple Projects
   5) Example: User Interface
 
-Change Log:
+
+  Change Log:
 -----------
 2012-0224 [djs] * Note, the project's folder structure has reciently changed as of
                   version 0.1 "nighthawk" (Concept-3). This will need to be changed.

@@ -528,7 +528,7 @@ Also see [[AdvancedOptions]]</pre>
 |--admin-mod-install-uninst--     |Install and Uninstall modules |
 !User and Group Administration
 //For now to keep permissions simple ''admin-user-edit'' will handle all functionality//
-|Value               |Description |h
+|Value &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp;   |Description |h
 |--admin-user-add--  |Create new users |
 |--admin-user-rmv--  |Remove users |
 |--admin-group-add-- |Create Groups |
@@ -851,12 +851,13 @@ One of the first module to get created. The initiative is to create a simple mod
 &lt;!-- &lt;h2&gt;Feedback&lt;/h2&gt; --&gt;
 }}}</pre>
 </div>
-<div title="MainMenu" creator="d.suess" modifier="d.suess" created="201209011745" modified="201210040651" changecount="35">
+<div title="MainMenu" creator="d.suess" modifier="d.suess" created="201209011745" modified="201210270137" changecount="36">
 <pre>! xenoPMT
 * [[Core2-Workflow]]
 * [[Modules]]
 * [[Reports]]
 * [[ToDoList]]
+* [[Test System]]
 ! Modules
 * [[Admin    |Admin (mod)]]
 * [[Customer |Customer (mod)]]
@@ -920,13 +921,31 @@ One of the first module to get created. The initiative is to create a simple mod
 * Fix installer (errors with PHP 5.3.6 but not later versions)
 * Update database structure</pre>
 </div>
-<div title="Milestone 0.0.5" creator="d.suess" modifier="d.suess" created="201210032309" changecount="1">
+<div title="Milestone 0.0.5" creator="d.suess" modifier="d.suess" created="201210032309" modified="201210270318" tags="milestone" changecount="6">
 <pre>''Started:'' 2012-1101
-''Completed:'' 2012-1130
+''Deadline:'' 2012-1130
+''Completed:''
+
+
 * Core System
-** Rewrite module loader</pre>
+** Rewritten module loader
+** Module format redesigned
+*** Modules must contain a header file. This will check against the DB for previous installation
+* Installer
+** Completely rewritten
+** ''New:''
+*** Now uses Ajax with jQuery and PHP for DB calls
+*** Admin will pick default modules to pre-install (under development)
+** To Do:
+*** Module picker (Dependency: Module Loader)
+* Modules
+** Modules MUST contain a header file with array
+** Modules MUST contain a UUID (for verification against DB)
+*** No UUID may be alike!** Header file points to module location and class name
+
+</pre>
 </div>
-<div title="Milestone-0" creator="d.suess" modifier="d.suess" created="201210032137" modified="201210032309" changecount="4">
+<div title="Milestone-0" creator="d.suess" modifier="d.suess" created="201210032137" modified="201210270250" changecount="5">
 <pre>!0.0.1
 * Written Concept
 * Folder and File Structure
@@ -959,8 +978,7 @@ One of the first module to get created. The initiative is to create a simple mod
 * Update database structure
 
 !0.0.5 - {2012-1101 - 2012-1130}
-* Core System
-** Rewrite module loader
+* See page: [[Milestone 0.0.5]]
 </pre>
 </div>
 <div title="Milestones" creator="d.suess" modifier="d.suess" created="201210032306" modified="201210032333" changecount="6">
@@ -1736,6 +1754,48 @@ table.listView th, table.listView td, table.listView tr {padding:0 3px 0 3px;}
 <pre>chkAutoSave: true
 txtBackupFolder: bak
 txtUserName: d.suess</pre>
+</div>
+<div title="Test System" creator="d.suess" modifier="d.suess" created="201210270137" modified="201210270139" changecount="5">
+<pre>Below are some quick notes for creating your test environment
+
+# Create your test database for the installer to work with
+
+{{{
+/* Log into MySQL */
+mysql -h localhost  -u root -p
+
+/* Create User */
+CREATE USER 'testuser'@'localhost' IDENTIFIED BY 'testpass';
+
+/* Create database */
+CREATE DATABASE PMT_DATA;
+
+/* Add user permissions */
+GRANT ALL ON PMT_DATA.* TO testuser@localhost;
+
+/* Cleanup and Exit */
+flush privileges;
+exit;
+}}}
+
+
+# Folder Structure
+(Below is a sample of a v0.0.1 structure)
+
+{{{
+|/doc/
+|/xpmt/
+|   ./install/
+|   ./lib/
+|     ./common/
+|     ./modules/
+|     ./themes/
+|       ./default/
+|   index.php
+|/sandbox/
+---------------------
+}}}
+</pre>
 </div>
 <div title="Ticket (mod)" creator="d.suess" modifier="d.suess" created="201209062239" modified="201210040714" tags="ticket" changecount="7">
 <pre>* [[Ticket (mod) - Sections]]

@@ -48,8 +48,8 @@ namespace xenoPMT\Module\Sample
     public function __construct()
     {
 
-      global $pmt_version_ex;
-      //global $xpmtCore;
+      // global $pmt_version_ex; // Deprecated: 2012-1026 - use $xpmtCore[][];
+      global $xpmtCore;
 
       $this->Verified = false;   // Do not validate until we check module data for matching UUID
 
