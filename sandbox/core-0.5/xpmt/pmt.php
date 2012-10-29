@@ -115,14 +115,14 @@ $PAGE_PATH="";      // Relative path to theme currently in use
 //  or
 //  $xpmtPage["title"]="";      <<<< use this
 //
-// $xpmtCore["page"]["title"]="";
-// $xpmtCore["page"]["logo"]="";
-// $xpmtCore["page"]["metabar"]="";
-// $xpmtCore["page"]["toolbar"]="";
-// $xpmtCore["page"]["minileft"]="";
-// $xpmtCore["page"]["miniright"]="";
-// $xpmtCore["page"]["htdata"]="";
-// $xpmtCore["page"]["path"]="";
+// $xpmtPage["title"]="";       // Page Title
+// $xpmtPage["logo"]="";        // Site image path
+// $xpmtPage["metabar"]="";     // User (login/usr-pref)/settings/logout/about
+// $xpmtPage["toolbar"]="";     // Main toolbar
+// $xpmtPage["minileft"]="";    // Mini-bar Left aligned (bread crumbs)
+// $xpmtPage["miniright"]="";   // Mini-bar Right aligned (module node options)
+// $xpmtPage["htdata"]="";      // Main page html data
+// $xpmtPage["path"]="";        // Relative path to theme currently in use
 
 
 /* ################################################################################ */

@@ -2,6 +2,7 @@
 
 // Module information
 //$xpmtCore["module"][] = array(...);     // Proposal (2012-1019)
+
 $xpmtModule["info"][] = array
   (
     "author"      => "Damian Suess",
