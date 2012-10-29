@@ -15,8 +15,35 @@
  */
 
 
-//require ("/../../iModule.php");
-class sample implements iModule
+// Implementing forces you to use ALL members of the class
+// require_once (PMT_PATH . "xpmt/core/pmt.i.module.php");
+// class sample implements iModule { }
+
+// Extending the class already implements xenoPMT's iModule so you can skip some members (safer)
+// require_once (PMT_PATH . "xpmt/core/pmt.module.php");
+// class sample extends pmtModule { }
+
+
+// Used for Module v0.0.5
+$xpmtModule["info"][] = array
+(
+  "author"      => "Damian Suess",
+  "version"     => "0.0.1",
+  "title"       => "Sample Module",
+  "description" => "Sample module structure",
+  "urn"         => "test1",                                 // UniformResourceName of the module (pmt.com/ticket)
+  "classname"   => "sample",                                // Name of class inside of "path"
+  "path"        => dirname(__FILE__) . "/sample.php",       // dirname(__FILE__) . "/sample.main.php"
+  "core"        => "false",                                 // core system module (true=core)
+  "uuid"        => "1a6b8db3-aa0b-4725-86fb-d637c6e319aa"   // Universally Unique Id to tag each module as their own
+);
+
+
+
+/**
+ * Sample Project Class
+ */
+class sample extends pmtModule
 {
   const MODULE  = "sample";    // Module name
 

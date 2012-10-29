@@ -96,11 +96,20 @@ CREATE TABLE IF NOT EXISTS `TBLPMT_S_CORE_MODULE_PRIV`
 /*
   Module Uniform Resource Name  - Give your module a home!
   This is only used for modules with multiple URN IDs.. currently deprecated
+    Note:
+      DO NOT allow'/' in your name when identifying the URN (uniform resource identifier)
 
     Used in "pmt.php/PmtParseURL()" to accept the 'p' in "project/prj/p" as valid uri segments name
     This is an extenion of "_MODULE.Module_URN"
 
-  Note: DO NOT allow'/' in your name when identifying the URN (uniform resource identifier)
+    Uniform resource identifier.
+      A uniform resource name (URN) functions like a person's name, while
+      a Uniform Resource Locator (URL) resembles that person's street
+      address. In other words: the URN defines an item's identity, while
+      the URL provides a method for finding it.
+      [-----URI-----]
+      [-URL-] [-URN-]
+
   Created: 2012-0619
   Updated:
     2012-0923 - Removed Module_Name comment. This was breaking the installer
@@ -118,15 +127,6 @@ CREATE TABLE IF NOT EXISTS `TBLPMT_CORE_MODULE_URN`
 /*
   * NOT IN USE *
   Intention was for the dynamic naming structure of modules or other (wiki) pages. Deprecated.
-
-  Uniform resource identifier.
-  A uniform resource name (URN) functions like a person's name, while
-  a Uniform Resource Locator (URL) resembles that person's street
-  address. In other words: the URN defines an item's identity, while
-  the URL provides a method for finding it.
-  [-----URI-----]
-  [-URL-] [-URN-]
-
   Created: 2012-0306
 * /
 

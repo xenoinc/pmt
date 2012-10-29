@@ -29,6 +29,6 @@ $xpmtModule["info"][] = array
   );
 
 // URI to module (also above)
-$xpmtModule["uri"]["kb"] = "kb";
+// $xpmtModule["urn"]["kb"] = "kb";
 
 ?>

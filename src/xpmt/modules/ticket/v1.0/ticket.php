@@ -30,6 +30,6 @@ $xpmtModule["info"][] = array
   );
 
 // URI to module (also above)
-$xpmtModule["uri"]["ticket"] = "ticket";
+// $xpmtModule["urn"]["ticket"] = "ticket";
 
 ?>

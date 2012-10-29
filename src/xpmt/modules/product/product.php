@@ -14,31 +14,29 @@
  *
  */
 
-/**
- * Module Permissions
- */
-class ENUM_ProductPermission
-{
-  //const Admin       = "admin";        // Access the admin panel (useless)
-  const AdminCreate = "admin_create";   // Create new products (cmd=new)    - MiniBarRight
-  const AdminEdit   = "admin_edit";     // Edit product details (cmd=edit)  - MiniBarRight
-  const AdminRemove = "admin_remove";   // Remove product (cmd=rmv)         - MiniBarRight
+// Remove this line when Core-005 is ready
+require_once ("product.main.php");
 
-  const WikiCreate  = "wiki_create";    // Create new wiki articles
-  const WikiView    = "wiki_view";      // View wiki articles
-  const WikiEdit    = "wiki_edit";      // Edit wiki articles
-  const WikiRemove  = "wiki_remove";    // Remove wiki articles
-}
 
-class product implements iModule {
-  //put your code here
 
-  public function Title() { return ""; }
-  public function PageData() { return ""; }
-  public function Toolbar() { return ""; }
-  public function MiniBarLeft() { return ""; }
-  public function MiniBarRight() { return ""; }
+// Used for Module v0.0.5
+$xpmtModule["info"][] = array
+(
+  "author"      => "Damian Suess",
+  "version"     => "0.0.1",
+  "title"       => "Product Module",
+  "description" => "Product overview and management module",
+  "urn"         => "prod",                                  // UniformResourceName of the module (pmt.com/ticket)
+  "classname"   => "product",                               // Name of class inside of "path"
+  "path"        => dirname(__FILE__) . "/product.main.php", // dirname(__FILE__) . "/sample.main.php"
+  "core"        => "false",                                 // core system module (true=core)
+  "uuid"        => "68bed8da-0989-481c-96df-91123e0276dd"   // Universally Unique Id to tag each module as their own
+);
 
-}
+// URI to module (also above)
+// not used anymore. See TBL_CORE_MODULE_URI
+// $xpmtModule["urn"]["kb"] = "kb";
+
+
 
 ?>

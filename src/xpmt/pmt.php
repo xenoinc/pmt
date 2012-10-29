@@ -17,6 +17,8 @@
  *      that our system handles the default settings.
  *
  * Change Log:
+ * 2012-1029 + Added "PmtParseURL2()" as a suggestion for the NEW dynamic Core-005 Module Loader
+ *           + PmtParseURL() - Changed load $uri->seg[0] by default
  * 2012-0716 + Added "config.default.php" to be accessed before user custom file is accessed
  * 2012-0709 + Added 'iModule.php' interface to {required} list. (old pmtModule interface) [DJS]
  * 2012-0112 - Initial Creation [DJS]
@@ -106,6 +108,38 @@ $PAGE_PATH="";      // Relative path to theme currently in use
 
 /* ################################################################################ */
 
+/**
+ * Parse URL and load module (core-005)
+ * @global URI $uri
+ *
+ * Created: 2012-10-29
+ *
+ */
+function PmtParseURL2()
+{
+  global $uri;
+
+  if (count($uri->seg) == 0)
+  {
+    LoadModule("dashboard", $uri->seg);
+  }
+  else
+  {
+
+    $urn = $uri->seg[0];
+
+    // 1) Get UUID info from database using URN
+
+    // 2) Does URN exist?
+
+    // 3) Is UUID pre-loaded from config file?
+
+    // 4) Using UUID, is module enabled?
+
+    // 5) Load Module passing UUID and URI segments
+    //LoadModule2($UUID, $uri->seg);
+  }
+}
 
 
 function PmtParseURL()
@@ -226,12 +260,15 @@ function PmtParseURL()
        */
 
       // Option A
-      LoadModule("dashboard", $uri->seg);
+      //LoadModule("dashboard", $uri->seg);
 
-      // Option B
+      // Option B - [Added 2012-1029 as a quick patch until PmtParseURL can be rewritten]
+      LoadModule($uri->seg[0], $uri->seg);
+
+      // Option C
       //header("Location: " . $pmtConf["general"]["base_url"] );  exit;
 
-      // Option C - (TEST) Allow virtually anything
+      // Option D - (TEST) Allow virtually anything
       //LoadModule($uRoot, $uri->seg);
       break;
   }

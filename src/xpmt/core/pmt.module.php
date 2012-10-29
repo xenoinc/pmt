@@ -10,14 +10,23 @@
  *  Basic model for Modules
  *
  * To Do:
- * [ ]
+ * [ ] 2012-1029 + Add private/public variables? or let $xpmtPage/Module[] handle this?
  *
  * Change Log:
- *  2012-07-23  * Added basic functionality
+ *  2012-1029 + Added notes in Toolbar() - Auto generate tbar based upon user/group settings
+ *            + Added Footer() - Still needs code to implement it
+ *  2012-0723 * Added basic functionality
  ***********************************************************/
+require_once ("pmt.i.module.php");
 
 class pmtModule implements iModule
 {
+
+  /**
+   * 2012-1029
+   * Add variables here?
+   *
+   */
 
   /**
    * Install/Uninstall Module
@@ -74,6 +83,8 @@ class pmtModule implements iModule
    */
   public function Toolbar()
   {
+    // 2012-1029
+    // pre-Generate toolbar based upon user/group settings in DB
     return "";
   }
 
@@ -104,8 +115,13 @@ class pmtModule implements iModule
     return "";
   }
 
-
-
+  /**
+   * Override page footer here
+   */
+  public function Footer()
+  {
+    return "";
+  }
 
 }
 
