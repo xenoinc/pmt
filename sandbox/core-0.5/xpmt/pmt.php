@@ -115,6 +115,7 @@ $PAGE_PATH="";      // Relative path to theme currently in use
 //  or
 //  $xpmtPage["title"]="";      <<<< use this
 //
+// $xpmtPage["icon"]="";        // Path to Icon file
 // $xpmtPage["title"]="";       // Page Title
 // $xpmtPage["logo"]="";        // Site image path
 // $xpmtPage["metabar"]="";     // User (login/usr-pref)/settings/logout/about

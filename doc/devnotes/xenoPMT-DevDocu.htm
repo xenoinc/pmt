@@ -851,11 +851,12 @@ One of the first module to get created. The initiative is to create a simple mod
 &lt;!-- &lt;h2&gt;Feedback&lt;/h2&gt; --&gt;
 }}}</pre>
 </div>
-<div title="MainMenu" creator="d.suess" modifier="d.suess" created="201209011745" modified="201210270137" changecount="36">
+<div title="MainMenu" creator="d.suess" modifier="d.suess" created="201209011745" modified="201211071444" changecount="37">
 <pre>! xenoPMT
 * [[Core2-Workflow]]
 * [[Modules]]
 * [[Reports]]
+* [[Variables]]
 * [[ToDoList]]
 * [[Test System]]
 ! Modules
@@ -921,7 +922,7 @@ One of the first module to get created. The initiative is to create a simple mod
 * Fix installer (errors with PHP 5.3.6 but not later versions)
 * Update database structure</pre>
 </div>
-<div title="Milestone 0.0.5" creator="d.suess" modifier="d.suess" created="201210032309" modified="201210281921" tags="milestone v0.0.5" changecount="14">
+<div title="Milestone 0.0.5" creator="d.suess" modifier="d.suess" created="201210032309" modified="201211071458" tags="milestone v0.0.5" changecount="15">
 <pre>''Started:'' 2012-1101
 ''Deadline:'' 2012-1130
 ''Completed:''
@@ -945,6 +946,8 @@ One of the first module to get created. The initiative is to create a simple mod
 
 ! New features
 The system is combining the loosely named variables to be contained inside of PHP variable arrays. This way we can easily track the parameters and its values. There was a thought to contain everything a single global variable $xpmtCore, but there was a performance concern of the array carrying too much weight.
+
+The official list is located on the [[Variables]] page.
 
 !!! Core Global Variables
 {{{
@@ -1931,6 +1934,75 @@ foreach ($myArray as $row)
 |[[KB (mod)]] |Editor |Add side banner to editor |
 
 </pre>
+</div>
+<div title="Variables" creator="d.suess" modifier="d.suess" created="201211071341" modified="201211072051" changecount="6">
+<pre>Most of these were added in [[Milestone 0.0.5]]. Below is the official list of variables used by this branch of xenoPMT.
+
+!xpmtConfig
+{{{
+$pmtConf[&quot;db&quot;][&quot;server&quot;]
+$pmtConf[&quot;db&quot;][&quot;user&quot;]
+$pmtConf[&quot;db&quot;][&quot;pass&quot;]
+$pmtConf[&quot;db&quot;][&quot;dbname&quot;]
+}}}
+
+!xpmtCore - Core Global Variables
+{{{
+$xpmtCore[&quot;info&quot;][&quot;version&quot;]     = &quot;0.0.5&quot;;
+$xpmtCore[&quot;info&quot;][&quot;version_ex&quot;]  = 000005;
+$xpmtCore[&quot;info&quot;][&quot;version_ex2&quot;] = &quot;000005&quot;;
+$xpmtCore[&quot;info&quot;][&quot;db_version&quot;]  = 0.2;
+
+// Not used currently
+$xpmtCore[&quot;page&quot;][&quot;cache&quot;]      = array(&quot;setting&quot;=&gt;array());
+$xpmtCore[&quot;page&quot;][&quot;breadcrumb&quot;] = array();
+
+}}}
+
+!xpmtPage NEW
+{{{
+$xpmtPage[&quot;icon&quot;] = &quot;&quot;;      // Page custom icon (override standard one set in user.config)
+$xpmtPage[&quot;title&quot;]=&quot;&quot;;       // Page Title
+$xpmtPage[&quot;logo&quot;]=&quot;&quot;;        // Site image path
+$xpmtPage[&quot;metabar&quot;]=&quot;&quot;;     // User (login/usr-pref)/settings/logout/about
+$xpmtPage[&quot;toolbar&quot;]=&quot;&quot;;     // Main toolbar
+$xpmtPage[&quot;minileft&quot;]=&quot;&quot;;    // Mini-bar Left aligned (bread crumbs)
+$xpmtPage[&quot;miniright&quot;]=&quot;&quot;;   // Mini-bar Right aligned (module node options)
+$xpmtPage[&quot;htdata&quot;]=&quot;&quot;;      // Main page html data
+$xpmtPage[&quot;path&quot;]=&quot;&quot;;        // Relative path to theme currently in use
+}}}
+
+
+The $xpmtPage[] variable replaces the following list of global variables. One benefit of using an array in PHP is the developer at anytime during debugging can perform a lookup of the list of array items for reference.
+
+''OLD Variables:''
+{{{
+$PAGE_TITLE=&quot;&quot;;     // Page title
+$PAGE_LOGO=&quot;&quot;;      // Site image path  ** not used yet.
+$PAGE_METABAR=&quot;&quot;;   // User (login/usr-pref)/settings/logout/about
+$PAGE_TOOLBAR=&quot;&quot;;   // Main toolbar
+$PAGE_MINILEFT=&quot;&quot;;  // Mini-bar Left aligned (bread crumbs)
+$PAGE_MINIRIGHT=&quot;&quot;; // Mini-bar Right aligned (module node options)
+$PAGE_HTDATA=&quot;&quot;;    // Main page html data
+$PAGE_PATH=&quot;&quot;;      // Relative path to theme currently in use
+}}}
+
+!xpmtModule - Module Global Variable
+{{{
+$xpmtModule[&quot;current&quot;][&quot;uuid&quot;] = &quot;&quot;;   // UUID of the module being used
+$xpmtModule[&quot;info&quot;][] = array
+(
+  &quot;author&quot;      =&gt; &quot;Damian Suess&quot;,
+  &quot;version&quot;     =&gt; &quot;1.0&quot;,
+  &quot;title&quot;       =&gt; &quot;Sample Module Title&quot;,
+  &quot;description&quot; =&gt; &quot;Sample description for module to show up in loader&quot;,
+  &quot;urn&quot;         =&gt; &quot;sample&quot;,            // Uniform Resource Name of the module (pmt.com/ticket) ** possibly deprecated
+  &quot;classname&quot;   =&gt; &quot;sample&quot;,                                // name of the class inside of &quot;$xpmtModule[&quot;info&quot;][$ndx]-&gt;path&quot;
+  &quot;path&quot;        =&gt; dirname(__FILE__) . &quot;/sample.main.php&quot;,  // Path to module core
+  &quot;core&quot;        =&gt; &quot;false&quot;,                                 // core system module (true=core)
+  &quot;uuid&quot;        =&gt; &quot;ef64ffb0-19a8-11e2-892e-0800200c9a66&quot;   // Universally Unique identifier
+);
+}}}</pre>
 </div>
 <div title="Welcome Email" creator="d.suess" modifier="d.suess" created="201209012251" modified="201209012252" tags="proposal" changecount="3">
 <pre>{{{
