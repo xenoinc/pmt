@@ -412,7 +412,15 @@ DebugDisplay();
 
           <?php MakeNav(4,5,6); ?>
           <h1>Install Modules</h1>
+          <!--
 
+          Use Check boxes to select which modules to install.
+          Milestone 0.0.5:
+            * Do not install, only mark for installation by including them
+              in the user.config file. When the user first runs the admin panel
+              they will have to install them under the Module Management tab.
+
+          -->
           <table id="tblSystemReq" border="0" cellpadding="0" cellspacing="0" width="100%">
             <thread>
               <tr>

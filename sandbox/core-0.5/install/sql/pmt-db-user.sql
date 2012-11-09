@@ -15,6 +15,10 @@
  *            + #2 Prefix all tables with _CORE. Since the user syste is apart of
  *                 xenoPMT Core system.
  *            * Implement in Core 0.0.6
+ * 2012-1109  + Prepend all USER tables with CORE_ so we can diff between module addons
+ *              and core.
+ *            * Suggestion for other add-on modules should use _M_ header so we know
+ *              that they are user modules * not Core.
  *
  * Change Log:
  * 2012-1004  * (djs) Increased `Priv_Name` from 25 to 64 (ie: admin-edit-permissions)
@@ -40,6 +44,8 @@
     2012-0603 * Changed `Session_Hash` from NOT NULL to NULL (stupid mistake)
               * Changed `Name` to `Display_Name`
 */
+/* Suggestion [2012-11-09]: CREATE TABLE IF NOT EXISTS `TBLPMT_CORE_USER` */
+
 CREATE TABLE IF NOT EXISTS `TBLPMT_USER`
 (
   `User_Id`       INT UNSIGNED NOT NULL AUTO_INCREMENT,
@@ -74,6 +80,8 @@ CREATE TABLE IF NOT EXISTS `TBLPMT_USER`
   Version:  0.2.0
   Created:  2012-03-20
 */
+/* Suggestion [2012-11-09]: CREATE TABLE IF NOT EXISTS `TBLPMT_CORE_USER_SETTING` (note it not plural) */
+
 create table if not exists `TBLPMT_USER_SETTINGS`
 (
   `User_Id` INT UNSIGNED NOT NULL,
@@ -91,6 +99,8 @@ create table if not exists `TBLPMT_USER_SETTINGS`
   Version:  0.2.0
   Created:  2010-11-07
 */
+/* Suggestion [2012-11-09]: CREATE TABLE IF NOT EXISTS `TBLPMT_CORE_USER_INFO` */
+
 CREATE TABLE IF NOT EXISTS `TBLPMT_USER_INFO`
 (
   `User_Info_Id`  INT UNSIGNED  NOT NULL AUTO_INCREMENT,
@@ -106,6 +116,7 @@ CREATE TABLE IF NOT EXISTS `TBLPMT_USER_INFO`
   Created:  2010-11-06
   * 2012-0305 - Changed User_Name to User_Id
 */
+/* Suggestion [2012-11-09]: CREATE TABLE IF NOT EXISTS `TBLPMT_CORE_USER_COOKIE` (rmv'd AUTH_) */
 CREATE TABLE IF NOT EXISTS `TBLPMT_USER_AUTH_COOKIE`
 (
   User_Id     INT UNSIGNED,   -- PMT User Name
@@ -128,6 +139,7 @@ CREATE TABLE IF NOT EXISTS `TBLPMT_USER_AUTH_COOKIE`
   2012-03-09: - Changed from PMT_USER_GROUP to PMT_GROUP
 */
 /* 2012-1018  * Proposed name change: _GROUP to _USER_GROUP */
+/* Suggestion [2012-11-09]: CREATE TABLE IF NOT EXISTS `TBLPMT_CORE_USER_GROUP` */
 create table `TBLPMT_GROUP`
 (
   `Group_Id`    INT UNSIGNED  NOT NULL AUTO_INCREMENT,
@@ -156,6 +168,7 @@ INSERT INTO `TBLPMT_GROUP` (Group_Name, Description) VALUES ('CUSTOMERADMIN', 'C
   Last Update:  2010-11-07
 */
 /* 2012-1018  * Proposed name change: _GROUP_PRIV to _USER_GROUP_PRIV */
+/* Suggestion [2012-11-09]: CREATE TABLE IF NOT EXISTS `TBLPMT_CORE_USER_GROUP_PRIV` */
 create table `TBLPMT_GROUP_PRIV`
 (
   `Group_Id`    INT UNSIGNED  NOT NULL,                         -- Name of the group
@@ -168,6 +181,7 @@ create table `TBLPMT_GROUP_PRIV`
   Last Update:  2010-11-07
 */
 /* 2012-1018  * Proposed name change: _S_GROUP_PERMISSION to _S_USER_GROUP_PERMISSION */
+/* Suggestion [2012-11-09]: CREATE TABLE IF NOT EXISTS `TBLPMT_S_CORE_USER_GROUP_PERMISSION` */
 CREATE TABLE IF NOT EXISTS `TBLPMT_S_GROUP_PERMISSION`
 (
   `Priv_Name`   VARCHAR(64)   COLLATE utf8_unicode_ci NOT NULL,
@@ -183,6 +197,7 @@ CREATE TABLE IF NOT EXISTS `TBLPMT_S_GROUP_PERMISSION`
   ** NOT USED YET (v1.5)
 */
 /* 2012-1018  * Proposed name change: _USER_GROUP to _USER_GROUP_LIST */
+/* Suggestion [2012-11-09]: CREATE TABLE IF NOT EXISTS `TBLPMT_CORE_USER_GROUP_LIST` */
 CREATE TABLE `TBLPMT_USER_GROUP`
 (
   `User_Id`  INT UNSIGNED NOT NULL,
@@ -195,6 +210,7 @@ CREATE TABLE `TBLPMT_USER_GROUP`
   A group can be called, "development" and inside
   that large group are teams.
 */
+/* Suggestion [2012-11-09]: CREATE TABLE IF NOT EXISTS `TBLPMT_CORE_USER_TEAM` */
 CREATE TABLE IF NOT EXISTS `TBLPMT_USER_TEAM`
 (
   `Team_Id`   INT UNSIGNED NOT NULL AUTO_INCREMENT,
@@ -205,6 +221,7 @@ CREATE TABLE IF NOT EXISTS `TBLPMT_USER_TEAM`
 
 
 /* Team group members, Scrum team, etc. */
+/* Suggestion [2012-11-09]: CREATE TABLE IF NOT EXISTS `TBLPMT_CORE_USER_TEAM_MEMBER`  (removed plural) */
 CREATE TABLE IF NOT EXISTS `TBLPMT_USER_TEAM_MEMBERS`
 (
   `Team_Id` INT UNSIGNED NOT NULL,
