@@ -433,82 +433,134 @@ DebugDisplay();
                 <td>
                   Administrator
                 </td>
-                <td>X</td>
+                <td>
+                  <input type="checkbox" name="chkModule"  value="chkModAdmin" checked disabled />
+                  <small><i>Apart of core system</i></small>
+                </td>
               </tr>
               <tr>
                 <td>
                   <h3>Dashboard</h3>
                   <h6>Version: 0.0.5</h6>
+                  <!--<small><i>Apart of core system</i></small>-->
                   <small><i>Default xenoPMT dashboard</i></small>
                 </td>
                 <td>
+                  <input type="checkbox" name="chkModule" value="chkModDashboard" checked disabled />
                   <i>not available</i>
                 </td>
               </tr>
               <tr>
                 <td>
                   Customer Manager<br />
-                  <small><i>(no dependencies)</i></small>
+                  <small>
+                    <b>Dependencies:</b> <i>none</i><br />
+                    <b>Uses:</b> Ticket, Bug, Task, Product
+                  </small>
                 </td>
                 <td>
-
+                  <input type="checkbox" name="chkModule" value="chkModDashboard" checked />
+                  <i>Module not yet available</i>
                 </td>
               </tr>
               <tr>
                 <td>
                   Knowledge Base<br />
-                  <small><i></i></small>
+                  <small>
+                    <b>Dependencies:</b> <i>None</i><br />
+                    <b>Uses:</b> Product
+                  </small>
                 </td>
-                <td></td>
+                <td>
+                  <input type="checkbox" name="chkModule" value="chkModKB" checked />
+                </td>
               </tr>
               <tr>
                 <td>
                   Product<br />
-                  <small><i> </i></small>
+                  <small>
+                    <b>Dependencies:</b> <i>none</i><br />
+                    <b>Uses:</b> Ticket, Bug, Knowledge Base
+                  </small>
                 </td>
-                <td></td>
+                <td>
+                  <input type="checkbox" name="chkModule" value="chkModProduct" checked />
+                  <i>Module not yet available</i>
+                </td>
               </tr>
               <tr>
                 <td>
                   Project<br />
-                  <small><i> </i></small>
+                  <small>
+                    <b>Dependencies:</b> <i>none</i><br />
+                    <b>Uses:</b> Ticket, Bug, Task
+                  </small>
                 </td>
-                <td></td>
+                <td>
+                  <input type="checkbox" name="chkModule" value="chkModProduct" checked />
+                  <i></i>
+                </td>
               </tr>
               <tr>
                 <td>
                   Ticket System<br />
-                  <small><i>Issue ticketing system</i></small>
+                  <small><i>Issue ticketing system</i></small><br />
+                  <small>
+                    <b>Dependencies:</b> <i>None</i><br />
+                    <b>Uses:</b> Bug, Product, Project, Customer
+                  </small>
                 </td>
-                <td></td>
+                <td>
+                  <input type="checkbox" name="chkModule" value="chkModTicket" checked />
+                </td>
               </tr>
               <tr>
                 <td>
                   Bug Manager<br />
-                  <small><i> </i></small>
+                  <small>
+                    <b>Dependencies:</b> <i>None</i><br />
+                    <b>Uses:</b> Ticket, Product, Project
+                  </small>
                 </td>
-                <td></td>
+                <td>
+                  <input type="checkbox" name="chkModule" value="chkModBug" checked />
+                </td>
               </tr>
               <tr>
                 <td>
                   Task Manager<br />
-                  <small><i> </i></small>
+                  <small>
+                    <b>Dependencies:</b> <i>None</i><br />
+                    <b>Uses:</b> Product, Project, Customer
+                  </small>
                 </td>
-                <td></td>
+                <td>
+                  <input type="checkbox" name="chkModule" value="chkModTask" checked />
+                </td>
               </tr>
               <tr>
                 <td>
                   Wiki System<br />
-                  <small><i> </i></small>
+                  <small>
+                    <b>Dependencies:</b> <i>None</i><br />
+                    <b>Uses:</b> Product, Project
+                  </small>
                 </td>
-                <td></td>
+                <td>
+                  <input type="checkbox" name="chkModule" value="chkModWiki" disabled />
+                </td>
               </tr>
               <tr>
                 <td>
                   Purchase Order Manager<br />
-                  <small><i> </i></small>
+                  <small>
+                    <b>Dependencies:</b> <i>None</i><br />
+                    <b>Uses:</b> None
+                  </small>
                 </td>
-                <td></td>
+                <td>
+                  <input type="checkbox" name="chkModule" value="chkModPO" disabled />
+                </td>
               </tr>
               <tr>
                 <td></td>
@@ -525,7 +577,7 @@ DebugDisplay();
         </div> <!-- end:step5 -->
 
 
-        <!-- Step 6 - Install Modules -->
+        <!-- Step 6 - Finished -->
         <div class="steps" id="step6">
           <?php MakeNav(5, 6);  //MakeNav(5, 6, 7); ?>
           <h1>Finished!</h1>

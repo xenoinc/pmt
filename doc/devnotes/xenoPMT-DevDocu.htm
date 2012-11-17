@@ -851,9 +851,10 @@ One of the first module to get created. The initiative is to create a simple mod
 &lt;!-- &lt;h2&gt;Feedback&lt;/h2&gt; --&gt;
 }}}</pre>
 </div>
-<div title="MainMenu" creator="d.suess" modifier="d.suess" created="201209011745" modified="201211071444" changecount="37">
+<div title="MainMenu" creator="d.suess" modifier="d.suess" created="201209011745" modified="201211152022" changecount="38">
 <pre>! xenoPMT
 * [[Core2-Workflow]]
+* [[config.php]]
 * [[Modules]]
 * [[Reports]]
 * [[Variables]]
@@ -2035,6 +2036,52 @@ $xpmtModule[&quot;info&quot;][] = array
   Sincerely,&lt;br /&gt;
   The xenoPMT Team
 &lt;/p&gt;
+}}}</pre>
+</div>
+<div title="config.php" creator="d.suess" modifier="d.suess" created="201211152030" modified="201211152034" changecount="5">
+<pre>Apart from the database the configuration file is VERY critical. Consider it the keys to the control room of your power plant. Without the keys to get in, you can't turn it on.
+
+There are ''2 config files'' in this system, one simply overwrites the other.
+* ''&quot;/xpmt/config.default.php&quot;'' //(system default)//
+* ''&quot;config.php&quot;'' //(user edited config file)//
+
+
+! Sample Config File
+The following config file is a sample which also includes some not yet implemented settings yet.
+{{{
+
+date_default_timezone_set('America/New_York');        // [DJS] Added to fix warning in PHP &amp; PhpConsole
+
+
+// System admin bypass account (NOT IMPLEMENTED)
+$pmtRootUserEnabled = true;
+$pmtRootUserName    = &quot;rootadmin&quot;;
+$pmtRootUserPass    = &quot;testing&quot;;
+
+
+$pmtConf = array(
+
+// Database Connection
+  &quot;db&quot; =&gt; array(
+    &quot;server&quot;  =&gt; &quot;localhost&quot;,   // Database server
+    &quot;user&quot;    =&gt; &quot;root&quot;,        // Database username
+    &quot;pass&quot;    =&gt; &quot;testing123&quot;,  // Database password
+    &quot;dbname&quot;  =&gt; &quot;PMT_BETA&quot;,    // Database name
+    &quot;prefix&quot;  =&gt; &quot;XI_&quot;          // Table prefix
+  ),
+
+  // General Site Data
+  &quot;general&quot; =&gt; array(
+    &quot;auth_only&quot; =&gt; true,            // Allow access to public or auth-only
+    &quot;title&quot;     =&gt; &quot;Corporate Management System&quot;,
+    &quot;base_url&quot;  =&gt; &quot;http://pmt/&quot;    // Must include '/' at the end.
+
+    // Settings not yet implemented
+    ,&quot;allow_public_registration&quot; =&gt; false   // All general public to create user accounts
+
+  )
+);
+
 }}}</pre>
 </div>
 <div title="xenoPMT Core - To Do List" creator="d.suess" modifier="d.suess" created="201209061605" modified="201209061613" changecount="3">
