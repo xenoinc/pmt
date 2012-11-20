@@ -851,7 +851,7 @@ One of the first module to get created. The initiative is to create a simple mod
 &lt;!-- &lt;h2&gt;Feedback&lt;/h2&gt; --&gt;
 }}}</pre>
 </div>
-<div title="MainMenu" creator="d.suess" modifier="d.suess" created="201209011745" modified="201211152022" changecount="38">
+<div title="MainMenu" creator="d.suess" modifier="d.suess" created="201209011745" modified="201211200721" changecount="39">
 <pre>! xenoPMT
 * [[Core2-Workflow]]
 * [[config.php]]
@@ -870,7 +870,7 @@ One of the first module to get created. The initiative is to create a simple mod
 * [[Overview|Modules]]
 * [[List of Mods|Module - List]]
 * [[Workflow|Module - Loader Workflow]]
-* [[v0.4 Config|Module - v0.4 Configuration]]
+* [[Module-Config|Module - v0.0.5 Configuration]]
 !Milestones
 * [[Milestones]]
 * [[Milestone-0]]
@@ -914,7 +914,7 @@ One of the first module to get created. The initiative is to create a simple mod
 ** Created Ticket View template
 ** Push back to Trunk</pre>
 </div>
-<div title="Milestone 0.0.4" creator="d.suess" modifier="d.suess" created="201210032308" modified="201210032310" changecount="5">
+<div title="Milestone 0.0.4" creator="d.suess" modifier="d.suess" created="201210032308" modified="201211200720" changecount="6">
 <pre>''Started:'' 2012-0922
 ''Completed:'' 2012-1031
 * Core System
@@ -923,7 +923,7 @@ One of the first module to get created. The initiative is to create a simple mod
 * Fix installer (errors with PHP 5.3.6 but not later versions)
 * Update database structure</pre>
 </div>
-<div title="Milestone 0.0.5" creator="d.suess" modifier="d.suess" created="201210032309" modified="201211071458" tags="milestone v0.0.5" changecount="15">
+<div title="Milestone 0.0.5" creator="d.suess" modifier="d.suess" created="201210032309" modified="201211200720" tags="milestone v0.0.5" changecount="16">
 <pre>''Started:'' 2012-1101
 ''Deadline:'' 2012-1130
 ''Completed:''
@@ -1099,7 +1099,7 @@ In the future each module will be registered in the database and included via us
 
 </pre>
 </div>
-<div title="Module - v0.4 Configuration" creator="d.suess" modifier="d.suess" created="201209012256" modified="201209061556" tags="sample, configuration" changecount="6">
+<div title="Module - v0.0.5 Configuration" creator="d.suess" modifier="d.suess" created="201209012256" modified="201211200719" tags="sample, configuration" changecount="7">
 <pre>Below is a sample of the configuration file
 
 ! Database Structure
@@ -1117,21 +1117,22 @@ TBL_MODULE (
 {{{
 &lt;?php
 
+// For core-0.0.4. Remove this line when Core-005 is ready
+// require_once (&quot;uuid.main.php&quot;);
+
 // Module information
 $xpmtModule[&quot;info&quot;][] = array
-  (
-    &quot;author&quot;      =&gt; &quot;Damian Suess&quot;,
-    &quot;version&quot;     =&gt; &quot;1.0&quot;,
-    &quot;title&quot;       =&gt; &quot;Sample Module Title&quot;,
-    &quot;description&quot; =&gt; &quot;Sample description for module to show up in loader&quot;,
-    &quot;url&quot;         =&gt; &quot;&quot;,          // getHelpURL() - to wiki system (if installed)
-    &quot;classname&quot;   =&gt; &quot;sample&quot;,
-    &quot;path&quot;        =&gt; &quot;&quot;,          // dirname(__FILE__) . &quot;/sample.main.php&quot;
-    &quot;core&quot;        =&gt; &quot;false&quot;,     // core system module (true=core)
-  );
-
-// URI to module (also above)
-$xpmtModule[&quot;uri&quot;][&quot;sample&quot;] = &quot;samp&quot;;
+(
+  &quot;author&quot;      =&gt; &quot;Damian Suess&quot;,
+  &quot;version&quot;     =&gt; &quot;0.0.1&quot;,
+  &quot;title&quot;       =&gt; &quot;UUID Generator&quot;,
+  &quot;description&quot; =&gt; &quot;Unique Universal Identifier Generator&quot;,
+  &quot;urn&quot;         =&gt; &quot;uuid&quot;,                                  // UniformResourceName of the module (pmt.com/ticket)
+  &quot;classname&quot;   =&gt; &quot;uuid&quot;,                                  // Name of class inside of &quot;path&quot;
+  &quot;path&quot;        =&gt; dirname(__FILE__) . &quot;/uuid.main.php&quot;,    // dirname(__FILE__) . &quot;/sample.main.php&quot;
+  &quot;core&quot;        =&gt; &quot;true&quot;,                                  // core system module (true=core)
+  &quot;uuid&quot;        =&gt; &quot;c6fb97b8-af93-42ce-aac6-de5656c8fdae&quot;   // Universally unique identifier
+);
 
 ?&gt;
 }}}</pre>
@@ -1801,7 +1802,7 @@ table.listView th, table.listView td, table.listView tr {padding:0 3px 0 3px;}
 txtBackupFolder: bak
 txtUserName: d.suess</pre>
 </div>
-<div title="Test System" creator="d.suess" modifier="d.suess" created="201210270137" modified="201210270139" changecount="5">
+<div title="Test System" creator="d.suess" modifier="d.suess" created="201210270137" modified="201211200726" changecount="7">
 <pre>Below are some quick notes for creating your test environment
 
 # Create your test database for the installer to work with
@@ -1826,18 +1827,28 @@ exit;
 
 
 # Folder Structure
-(Below is a sample of a v0.0.1 structure)
+(Below is a sample of a v0.0.5 structure)
 
 {{{
 |/doc/
-|/xpmt/
-|   ./install/
-|   ./lib/
-|     ./common/
-|     ./modules/
-|     ./themes/
-|       ./default/
+|/src/
+|   /custom/
+|     /lib/
+|     /mod/
+|     /theme/
+|   /install/
+|   /xpmt/
+|     config.default.php
+|     /core/
+|     /libraries/
+|       /jquery/
+|     /modules/
+|       /sample/
+|       /uuid/
+|     /themes/
+|       /default/
 |   index.php
+|   config.php
 |/sandbox/
 ---------------------
 }}}

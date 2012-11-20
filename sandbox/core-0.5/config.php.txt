@@ -13,27 +13,42 @@
 *
 ***********************************************************/
 
-date_default_timezone_set('America/New_York');        // [DJS] Added to fix warning in PHP & PhpConsole
-
-// System admin bypass account (NOT IMPLEMENTED)
-$pmtRootUserEnabled = true;
-$pmtRootUserName    = "rootadmin";
-$pmtRootUserPass    = "testing";
+date_default_timezone_set('America/New_York');
 
 // Main config var
 $pmtConf = array(
+  // Database Connection
   "db" => array(
-    "server"  => "localhost",   // Database server
-    "user"    => "testuser2",   // Database username
-    "pass"    => "testpass",    // Database password
-    "dbname"  => "PMT_TEST",    // Database name
-    "prefix"  => "PMT_"         // Table prefix
+    "server"  => "localhost", // Database server
+    "dbname"  => "PMT_TEST",  // Database name
+    "prefix"  => "XI_",       // Table prefix
+    "user"    => "betauser",  // Database username
+    "pass"    => "betapass",  // Database password
   ),
+  // General Site Data
   "general" => array(
-    "auth_only" => true,            // Allow access to public or auth-only
+    "auth_only" => true,                  // Allow access to public or auth-only
     "title"     => "Corporate Management System",
-    "base_url"  => "http://pmt2/"    // Must include '/' at the end.
+    "base_url"  => "http://pmt2/",        // Must include '/' at the end.
+    "clean_uri" => "1"                    // Clean URI
+    // , "allow_public_reg" => false      // This should be in Database under system-cfg
   )
 );
+
+// Modules to include. Needed for first time install of module
+xpmtUseMod( dirname( __FILE__ ) . "/xpmt/modules/sample/sample.php");
+xpmtUseMod( dirname( __FILE__ ) . "/xpmt/modules/uuid/uuid.php");
+xpmtUseMod( dirname( __FILE__ ) . "/xpmt/modules/admin/admin.php");
+xpmtUseMod( dirname( __FILE__ ) . "/xpmt/modules/dashboard/dashboard.php");
+
+
+
+/**
+ * Safely REQUIRE modules. If it doesn't exist then it won't crash the system.
+ */
+function xpmtUseMod($modPath)
+{
+  if (file_exists($modPath)) require_once($modPath);
+}
 
 ?>

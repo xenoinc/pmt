@@ -494,6 +494,7 @@ date_default_timezone_set('America/New_York');
 
 // Main config var
 {$pmtConf} = array(
+  // Database Connection
   "db" => array(
     "server"  => "{$_txtDbServer}",  // Database server
     "dbname"  => "{$_txtDbName}",  // Database name
@@ -501,11 +502,13 @@ date_default_timezone_set('America/New_York');
     "user"    => "{$_txtDbUser}",  // Database username
     "pass"    => "{$_txtDbPass}",  // Database password
   ),
+  // General Site Data
   "general" => array(
     "auth_only" => true, // Allow access to public or auth-only
     "title"     => "{$_txtCfgSiteName}",
     "base_url"  => "{$_txtCfgBaseUrl}",   // Must include '/' at the end.
     "clean_uri" => "{$_optCfgCleanUri}"   // Clean URI
+    // , "allow_public_reg" => false      // This should be in Database under system-cfg
   )
 );
 
