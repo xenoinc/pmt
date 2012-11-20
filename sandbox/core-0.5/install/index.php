@@ -47,6 +47,7 @@ if ($BETA_TESTING)
   $_txtDBPass   = "betapass";
 
   $_txtCfgSiteName = "xenoPMT 0.0.5";
+  $_txtCfgBaseUrl = "http://pmt/";
   //$_optCfgCleanURI    = true;
   $_txtCfgAdminDisp   = "Administrator";
   $_txtCfgAdminUser   = "admin";
@@ -62,6 +63,7 @@ else
   $_txtDBPass   = "";
 
   $_txtCfgSiteName    = "xenoPMT";
+  $_txtCfgBaseUrl = "http://pmt/";
   //$_optCfgCleanURI    = true;
   $_txtCfgAdminDisp   = "Administrator";
   $_txtCfgAdminUser   = "";
@@ -342,8 +344,8 @@ DebugDisplay();
               </tr>
             </tbody>
           </table>
-          <div id="spnDbConnectionStatus" class="" style="padding-top: 10px;">
-            <i>(Click, "Test Connection" to continue)</i>
+          <div id="spnDbConnectionStatus" class="divStatusBox" style="padding-top: 10px;">
+            <i>Click, "Test Connection" to verify settings. Then, "Install xenoPMT Core" to create database tables.</i>
           </div>
 
         </div> <!-- end:step3 -->
@@ -369,10 +371,14 @@ DebugDisplay();
                 <td><input type="text" id="txtCfgSiteName" name="" value="<?php print($_txtCfgSiteName); ?>" /></td>
               </tr>
               <tr>
+                <td>Base URL:<br /><small><i>Must include '/' at end of URL</i></small></td>
+                <td><input type="text" id="txtCfgBaseUrl" name="" value="<?php print($_txtCfgBaseUrl); ?>" /></td>
+              </tr>
+              <tr>
                 <td>Clean URI:</td>
                 <td>
-                  <input type="radio" id="optCfgCleanURI1" name="" value="1" checked="checked" /><label for="optCfgCleanURI1">Yes</label>
-                  <input type="radio" id="optCfgCleanURI2" name="" value="0" /><label for="optCfgCleanURI2">No</label>
+                  <input type="radio" id="optCfgCleanURI1" name="optCfgCleanURI" value="1" checked="checked" /><label for="optCfgCleanURI1">Yes</label>
+                  <input type="radio" id="optCfgCleanURI2" name="optCfgCleanURI" value="0" /><label for="optCfgCleanURI2">No</label>
                 </td>
               </tr>
               <tr>
@@ -391,18 +397,22 @@ DebugDisplay();
                 <td>Admin Email:</td>
                 <td><input type="text" id="txtCfgAdminEmail" name="" value="<?php print($_txtCfgAdminEmail); ?>" autocomplete="off" /></td>
               </tr>
+              <!--
               <tr>
                 <td></td>
                 <td>
                   <button type="button" id="btnSysConfig" class="Buttons">Configure System</button>
                 </td>
               </tr>
+              -->
             </tbody>
           </table>
 
-          <div id="divDbInstallMsg" class="" style="padding-top: 10px;">
-            <!-- Display error messages here -->
-            <i>(Click, "Continue to accept settings")</i>
+          <div style="padding-top: 10px;">
+            <!--
+            <div id="divDbInstallMsg" class="" style="padding-top: 10px;">
+              Display error messages here -->
+            <i>(Click, "Next" to continue configuring system)</i>
           </div>
 
         </div> <!-- end:step4 -->
@@ -412,15 +422,26 @@ DebugDisplay();
 
           <?php MakeNav(4,5,6); ?>
           <h1>Install Modules</h1>
-          <!--
 
+          <div>
+            <p>
+              <button type="button" id="btnSysConfig" class="Buttons">Configure System</button>
+            </p>
+          </div>
+          <div id="divStatusConfigFile" class="divStatusBox">
+            <i>(Click, "Configure System" after selecting you desired modules)</i>
+          </div>
+
+          <p>&nbsp;</p>
+
+          <!--
           Use Check boxes to select which modules to install.
           Milestone 0.0.5:
             * Do not install, only mark for installation by including them
               in the user.config file. When the user first runs the admin panel
               they will have to install them under the Module Management tab.
-
           -->
+
           <table id="tblSystemReq" border="0" cellpadding="0" cellspacing="0" width="100%">
             <thread>
               <tr>
@@ -430,74 +451,98 @@ DebugDisplay();
             </thread>
             <tbody>
               <tr>
+                <td colspan="2">
+                  <center><h2>Core System</h2></center>
+                </td>
+              </tr>
+              <tr>
                 <td>
-                  Administrator
+                  <b>Administrator</b><br />
+                  <small><i>System configuration for SuperUsers</i></small>
+                  <small>
+                    <b>Version:</b> 0.0.5<br />
+                    <b>Dependencies:</b> <i>None</i><br />
+                    <b>Uses:</b> <i>None</i>
+                  </small>
                 </td>
                 <td>
-                  <input type="checkbox" name="chkModule"  value="chkModAdmin" checked disabled />
+                  <input type="checkbox" name="chkModule" id="chkModAdmin" checked disabled />
                   <small><i>Apart of core system</i></small>
                 </td>
               </tr>
               <tr>
                 <td>
-                  <h3>Dashboard</h3>
-                  <h6>Version: 0.0.5</h6>
-                  <!--<small><i>Apart of core system</i></small>-->
+                  <b>Dashboard</b><br />
                   <small><i>Default xenoPMT dashboard</i></small>
+                  <small>
+                    <b>Version:</b> 0.0.5<br />
+                    <b>Dependencies:</b> <i>wiki core</i><br />
+                    <b>Uses:</b> <i>None</i>
+                  </small>
                 </td>
                 <td>
-                  <input type="checkbox" name="chkModule" value="chkModDashboard" checked disabled />
-                  <i>not available</i>
+                  <input type="checkbox" name="chkModule" id="chkModDashboard" checked disabled />
+                  <i>Module not available yet</i>
+                </td>
+              </tr>
+
+              <tr>
+                <td colspan="2">
+                  <center><h2>xPMT Modules</h2></center>
                 </td>
               </tr>
               <tr>
                 <td>
                   Customer Manager<br />
                   <small>
+                    <b>Version:</b> 0.0.5<br />
                     <b>Dependencies:</b> <i>none</i><br />
                     <b>Uses:</b> Ticket, Bug, Task, Product
                   </small>
                 </td>
                 <td>
-                  <input type="checkbox" name="chkModule" value="chkModDashboard" checked />
-                  <i>Module not yet available</i>
+                  <input type="checkbox" name="chkModule" id="chkModCustomer" checked />
+                  <i>Module not available yet</i>
                 </td>
               </tr>
               <tr>
                 <td>
                   Knowledge Base<br />
                   <small>
+                    <b>Version:</b> 0.0.5<br />
                     <b>Dependencies:</b> <i>None</i><br />
                     <b>Uses:</b> Product
                   </small>
-                </td>
+\                </td>
                 <td>
-                  <input type="checkbox" name="chkModule" value="chkModKB" checked />
+                  <input type="checkbox" name="chkModule" id="chkModKB" checked />
                 </td>
               </tr>
               <tr>
                 <td>
                   Product<br />
                   <small>
+                    <b>Version:</b> 0.0.5<br />
                     <b>Dependencies:</b> <i>none</i><br />
                     <b>Uses:</b> Ticket, Bug, Knowledge Base
                   </small>
                 </td>
                 <td>
-                  <input type="checkbox" name="chkModule" value="chkModProduct" checked />
-                  <i>Module not yet available</i>
+                  <input type="checkbox" name="chkModule" id="chkModProduct" checked />
+                  <i>Module not available yet</i>
                 </td>
               </tr>
               <tr>
                 <td>
                   Project<br />
                   <small>
+                    <b>Version:</b> 0.0.5<br />
                     <b>Dependencies:</b> <i>none</i><br />
                     <b>Uses:</b> Ticket, Bug, Task
                   </small>
                 </td>
                 <td>
-                  <input type="checkbox" name="chkModule" value="chkModProduct" checked />
+                  <input type="checkbox" name="chkModule" id="chkModProject" checked />
                   <i></i>
                 </td>
               </tr>
@@ -506,73 +551,79 @@ DebugDisplay();
                   Ticket System<br />
                   <small><i>Issue ticketing system</i></small><br />
                   <small>
+                    <b>Version:</b> 0.0.5<br />
                     <b>Dependencies:</b> <i>None</i><br />
                     <b>Uses:</b> Bug, Product, Project, Customer
                   </small>
                 </td>
                 <td>
-                  <input type="checkbox" name="chkModule" value="chkModTicket" checked />
+                  <input type="checkbox" name="chkModule" id="chkModTicket" checked />
                 </td>
               </tr>
               <tr>
                 <td>
-                  Bug Manager<br />
+                  Bug Reporting<br />
                   <small>
+                    <b>Version:</b> 0.0.5<br />
                     <b>Dependencies:</b> <i>None</i><br />
                     <b>Uses:</b> Ticket, Product, Project
                   </small>
                 </td>
                 <td>
-                  <input type="checkbox" name="chkModule" value="chkModBug" checked />
+                  <input type="checkbox" name="chkModule" id="chkModBug" checked />
+                  <i>Module not available yet</i>
                 </td>
               </tr>
               <tr>
                 <td>
                   Task Manager<br />
                   <small>
+                    <b>Version:</b> 0.0.5<br />
                     <b>Dependencies:</b> <i>None</i><br />
                     <b>Uses:</b> Product, Project, Customer
                   </small>
                 </td>
                 <td>
-                  <input type="checkbox" name="chkModule" value="chkModTask" checked />
+                  <input type="checkbox" name="chkModule" id="chkModTask" checked />
+                  <i>Module not available yet</i>
                 </td>
               </tr>
               <tr>
                 <td>
                   Wiki System<br />
                   <small>
+                    <b>Version:</b> 0.0.5<br />
                     <b>Dependencies:</b> <i>None</i><br />
                     <b>Uses:</b> Product, Project
                   </small>
                 </td>
                 <td>
-                  <input type="checkbox" name="chkModule" value="chkModWiki" disabled />
+                  <input type="checkbox" name="chkModule" id="chkModWiki" disabled />
+                  <i>Module not available yet</i>
                 </td>
               </tr>
               <tr>
                 <td>
                   Purchase Order Manager<br />
                   <small>
+                    <b>Version:</b> 0.0.5<br />
                     <b>Dependencies:</b> <i>None</i><br />
                     <b>Uses:</b> None
                   </small>
                 </td>
                 <td>
-                  <input type="checkbox" name="chkModule" value="chkModPO" disabled />
+                  <input type="checkbox" name="chkModule" id="chkModPO" disabled />
+                  <i>Module not available yet</i>
                 </td>
               </tr>
+              <!--
               <tr>
                 <td></td>
-                <td><button type="button" id="btnSysConfig" class="Buttons">Install Modules</button></td>
+                <td><button type="button" id="btnSysConfig" class="Buttons">Configure System</button></td>
               </tr>
+              -->
             </tbody>
           </table>
-
-          <div id="divModuleInstallStatus" class="" style="padding-top: 10px;">
-            <!-- Display status messages here -->
-            <i></i>
-          </div>
 
         </div> <!-- end:step5 -->
 

@@ -76,6 +76,17 @@ button {
 }
 
 
+
+.divStatusBox {
+  padding-top: 10px;
+  padding-bottom: 10px;
+  padding-left: 10px;
+  padding-right: 10px;
+  background-color:#fff4a4;
+  border-color: #000000;
+  border: 1px solid ;
+}
+
 /* other */
 .Success {
   color: #00AA00;
@@ -97,3 +108,4 @@ button {
   background: url("pix/fail.gif") no-repeat left;
   padding: 2px 0 2px 20px;
 }
+

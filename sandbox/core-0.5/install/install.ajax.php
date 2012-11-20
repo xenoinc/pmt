@@ -9,18 +9,58 @@
  * Description:
  *  Event handlers from Ajax/jQuery calls
  *
- * Change Log:
+ * To Do:
+ * 2012-11-19 - Proposal
+ * [ ]  Refactor variable names to reflect control names. (_dbHost -> txtDbHost)
+ * [ ]  Place procedures in a class and call only the needed members, encapsulating
+ *      the class members which don't need to be seen by the rest of the world.
+ *      The constructor will perform the GetPostParams crap.
  *
+ *     Ex:
+ *        $obj = new xpmtAjax();
+ *        $obj->ExecuteStep();      // get step from POST and execute member
+ *        echo($obj->Output());     // ret_msg and ret_class
+ *
+ * Change Log:
+ * 2012-11-19 + added proc, "ajaxCreateConfig()" to generate user's "config.php" file.
+ *            + added proc, "GetPost($param, $def="")". Refactored to minimize re-using code
+ *            * Renamed GetDbParams() to GetPostParams()
  */
 
 require "../xpmt/phpConsole.php";
 PhpConsole::start(true, true, dirname(__FILE__));
 
 // setup variables
-$_dbHost = ""; $_dbName = ""; $_dbPrfx = ""; $_dbUser = ""; $_dbPass = "";
+$_dbHost = "";  // Database Server Name
+$_dbName = "";  // Database Name
+$_dbPrfx = "";  // Database Table Prefix
+$_dbUser = "";  // Database User Name
+$_dbPass = "";  // Database Password
+
+// Site configuration
+$_txtCfgSiteName = "";
+$_txtCfgBaseUrl = "";
+$_optCfgCleanUri = "";
+$_txtCfgAdminName = "";
+$_txtCfgAdminUser = "";
+$_txtCfgAdminPass = "";
+$_txtCfgAdminEmail = "";
+
+// Modules to install
+$_chkModAdmin = "";
+$_chkModDashboard = "";
+$_chkModCustomer = "";
+$_chkModKB = "";
+$_chkModProduct = "";
+$_chkModProject = "";
+$_chkModTicket = "";
+$_chkModBug = "";
+$_chkModTask = "";
+$_chkModWiki = "";
+$_chkModPO = "";
 
 // Pull parameters by default
-GetDbParams();
+GetPostParams();
 
 
 // Get where we are suppose to go
@@ -28,7 +68,7 @@ if(isset($_POST["ClearDB"]) && $_POST["ClearDB"]=="1")  ajaxClearDB();
 if(isset($_POST["UpdateStep"]))                         ajaxUpdateStep();
 if(isset($_POST["step3"]) && $_POST["step3"]=="1")      ajaxDatabaseTest();
 if(isset($_POST["step4"]) && $_POST["step4"]=="1")      ajaxInstallXenoPMT();
-
+if(isset($_POST["step5"]) && $_POST["step5"]=="1")      ajaxCreateConfig();
 
 /* ##[ Misc Functions ]########################################## */
 function pmtDebug($buff)
@@ -40,42 +80,75 @@ function pmtDebug($buff)
 }
 
 
-function GetDbParams()
+/**
+ * Get POST parameters
+ */
+function GetPostParams()
 {
   global $_dbHost, $_dbName, $_dbPrfx, $_dbUser, $_dbPass;
-  if (isset($_POST["db_host"])) $_dbHost = $_POST['db_host']; else $_dbHost = "";
-  if (isset($_POST["db_name"])) $_dbName = $_POST['db_name']; else $_dbName = "";
-  if (isset($_POST["db_pref"])) $_dbPrfx = $_POST['db_pref']; else $_dbPrfx = "";
-  if (isset($_POST["db_user"])) $_dbUser = $_POST['db_user']; else $_dbUser = "";
-  if (isset($_POST["db_pass"])) $_dbPass = $_POST['db_pass']; else $_dbPass = "";
+  global $_txtCfgSiteName, $_txtCfgBaseUrl, $_optCfgCleanUri, $_txtCfgAdminName, $_txtCfgAdminUser, $_txtCfgAdminPass, $_txtCfgAdminEmail;
+
+  // Modules to install
+  global $_chkModAdmin;
+  global $_chkModDashboard;
+  global $_chkModCustomer;
+  global $_chkModKB;
+  global $_chkModProduct;
+  global $_chkModProject;
+  global $_chkModTicket;
+  global $_chkModBug;
+  global $_chkModTask;
+  global $_chkModWiki;
+  global $_chkModPO;
+
+
+  $_dbHost    = GetPost("txtDbServer");     //if (isset($_POST["txtDbServer"])) $_dbHost = $_POST['txtDbServer']; else $_dbHost = "";
+  $_dbName    = GetPost("txtDbName");       //if (isset($_POST["txtDbName"]))   $_dbName = $_POST['txtDbName'];   else $_dbName = "";
+  $_dbPrfx    = GetPost("txtDbPrefix");     //if (isset($_POST["txtDbPrefix"])) $_dbPrfx = $_POST['txtDbPrefix']; else $_dbPrfx = "";
+  $_dbUser    = GetPost("txtDbUser");       //if (isset($_POST["txtDbUser"]))   $_dbUser = $_POST['txtDbUser'];   else $_dbUser = "";
+  $_dbPass    = GetPost("txtDbPass");       //if (isset($_POST["txtDbPass"]))   $_dbPass = $_POST['txtDbPass'];   else $_dbPass = "";
+
+  // Site configuration
+  $_txtCfgSiteName    = GetPost("txtCfgSiteName");
+  $_txtCfgBaseUrl     = GetPost("txtCfgBaseUrl");
+  $_optCfgCleanUri    = GetPost("optCfgCleanUri");
+  $_txtCfgAdminName   = GetPost("txtCfgAdminName");
+  $_txtCfgAdminUser   = GetPost("txtCfgAdminUser");
+  $_txtCfgAdminPass   = GetPost("txtCfgAdminPass");
+  $_txtCfgAdminEmail  = GetPost("txtCfgAdminEmail");
+
+  // Modules to install
+  $_chkModAdmin     = GetPost("chkModAdmin", true);
+  $_chkModDashboard = GetPost("chkModDashboard", true);
+  $_chkModProject   = GetPost("chkModProject", true);
+  $_chkModTicket    = GetPost("chkModTicket", true);
+  $_chkModBug       = GetPost("chkModBug", true);
+  $_chkModTask      = GetPost("chkModTask", true);
+
+  $_chkModCustomer  = GetPost("chkModCustomer", false);
+  $_chkModKB        = GetPost("chkModKB", false);
+  $_chkModProduct   = GetPost("chkModProduct", false);
+  $_chkModWiki      = GetPost("chkModWiki", false);
+  $_chkModPO        = GetPost("chkModPO", false);
 
 }
-/* ##[ Ajax Procedures ]########################################## */
 
 /**
- * Remove database tables and prep for recreation
+ * Safely get _POST parameter and inject default if needed
+ * @param string $param POST parameter
+ * @param any $def      Default value
+ * @return any
  */
-function ajaxClearDB()
+function GetPost($param, $def="")
 {
-  // 1) Extract variables (safely pull from POST)
-  global $_dbHost, $_dbName, $_dbPrfx, $_dbUser, $_dbPass;
-  //GetDbParams();
-  require_once("../xpmt/core/pmt.db.php");
-
-
-  // 2) Connect to db
-  $pmtDB = new Database($_dbHost, $_dbUser, $_dbPass);
-  // 3) Drop all tables
-  $pmtDB->Query("DROP DATABASE ".$_dbName.";");
-  $pmtDB->Query("CREATE DATABASE ".$_dbName.";");
-  //$pmtDB->Close();                                // throws an error
-
-  // 4) Report status
-  $retArr = array("dbRet_msg"   => "Dropped and created database, '".$_dbName."'.",
-                  "dbRet_class" => "Success");
-  echo json_encode($retArr);
+  if (isset($_POST[$param]))
+    $ret = $_POST[$param];
+  else
+    $ret = "";
+  return $ret;
 }
 
+/* ##[ Ajax Procedures ]########################################## */
 
 /**
  * Useless function, just use the jQuery shit.
@@ -96,16 +169,40 @@ function ajaxUpdateStep()
 }
 */
 
+/**
+ * Remove database tables and prep for recreation
+ */
+function ajaxClearDB()
+{
+  // 1) Extract variables (safely pull from POST)
+  global $_dbHost, $_dbName, $_dbPrfx, $_dbUser, $_dbPass;
+  //GetPostParams();
+  require_once("../xpmt/core/pmt.db.php");
+
+
+  // 2) Connect to db
+  $pmtDB = new Database($_dbHost, $_dbUser, $_dbPass);
+  // 3) Drop all tables
+  $pmtDB->Query("DROP DATABASE ".$_dbName.";");
+  $pmtDB->Query("CREATE DATABASE ".$_dbName.";");
+  //$pmtDB->Close();                                // throws an error
+
+  // 4) Report status
+  $retArr = array("dbRet_msg"   => "Dropped and created database, '".$_dbName."'.",
+                  "dbRet_class" => "Success");
+  echo json_encode($retArr);
+}
+
 
 /**
  * DatabaseTest via Ajax
  *
  * Takes in POST arguments:
- *  db_host - Server Host Name
- *  db_name - Database Name
- *  db_pref - Table Prefix (not needed)
- *  db_user - User Name
- *  db_pass - Password
+ *  txtDbServer - Server Host Name
+ *  txtDbName   - Database Name
+ *  txtDbPrefix - Table Prefix (not needed)
+ *  txtDbUser   - User Name
+ *  txtDbPass   - Password
  */
 function ajaxDatabaseTest()
 {
@@ -115,7 +212,7 @@ function ajaxDatabaseTest()
 
   // 1) Extract variables (safely pull from POST)
   global $_dbHost, $_dbName, $_dbPrfx, $_dbUser, $_dbPass;
-  //GetDbParams();
+  //GetPostParams();
 
   // Stepp 2) Test Database HOST connection (localhost)
   try
@@ -167,14 +264,14 @@ function ajaxDatabaseTest()
  */
 function ajaxInstallXenoPMT()
 {
-  debug("Entering :: ajaxInstallXenoPMT");
+  pmtDebug("Entering :: ajaxInstallXenoPMT");
 
   // Step 1) Setup variables
   $retMsg   = "blank info";   //
   $retClass = "Fail";         // pre-populate
   $arrMsg = array();
   global $_dbHost, $_dbName, $_dbPrfx, $_dbUser, $_dbPass;
-  //GetDbParams();
+  //GetPostParams();
 
   // Step 2) Connect to database
   try
@@ -218,7 +315,99 @@ function ajaxInstallXenoPMT()
                   "dbRet_class" => $retClass);
   echo json_encode($retArr);
 
-  debug("Exiting :: ajaxInstallXenoPMT");
+  pmtDebug("Exiting :: ajaxInstallXenoPMT");
+}
+
+/**
+ * Step 5 - Create User Configuration File
+ */
+function ajaxCreateConfig()
+{
+  pmtDebug("Entering :: ajaxCreateConfig");
+
+  /** Steps
+   * 1 - setup variables
+   * 2 - Insert Administrator into Database
+   * 3 - Place modules into string list
+   * 4 - Write user's "config.php" file
+   */
+
+  /* Setup Variables */
+  global $_dbHost, $_dbName, $_dbPrfx, $_dbUser, $_dbPass;
+  global $_txtCfgSiteName, $_txtCfgBaseUrl, $_optCfgCleanUri, $_txtCfgAdminName, $_txtCfgAdminUser, $_txtCfgAdminPass, $_txtCfgAdminEmail;
+
+  // Modules to install
+  global $_chkModAdmin;
+  global $_chkModDashboard;
+  global $_chkModCustomer;
+  global $_chkModKB;
+  global $_chkModProduct;
+  global $_chkModProject;
+  global $_chkModTicket;
+  global $_chkModBug;
+  global $_chkModTask;
+  global $_chkModWiki;
+  global $_chkModPO;
+
+  $pmtConf = "$"."pmtConf";
+  $retMsg = "";
+  $retClass = "Success";
+
+  /* Create Module List */
+  // require_once( dirname( __FILE__ ) . "/extensions/WikiEditor/WikiEditor.php" );
+  $lstMods = "";
+  $lstMods .= "";
+  debug("DirName:" . dirname( __FILE__ ));
+
+
+  /* Step 3 - Create Config File*/
+
+  $buff = <<<CODE
+<?php
+/**
+* xenoPMT
+* Copyright 2010-2012 (C) Xeno Innovations, Inc.
+* ALL RIGHTS RESERVED
+* Author:        Damian J. Suess
+* Document:      config.php
+* Created Date:  Nov 18, 2010, 5:03:43 PM
+* Description:
+*   This is the Default CORE config file, becareful when editing this
+*   file as it will effect ALL of your sub-projects. Here you
+*   can set your Root-User, Database, Default Skin, etc.
+*
+***********************************************************/
+
+date_default_timezone_set('America/New_York');        // [DJS] Added to fix warning in PHP & PhpConsole
+
+// Main config var
+{$pmtConf} = array(
+  "db" => array(
+    "server"  => "{$_dbHost}",  // Database server
+    "user"    => "{$_dbUser}",  // Database username
+    "pass"    => "{$_dbPass}",  // Database password
+    "dbname"  => "{$_dbName}",  // Database name
+    "prefix"  => "{$_dbPrfx}"   // Table prefix
+  ),
+  "general" => array(
+    "auth_only" => true, // Allow access to public or auth-only
+    "title"     => "{$_txtCfgSiteName}",
+    "base_url"  => "{$_txtCfgBaseUrl}"    // Must include '/' at the end.
+  )
+);
+
+// Modules to include. Needed for first time install of module
+{$lstMods}
+
+?>
+
+CODE;
+
+  // ===================================
+  $retArr = array("ret_msg" => $retMsg,
+                  "ret_cls" => $retClass);
+  echo(json_encode($retArr));
+  pmtDebug("Exiting :: ajaxCreateConfig");
 }
 
 
@@ -267,7 +456,7 @@ function ExecuteSqlFile($sqlFile, $tblPrefix, $objConn, &$arrErrMsg)
 function IsInstalled()
 {
   //global $_dbHost, $_dbName, $_dbPrfx, $_dbUser, $_dbPass;
-  //GetDbParams();
+  //GetPostParams();
 
 
   $installed = false;

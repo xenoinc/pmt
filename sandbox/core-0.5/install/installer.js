@@ -83,6 +83,7 @@ $(document).ready(function() {
 
         case "btnSysConfig":
           // Create procedure to handle this!!!
+          CreateUserConfig();
         break;
 
         default:
@@ -195,11 +196,11 @@ function UpdateStep(ndxCurrent, ndxMove)
 function DbTestConnection()
 {
   // 1) Get info params
-  var dbHost     = $("#txtDbServer").val();
-  var dbDatabase = $("#txtDbName").val();
-  var dbPrefix   = $("#txtDbPrefix").val();
-  var dbUser     = $("#txtDbUser").val();
-  var dbPass     = $("#txtDbPass").val();
+  var _txtDbServer  = $("#txtDbServer").val();
+  var _txtDbName    = $("#txtDbName").val();
+  var _txtDbPrefix  = $("#txtDbPrefix").val();
+  var _txtDbUser    = $("#txtDbUser").val();
+  var _txtDbPass    = $("#txtDbPass").val();
 
   // Clear old rules so we properly display spinner
   $("#spnDbConnectionStatus").removeClass();
@@ -212,11 +213,11 @@ function DbTestConnection()
     cache: false,
     dataType: "json",
     data: {step3: "1",
-            db_host: dbHost,
-            db_name: dbDatabase,
-            db_pref: dbPrefix,
-            db_user: dbUser,
-            db_pass: dbPass
+            txtDbServer: _txtDbServer,
+            txtDbName: _txtDbName,
+            txtDbPrefix: _txtDbPrefix,
+            txtDbUser: _txtDbUser,
+            txtDbPass: _txtDbPass
           },
     beforeSend: function()
     {
@@ -226,7 +227,9 @@ function DbTestConnection()
     {
       $("#spnDbConnectionStatus").html(data.dbRet_msg);
       $("#spnDbConnectionStatus").removeClass();            // Remove all previous classes to reload load new update
-      $("#spnDbConnectionStatus").addClass(data.dbRet_class)
+      $("#spnDbConnectionStatus").addClass(data.dbRet_class);
+      //$("#spnDbConnectionStatus").addClass("divStatusBox");
+
       // $("#spnDbConnectionStatus").remove();    // remove the div
       //alert ('"'+ data.dbRet_class +'"');
       if(data.dbRet_class == "Success")
@@ -247,11 +250,11 @@ function DbTestConnection()
 function DbInstall()
 {
 
-  var dbHost     = $("#txtDbServer").val();
-  var dbDatabase = $("#txtDbName").val();
-  var dbPrefix   = $("#txtDbPrefix").val();
-  var dbUser     = $("#txtDbUser").val();
-  var dbPass     = $("#txtDbPass").val();
+  var _txtDbServer  = $("#txtDbServer").val();
+  var _txtDbName    = $("#txtDbName").val();
+  var _txtDbPrefix  = $("#txtDbPrefix").val();
+  var _txtDbUser    = $("#txtDbUser").val();
+  var _txtDbPass    = $("#txtDbPass").val();
 
   // Clear old rules so we properly display spinner
   $("#spnDbConnectionStatus").removeClass();
@@ -262,11 +265,11 @@ function DbInstall()
     cache: false,
     dataType: "json",
     data: { step4: "1",
-            db_host: dbHost,
-            db_name: dbDatabase,
-            db_pref: dbPrefix,
-            db_user: dbUser,
-            db_pass: dbPass
+            txtDbServer:  _txtDbServer,
+            txtDbName:    _txtDbName,
+            txtDbPrefix:  _txtDbPrefix,
+            txtDbUser:    _txtDbUser,
+            txtDbPass:    _txtDbPass
           },
     beforeSend: function() {
       $("#spnDbConnectionStatus").removeClass();
@@ -288,11 +291,11 @@ function DbInstall()
 function DbRemoveTables()
 {
 
-  var dbHost     = $("#txtDbServer").val();
-  var dbDatabase = $("#txtDbName").val();
-  var dbPrefix   = $("#txtDbPrefix").val();
-  var dbUser     = $("#txtDbUser").val();
-  var dbPass     = $("#txtDbPass").val();
+  var _txtDbServer  = $("#txtDbServer").val();
+  var _txtDbName    = $("#txtDbName").val();
+  var _txtDbPrefix  = $("#txtDbPrefix").val();
+  var _txtDbUser    = $("#txtDbUser").val();
+  var _txtDbPass    = $("#txtDbPass").val();
 
   // Clear old rules so we properly display spinner
   $("#spnDbConnectionStatus").removeClass();
@@ -303,11 +306,11 @@ function DbRemoveTables()
     cache: false,
     dataType: "json",
     data: { ClearDB: "1",
-            db_host: dbHost,
-            db_name: dbDatabase,
-            db_pref: dbPrefix,
-            db_user: dbUser,
-            db_pass: dbPass
+            txtDbServer:  _txtDbServer,
+            txtDbName:    _txtDbName,
+            txtDbPrefix:  _txtDbPrefix,
+            txtDbUser:    _txtDbUser,
+            txtDbPass:    _txtDbPass
           },
     beforeSend: function() {
       //$("#spnDbConnectionStatus").html("<img src='pix/spinner.gif' /> Removing database...");
@@ -317,6 +320,92 @@ function DbRemoveTables()
       $("#spnDbConnectionStatus").html(data.dbRet_msg);
       $("#spnDbConnectionStatus").removeClass();            // Remove all previous classes to reload load new update
       $("#spnDbConnectionStatus").addClass(data.dbRet_class)
+    }
+  });
+}
+
+
+/**
+ * Generate the "config.php" file.
+ */
+function CreateUserConfig()
+{
+  // --[ Setup vars for config.php ]---------------------
+  // CheckBox.is(":checked") = "true", "false", "1", "0"
+
+  // Database Configuration
+  var _txtDbServer = $("#txtDbServer").val();
+  var _txtDbName   = $("#txtDbName").val();
+  var _txtDbPrefix = $("#txtDbPrefix").val();
+  var _txtDbUser   = $("#txtDbUser").val();
+  var _txtDbPass   = $("#txtDbPass").val();
+
+  // Site Configuration
+  var _txtCfgSiteName   = $("#txtCfgSiteName").val();
+  var _txtCfgBaseUrl    = $("#txtCfgBaseUrl").val();
+  var _optCfgCleanUri   = $("#optCfgCleanURI1").is(":checked") ? true : false;
+  var _txtCfgAdminName  = $("#txtCfgAdminName").val();
+  var _txtCfgAdminUser  = $("#txtCfgAdminUser").val();
+  var _txtCfgAdminPass  = $("#txtCfgAdminPass").val();
+  var _txtCfgAdminEmail = $("#txtCfgAdminEmail").val();
+
+  // Modules selected
+  //var _chkMod         = $("#chkMod").is(":checked") ? true : false;
+  var _chkModAdmin      = $("#chkModAdmin").is(":checked") ? true : false;
+  var _chkModDashboard  = $("#chkModDashboard").is(":checked") ? true : false;
+  var _chkModCustomer   = $("#chkModCustomer").is(":checked") ? true : false;
+  var _chkModKB         = $("#chkModKB").is(":checked") ? true : false;
+  var _chkModProduct    = $("#chkModProduct").is(":checked") ? true : false;
+  var _chkModProject    = $("#chkModProject").is(":checked") ? true : false;
+  var _chkModTicket     = $("#chkModTicket").is(":checked") ? true : false;
+  var _chkModBug        = $("#chkModBug").is(":checked") ? true : false;
+  var _chkModTask       = $("#chkModTask").is(":checked") ? true : false;
+  var _chkModWiki       = $("#chkModWiki").is(":checked") ? true : false;
+  var _chkModPO         = $("#chkModPO").is(":checked") ? true : false;
+
+
+  // --[ Perform ajax call ]------------------
+  $.ajax({
+    type: "post",
+    url: "install.ajax.php",
+    chache: false,
+    dataType: "json",
+    data: { step5: "1",
+            db_host: _txtDbServer,
+            db_name: _txtDbName,
+            db_pref: _txtDbPrefix,
+            db_user: _txtDbUser,
+            db_pass: _txtDbPass,
+
+            txtCfgSiteName:   _txtCfgSiteName,
+            txtCfgBaseUrl:    _txtCfgBaseUrl,
+            txtCfgCleanUri:   _optCfgCleanUri,
+            txtCfgAdminName:  _txtCfgAdminName,
+            txtCfgAdminUser:  _txtCfgAdminUser,
+            txtCfgAdminPass:  _txtCfgAdminPass,
+            txtCfgAdminEmail: _txtCfgAdminEmail,
+
+            chkModAdmin:      _chkModAdmin,
+            chkModDashboard:  _chkModDashboard,
+            chkModCustomer:   _chkModCustomer,
+            chkModKB:         _chkModKB,
+            chkModProduct:    _chkModProduct,
+            chkModProject:    _chkModProject,
+            chkModTicket:     _chkModTicket,
+            chkModBug:        _chkModBug,
+            chkModTask:       _chkModTask,
+            chkModWiki:       _chkModWiki,
+            chkModPO:         _chkModPO
+      },
+    beforeSend: function() {
+      $("#divStatusConfigFile").removeClass();
+      $("#divStatusConfigFile").addClass("divStatusBox");
+      $("#divStatusConfigFile").html("<img src='pix/busy.gif' /> Creating user's config.php file.");
+    },
+    success: function(data) {
+      $("#divStatusConfigFile").html(data.ret_msg);
+      $("#divStatusConfigFile").removeClass();
+      $("#divStatusConfigFile").addClass(data.ret_cls);
     }
   });
 }
