@@ -5,7 +5,8 @@
  * @author        Damian Suess
  * Document:      pmt.module.php
  * Created Date:  2012-07-23
- *
+ * Version:       0.0.4
+ * 
  * Description:
  *  Basic model for Modules
  *
@@ -25,7 +26,6 @@ class pmtModule implements iModule
   /**
    * 2012-1029
    * Add variables here?
-   *
    */
 
   /**
@@ -43,7 +43,6 @@ class pmtModule implements iModule
     return true;
   }
 
-
   /**
    * Enable or Disable Module
    * Actions to perform when enabling or disabling module
@@ -58,8 +57,6 @@ class pmtModule implements iModule
 
     return true;
   }
-
-
 
   // -----------------------
 

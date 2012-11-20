@@ -9,14 +9,21 @@
  *  Installer (v0.0.5)
  *  jQuery handler
  *
+ * To Do:
+ * [ ] 2012-1120  + In Step-3, check for prev-install in the "Install" button before creating tables.
+ *
  * Change Log:
+ *  2012-1120 + Step-3 - Disabled and hiding #btnFwd4 during installation, just to be safe!
+ *            + Added Ajax error checking in most funcitons
+ *            + Step-3 - Hiding "Install" button on 'Success' to make sure we don't double-recreate db
+ *  2012-1119 + Added "CreateUserConfig()"
  *  2012-1005 + Initial creation
  */
 
 // Move this to install.js
-$(document).ready(function() {
 
-
+$(document).ready(function()
+{
   // ######################################################################
   /**[ jQuery Entry ]******** */
 
@@ -275,11 +282,23 @@ function DbInstall()
       $("#spnDbConnectionStatus").removeClass();
       // $("#spnDbConnectionStatus").html("<img src='pix/spinner.gif' />");
       $("#spnDbConnectionStatus").html("<img src='pix/busy.gif' /> Installing...");
+
+      $("#btnFwd4").attr("disabled", "disabled"); // Added 2012-11-20 - Not really needed since we're hiding it
+      $("#btnFwd4").hide();                       // Added 2012-11-20
     },
     success: function(data) {
       $("#spnDbConnectionStatus").html(data.dbRet_msg);
       $("#spnDbConnectionStatus").removeClass();            // Remove all previous classes to reload load new update
       $("#spnDbConnectionStatus").addClass(data.dbRet_class)
+
+      //$("#btnFwd4").enable() = true;
+      $("#btnFwd4").removeAttr("disabled");   // Added 2012-11-20 - re-enable and show
+      $("#btnFwd4").show();                   // Added 2012-11-20
+      if (data.dbRet_class.toLocaleString().toLowerCase() == "Success".toLowerCase())
+        $("#btnInstallDb").hide();            // Added 2012-11-20 - make sure we don't recreate db
+    },
+    error: function() {
+      alert("Error while installing database.");
     }
   });
 }
@@ -320,6 +339,9 @@ function DbRemoveTables()
       $("#spnDbConnectionStatus").html(data.dbRet_msg);
       $("#spnDbConnectionStatus").removeClass();            // Remove all previous classes to reload load new update
       $("#spnDbConnectionStatus").addClass(data.dbRet_class)
+    },
+    error: function() {
+      alert("Error while removing database.");
     }
   });
 }
@@ -332,6 +354,7 @@ function CreateUserConfig()
 {
   // --[ Setup vars for config.php ]---------------------
   // CheckBox.is(":checked") = "true", "false", "1", "0"
+  // Note: Do not pass, true/false. This will pass, "true" or "false". Use 1/0 instead!!
 
   // Database Configuration
   var _txtDbServer = $("#txtDbServer").val();
@@ -343,7 +366,7 @@ function CreateUserConfig()
   // Site Configuration
   var _txtCfgSiteName   = $("#txtCfgSiteName").val();
   var _txtCfgBaseUrl    = $("#txtCfgBaseUrl").val();
-  var _optCfgCleanUri   = $("#optCfgCleanURI1").is(":checked") ? true : false;
+  var _optCfgCleanUri   = $("#optCfgCleanURI1").is(":checked") ? 1 : 0;
   var _txtCfgAdminName  = $("#txtCfgAdminName").val();
   var _txtCfgAdminUser  = $("#txtCfgAdminUser").val();
   var _txtCfgAdminPass  = $("#txtCfgAdminPass").val();
@@ -351,17 +374,19 @@ function CreateUserConfig()
 
   // Modules selected
   //var _chkMod         = $("#chkMod").is(":checked") ? true : false;
-  var _chkModAdmin      = $("#chkModAdmin").is(":checked") ? true : false;
-  var _chkModDashboard  = $("#chkModDashboard").is(":checked") ? true : false;
-  var _chkModCustomer   = $("#chkModCustomer").is(":checked") ? true : false;
-  var _chkModKB         = $("#chkModKB").is(":checked") ? true : false;
-  var _chkModProduct    = $("#chkModProduct").is(":checked") ? true : false;
-  var _chkModProject    = $("#chkModProject").is(":checked") ? true : false;
-  var _chkModTicket     = $("#chkModTicket").is(":checked") ? true : false;
-  var _chkModBug        = $("#chkModBug").is(":checked") ? true : false;
-  var _chkModTask       = $("#chkModTask").is(":checked") ? true : false;
-  var _chkModWiki       = $("#chkModWiki").is(":checked") ? true : false;
-  var _chkModPO         = $("#chkModPO").is(":checked") ? true : false;
+  var _chkModAdmin      = $("#chkModAdmin").is(":checked")      ? 1 : 0;
+  var _chkModDashboard  = $("#chkModDashboard").is(":checked")  ? 1 : 0;
+  var _chkModUUID       = $("#chkModUUID").is(":checked")       ? 1 : 0;
+
+  var _chkModCustomer   = $("#chkModCustomer").is(":checked")   ? 1 : 0;
+  var _chkModKB         = $("#chkModKB").is(":checked")         ? 1 : 0;
+  var _chkModProduct    = $("#chkModProduct").is(":checked")    ? 1 : 0;
+  var _chkModProject    = $("#chkModProject").is(":checked")    ? 1 : 0;
+  var _chkModTicket     = $("#chkModTicket").is(":checked")     ? 1 : 0;
+  var _chkModBug        = $("#chkModBug").is(":checked")        ? 1 : 0;
+  var _chkModTask       = $("#chkModTask").is(":checked")       ? 1 : 0;
+  var _chkModWiki       = $("#chkModWiki").is(":checked")       ? 1 : 0;
+  var _chkModPO         = $("#chkModPO").is(":checked")         ? 1 : 0;
 
 
   // --[ Perform ajax call ]------------------
@@ -371,22 +396,24 @@ function CreateUserConfig()
     chache: false,
     dataType: "json",
     data: { step5: "1",
-            db_host: _txtDbServer,
-            db_name: _txtDbName,
-            db_pref: _txtDbPrefix,
-            db_user: _txtDbUser,
-            db_pass: _txtDbPass,
+            txtDbServer: _txtDbServer,
+            txtDbName: _txtDbName,
+            txtDbPrefix: _txtDbPrefix,
+            txtDbUser: _txtDbUser,
+            txtDbPass: _txtDbPass,
 
             txtCfgSiteName:   _txtCfgSiteName,
             txtCfgBaseUrl:    _txtCfgBaseUrl,
-            txtCfgCleanUri:   _optCfgCleanUri,
             txtCfgAdminName:  _txtCfgAdminName,
             txtCfgAdminUser:  _txtCfgAdminUser,
             txtCfgAdminPass:  _txtCfgAdminPass,
             txtCfgAdminEmail: _txtCfgAdminEmail,
 
+            optCfgCleanUri:   _optCfgCleanUri,
+
             chkModAdmin:      _chkModAdmin,
             chkModDashboard:  _chkModDashboard,
+            chkModUUID:       _chkModUUID,
             chkModCustomer:   _chkModCustomer,
             chkModKB:         _chkModKB,
             chkModProduct:    _chkModProduct,
@@ -401,11 +428,16 @@ function CreateUserConfig()
       $("#divStatusConfigFile").removeClass();
       $("#divStatusConfigFile").addClass("divStatusBox");
       $("#divStatusConfigFile").html("<img src='pix/busy.gif' /> Creating user's config.php file.");
+      $("#btnFwd6").hide();                       // Added 2012-11-20 - Disable during execution
     },
     success: function(data) {
       $("#divStatusConfigFile").html(data.ret_msg);
       $("#divStatusConfigFile").removeClass();
       $("#divStatusConfigFile").addClass(data.ret_cls);
+      $("#btnFwd6").show();                       // Added 2012-11-20 - Allow user to continue
+    },
+    error: function() {
+      alert("Failure while creating user's, config.php.");
     }
   });
 }

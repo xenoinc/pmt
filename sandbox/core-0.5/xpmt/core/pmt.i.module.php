@@ -28,18 +28,18 @@ interface iModule
    * This is only accessesable via the Administration console to add
    * a module to your system. By default all modules are not installed
    * except for the "Admin" module.
-   * 
+   *
    * @param bool $install True=Install Module, False=Uninstall Module
    */
   //public function Installation(bool $install);
-  
-  
+
+
   /**
-   * 
+   *
    * @param bool $enable True=Perform enable module routine (if any). False=Disable routines (if any)
    */
   //public function Enabled(bool $enable);
-  
+
   // public function Initialize();    // initialize data (basically the construct)
 
   
@@ -79,7 +79,6 @@ interface iModule
   public function PageData();
 
 
-  
   /*
 
   private function GenerateToolbar()

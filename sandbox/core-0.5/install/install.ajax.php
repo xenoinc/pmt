@@ -30,12 +30,16 @@
 require "../xpmt/phpConsole.php";
 PhpConsole::start(true, true, dirname(__FILE__));
 
+// ********************
+$BETA_TESTING = true;
+// ********************
+
 // setup variables
-$_dbHost = "";  // Database Server Name
-$_dbName = "";  // Database Name
-$_dbPrfx = "";  // Database Table Prefix
-$_dbUser = "";  // Database User Name
-$_dbPass = "";  // Database Password
+$_txtDbServer = "";  // Database Server Name
+$_txtDbName = "";  // Database Name
+$_txtDbPrefix = "";  // Database Table Prefix
+$_txtDbUser = "";  // Database User Name
+$_txtDbPass = "";  // Database Password
 
 // Site configuration
 $_txtCfgSiteName = "";
@@ -49,6 +53,7 @@ $_txtCfgAdminEmail = "";
 // Modules to install
 $_chkModAdmin = "";
 $_chkModDashboard = "";
+$_chkModUUID = "";
 $_chkModCustomer = "";
 $_chkModKB = "";
 $_chkModProduct = "";
@@ -85,12 +90,13 @@ function pmtDebug($buff)
  */
 function GetPostParams()
 {
-  global $_dbHost, $_dbName, $_dbPrfx, $_dbUser, $_dbPass;
+  global $_txtDbServer, $_txtDbName, $_txtDbPrefix, $_txtDbUser, $_txtDbPass;
   global $_txtCfgSiteName, $_txtCfgBaseUrl, $_optCfgCleanUri, $_txtCfgAdminName, $_txtCfgAdminUser, $_txtCfgAdminPass, $_txtCfgAdminEmail;
 
   // Modules to install
   global $_chkModAdmin;
   global $_chkModDashboard;
+  global $_chkModUUID;
   global $_chkModCustomer;
   global $_chkModKB;
   global $_chkModProduct;
@@ -102,16 +108,16 @@ function GetPostParams()
   global $_chkModPO;
 
 
-  $_dbHost    = GetPost("txtDbServer");     //if (isset($_POST["txtDbServer"])) $_dbHost = $_POST['txtDbServer']; else $_dbHost = "";
-  $_dbName    = GetPost("txtDbName");       //if (isset($_POST["txtDbName"]))   $_dbName = $_POST['txtDbName'];   else $_dbName = "";
-  $_dbPrfx    = GetPost("txtDbPrefix");     //if (isset($_POST["txtDbPrefix"])) $_dbPrfx = $_POST['txtDbPrefix']; else $_dbPrfx = "";
-  $_dbUser    = GetPost("txtDbUser");       //if (isset($_POST["txtDbUser"]))   $_dbUser = $_POST['txtDbUser'];   else $_dbUser = "";
-  $_dbPass    = GetPost("txtDbPass");       //if (isset($_POST["txtDbPass"]))   $_dbPass = $_POST['txtDbPass'];   else $_dbPass = "";
+  $_txtDbServer = GetPost("txtDbServer");     //if (isset($_POST["txtDbServer"])) $_txtDbServer = $_POST['txtDbServer']; else $_txtDbServer = "";
+  $_txtDbName   = GetPost("txtDbName");       //if (isset($_POST["txtDbName"]))   $_txtDbName = $_POST['txtDbName'];   else $_txtDbName = "";
+  $_txtDbPrefix = GetPost("txtDbPrefix");     //if (isset($_POST["txtDbPrefix"])) $_txtDbPrefix = $_POST['txtDbPrefix']; else $_txtDbPrefix = "";
+  $_txtDbUser   = GetPost("txtDbUser");       //if (isset($_POST["txtDbUser"]))   $_txtDbUser = $_POST['txtDbUser'];   else $_txtDbUser = "";
+  $_txtDbPass   = GetPost("txtDbPass");       //if (isset($_POST["txtDbPass"]))   $_txtDbPass = $_POST['txtDbPass'];   else $_txtDbPass = "";
 
   // Site configuration
   $_txtCfgSiteName    = GetPost("txtCfgSiteName");
   $_txtCfgBaseUrl     = GetPost("txtCfgBaseUrl");
-  $_optCfgCleanUri    = GetPost("optCfgCleanUri");
+  $_optCfgCleanUri    = GetPost("optCfgCleanUri", true);
   $_txtCfgAdminName   = GetPost("txtCfgAdminName");
   $_txtCfgAdminUser   = GetPost("txtCfgAdminUser");
   $_txtCfgAdminPass   = GetPost("txtCfgAdminPass");
@@ -120,10 +126,11 @@ function GetPostParams()
   // Modules to install
   $_chkModAdmin     = GetPost("chkModAdmin", true);
   $_chkModDashboard = GetPost("chkModDashboard", true);
-  $_chkModProject   = GetPost("chkModProject", true);
-  $_chkModTicket    = GetPost("chkModTicket", true);
-  $_chkModBug       = GetPost("chkModBug", true);
-  $_chkModTask      = GetPost("chkModTask", true);
+  $_chkModUUID      = GetPost("chkModUUID", false);
+  $_chkModProject   = GetPost("chkModProject", false);
+  $_chkModTicket    = GetPost("chkModTicket", false);
+  $_chkModBug       = GetPost("chkModBug", false);
+  $_chkModTask      = GetPost("chkModTask", false);
 
   $_chkModCustomer  = GetPost("chkModCustomer", false);
   $_chkModKB        = GetPost("chkModKB", false);
@@ -144,7 +151,8 @@ function GetPost($param, $def="")
   if (isset($_POST[$param]))
     $ret = $_POST[$param];
   else
-    $ret = "";
+    $ret = $def;
+
   return $ret;
 }
 
@@ -175,20 +183,20 @@ function ajaxUpdateStep()
 function ajaxClearDB()
 {
   // 1) Extract variables (safely pull from POST)
-  global $_dbHost, $_dbName, $_dbPrfx, $_dbUser, $_dbPass;
+  global $_txtDbServer, $_txtDbName, $_txtDbPrefix, $_txtDbUser, $_txtDbPass;
   //GetPostParams();
   require_once("../xpmt/core/pmt.db.php");
 
 
   // 2) Connect to db
-  $pmtDB = new Database($_dbHost, $_dbUser, $_dbPass);
+  $pmtDB = new Database($_txtDbServer, $_txtDbUser, $_txtDbPass);
   // 3) Drop all tables
-  $pmtDB->Query("DROP DATABASE ".$_dbName.";");
-  $pmtDB->Query("CREATE DATABASE ".$_dbName.";");
+  $pmtDB->Query("DROP DATABASE ".$_txtDbName.";");
+  $pmtDB->Query("CREATE DATABASE ".$_txtDbName.";");
   //$pmtDB->Close();                                // throws an error
 
   // 4) Report status
-  $retArr = array("dbRet_msg"   => "Dropped and created database, '".$_dbName."'.",
+  $retArr = array("dbRet_msg"   => "Dropped and created database, '".$_txtDbName."'.",
                   "dbRet_class" => "Success");
   echo json_encode($retArr);
 }
@@ -211,13 +219,13 @@ function ajaxDatabaseTest()
   $retClass = "Fail";         // pre-populate
 
   // 1) Extract variables (safely pull from POST)
-  global $_dbHost, $_dbName, $_dbPrfx, $_dbUser, $_dbPass;
+  global $_txtDbServer, $_txtDbName, $_txtDbPrefix, $_txtDbUser, $_txtDbPass;
   //GetPostParams();
 
   // Stepp 2) Test Database HOST connection (localhost)
   try
   {
-    $mysqli = new mysqli($_dbHost, $_dbUser, $_dbPass, $_dbName);
+    $mysqli = new mysqli($_txtDbServer, $_txtDbUser, $_txtDbPass, $_txtDbName);
     if ($mysqli->connect_errno)
     {
       //$retMsg = "<p>Connection Failed</p><p>[". $mysqli->connect_errno ."]: ". $mysqli->connect_error ."</p>";
@@ -235,7 +243,7 @@ function ajaxDatabaseTest()
 
     // Old code
     /*
-    $con = mysql_connect($_dbHost, $_dbUser, $_dbPass);
+    $con = mysql_connect($_txtDbServer, $_txtDbUser, $_txtDbPass);
     if (!$con)
     {
       $retMsg = "MySQL Failed: " . mysql_error();
@@ -270,13 +278,13 @@ function ajaxInstallXenoPMT()
   $retMsg   = "blank info";   //
   $retClass = "Fail";         // pre-populate
   $arrMsg = array();
-  global $_dbHost, $_dbName, $_dbPrfx, $_dbUser, $_dbPass;
+  global $_txtDbServer, $_txtDbName, $_txtDbPrefix, $_txtDbUser, $_txtDbPass;
   //GetPostParams();
 
   // Step 2) Connect to database
   try
   {
-    $mysqli = new mysqli($_dbHost, $_dbUser, $_dbPass, $_dbName);
+    $mysqli = new mysqli($_txtDbServer, $_txtDbUser, $_txtDbPass, $_txtDbName);
     if ($mysqli->connect_errno)
     {
       $retMsg = "Connection Failed<br />[". $mysqli->errno."]: ". $mysqli->connect_error;
@@ -284,10 +292,10 @@ function ajaxInstallXenoPMT()
     }
     else
     {
-      ExecuteSqlFile("sql/pmt-db-core.sql", $_dbPrfx, $mysqli, $arrMsgRet);
+      ExecuteSqlFile("sql/pmt-db-core.sql", $_txtDbPrefix, $mysqli, $arrMsgRet);
       $arrMsg = array_merge($arrMsg, $arrMsgRet);
 
-      ExecuteSqlFile("sql/pmt-db-user.sql", $_dbPrfx, $mysqli, $arrMsgRet);
+      ExecuteSqlFile("sql/pmt-db-user.sql", $_txtDbPrefix, $mysqli, $arrMsgRet);
       $arrMsg = array_merge($arrMsg, $arrMsgRet);
 
       // Usually returnd messages means FAIL!
@@ -323,22 +331,54 @@ function ajaxInstallXenoPMT()
  */
 function ajaxCreateConfig()
 {
-  pmtDebug("Entering :: ajaxCreateConfig");
+  //pmtDebug("Entering :: ajaxCreateConfig");
 
   /** Steps
+   * 0 - Error Checking - Check if config.php exists
    * 1 - setup variables
    * 2 - Insert Administrator into Database
    * 3 - Place modules into string list
    * 4 - Write user's "config.php" file
    */
 
-  /* Setup Variables */
-  global $_dbHost, $_dbName, $_dbPrfx, $_dbUser, $_dbPass;
+  /** Step 0
+   * Check if CONFIG.PHP exists
+   */
+  /*
+  if (file_exists("../config.php"))
+  {
+    $retArr = array("ret_msg" => "The user config file, 'config.php' already exists in root directory. Please remove it and re-run this step.", "ret_cls" => "Fail");
+    echo(json_encode($retArr));
+    pmtDebug("Exiting :: ajaxCreateConfig");
+    return;
+  }
+  */
+  if (is_writable("../") == false)
+  {
+    $retArr = array(
+        "ret_msg" =>  "The root directory is not is not writable. Please give system write access " .
+                      "so we can generate 'config.php' and then change back privs when done.",
+        "ret_cls" => "Fail");
+    echo(json_encode($retArr));
+    pmtDebug("Exiting :: ajaxCreateConfig");
+    return;
+  }
+
+  // ===================================
+
+
+  /** Step 1
+   * Setup Variables
+   */
+  global $BETA_TESTING;
+
+  global $_txtDbServer, $_txtDbName, $_txtDbPrefix, $_txtDbUser, $_txtDbPass;
   global $_txtCfgSiteName, $_txtCfgBaseUrl, $_optCfgCleanUri, $_txtCfgAdminName, $_txtCfgAdminUser, $_txtCfgAdminPass, $_txtCfgAdminEmail;
 
   // Modules to install
   global $_chkModAdmin;
   global $_chkModDashboard;
+  global $_chkModUUID;
   global $_chkModCustomer;
   global $_chkModKB;
   global $_chkModProduct;
@@ -350,17 +390,89 @@ function ajaxCreateConfig()
   global $_chkModPO;
 
   $pmtConf = "$"."pmtConf";
-  $retMsg = "";
-  $retClass = "Success";
+  $modPath = "$"."modPath";
 
-  /* Create Module List */
+  $retMsg   = "";           // Ajax return message
+  $retClass = "Success";    // Ajax return panel class (Success/Fail)
+  $lstMods  = "";           // String list of modules to include
+
+  /** Step 2
+   * Insert Admin into Database
+   */
+
+  try
+  {
+    $mysqli = new mysqli($_txtDbServer, $_txtDbUser, $_txtDbPass, $_txtDbName);
+    if ($mysqli->connect_errno)
+    {
+      $retMsg .= "Connection Failed<br />[". $mysqli->errno."]: ". $mysqli->connect_error;
+      $retClass = "Fail";
+    }
+    else
+    {
+      // ==[ 1 - Check if prev-user exist? ]=====================
+      $userRows = 0;
+      $sqlRet = $mysqli->query("SELECT * FROM  `{$_txtDbPrefix}USER` WHERE User_Name = '{$_txtCfgAdminUser}';");
+      if ($sqlRet)
+      {
+        $userRows = $sqlRet->num_rows;
+        pmtDebug("User Query returned {$userRows} rows.\n");
+        $sqlRet->close(); /* free result set */
+      }
+
+      // ==[ 2 - Insert ]=====================
+      if ($userRows == 0)
+      {
+        $q = "INSERT INTO `{$_txtDbPrefix}USER` (User_Name, Password, Email, Display_Name) VALUES (" .
+             "'{$_txtCfgAdminUser}', '{$_txtCfgAdminPass}', '{$_txtCfgAdminEmail}', '{$_txtCfgAdminName}');";
+        $mysqli->query($q);
+      }
+
+      $mysqli->close();
+    }
+  }
+  catch(Exception $e)
+  {
+    $retMsg .= "<br />Failed to add Admin User data into database. Error: {$e}";
+    $retClass = "Fail";
+    pmtDebug("Failed to add Admin User data into database. Error: {$e}");
+  }
+
+
+
+
+  /** Step 3
+   * Create Module List
+   */
+  //pmtDebug("Step 3" );    // debug("DirName:" . dirname( __FILE__ ));
   // require_once( dirname( __FILE__ ) . "/extensions/WikiEditor/WikiEditor.php" );
-  $lstMods = "";
-  $lstMods .= "";
-  debug("DirName:" . dirname( __FILE__ ));
+  $req = 'xpmtUseMod( dirname( __FILE__ ) . "/xpmt/modules/';       // disable automatically for now just in case
+
+  // Beta testing only
+  if ($BETA_TESTING)    {$lstMods .= $req . 'sample/sample.php");' . PHP_EOL;}
+  if ($_chkModUUID)     {$lstMods .= $req . 'uuid/uuid.php");' . PHP_EOL;}
 
 
-  /* Step 3 - Create Config File*/
+// Modules to install
+  //$req = 'require_once( dirname( __FILE__ ) . "/xpmt/modules/';       // disable automatically for now just in case
+  if($_chkModAdmin)     {$lstMods .= $req . 'admin/admin.php");' . PHP_EOL;}
+  if($_chkModDashboard) {$lstMods .= $req . 'dashboard/dashboard.php");' . PHP_EOL;}
+
+  if($_chkModProject)   {$lstMods .= $req . 'project/project.php");' . PHP_EOL;}
+  if($_chkModTicket)    {$lstMods .= $req . 'ticket/ticket.php");' . PHP_EOL;}
+  if($_chkModBug)       {$lstMods .= $req . 'bug/bug.php");' . PHP_EOL;}
+  if($_chkModTask)      {$lstMods .= $req . 'task/task.php");' . PHP_EOL;}
+
+  if($_chkModCustomer)  {$lstMods .= $req . 'customer/customer.php");' . PHP_EOL;}
+  if($_chkModKB)        {$lstMods .= $req . 'kb/kb.php");' . PHP_EOL;}
+  if($_chkModProduct)   {$lstMods .= $req . 'product/product.php");' . PHP_EOL;}
+  if($_chkModWiki)      {$lstMods .= $req . 'wiki/wiki.php");' . PHP_EOL;}
+  if($_chkModPO)        {$lstMods .= $req . 'po/po.php");' . PHP_EOL;}
+
+
+  /** Step 4
+   * Create use's CONFIG.PHP
+   */
 
   $buff = <<<CODE
 <?php
@@ -378,36 +490,66 @@ function ajaxCreateConfig()
 *
 ***********************************************************/
 
-date_default_timezone_set('America/New_York');        // [DJS] Added to fix warning in PHP & PhpConsole
+date_default_timezone_set('America/New_York');
 
 // Main config var
 {$pmtConf} = array(
   "db" => array(
-    "server"  => "{$_dbHost}",  // Database server
-    "user"    => "{$_dbUser}",  // Database username
-    "pass"    => "{$_dbPass}",  // Database password
-    "dbname"  => "{$_dbName}",  // Database name
-    "prefix"  => "{$_dbPrfx}"   // Table prefix
+    "server"  => "{$_txtDbServer}",  // Database server
+    "dbname"  => "{$_txtDbName}",  // Database name
+    "prefix"  => "{$_txtDbPrefix}",   // Table prefix
+    "user"    => "{$_txtDbUser}",  // Database username
+    "pass"    => "{$_txtDbPass}",  // Database password
   ),
   "general" => array(
     "auth_only" => true, // Allow access to public or auth-only
     "title"     => "{$_txtCfgSiteName}",
-    "base_url"  => "{$_txtCfgBaseUrl}"    // Must include '/' at the end.
+    "base_url"  => "{$_txtCfgBaseUrl}",   // Must include '/' at the end.
+    "clean_uri" => "{$_optCfgCleanUri}"   // Clean URI
   )
 );
 
 // Modules to include. Needed for first time install of module
 {$lstMods}
 
-?>
 
+/**
+ * Safely REQUIRE modules. If it doesn't exist then it won't crash the system.
+ */
+function xpmtUseMod({$modPath})
+{
+  if (file_exists({$modPath})) require_once({$modPath});
+}
+
+?>
 CODE;
 
-  // ===================================
+  // Write config.php
+  //pmtDebug("Step 3" );
+  try
+  {
+    // write file data
+    $ptr = fopen("../config.php", "w+");
+      fwrite($ptr, $buff);
+    fclose($ptr);
+
+    $retMsg .= "<br />Generated user's <b>CONFIG.PHP</b> in root directory.";
+    //pmtDebug("Created CONFIG.PHP");
+  }
+  catch (Exception $e)
+  {
+    $retMsg .= "<br />Error creating <b>CONFIG.PHP</b>. Error: {$e}";
+    $retClass = "Fail";
+    pmtDebug("Failed to create, CONFIG.PHP");
+  }
+
+
+  // =[ Report back ]==================================
+
   $retArr = array("ret_msg" => $retMsg,
                   "ret_cls" => $retClass);
   echo(json_encode($retArr));
-  pmtDebug("Exiting :: ajaxCreateConfig");
+  //pmtDebug("Exiting :: ajaxCreateConfig");
 }
 
 
@@ -455,7 +597,7 @@ function ExecuteSqlFile($sqlFile, $tblPrefix, $objConn, &$arrErrMsg)
  */
 function IsInstalled()
 {
-  //global $_dbHost, $_dbName, $_dbPrfx, $_dbUser, $_dbPass;
+  //global $_txtDbServer, $_txtDbName, $_txtDbPrefix, $_txtDbUser, $_txtDbPass;
   //GetPostParams();
 
 

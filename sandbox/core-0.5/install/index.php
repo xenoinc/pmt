@@ -486,6 +486,7 @@ DebugDisplay();
                 </td>
               </tr>
 
+
               <tr>
                 <td colspan="2">
                   <center><h2>xPMT Modules</h2></center>
@@ -493,62 +494,76 @@ DebugDisplay();
               </tr>
               <tr>
                 <td>
-                  Customer Manager<br />
+                  <b>UUID Generator</b><br />
+                  <small><i>Generate Unique Identifiers on the fly. These are used in every module to separate them from one another.</i></small><br />
                   <small>
                     <b>Version:</b> 0.0.5<br />
-                    <b>Dependencies:</b> <i>none</i><br />
+                    <b>Dependencies:</b> <i>None</i><br />
+                    <b>Uses:</b> None
+                  </small>
+                </td>
+                <td>
+                  <input type="checkbox" name="chkModule" id="chkModUUID" checked />
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  <b>Customer Manager</b><br />
+                  <small>
+                    <b>Version:</b> 0.0.5<br />
+                    <b>Dependencies:</b> <i>None</i><br />
                     <b>Uses:</b> Ticket, Bug, Task, Product
                   </small>
                 </td>
                 <td>
-                  <input type="checkbox" name="chkModule" id="chkModCustomer" checked />
+                  <input type="checkbox" name="chkModule" id="chkModCustomer" disabled />
                   <i>Module not available yet</i>
                 </td>
               </tr>
               <tr>
                 <td>
-                  Knowledge Base<br />
+                  <b>Knowledge Base</b><br />
                   <small>
                     <b>Version:</b> 0.0.5<br />
                     <b>Dependencies:</b> <i>None</i><br />
                     <b>Uses:</b> Product
                   </small>
-\                </td>
+                </td>
                 <td>
-                  <input type="checkbox" name="chkModule" id="chkModKB" checked />
+                  <input type="checkbox" name="chkModule" id="chkModKB" disabled />
                 </td>
               </tr>
               <tr>
                 <td>
-                  Product<br />
+                  <b>Product</b><br />
                   <small>
                     <b>Version:</b> 0.0.5<br />
-                    <b>Dependencies:</b> <i>none</i><br />
+                    <b>Dependencies:</b> <i>None</i><br />
                     <b>Uses:</b> Ticket, Bug, Knowledge Base
                   </small>
                 </td>
                 <td>
-                  <input type="checkbox" name="chkModule" id="chkModProduct" checked />
+                  <input type="checkbox" name="chkModule" id="chkModProduct" disabled />
                   <i>Module not available yet</i>
                 </td>
               </tr>
               <tr>
                 <td>
-                  Project<br />
+                  <b>Project</b><br />
                   <small>
                     <b>Version:</b> 0.0.5<br />
-                    <b>Dependencies:</b> <i>none</i><br />
+                    <b>Dependencies:</b> <i>None</i><br />
                     <b>Uses:</b> Ticket, Bug, Task
                   </small>
                 </td>
                 <td>
-                  <input type="checkbox" name="chkModule" id="chkModProject" checked />
-                  <i></i>
+                  <input type="checkbox" name="chkModule" id="chkModProject" disabled />
+                  <i>Alpha testing stages</i>
                 </td>
               </tr>
               <tr>
                 <td>
-                  Ticket System<br />
+                  <b>Ticket System</b><br />
                   <small><i>Issue ticketing system</i></small><br />
                   <small>
                     <b>Version:</b> 0.0.5<br />
@@ -557,12 +572,13 @@ DebugDisplay();
                   </small>
                 </td>
                 <td>
-                  <input type="checkbox" name="chkModule" id="chkModTicket" checked />
+                  <input type="checkbox" name="chkModule" id="chkModTicket" disabled />
+                  <i>Alpha testing stages</i>
                 </td>
               </tr>
               <tr>
                 <td>
-                  Bug Reporting<br />
+                  <b>Bug Reporting</b><br />
                   <small>
                     <b>Version:</b> 0.0.5<br />
                     <b>Dependencies:</b> <i>None</i><br />
@@ -570,13 +586,13 @@ DebugDisplay();
                   </small>
                 </td>
                 <td>
-                  <input type="checkbox" name="chkModule" id="chkModBug" checked />
+                  <input type="checkbox" name="chkModule" id="chkModBug" disabled />
                   <i>Module not available yet</i>
                 </td>
               </tr>
               <tr>
                 <td>
-                  Task Manager<br />
+                  <b>Task Manager</b><br />
                   <small>
                     <b>Version:</b> 0.0.5<br />
                     <b>Dependencies:</b> <i>None</i><br />
@@ -584,13 +600,13 @@ DebugDisplay();
                   </small>
                 </td>
                 <td>
-                  <input type="checkbox" name="chkModule" id="chkModTask" checked />
+                  <input type="checkbox" name="chkModule" id="chkModTask" disabled />
                   <i>Module not available yet</i>
                 </td>
               </tr>
               <tr>
                 <td>
-                  Wiki System<br />
+                  <b>Wiki System</b><br />
                   <small>
                     <b>Version:</b> 0.0.5<br />
                     <b>Dependencies:</b> <i>None</i><br />
@@ -604,7 +620,7 @@ DebugDisplay();
               </tr>
               <tr>
                 <td>
-                  Purchase Order Manager<br />
+                  <b>Purchase Order Manager</b><br />
                   <small>
                     <b>Version:</b> 0.0.5<br />
                     <b>Dependencies:</b> <i>None</i><br />
