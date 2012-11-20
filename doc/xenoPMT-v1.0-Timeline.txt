@@ -1,15 +1,45 @@
 Copyright 2011 (C) Xeno Innovations, Inc.
-File Name:     PMT Timeline and Milestones
-Created by:    Damian J. Suess
-Created Date:  2011-0201
-
+File Name:    PMT Timeline and Milestones
+Created by:   Damian J. Suess
+Created Date: 2011-0201
+Updated:      2012-0922
 
 Milesstones and Timeline
 ========================
 
+0.0.1
+  * Written Concept
+  * Folder and File Structure
+  * Basic GUI
+0.0.2
+  * Basic Core to load modules (pre-definied module URIs)
+  * Make GUI look a little better
+  * Basic Module structure
+  * Module - Project
+    * Create Project
+    * View list of projects
+    * View project description page
+0.0.3 - (xiPMT v0.4 branch) - {unknown to 2012-0922}
+  * Fix bugs in GUI
+  * Draw outline for new module loader
+  * Create staging area for new core
+  + Add space for new Core variables: $PMT_HEADER, $PMT_CSS (not used yet)
+  * Module - Ticket
+    * Added outline
+    * Created Ticket View template
+  # Push back to Trunk
+0.0.4 - {2012-0922 to 2012-1031}
+  * Core System
+    * Enhance module loader
+    * Separate Core-System from User-Space
+  * Fix installer (errors with PHP 5.3.6 but not later versions)
+  * Update database structure
+0.0.5 - {2012-1101 - 2012-1130}
+  * Core System
+    * 
 
 Milestone 1 - Getting started - v0.1 - "Ground work"
-------------------------------------------------
+----------------------------------------------------
 - Basic UI
 - Able to create Projects
 - Able to create Milestones

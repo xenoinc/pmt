@@ -507,7 +507,36 @@ Also see [[AdvancedOptions]]</pre>
 </div>
 <!--POST-SHADOWAREA-->
 <div id="storeArea">
-<div title="Admin (mod)" creator="d.suess" modifier="d.suess" created="201209061627" modified="201209061632" changecount="3">
+<div title="Admin (mod)" creator="d.suess" modifier="d.suess" created="201209061627" modified="201210040601" changecount="7">
+<pre>* [[Admin (mod) - Sections]]
+* [[Admin (mod) - Permissions]]
+</pre>
+</div>
+<div title="Admin (mod) - Permissions" creator="d.suess" modifier="d.suess" created="201210040601" modified="201210040645" changecount="7">
+<pre>!General Administration
+|Value                |Description |h
+|admin-tab            |View the admin tab in toolbar |
+|admin-module-edit*    |Access module modifications |
+|admin-user-edit*      |Enable/Disable and Edit user details |
+ * Simplified permissions (v1.0) to follow the K.I.S.S. principals and quicker deployment
+
+!Module Administration
+//For now to keep permissions simple ''admin-module-edit'' will handle all functionality//
+|Value                            |Description |h
+|--admin-mod-edit-permissions--   |Edit module permissions |
+|--admin-mod-enable-disable--     |Enable and Disable modules |
+|--admin-mod-install-uninst--     |Install and Uninstall modules |
+!User and Group Administration
+//For now to keep permissions simple ''admin-user-edit'' will handle all functionality//
+|Value &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp;   |Description |h
+|--admin-user-add--  |Create new users |
+|--admin-user-rmv--  |Remove users |
+|--admin-group-add-- |Create Groups |
+|--admin-group-mod-- |Modify Groups |
+|--admin-group-rmv-- |Remove Groups |
+</pre>
+</div>
+<div title="Admin (mod) - Sections" creator="d.suess" modifier="d.suess" created="201210040600" changecount="1">
 <pre>!Sections to create
 * Module Editor
 ** Change URI
@@ -525,7 +554,10 @@ Also see [[AdvancedOptions]]</pre>
 ** Group Members
 ** Group Permissions
 *** //Permissions items should be added from module install process// (PMT_S_GROUP_PERMISSION)
-** Default toolbar view - //See Group_Permissions//</pre>
+** Default toolbar view - //See Group_Permissions//
+
+!Sections Completed
+//None//</pre>
 </div>
 <div title="AdvancedOptions" creator="d.suess" modifier="d.suess" created="201209012235" changecount="1">
 <pre>&lt;&lt;options&gt;&gt;</pre>
@@ -722,7 +754,7 @@ You are free to use this however you like.  I place this code into the public do
 ***/
 </pre>
 </div>
-<div title="Core2-Workflow" creator="d.suess" modifier="d.suess" created="201209012314" modified="201209012351" changecount="6">
+<div title="Core2-Workflow" creator="d.suess" modifier="d.suess" created="201209012314" modified="201209241852" changecount="10">
 <pre>Below describes the default core loading workflow.
 
 ! Core Workflow
@@ -744,11 +776,20 @@ You are free to use this however you like.  I place this code into the public do
 # Load module from URI request
 ## Prompt if module doesn't exist or enabled
 ## Prompt if user doesn't have access
-# Display HTML output for user</pre>
+# Display HTML output for user
+
+!Core Change Suggestions
+* 2012-0924
+**Should use something like, $PAGE[&quot;&quot;] and not $PAGE_XXX for the page context. this will manage only 1 global.
+*** $PAGE[&lt;definitions&gt;]
+*** path, title, header, tbar_meta, tbar_main, tbar_minileft, tbar_miniright, htdata, footer |</pre>
 </div>
-<div title="DefaultTiddlers" creator="d.suess" modifier="d.suess" created="201209012237" modified="201209020109" changecount="3">
-<pre>[[ToDoList]]
-[[Modules]]</pre>
+<div title="Customer (mod)" creator="d.suess" modifier="d.suess" created="201210040652" changecount="1">
+<pre>* [[Customer (mod) - Sections]]
+* [[Customer (mod) - Permissions]]</pre>
+</div>
+<div title="DefaultTiddlers" creator="d.suess" modifier="d.suess" created="201209012237" modified="201210032135" changecount="4">
+<pre></pre>
 </div>
 <div title="KB (mod)" creator="d.suess" modifier="d.suess" created="201209031656" modified="201209061549" changecount="6">
 <pre>!Knowledge Base
@@ -810,15 +851,32 @@ One of the first module to get created. The initiative is to create a simple mod
 &lt;!-- &lt;h2&gt;Feedback&lt;/h2&gt; --&gt;
 }}}</pre>
 </div>
-<div title="MainMenu" creator="d.suess" modifier="d.suess" created="201209011745" modified="201209061558" changecount="17">
-<pre>! Components
+<div title="MainMenu" creator="d.suess" modifier="d.suess" created="201209011745" modified="201211152022" changecount="38">
+<pre>! xenoPMT
 * [[Core2-Workflow]]
-* [[Reports]]
+* [[config.php]]
 * [[Modules]]
+* [[Reports]]
+* [[Variables]]
+* [[ToDoList]]
+* [[Test System]]
 ! Modules
+* [[Admin    |Admin (mod)]]
+* [[Customer |Customer (mod)]]
+* [[Product  |Product (mod)]]
+* [[Project  |Project (mod)]]
+* [[Ticket   |Ticket (mod)]]
+!!!!Modules Ext
+* [[Overview|Modules]]
 * [[List of Mods|Module - List]]
 * [[Workflow|Module - Loader Workflow]]
 * [[v0.4 Config|Module - v0.4 Configuration]]
+!Milestones
+* [[Milestones]]
+* [[Milestone-0]]
+* [[Milestone-1]]
+* [[Milestone-2]]
+* [[Milestone-3]]
 ! Unsorted
 * [[Welcome Email]]
 ! Config
@@ -832,23 +890,171 @@ One of the first module to get created. The initiative is to create a simple mod
 * [[MyPlugins]]
 * [[MarkUp | http://oldwiki.tiddlywiki.org/wiki/TiddlyWiki_Markup]]</pre>
 </div>
-<div title="Module - List" creator="d.suess" modifier="d.suess" created="201209061537" modified="201209062255" changecount="9">
-<pre>! xenoPMT v1.0 Concept List
+<div title="Milestone 0.0.1" creator="d.suess" modifier="d.suess" created="201210032306" changecount="1">
+<pre>* Written Concept
+* Folder and File Structure
+* Basic GUI</pre>
+</div>
+<div title="Milestone 0.0.2" creator="d.suess" modifier="d.suess" created="201210032306" changecount="1">
+<pre>* Basic Core to load modules (pre-definied module URIs)
+* Make GUI look a little better
+* Basic Module structure
+* Module - Project
+** Create Project
+** View list of projects
+** View project description page</pre>
+</div>
+<div title="Milestone 0.0.3" creator="d.suess" modifier="d.suess" created="201210032307" modified="201210032307" changecount="2">
+<pre>* Fix bugs in GUI
+* Draw outline for new module loader
+* Create staging area for new core
+* + Add space for new Core variables: $PMT_HEADER, $PMT_CSS (not used yet)
+* Module - Ticket
+** Added outline
+** Created Ticket View template
+** Push back to Trunk</pre>
+</div>
+<div title="Milestone 0.0.4" creator="d.suess" modifier="d.suess" created="201210032308" modified="201210032310" changecount="5">
+<pre>''Started:'' 2012-0922
+''Completed:'' 2012-1031
+* Core System
+** Enhance module loader
+** Separate Core-System from User-Space
+* Fix installer (errors with PHP 5.3.6 but not later versions)
+* Update database structure</pre>
+</div>
+<div title="Milestone 0.0.5" creator="d.suess" modifier="d.suess" created="201210032309" modified="201211071458" tags="milestone v0.0.5" changecount="15">
+<pre>''Started:'' 2012-1101
+''Deadline:'' 2012-1130
+''Completed:''
+
+
+* Core System
+** Rewritten module loader
+** Module format redesigned
+*** Modules must contain a header file. This will check against the DB for previous installation
+* Installer
+** Completely rewritten
+** ''New:''
+*** Now uses Ajax with jQuery and PHP for DB calls
+*** Admin will pick default modules to pre-install (under development)
+** To Do:
+*** Module picker (Dependency: Module Loader)
+* Modules
+** Modules MUST contain a header file with array
+** Modules MUST contain a UUID (for verification against DB)
+*** No UUID may be alike!** Header file points to module location and class name
+
+! New features
+The system is combining the loosely named variables to be contained inside of PHP variable arrays. This way we can easily track the parameters and its values. There was a thought to contain everything a single global variable $xpmtCore, but there was a performance concern of the array carrying too much weight.
+
+The official list is located on the [[Variables]] page.
+
+!!! Core Global Variables
+{{{
+  $xpmtCore[&quot;info&quot;][&quot;version&quot;]     = &quot;0.0.5&quot;;
+  $xpmtCore[&quot;info&quot;][&quot;version_ex&quot;]  = 000005;
+  $xpmtCore[&quot;info&quot;][&quot;version_ex2&quot;] = &quot;000005&quot;;
+  $xpmtCore[&quot;info&quot;][&quot;db_version&quot;]  = 0.2;
+
+  $xpmtCore[&quot;page&quot;][&quot;cache&quot;]      = array(&quot;setting&quot;=&gt;array());
+  $xpmtCore[&quot;page&quot;][&quot;breadcrumb&quot;] = array();
+}}}
+
+!!! Page Global Variable
+{{{
+  $xpmtPage[&quot;title&quot;]=&quot;&quot;;       // Page Title
+  $xpmtPage[&quot;logo&quot;]=&quot;&quot;;        // Site image path
+  $xpmtPage[&quot;metabar&quot;]=&quot;&quot;;     // User (login/usr-pref)/settings/logout/about
+  $xpmtPage[&quot;toolbar&quot;]=&quot;&quot;;     // Main toolbar
+  $xpmtPage[&quot;minileft&quot;]=&quot;&quot;;    // Mini-bar Left aligned (bread crumbs)
+  $xpmtPage[&quot;miniright&quot;]=&quot;&quot;;   // Mini-bar Right aligned (module node options)
+  $xpmtPage[&quot;htdata&quot;]=&quot;&quot;;      // Main page html data
+  $xpmtPage[&quot;path&quot;]=&quot;&quot;;        // Relative path to theme currently in use
+}}}
+
+!!! Module Global Variable
+{{{
+  $xpmtModule[&quot;current&quot;][&quot;uuid&quot;] = &quot;&quot;;   // UUID of the module being used
+  $xpmtModule[&quot;info&quot;][] = array
+  (
+    &quot;author&quot;      =&gt; &quot;Damian Suess&quot;,
+    &quot;version&quot;     =&gt; &quot;1.0&quot;,
+    &quot;title&quot;       =&gt; &quot;Sample Module Title&quot;,
+    &quot;description&quot; =&gt; &quot;Sample description for module to show up in loader&quot;,
+    &quot;urn&quot;         =&gt; &quot;sample&quot;,                                      // Uniform Resource Name of the module (pmt.com/ticket) ** possibly deprecated
+    &quot;classname&quot;   =&gt; &quot;sample&quot;,                                      // name of the class inside of &quot;$xpmtModule[&quot;info&quot;][$ndx]-&gt;path&quot;
+    &quot;path&quot;        =&gt; dirname(__FILE__) . &quot;/sample.main.php&quot;,        // Path to module core
+    &quot;core&quot;        =&gt; &quot;false&quot;,                                       // core system module (true=core)
+    &quot;uuid&quot;        =&gt; &quot;ef64ffb0-19a8-11e2-892e-0800200c9a66&quot;         // Universally Unique identifier
+  );
+}}}
+</pre>
+</div>
+<div title="Milestone-0" creator="d.suess" modifier="d.suess" created="201210032137" modified="201210270250" changecount="5">
+<pre>!0.0.1
+* Written Concept
+* Folder and File Structure
+* Basic GUI
+
+!0.0.2
+* Basic Core to load modules (pre-definied module URIs)
+* Make GUI look a little better
+* Basic Module structure
+* Module - Project
+** Create Project
+** View list of projects
+** View project description page
+
+!0.0.3 - (xiPMT v0.4 branch) - {unknown to 2012-0922}
+* Fix bugs in GUI
+* Draw outline for new module loader
+* Create staging area for new core
+* + Add space for new Core variables: $PMT_HEADER, $PMT_CSS (not used yet)
+* Module - Ticket
+** Added outline
+** Created Ticket View template
+## Push back to Trunk
+
+!0.0.4 - {2012-0922 to 2012-1031}
+* Core System
+** Enhance module loader
+** Separate Core-System from User-Space
+* Fix installer (errors with PHP 5.3.6 but not later versions)
+* Update database structure
+
+!0.0.5 - {2012-1101 - 2012-1130}
+* See page: [[Milestone 0.0.5]]
+</pre>
+</div>
+<div title="Milestones" creator="d.suess" modifier="d.suess" created="201210032306" modified="201210032333" changecount="6">
+<pre>|!Milestone Series   |!Milestone 1    |!Milestone 2    |!Milestone 3    |h
+|[[Milestone-0]]     |[[Milestone-1]] |[[Milestone-2]] |[[Milestone-3]] |
+|[[Milestone 0.0.1]] |  |
+|[[Milestone 0.0.2]] |  |
+|[[Milestone 0.0.3]] |  |
+|[[Milestone 0.0.4]] |  |
+|[[Milestone 0.0.5]] |  |
+</pre>
+</div>
+<div title="Module - List" creator="d.suess" modifier="d.suess" created="201209061537" modified="201210040648" changecount="14">
+<pre>! v1.0 - Modules
 | # |Name                | %   | Core |URI    |C|D|A|Description                   |Customer Access |h
-| 5 |[[KB (mod)]]        | 75% | No   |kb     |X|X|/|Knowledge Base Articles       |
-| 5 |[[Customer (mod)]]  | 0%  | No   |c      |X|X| |Customer information system   |Access their site details and open tickets |
-| 5 |[[Ticket (mod)]]    | 0%  | No   |ticket |X|X|/|Issue Ticketing tracker       |View only their open items. Only CstmrAdmin can view Old  |
+| 4 |[[Admin (mod)]]     | 0%  | Yes  |admin  | | | |Administration and Config Panel (//admin only//) |  |
 | 4 |[[Bug (mod)]]       | 0%  | No   |bug    | |X| |Bug tracker                   |  |
-| 4 |[[Task (mod)]]      | 0%  | No   |task   | |X| |Technical request tracker     |  |
+| 5 |[[Customer (mod)]]  | 0%  | No   |c      |X|X| |Customer information system   |Access their site details and open tickets |
+| 3 |[[Dashboard (mod)]] | 0%  | Yes  |main   |X|X|X|Welcome page                  |Display open tickets, list of products, reg/warranty info and Announcements  |
+| 5 |[[KB (mod)]]        | 75% | No   |kb     |X|X|/|Knowledge Base Articles       |  |
 | 4 |[[Project (mod)]]   | 10% | No   |p      | |X| |Project overview page (//dev only//) |  |
 | 3 |[[Product (mod)]]   | 0%  | No   |prod   |X|X|/|Product overview and tracking |Can view all projects ''or'' only their own registered ones  |
-| 4 |[[Admin (mod)]]     | 0%  | Yes  |admin  | | | |Administration and Config Panel (//admin only//) |  |
-| 3 |[[Dashboard (mod)]] | 0%  | Yes  |main   |X|X|X|Welcome page                  |Display open tickets, list of products, reg/warranty info and Announcements  |
+| 4 |[[Task (mod)]]      | 0%  | No   |task   | |X| |Technical request tracker     |  |
+| 5 |[[Ticket (mod)]]    | 0%  | No   |ticket |X|X|/|Issue Ticketing tracker       |View only their open items. Only CstmrAdmin can view Old  |
 | 3 |[[User (mod)]]      | 0%  | Yes  |user   |X|X| |Product overview and tracking |Can view/edit basic info. CstmrAdmin can make (limited) colleague accounts  |
 | 2 |[[Wiki (mod)]]      | 0%  | No   |wiki   |X|X|/|Self-contained wiki system    |Can view but not edit  |
 //Help://
 ''C''ustomer, ''D''evelopment, ''A''nonymous
-! Concept Modules
+
+! v1.5 - New Additions
 |Name           |URI  |Description |h
 |[[Purchase Order|PO (mod)]] |po   |Track orders created for customers and pricing |
 |Svn            |svn  |Source Code Viewer |
@@ -942,8 +1148,36 @@ $xpmtModule[&quot;uri&quot;][&quot;sample&quot;] = &quot;samp&quot;;
 <pre>* [[BackupOptionsPlugin]]
 * [[SortableGridPlugin]]</pre>
 </div>
-<div title="Project (mod)" creator="d.suess" modifier="d.suess" created="201209061526" modified="201209061539" changecount="8">
+<div title="Product (mod)" creator="d.suess" modifier="d.suess" created="201210040653" changecount="1">
+<pre>* [[Product (mod) - Sections]]
+* [[Product (mod) - Permissions]]</pre>
+</div>
+<div title="Product (mod) - Permissions" creator="d.suess" modifier="d.suess" created="201210040659" modified="201210040711" changecount="3">
+<pre>! v1.0 Permissions List
+|Value               |Description |h
+|product-tab         |Access ''Product'' tab |
+|product-admin       |Access Product ''Administration Panel'' (under Admin tab) |
+|product-mod-admin   |Create/Edit/Remove Product details, components, versions, etc  |
+|product-wiki-admin  |Add/Edit/Remove wiki pages |
+
+! v2.0 Permissions List
+|Value             |Description |h
+|product-admin     |Access admin panel |
+|product-view      |View product page (wiki pages) |
+|product-wiki-edit |Edit wiki pages |
+|product-wiki-add  |Create wiki pages  |
+|product-wiki-rmv  |Remove wiki pages  |
+|product-new       |Create New Products  |
+|product-mod       |Edit Product details, components, versions, etc  |
+|product-rmv       |Remove Products  |
+
+</pre>
+</div>
+<div title="Project (mod)" creator="d.suess" modifier="d.suess" created="201209061526" modified="201210040654" changecount="10">
 <pre>The project module is more-so used for behind the scenes and not intended for customers or anonymous [[user groups|User Group]].
+
+* [[Project (mod) - Sections]]
+* [[Project (mod) - Permissions]]
 
 !Features and Workflows
 * [[Project (mod) - Create]]
@@ -1567,8 +1801,80 @@ table.listView th, table.listView td, table.listView tr {padding:0 3px 0 3px;}
 txtBackupFolder: bak
 txtUserName: d.suess</pre>
 </div>
-<div title="Ticket (mod)" creator="d.suess" modifier="d.suess" created="201209062239" modified="201209062258" changecount="2">
-<pre>
+<div title="Test System" creator="d.suess" modifier="d.suess" created="201210270137" modified="201210270139" changecount="5">
+<pre>Below are some quick notes for creating your test environment
+
+# Create your test database for the installer to work with
+
+{{{
+/* Log into MySQL */
+mysql -h localhost  -u root -p
+
+/* Create User */
+CREATE USER 'testuser'@'localhost' IDENTIFIED BY 'testpass';
+
+/* Create database */
+CREATE DATABASE PMT_DATA;
+
+/* Add user permissions */
+GRANT ALL ON PMT_DATA.* TO testuser@localhost;
+
+/* Cleanup and Exit */
+flush privileges;
+exit;
+}}}
+
+
+# Folder Structure
+(Below is a sample of a v0.0.1 structure)
+
+{{{
+|/doc/
+|/xpmt/
+|   ./install/
+|   ./lib/
+|     ./common/
+|     ./modules/
+|     ./themes/
+|       ./default/
+|   index.php
+|/sandbox/
+---------------------
+}}}
+</pre>
+</div>
+<div title="Ticket (mod)" creator="d.suess" modifier="d.suess" created="201209062239" modified="201210040714" tags="ticket" changecount="7">
+<pre>* [[Ticket (mod) - Sections]]
+* [[Ticket (mod) - Permissions]]
+* [[Ticket (mod) - Sandbox]] - Miscellaneous code to be used later on
+</pre>
+</div>
+<div title="Ticket (mod) - Permissions" creator="d.suess" modifier="d.suess" created="201210040712" modified="201210040728" changecount="2">
+<pre>! Module User Privs
+|Value                |Description |h
+|ticket-view-all      |User can view tickets system wide |
+|ticket-view-group    |User can only view group tickets |
+|ticket-view-own      |User can only view personal tickets (even closed) |
+|ticket-admin         |User can edit ticket details |
+|ticket-diary         |User can create diary entries |
+|ticket-attch-add     |User can attach file(s) to ticket |
+|ticket-attch-get     |User can download attachment |
+|ticket-attch-rmv     |User can remove file(s) from ticket |
+
+! Module Options
+ //tbl_module_options//
+|Value               |Default  |Description |h
+|max_attch           |10000000 |Maximum size of attachments; in bytes (def=10mb) |
+|allow_anon_access   |false    |Allow anonymous access to module |
+|allow_anon_create   |false    |Anon user can create new tickets (record IP) |
+|allow_anon_diary    |false    |Anon user can create diary entries |
+|allow_anon_attch    |false    |Anon user can attach files |
+
+</pre>
+</div>
+<div title="Ticket (mod) - Sandbox" creator="d.suess" modifier="d.suess" created="201210040713" modified="201210040713" changecount="2">
+<pre>The ''Sandbox'' is a collection of miscellaneous code to be used later on in the module.
+
 ! Design
 Check out [[http://www.geekzone.co.nz/vs2008/6283]] for pointers to use Visual Studio as an XSLT debugger for the designs. Inputs XML and XSLT, Outputs display
 
@@ -1607,7 +1913,7 @@ foreach ($myArray as $row)
 &lt;/table&gt;
 }}}</pre>
 </div>
-<div title="ToDoList" creator="d.suess" modifier="d.suess" created="201209031640" modified="201209061742" changecount="11">
+<div title="ToDoList" creator="d.suess" modifier="d.suess" created="201209031640" modified="201209241851" changecount="15">
 <pre>!ASAP
 |!Module            |!Sub-Section  |!Description |h
 |[[KB (mod)]]       |Main   |List items |
@@ -1619,7 +1925,8 @@ foreach ($myArray as $row)
 
 !Later
 |!Module      |!Sub-Section  |!Description |h
-|Core         |       |[[xenoPMT Core - To Do List]]  |
+|Core         |       |[[xenoPMT Core - To Do List]] |
+|Core         |$page  | * Should use something like, $PAGE[&quot;&quot;] and not $PAGE_XXX for the page context. this will manage only 1 global. |
 |[[KB (mod)]] |View   |Add DIV to hide sections |
 |[[KB (mod)]] |Main   |Search |
 |[[KB (mod)]] |Main   |Show latest additions (top 10) |
@@ -1628,6 +1935,75 @@ foreach ($myArray as $row)
 |[[KB (mod)]] |Editor |Add side banner to editor |
 
 </pre>
+</div>
+<div title="Variables" creator="d.suess" modifier="d.suess" created="201211071341" modified="201211072051" changecount="6">
+<pre>Most of these were added in [[Milestone 0.0.5]]. Below is the official list of variables used by this branch of xenoPMT.
+
+!xpmtConfig
+{{{
+$pmtConf[&quot;db&quot;][&quot;server&quot;]
+$pmtConf[&quot;db&quot;][&quot;user&quot;]
+$pmtConf[&quot;db&quot;][&quot;pass&quot;]
+$pmtConf[&quot;db&quot;][&quot;dbname&quot;]
+}}}
+
+!xpmtCore - Core Global Variables
+{{{
+$xpmtCore[&quot;info&quot;][&quot;version&quot;]     = &quot;0.0.5&quot;;
+$xpmtCore[&quot;info&quot;][&quot;version_ex&quot;]  = 000005;
+$xpmtCore[&quot;info&quot;][&quot;version_ex2&quot;] = &quot;000005&quot;;
+$xpmtCore[&quot;info&quot;][&quot;db_version&quot;]  = 0.2;
+
+// Not used currently
+$xpmtCore[&quot;page&quot;][&quot;cache&quot;]      = array(&quot;setting&quot;=&gt;array());
+$xpmtCore[&quot;page&quot;][&quot;breadcrumb&quot;] = array();
+
+}}}
+
+!xpmtPage NEW
+{{{
+$xpmtPage[&quot;icon&quot;] = &quot;&quot;;      // Page custom icon (override standard one set in user.config)
+$xpmtPage[&quot;title&quot;]=&quot;&quot;;       // Page Title
+$xpmtPage[&quot;logo&quot;]=&quot;&quot;;        // Site image path
+$xpmtPage[&quot;metabar&quot;]=&quot;&quot;;     // User (login/usr-pref)/settings/logout/about
+$xpmtPage[&quot;toolbar&quot;]=&quot;&quot;;     // Main toolbar
+$xpmtPage[&quot;minileft&quot;]=&quot;&quot;;    // Mini-bar Left aligned (bread crumbs)
+$xpmtPage[&quot;miniright&quot;]=&quot;&quot;;   // Mini-bar Right aligned (module node options)
+$xpmtPage[&quot;htdata&quot;]=&quot;&quot;;      // Main page html data
+$xpmtPage[&quot;path&quot;]=&quot;&quot;;        // Relative path to theme currently in use
+}}}
+
+
+The $xpmtPage[] variable replaces the following list of global variables. One benefit of using an array in PHP is the developer at anytime during debugging can perform a lookup of the list of array items for reference.
+
+''OLD Variables:''
+{{{
+$PAGE_TITLE=&quot;&quot;;     // Page title
+$PAGE_LOGO=&quot;&quot;;      // Site image path  ** not used yet.
+$PAGE_METABAR=&quot;&quot;;   // User (login/usr-pref)/settings/logout/about
+$PAGE_TOOLBAR=&quot;&quot;;   // Main toolbar
+$PAGE_MINILEFT=&quot;&quot;;  // Mini-bar Left aligned (bread crumbs)
+$PAGE_MINIRIGHT=&quot;&quot;; // Mini-bar Right aligned (module node options)
+$PAGE_HTDATA=&quot;&quot;;    // Main page html data
+$PAGE_PATH=&quot;&quot;;      // Relative path to theme currently in use
+}}}
+
+!xpmtModule - Module Global Variable
+{{{
+$xpmtModule[&quot;current&quot;][&quot;uuid&quot;] = &quot;&quot;;   // UUID of the module being used
+$xpmtModule[&quot;info&quot;][] = array
+(
+  &quot;author&quot;      =&gt; &quot;Damian Suess&quot;,
+  &quot;version&quot;     =&gt; &quot;1.0&quot;,
+  &quot;title&quot;       =&gt; &quot;Sample Module Title&quot;,
+  &quot;description&quot; =&gt; &quot;Sample description for module to show up in loader&quot;,
+  &quot;urn&quot;         =&gt; &quot;sample&quot;,            // Uniform Resource Name of the module (pmt.com/ticket) ** possibly deprecated
+  &quot;classname&quot;   =&gt; &quot;sample&quot;,                                // name of the class inside of &quot;$xpmtModule[&quot;info&quot;][$ndx]-&gt;path&quot;
+  &quot;path&quot;        =&gt; dirname(__FILE__) . &quot;/sample.main.php&quot;,  // Path to module core
+  &quot;core&quot;        =&gt; &quot;false&quot;,                                 // core system module (true=core)
+  &quot;uuid&quot;        =&gt; &quot;ef64ffb0-19a8-11e2-892e-0800200c9a66&quot;   // Universally Unique identifier
+);
+}}}</pre>
 </div>
 <div title="Welcome Email" creator="d.suess" modifier="d.suess" created="201209012251" modified="201209012252" tags="proposal" changecount="3">
 <pre>{{{
@@ -1660,6 +2036,52 @@ foreach ($myArray as $row)
   Sincerely,&lt;br /&gt;
   The xenoPMT Team
 &lt;/p&gt;
+}}}</pre>
+</div>
+<div title="config.php" creator="d.suess" modifier="d.suess" created="201211152030" modified="201211152034" changecount="5">
+<pre>Apart from the database the configuration file is VERY critical. Consider it the keys to the control room of your power plant. Without the keys to get in, you can't turn it on.
+
+There are ''2 config files'' in this system, one simply overwrites the other.
+* ''&quot;/xpmt/config.default.php&quot;'' //(system default)//
+* ''&quot;config.php&quot;'' //(user edited config file)//
+
+
+! Sample Config File
+The following config file is a sample which also includes some not yet implemented settings yet.
+{{{
+
+date_default_timezone_set('America/New_York');        // [DJS] Added to fix warning in PHP &amp; PhpConsole
+
+
+// System admin bypass account (NOT IMPLEMENTED)
+$pmtRootUserEnabled = true;
+$pmtRootUserName    = &quot;rootadmin&quot;;
+$pmtRootUserPass    = &quot;testing&quot;;
+
+
+$pmtConf = array(
+
+// Database Connection
+  &quot;db&quot; =&gt; array(
+    &quot;server&quot;  =&gt; &quot;localhost&quot;,   // Database server
+    &quot;user&quot;    =&gt; &quot;root&quot;,        // Database username
+    &quot;pass&quot;    =&gt; &quot;testing123&quot;,  // Database password
+    &quot;dbname&quot;  =&gt; &quot;PMT_BETA&quot;,    // Database name
+    &quot;prefix&quot;  =&gt; &quot;XI_&quot;          // Table prefix
+  ),
+
+  // General Site Data
+  &quot;general&quot; =&gt; array(
+    &quot;auth_only&quot; =&gt; true,            // Allow access to public or auth-only
+    &quot;title&quot;     =&gt; &quot;Corporate Management System&quot;,
+    &quot;base_url&quot;  =&gt; &quot;http://pmt/&quot;    // Must include '/' at the end.
+
+    // Settings not yet implemented
+    ,&quot;allow_public_registration&quot; =&gt; false   // All general public to create user accounts
+
+  )
+);
+
 }}}</pre>
 </div>
 <div title="xenoPMT Core - To Do List" creator="d.suess" modifier="d.suess" created="201209061605" modified="201209061613" changecount="3">

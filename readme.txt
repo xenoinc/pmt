@@ -1,8 +1,8 @@
-About xiPMT - Project Management & Tracking
-Copyright 2010 (C) Xeno Innovations, Inc.
-=========================================
+About xenoPMT - Project Management & Tracking
+Copyright 2010-2012 (C) Xeno Innovations, Inc.
+==============================================
 
-PMT is a web-basesd Project Management and Issue Tracking system.
+xenoPMT is a web-basesd Project Management and Issue Tracking system.
 It can be used to create a front-page to your project(s) with
 the Wiki system, provide issues/bug tracking system, Subversoin
 revision and generate statistic reports on your project's direction.
