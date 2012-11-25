@@ -47,9 +47,11 @@ if(!file_exists("config.php"))
 }
 // else { [verify settings are valid] }
 
-/*
+
+/* ##[ Load the system ]############## */
+
 // print("path: " . PMT_PATH);
 include_once "xpmt/pmt.php";
 PmtParseURL();
-*/
+
 ?>
