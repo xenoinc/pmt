@@ -4,8 +4,8 @@
   Copyright 2012 (C) Xeno Innovations, Inc.
   ALL RIGHTS RESERVED
   Author:       Damian Suess
-  Document:     kb-view.xsl
-  Created Date: June 30, 2012, 11:10 AM
+  Document:     kb-main.xsl
+  Created Date: 2012-11-25
 
   Description:
 
@@ -22,7 +22,24 @@
   <xsl:template match="/">
     <div id="kbMainBody">
 
-      <!-- KB Information -->
+      <div id="idSearch">
+        <b>Search:</b><br />
+        <input type="text" name="txtSearch" value="enter search text" />
+        <input type="submit" name="btnSearch" />
+      </div><!-- end:#idSearch -->
+
+      <div id="idTop5Rated">
+        <ul>
+          <li></li>
+        </ul>
+      </div><!-- end:#idTop5Rated -->
+
+      <div id="idTop5New">
+        <ul>
+          <li></li>
+        </ul>
+      </div><!-- end:#idTop5Rated -->
+
 
     </div><!-- end:#kbMainBody -->
   </xsl:template>
