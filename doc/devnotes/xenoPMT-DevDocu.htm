@@ -1947,31 +1947,60 @@ foreach ($myArray as $row)
 
 </pre>
 </div>
-<div title="Variables" creator="d.suess" modifier="d.suess" created="201211071341" modified="201211072051" changecount="6">
+<div title="Variables" creator="d.suess" modifier="d.suess" created="201211071341" modified="201212040115" changecount="18">
 <pre>Most of these were added in [[Milestone 0.0.5]]. Below is the official list of variables used by this branch of xenoPMT.
 
 !xpmtConfig
 {{{
-$pmtConf[&quot;db&quot;][&quot;server&quot;]
-$pmtConf[&quot;db&quot;][&quot;user&quot;]
-$pmtConf[&quot;db&quot;][&quot;pass&quot;]
-$pmtConf[&quot;db&quot;][&quot;dbname&quot;]
+$xpmtConf[&quot;db&quot;][&quot;server&quot;]         = &quot;localhost&quot;       // Database Server
+$xpmtConf[&quot;db&quot;][&quot;dbname&quot;]         = &quot;PMT_DATA&quot;        // Database Name
+$xpmtConf[&quot;db&quot;][&quot;prefix&quot;]         = &quot;XI_&quot;             // Table prefix
+$xpmtConf[&quot;db&quot;][&quot;user&quot;]           = &quot;betauser&quot;        // Database Admin User
+$xpmtConf[&quot;db&quot;][&quot;pass&quot;]           = &quot;betapass&quot;        // Database Password
+
+$xpmtConf[&quot;general&quot;][&quot;auth_only&quot;] = true              // Allow access to public or auth-only
+$xpmtConf[&quot;general&quot;][&quot;title&quot;]     = &quot;xenoPMT 0.0.5&quot;   // Default website title
+$xpmtConf[&quot;general&quot;][&quot;base_url&quot;]  = &quot;http://pmt/&quot;     // Must include '/' at the end.
+$xpmtConf[&quot;general&quot;][&quot;clean_uri&quot;] = &quot;1&quot;               // Clean URI
 }}}
 
-!xpmtCore - Core Global Variables
+
+!xpmtCore - xenoPMT Core Global Associative Array
+
+!!xpmtCore - System Information
 {{{
 $xpmtCore[&quot;info&quot;][&quot;version&quot;]     = &quot;0.0.5&quot;;
 $xpmtCore[&quot;info&quot;][&quot;version_ex&quot;]  = 000005;
 $xpmtCore[&quot;info&quot;][&quot;version_ex2&quot;] = &quot;000005&quot;;
 $xpmtCore[&quot;info&quot;][&quot;db_version&quot;]  = 0.2;
-
-// Not used currently
-$xpmtCore[&quot;page&quot;][&quot;cache&quot;]      = array(&quot;setting&quot;=&gt;array());
-$xpmtCore[&quot;page&quot;][&quot;breadcrumb&quot;] = array();
-
 }}}
 
-!xpmtPage NEW
+!!xpmtCore - URI Class
+Moved global var class &quot;$uri&quot; to $xpmtCore[&quot;uri&quot;] to keep track of things.
+{{{
+$xpmtCore[&quot;uri&quot;] = new URI;
+
+// Properties
+$xpmtCore[&quot;uri&quot;]-&gt;seg     // Segment array. Splits up URI &quot;p/ProjName&quot;
+$xpmtCore[&quot;uri&quot;]-&gt;style   // Not used yet. Always = &quot;1&quot;
+$xpmtCore[&quot;uri&quot;]-&gt;Count   // Count of Segment array
+
+// Members
+$xpmtCore[&quot;uri&quot;]-&gt;Anchor(&quot;xpmt/themes&quot;, GetSetting(&quot;theme&quot;))      // Create URIs from Array { ArrayToURI($arrSegs) }
+$xpmtCore[&quot;uri&quot;]-&gt;GetUri()                                        // Gets the current URI  { Anchor($this-&gt;seg) }
+$xpmtCore[&quot;uri&quot;]-&gt;Segment($segIndex)                              // Return value of segment array  { $uri-&gt;Segment(0) = &quot;p&quot; }
+$xpmtCore[&quot;uri&quot;]-&gt;SegmentArray()                                  // Return array of segments
+$xpmtCore[&quot;uri&quot;]-&gt;AnchorFile()                                    // Return the file name used in URL
+}}}
+
+
+!!xpmtCore - Member Class
+{{{
+$xpmtCore[&quot;user&quot;] = new Member;
+}}}
+
+
+!xpmtPage[] NEW
 {{{
 $xpmtPage[&quot;icon&quot;] = &quot;&quot;;      // Page custom icon (override standard one set in user.config)
 $xpmtPage[&quot;title&quot;]=&quot;&quot;;       // Page Title
@@ -1982,6 +2011,10 @@ $xpmtPage[&quot;minileft&quot;]=&quot;&quot;;    // Mini-bar Left aligned (bread
 $xpmtPage[&quot;miniright&quot;]=&quot;&quot;;   // Mini-bar Right aligned (module node options)
 $xpmtPage[&quot;htdata&quot;]=&quot;&quot;;      // Main page html data
 $xpmtPage[&quot;path&quot;]=&quot;&quot;;        // Relative path to theme currently in use
+
+// Not used currently
+$xpmtCore[&quot;page&quot;][&quot;cache&quot;]      = array(&quot;setting&quot;=&gt;array());
+$xpmtCore[&quot;page&quot;][&quot;breadcrumb&quot;] = array();                       // this is should be handled at Module's own will
 }}}
 
 
@@ -2001,7 +2034,7 @@ $PAGE_PATH=&quot;&quot;;      // Relative path to theme currently in use
 
 !xpmtModule - Module Global Variable
 {{{
-$xpmtModule[&quot;current&quot;][&quot;uuid&quot;] = &quot;&quot;;   // UUID of the module being used
+// $xpmtModule[&quot;current&quot;][&quot;uuid&quot;] = &quot;&quot;;   // UUID of the module being used  (don't use yet {2012-1303})
 $xpmtModule[&quot;info&quot;][] = array
 (
   &quot;author&quot;      =&gt; &quot;Damian Suess&quot;,
@@ -2014,7 +2047,39 @@ $xpmtModule[&quot;info&quot;][] = array
   &quot;core&quot;        =&gt; &quot;false&quot;,                                 // core system module (true=core)
   &quot;uuid&quot;        =&gt; &quot;ef64ffb0-19a8-11e2-892e-0800200c9a66&quot;   // Universally Unique identifier
 );
-}}}</pre>
+}}}
+
+!!$xpmtModule - Sample data
+{{{
+$xpmtModule = Array (
+  [info] =&gt; Array
+  (
+    [0] =&gt; Array
+    (
+      [author] =&gt; Damian Suess [version] =&gt; 0.0.1 [title] =&gt; Sample Module Title [description] =&gt; Sample description for module to show up in loader
+      [urn] =&gt; sample [classname] =&gt; sample [path] =&gt; C:\prog\Apache24\htdocs\pmt2\xpmt\modules\sample/sample.main.php [core] =&gt; false [uuid] =&gt; 04a78f00-220f-11e2-81c1-0800200c9a66
+    )
+    [1] =&gt; Array
+    (
+      [author] =&gt; Damian Suess [version] =&gt; 0.0.1 [title] =&gt; UUID Generator [description] =&gt; Unique Universal Identifier Generator
+      [urn] =&gt; uuid [classname] =&gt; uuid [path] =&gt; C:\prog\Apache24\htdocs\pmt2\xpmt\modules\uuid/uuid.main.php [core] =&gt; true [uuid] =&gt; c6fb97b8-af93-42ce-aac6-de5656c8fdae
+    )
+    [2] =&gt; Array
+    (
+      [author] =&gt; Damian Suess [version] =&gt; 0.0.5 [title] =&gt; System Administration Panel [description] =&gt; Control panel to your xenoPMT core system.
+      [urn] =&gt; admin [classname] =&gt; admin [path] =&gt; C:\prog\Apache24\htdocs\pmt2\xpmt\modules\admin/admin.main.php [core] =&gt; true [uuid] =&gt; 81d641a2-dbcc-4bde-ad09-40c3260f325b
+    )
+    [3] =&gt; Array
+    (
+      [author] =&gt; Damian Suess [version] =&gt; 0.0.5 [title] =&gt; Welcome to xenoPMT [description] =&gt; Welcome screen and main page for all users whether they are logged in or not.
+      [urn] =&gt; [classname] =&gt; dashboard [path] =&gt; C:\prog\Apache24\htdocs\pmt2\xpmt\modules\dashboard/dashboard.main.php [core] =&gt; true [uuid] =&gt; df9f29f8-1aed-421d-b01c-860c6b89fb14
+    )
+  )
+)
+}}}
+
+
+</pre>
 </div>
 <div title="Welcome Email" creator="d.suess" modifier="d.suess" created="201209012251" modified="201209012252" tags="proposal" changecount="3">
 <pre>{{{

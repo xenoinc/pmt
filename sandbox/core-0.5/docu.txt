@@ -1,14 +1,14 @@
 Section 1 - Staging Area Setup
 
   Note: Staging-Area does not contain an installer, this must be done by hand
-  
+
   Steps:
   1) Create User
   2) Create Database
   3) Grant access
   4) Cleanup
-  
-  CREATE USER 'testuser2'@'localhost' IDENTIFIED BY 'testpass'; 
+
+  CREATE USER 'testuser2'@'localhost' IDENTIFIED BY 'testpass';
   CREATE DATABASE PMT_TEST;
   GRANT ALL ON PMT_TEST.* to testuser2@localhost;
   FLUSH PRIVILEGES;
@@ -30,7 +30,7 @@ $xpmtModule[]
 ./custom/lib
 
   * Contains the user's custom folder for Themes, Modules and Libaries
-  
+
   * The system will one day pull from this directory as well as the standard
     "xpmt" core folders.
 
@@ -49,12 +49,23 @@ $pmt_RootUserPass
 
 Global Variables
 ================
-$pmtConf          array     Configuration Array
-$pmt_version      string    Version String (0.0.1)
-$pmt_version_ex   integer   Numerical version string ('000001' = 'x-xx-xxx')
-$pmt_db_version   string    maximum database version acceptable
-$pmt_cache        array     NOT USED  ::  array("setting"=>array());
-$pmt_breadcrumb   array     NOT USED  ::  array();
+$xpmtConf[][]                       array     Configuration Array
+  $xpmtConf["db"]["server"]         string    = "localhost"       // Database Server
+  $xpmtConf["db"]["dbname"]         string    = "PMT_DATA"        // Database Name
+  $xpmtConf["db"]["prefix"]         string    = "XI_"             // Table prefix
+  $xpmtConf["db"]["user"]           string    = "betauser"        // Database Admin User
+  $xpmtConf["db"]["pass"]           string    = "betapass"        // Database Password
+  $xpmtConf["general"]["auth_only"] boolean   = true              // Allow access to public or auth-only
+  $xpmtConf["general"]["title"]     string    = "xenoPMT 0.0.5"   // Default website title
+  $xpmtConf["general"]["base_url"]  string    = "http://pmt/"     // Must include '/' at the end.
+  $xpmtConf["general"]["clean_uri"] integer   = "1"               // Clean URI
+
+$xpmtCore["info"]["version"]        string    Version String (0.0.1)
+$xpmtCore["info"]["version_ex"]     integer   Numerical version string ('000001' = 'x-xx-xxx')
+$xpmtCore["info"]["version_ex2"]    string    friendly value "000005" = (00 00 05)
+$xpmtCore["info"]["db_version"]     string    maximum database version acceptable
+$xpmtCore["page"]["cache"]          array     NOT USED  ::  array("setting"=>array());
+$xpmtCore["page"]["breadcrumb"]     array     NOT USED  ::  array();
 
 Global Classes
 ==============
@@ -64,10 +75,10 @@ $uri              class     URI Parser class
 
 Define
 ======
-PMT_VER           string    PMT Version number        $pmt_version
+PMT_VER           string    PMT Version number        $xpmtCore["info"]["version"]
 PMT_PATH          string    Path to base install
-PMT_TBL           string    Database table prefix     $pmtConf["db"]["prefix"]
-THEME             string    NOT USED                  $uri->Anchor("xpmt/themes", GetSetting("theme"))
+PMT_TBL           string    Database table prefix     $xpmtConf["db"]["prefix"]
+THEME             string    NOT USED                  $xpmtCore["uri"]->Anchor("xpmt/themes", GetSetting("theme"))
 
 
 Page Variables

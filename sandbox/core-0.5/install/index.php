@@ -10,6 +10,7 @@
  *  Installer (v0.0.5)
  *
  * Change Log:
+ *  2012-1203 + added id="idFinished" to step 6, "Finished" for a dynamic link to main page
  *  2012-1015 * A lot of updates occurred
  *            + Added BETA_TESTING boolean switch
  *  2012-1013 + Fixed DB Connection Tester. Using:  mysqli(..) not mysql_connect(..)
@@ -652,6 +653,7 @@ DebugDisplay();
           <p>
             No go forth and give you new system a test drive.
           </p>
+          <h2 id="idFinished"></h2>
           <p>
             Check out our support page to submit any issues or enhancement
             requests you may have. We appreciate your input! If you have

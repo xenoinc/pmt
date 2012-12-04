@@ -4,7 +4,7 @@
  * Copyright 2010-2012 (C) Xeno Innovations, Inc.
  * ALL RIGHTS RESERVED
  * Author:       Damian J. Suess
- * Document:     pmtentry.hpp
+ * Document:     core.php (OLD: pmt.php)
  * Created Date: 2012-01-12
  *
  * Description:
@@ -12,38 +12,30 @@
  *
  * To Do:
  * [ ] Handle Plugins (Milestone 0.5)
+ * [ ] Change "$PAGE_TITLE" to use associatve array $xpmtPage[] or $xpmtCore["page"][]
  * [ ] Include langauge pack (Milestone 0.5)
  * [ ] Call "config.default.php" before calling "config.php" to ensure
  *      that our system handles the default settings.
  *
  * Change Log:
- * 2012-0716 + Added "config.default.php" to be accessed before user custom file is accessed
- * 2012-0709 + Added 'iModule.php' interface to {required} list. (old pmtModule interface) [DJS]
- * 2012-0112 - Initial Creation [DJS]
+ *  2012-1203 * Changed global variables to associative arrays like $xpmtCore[][];
+ *            + $xpmtCore["uri"] = $uri; Testing to see if it's worth it to consolidate into xpmtCore ass array.
+ *  2012-0716 + Added "config.default.php" to be accessed before user custom file is accessed
+ *  2012-0709 + Added 'iModule.php' interface to {required} list. (old pmtModule interface) [DJS]
+ *  2012-0112 - Initial Creation [DJS]
  */
 
 /* Step 1 - Make sure system is configured & db installed */
 
 // i) Set version (should be in array)
-$pmt_version      = "0.0.5";      // Core Version      (maj.min.rev)
-$pmt_version_ex   = 000005;       // Integer friendly  (00 00 05)
-$pmt_version_ex2  = "000005";     // String  friendly  (00 00 05)
-$pmt_db_version   = 0.2;
 
 // Added 2012-1019 - to replace old crap
-$xpmtCore["info"]["version"]     = "0.0.5";
-$xpmtCore["info"]["version_ex"]  = 000005;
-$xpmtCore["info"]["version_ex2"] = "000005";
-$xpmtCore["info"]["db_version"]  = 0.2;
+$xpmtCore["info"]["version"]     = "0.0.5";       // Core Version      (maj.min.rev)
+$xpmtCore["info"]["version_ex"]  = 000005;        // Integer friendly  (00 00 05)
+$xpmtCore["info"]["version_ex2"] = "000005";      // String  friendly  (00 00 05)
+$xpmtCore["info"]["db_version"]  = 0.2;           // Minimum Database version accepted
+define("PMT_VER", $xpmtCore["info"]["version"]);
 
-
-define("PMT_VER",$pmt_version);
-
-// ii) Setup debugging - (2012-0805) Moved debugging to index for immediate results
-//require "phpConsole.php";
-//PhpConsole::start(true, true, dirname(__FILE__));
-//if (DebugMode == true)
-//  debug("Debug Mode ON!");
 
 // iii) no config.php? then goto installer
 ///  ** Moved to index.php (2012-0805 - djs)
@@ -52,9 +44,6 @@ define("PMT_VER",$pmt_version);
 /* Step 2 - Minor Init */
 // 1) set breadcrumbs
 // 2) strip magic quotes
-$pmt_cache = array("setting"=>array());
-$pmt_breadcrumb = array();
-
 // Added 2012-1019 - keep one home for many variables
 $xpmtCore["page"]["cache"]      = array("setting"=>array());
 $xpmtCore["page"]["breadcrumb"] = array();
@@ -81,25 +70,46 @@ require(PMT_PATH."xpmt/modcontroller.php");       // module controller
  * 3. If cashed user verify in database and set PMT_LOGGED_ID
  */
 
-// Add error handling to ensure that $pmtConf[][] is configured
-$pmtDB = new Database($pmtConf["db"]["server"],
-                      $pmtConf["db"]["user"],
-                      $pmtConf["db"]["pass"],
-                      $pmtConf["db"]["dbname"]);
-define("PMT_TBL", $pmtConf["db"]["prefix"]);     // This may be removed
+// Add error handling to ensure that $xpmtConf[][] is configured
+$pmtDB = new Database($xpmtConf["db"]["server"],
+                      $xpmtConf["db"]["user"],
+                      $xpmtConf["db"]["pass"],
+                      $xpmtConf["db"]["dbname"]);
+define("PMT_TBL", $xpmtConf["db"]["prefix"]);     // This may be removed
 
 $user = new Member;   // $user = new User;
 $uri = new URI;
 
+
+$xpmtCore["uri"] = $uri;      // 2012-1203  + Testing to see if it's worth it to consolidate into xpmtCore ass array.
+$xpmtCore["user"] = $user;    // 2012-1203  + Eliminate class variables & place into associative array!
+
+/**********************************************
+ *  Step 5 - Get theme to use
+ * 0) Pull theme from system settings
+ * 1) Future: Pull theme from user's settings
+ ******************************************* */
+
 // undefined GetSetting
-define("THEME", $uri->Anchor("xpmt/themes", GetSetting("theme"))); // Set theme
+//define("THEME", $uri->Anchor("xpmt/themes", GetSetting("theme"))); // Set theme
+define("THEME", $xpmtCore["uri"]->Anchor("xpmt/themes", GetSetting("theme"))); // Set theme
+
+
+
+/****************************
+ * Step 6 - Language Pack
+ ************************* */
 
 /* Include language pack (v0.5) */
 // require(PMT_PATH."xpmt/lang/" . GetSetting("lang"));   // Setup language
 
 
-// Used to generate the body of our skin
 
+/*********************************
+ * Step 7 - Initialize Page data
+ ****************************** */
+
+// Used to generate the body of our skin
 $PAGE_TITLE="";     // Page title
 $PAGE_LOGO="";      // Site image path  ** not used yet.
 $PAGE_METABAR="";   // User (login/usr-pref)/settings/logout/about
@@ -109,28 +119,132 @@ $PAGE_MINIRIGHT=""; // Mini-bar Right aligned (module node options)
 $PAGE_HTDATA="";    // Main page html data
 $PAGE_PATH="";      // Relative path to theme currently in use
 
+
 // Proposal 2012-1019 - keep one home for many variables
 //
 //  $xpmtCore["page"]["title"]="";
 //  or
 //  $xpmtPage["title"]="";      <<<< use this
-//
-// $xpmtPage["icon"]="";        // Path to Icon file
-// $xpmtPage["title"]="";       // Page Title
-// $xpmtPage["logo"]="";        // Site image path
-// $xpmtPage["metabar"]="";     // User (login/usr-pref)/settings/logout/about
-// $xpmtPage["toolbar"]="";     // Main toolbar
-// $xpmtPage["minileft"]="";    // Mini-bar Left aligned (bread crumbs)
-// $xpmtPage["miniright"]="";   // Mini-bar Right aligned (module node options)
-// $xpmtPage["htdata"]="";      // Main page html data
-// $xpmtPage["path"]="";        // Relative path to theme currently in use
+
+// Used to generate the body of our skin
+$xpmtPage["icon"]="";        // Path to Icon file
+$xpmtPage["title"]="";       // Page Title
+$xpmtPage["logo"]="";        // Site image path
+$xpmtPage["metabar"]="";     // User (login/usr-pref)/settings/logout/about
+$xpmtPage["toolbar"]="";     // Main toolbar
+$xpmtPage["minileft"]="";    // Mini-bar Left aligned (bread crumbs)
+$xpmtPage["miniright"]="";   // Mini-bar Right aligned (module node options)
+$xpmtPage["htdata"]="";      // Main page html data
+$xpmtPage["path"]="";        // Relative path to theme currently in use
 
 
 /* ################################################################################ */
 
 
+/**
+ * Parse URI and Load Module
+ *
+ * @since v0.0.5
+ *
+ * @global URI $uri
+ * @global type $xpmtModule
+ * @global array $xpmtCore
+ */
+function ParseAndLoad()
+{
+  global $xpmtCore, $xpmtModule,$xpmtPage, $PAGE_HTDATA;    // , $xpmtConf;
 
-function PmtParseURL()
+
+  // Step 1 - Cleanup segment data ]-------------
+  if (count($xpmtCore["uri"]->Count) == 0)      // if (count($uri->seg) == 0)
+    $uRoot = "";
+  else
+    $uRoot = $xpmtCore["uri"]->Segment(0);
+
+  //$uRoot = $xpmtCore["uri"]->seg[0];
+  //pmtDebug("uri.seg[0]: '" . $uRoot . "'");
+
+  /* *************** */
+
+  // Debugging ]-------------
+  /*
+  echo("<small>" );
+  //echo("<p><b>2-Segments:</b> <br />"); print_r($xpmtCore["uri"]->seg);   echo("</p>");
+  //echo("<p><b>2-Full:</b><br />");      print_r($xpmtCore["uri"]);        echo("</p>");
+  echo("<p><b>Modules:</b><br /> '");   print_r($xpmtModule); echo("'</p>");
+  echo("</small><hr>");
+  */
+
+
+  // Step 2 - Load the module ]-------------
+
+  $matchFound = false;    // Did we find a module match?
+  $modHeader = array();      // Prepare a blank Module header
+
+  foreach( $xpmtModule["info"] as $ndx => $tmpModHeader)
+  {
+    //echo($tmpModHeader["urn"]);
+    if ($xpmtCore["uri"]->Count > 0 && $xpmtCore["uri"]->Segment(0) == $tmpModHeader["urn"])
+    {
+      $matchFound = true;   // We found a match!
+      $modHeader = $tmpModHeader;   // Use this module header!
+      break;
+    }
+  }
+
+  if ($matchFound)
+  {
+    // Load the module
+    LoadMod2($modHeader["uuid"]);
+  }
+  else
+  {
+    $html = "Unknown Module!";
+
+    $xpmtPage["htdata"]=$html;
+    $PAGE_HTDATA=$html;
+    echo($html );
+
+  }
+}
+
+/*
+ * Temporary replacement for old "LoadModule()"
+ */
+function LoadMod2($uuid)
+{
+  // include them all just in case
+  global $xpmtModule, $xpmtCore, $xpmtPage, $xpmtConf;
+
+
+  debug ($uuid);
+
+  // step 1 - Skin Part 1 - Set theme path
+  // step 2 - Search for registered module via UUID  { $module = GetClassFromUUID($uuid);
+  //        + do this via SQL
+  // step 3 - Check if module has custom skin { file_exists($skin_path . $module . ".php")  ** deprecated!!, use CSS rules and STYLE inject
+  // step 4 - Initialize module class!   { $obj = new $module(); }
+  // step 5 - Setup $xpmtPage[""] properties from $obj->...
+  // step 6 - REQUIRE_ONCE ($page)  -  Actually use the theme & display it
+
+
+
+}
+
+
+
+/**
+ * @deprecated since version Core-0.0.5 - 2012-1203 [djs]
+ *
+ * Backup from old Core-0.0.4
+ * Retained for legacy and documentation values
+ *
+ *
+ * @global URI $uri
+ * @global type $xpmtModule
+ * @global array $xpmtCore
+ */
+function OLD__PmtParseURL()
 {
   /**
    * Possible Paths:
@@ -143,24 +257,32 @@ function PmtParseURL()
    * /admin/                      System admin page
    */
 
-  global $uri;
+  global $uri, $xpmtModule,$xpmtCore; // , $xpmtConf, $xpmtCore;
   //$param = array();
 
-  // Cleanup
-  if (count($uri->seg) == 0) $uRoot = ""; else $uRoot = $uri->seg[0];
+  // Cleanup ]-------------
+  if (count($xpmtCore["uri"]->Count) == 0)      // if (count($uri->seg) == 0)
+    $uRoot = "";
+  else
+    $uRoot = $xpmtCore["uri"]->Segment(0);  //$uRoot = $xpmtCore["uri"]->seg[0];
 
   /* *************** */
 
-  // Debugging
-  /*
-    print("<small>" );
-    print("<p><b>Segments:</b> <br />"); print_r($uri->seg); print("</p>");
-    print("<p><b>Full:</b><br />"); print_r($uri); print("</p>");
-    print("</small><hr>");
-    //pmtDebug("uri.seg[0]: '" . $uRoot . "'");
-  */
+  // Debugging ]-------------
+
+  echo("<small>" );
+  echo("<p><b>Segments:</b> <br />");   print_r($uri->seg);   echo("</p>");
+  echo("<p><b>Full:</b><br />");        print_r($uri);        echo("</p>");
+  echo("<p><b>2-Segments:</b> <br />"); print_r($xpmtCore["uri"]->seg);   echo("</p>");
+  echo("<p><b>2-Full:</b><br />");      print_r($xpmtCore["uri"]);        echo("</p>");
+  echo("<p><b>Modules:</b><br /> '");   print_r($xpmtModule); echo("'</p>");
+  echo("</small><hr>");
+  //pmtDebug("uri.seg[0]: '" . $uRoot . "'");
 
 
+
+
+  // Load the module ]-------------
   /*
    * Filter out the modules with ones that are known
    * In the future, don't use this.. just rely on LoadModule()
@@ -170,7 +292,7 @@ function PmtParseURL()
   {
     case '':
       //pmtDebug("Module: 'dashboard'");
-      LoadModule("dashboard", $uri->seg);
+      LoadModule("dashboard", $xpmtCore["uri"]->SegmentArray()); //LoadModule("dashboard", $uri->seg);
       break;
 
     case 'kb':
@@ -251,13 +373,12 @@ function PmtParseURL()
       LoadModule("dashboard", $uri->seg);
 
       // Option B
-      //header("Location: " . $pmtConf["general"]["base_url"] );  exit;
+      //header("Location: " . $xpmtConf["general"]["base_url"] );  exit;
 
       // Option C - (TEST) Allow virtually anything
       //LoadModule($uRoot, $uri->seg);
       break;
   }
-
 }
 
 ?>

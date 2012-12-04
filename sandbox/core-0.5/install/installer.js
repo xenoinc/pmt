@@ -13,6 +13,8 @@
  * [ ] 2012-1120  + In Step-3, check for prev-install in the "Install" button before creating tables.
  *
  * Change Log:
+ *  2012-1203 + CreateUserConfig() - Hiding btnSysConfig on success
+ *            + CreateUserConfig() - Dynamically create link for "Finished" step to main page
  *  2012-1120 + Step-3 - Disabled and hiding #btnFwd4 during installation, just to be safe!
  *            + Added Ajax error checking in most funcitons
  *            + Step-3 - Hiding "Install" button on 'Success' to make sure we don't double-recreate db
@@ -435,6 +437,11 @@ function CreateUserConfig()
       $("#divStatusConfigFile").removeClass();
       $("#divStatusConfigFile").addClass(data.ret_cls);
       $("#btnFwd6").show();                       // Added 2012-11-20 - Allow user to continue
+
+      // Hide config button
+      $("#btnSysConfig").hide();
+      $("#idFinished").html("<a href='" + $("#txtCfgBaseUrl").val() + "'>Go to Main Page!</a>");
+
     },
     error: function() {
       alert("Failure while creating user's, config.php.");

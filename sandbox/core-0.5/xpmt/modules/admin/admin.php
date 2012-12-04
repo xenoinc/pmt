@@ -16,7 +16,7 @@
  */
 
 // Remove this line when Core-005 is ready
-require_once ("admin.main.php");
+//require_once ("admin.main.php");
 
 // Used for Module v0.0.5
 $xpmtModule["info"][] = array

@@ -15,7 +15,7 @@
  */
 
 // Remove this line when Core-005 is ready
-require_once ("uuid.main.php");
+//require_once ("uuid.main.php");
 
 
 

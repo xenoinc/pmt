@@ -24,7 +24,7 @@ global $PAGE_TOOLBAR;
 global $PAGE_METABAR;
 global $PAGE_HTDATA;
 global $PAGE_PATH;
-global $pmtConf;
+global $xpmtConf;
 
 // require ("skin-fctn.php");
 ?>

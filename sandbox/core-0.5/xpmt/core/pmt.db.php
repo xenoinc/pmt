@@ -93,7 +93,7 @@ class Database {
 
   /**
    * Returns array contained in fetched row
-   * @param string $ret - SQL Result Array[]
+   * @param resource $ret - SQL Result Array[]
    * @param int $result_type [optional] <p>
    *  The type of array that is to be fetched. It's a constant and can
    *  take the following values: <b>MYSQL_ASSOC</b>, <b>MYSQL_NUM</b>,
@@ -106,6 +106,9 @@ class Database {
    */
   public function FetchArray($ret, $result_type=MYSQL_ASSOC)
   {
+    /** ToDo:
+     *  [ ] check if resource ($ret) is FALSE/NULL.
+     */
     $retArr = mysql_fetch_array($ret, $result_type);   // associative keys as indexes
 
     //$retArr = mysql_fetch_assoc($ret);              // Return column names

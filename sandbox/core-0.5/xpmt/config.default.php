@@ -1,17 +1,19 @@
 <?php
 /**
-* pmTrack (xiPMT, xiPMTrack)
-* Copyright 2010-2012 (C) Xeno Innovations, Inc.
-* ALL RIGHTS RESERVED
-* Author:        Damian J. Suess
-* Document:      config.default.php
-* Created Date:  Nov 18, 2010, 5:03:43 PM
-* Description:
-*   This is the Default CORE config file, becareful when editing this
-*   file as it will effect ALL of your sub-projects. Here you
-*   can set your Root-User, Database, Default Skin, etc.
-*
-***********************************************************/
+ * pmTrack (xiPMT, xiPMTrack)
+ * Copyright 2010-2012 (C) Xeno Innovations, Inc.
+ * ALL RIGHTS RESERVED
+ * Author:        Damian J. Suess
+ * Document:      config.default.php
+ * Created Date:  Nov 18, 2010, 5:03:43 PM
+ * Description:
+ *   This is the Default CORE config file, becareful when editing this
+ *   file as it will effect ALL of your sub-projects. Here you
+ *   can set your Root-User, Database, Default Skin, etc.
+ * Change Log:
+ *  2012-1203 + Added procedure, xpmtUseMod($modPath) here from the user's "config.php" so that
+ *              the user does not mess with this. And added debugging logic
+ ***********************************************************/
 
 // $pmt_defskin = "skin-std";       /* Not used yet */
 
@@ -35,7 +37,7 @@ $pmtRootUserName    = "rootadmin";
 $pmtRootUserPass    = "testing";
 
 
-$pmtConf = array(
+$xpmtConf = array(
 
 // Database Connection
   "db" => array(
@@ -57,5 +59,30 @@ $pmtConf = array(
 
   )
 );
+
+/**
+ * Safely REQUIRE modules. If it doesn't exist then it won't crash the system.
+ * *** This only exists in "config.default.php" ***
+ *
+ * @param string $modPath Path to module
+ *
+ * @example
+ *  xpmtUseMod( dirname( __FILE__ ) . "/xpmt/modules/sample/sample.php");
+ */
+function xpmtUseMod($modPath)
+{
+  // Must define as a GLOBAL or else $xpmtModule will be lost
+  global $xpmtModule;
+
+  if (file_exists($modPath))
+  {
+    require_once($modPath);
+    //if (DebugMode) debug("Mod Added: $modPath");
+  }
+  else
+  {
+    //if (DebugMode) debug("Mod Failed: $modPath");
+  }
+}
 
 ?>

@@ -78,7 +78,7 @@ function LoadModule($module, $arrParams)
   global $PAGE_HTDATA;    // Main page html data
   global $PAGE_PATH;      // Relative path to theme currently in use
 
-  global $pmtConf;
+  global $xpmtConf;
   global $uri;
   // if (count($arrParams) == 0)
 
@@ -119,7 +119,7 @@ function LoadModule($module, $arrParams)
   {
     $module="dashboard";
     //require(PMT_PATH."xpmt/modules/dashboard.php");              // Option A
-    header("Location: " . $pmtConf["general"]["base_url"] );    // Option B
+    header("Location: " . $xpmtConf["general"]["base_url"] );    // Option B
     exit;
   }
 
@@ -139,7 +139,7 @@ function LoadModule($module, $arrParams)
   //pmtDebug( "skin_file: " . $skin_file);
 
   $obj = new $module();
-  $PAGE_PATH = $pmtConf["general"]["base_url"] . $relpath;
+  $PAGE_PATH = $xpmtConf["general"]["base_url"] . $relpath;
   //$PAGE_PATH = $relpath;      // OLD METHOD
   //$PAGE_PATH = $skin_path;    // NOOO
   $PAGE_TITLE = $obj->Title();
@@ -159,6 +159,13 @@ function LoadModule($module, $arrParams)
 
 }
 
+/**
+ * Add list item
+ *
+ * @param type $buff
+ * @param type $class
+ * @return type
+ */
 function AddLI($buff, $class="")
 {
   if($class=="")
@@ -167,18 +174,18 @@ function AddLI($buff, $class="")
   return "<li$c>" . $buff . "</li>";
 }
 
-  /**
-   * Generates simple link based upon PMT's installed location
-   * @param string $module Module name to go to
-   * @param string $text Link caption
-   * @param string $extLink Link URL Extended
-   * @return string
-   */
-  function AddLink($module, $text, $extLink = "")
-  {
-    global $pmtConf;
-    return '<a href="'. $pmtConf["general"]["base_url"].$module.$extLink.'">'.$text.'</a>';
-  }
+/**
+ * Generates simple link based upon PMT's installed location
+ * @param string $module Module name to go to
+ * @param string $text Link caption
+ * @param string $extLink Link URL Extended
+ * @return string
+ */
+function AddLink($module, $text, $extLink = "")
+{
+  global $xpmtConf;
+  return '<a href="'. $xpmtConf["general"]["base_url"].$module.$extLink.'">'.$text.'</a>';
+}
 
 
 function GenerateMetabar($module)
@@ -194,7 +201,7 @@ function GenerateMetabar($module)
    * 4) "Log off"
    */
 
-  global $user;
+  global $xpmtCore;
 
   /* I) Get online status & user name */
   //$user_online = true;
@@ -207,13 +214,13 @@ function GenerateMetabar($module)
   $t = "        ";
   //$ret = $t . "<ul>" . PHP_EOL;
   $ret = $t . "<ul>" . PHP_EOL;
-  if ($user->online)
+  if ($xpmtCore["user"]->online)    //if ($user->online)
   {
     $ret .= $t . "  ";
     // ONLINE
     // Login / Welcome, %USER%.   <-- Welcome screen take to user stats page
     //$ret .= AddLI('Welcome, <a href="/user" alt="User\'s Dashboard">' .$user->UserInfo["username"] . '</a>', "first");
-    $ret .= AddLI('Welcome, <a href="/user" alt="User\'s Dashboard">' .$user->UserInfo["Display_Name"] . '</a>', "first");
+    $ret .= AddLI('Welcome, <a href="/user" alt="User\'s Dashboard">' .$xpmtCore["user"]->UserInfo["Display_Name"] . '</a>', "first");
     // $ret .= AddLI('Welcome, <a href="/user" alt="User\'s Dashboard">' .$user->UserInfo["User_Name"] . '</a>', "first");
     $ret .= AddLI("Preferences");         //
     $ret .= AddLI("About xenoPMT");       // "pmt/wiki/about"
@@ -240,7 +247,7 @@ function GenerateMetabar($module)
       isset($conf['general']['authorized_only'])
       && $conf['general']['authorized_only'] == true
       && !$user->loggedin && @$_POST['action'] != 'login'
-      && ($uri->seg[0] != 'user' && $uri->seg[1] != 'register'))
+      && ($xpmtCore["uri"]->seg[0] != 'user' && $xpmtCore["uri"]->seg[1] != 'register'))
   {
       include(template('user/login'));
       exit;

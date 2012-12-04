@@ -11,7 +11,7 @@
  *  Dashboard module entry point
  *
  * Change Log:
- *
+ *  2012-1203 + Added notes to construct. Display, "Module not installed!"
  */
 
 require_once (PMT_PATH . "xpmt/core/pmt.module.php");
@@ -30,7 +30,13 @@ class dashboard extends pmtModule
   {
     $this->_title     = "Welcome to xenoPMT";
     $this->_toolbar   = "";
-    $this->_pagedata   = $this->GeneratePage(); //
+    //$this->_pagedata   = $this->GeneratePage(); //
+
+    // If (IsInstalled() == false && UserIsAdmin==true)
+    // { give link to install module }
+    // --[ OR ]--
+    // if (IsInstalled() == false)
+    // $this->_pageData = "Module Not Installed!";
   }
 
   function __destruct()
@@ -70,7 +76,7 @@ HTM;
    */
   private function GeneratePage()
   {
-    // if ($pmtConf["user"]["online"] == false)
+    // if ($xpmtConf["user"]["online"] == false)
     // { ... } else { ... }
 
     $htdata = "";

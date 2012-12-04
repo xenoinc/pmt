@@ -57,9 +57,11 @@ class Member
   //public $group = null;
 
 
-  public $Online = false;
+  public $Online = false;       // 2012-1203 + Make property private and use memeber
   public $errors = array();
 
+
+  // 2012-1203  * make property private and use member, ->Info("User_Id")
   /* Array (
    * [User_Id]    => 1
    * [User_Name]  => admin
@@ -361,6 +363,33 @@ EOT;
 
     return $arrUsers;
   }
+
+  /**
+   * Return user information
+   *
+   * @param string $property
+   *  + "User_Id"
+   *  + "User_Name"
+   *  + "Display_Name"
+   *  + "Group_Id"
+   *  + "Online"
+   *
+   * @return string
+   *  Returns user information from property
+   */
+  public function Info($property)
+  {
+    return $this->UserInfo[$property];
+  }
+
+  /*
+   * currently unused. Make GA by the end of 0.0.5
+  public function Online()
+  {
+    return $this->_online;
+  }
+   *
+   */
 
 }
 

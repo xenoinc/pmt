@@ -31,7 +31,7 @@ namespace xenoPMT\Module\Sample
 
     /// Module is valid for install (uuid match)
     public $Verified = false;
-    public $CoreVersion = 000005;       // $pmt_version_ex
+    public $CoreVersion = 000005;       // $xpmtCore["info"]["version_ex"]    // Integer Frienly
 
     private $_uuid        = "ef64ffb0-19a8-11e2-892e-0800200c9a66";         // Universally Unique identifier
     private $_author;
@@ -48,7 +48,7 @@ namespace xenoPMT\Module\Sample
     public function __construct()
     {
 
-      // global $pmt_version_ex; // Deprecated: 2012-1026 - use $xpmtCore[][];
+      // global $xpmtCore["info"]["version_ex"];
       global $xpmtCore;
 
       $this->Verified = false;   // Do not validate until we check module data for matching UUID
@@ -139,7 +139,7 @@ namespace xenoPMT\Module\Sample
       /**[ Step 1) Is Core Version compatiable? ]************   */
 
       if ($xpmtCore["info"]["version_ex"] >= $this->CoreVersion)
-      //if ($pmt_version_ex >= $this->CoreVersion)
+      //if ($xpmtCore["info"]["version_ex"] >= $this->CoreVersion)
         $bCoreInvalid = false;
       else
       {
@@ -212,7 +212,7 @@ namespace xenoPMT\Module\Sample
       //$mysqli->query($query);
       //printf ("New Record has id %d.\n", $mysqli->insert_id);
 
-      $pfx = $pmtConf["db"]["prefix"];
+      $pfx = $xpmtConf["db"]["prefix"];
 
       // Future, get our Module Info from xpmtModule["info"][$ndx] via scanning it
       // global $xpmtModule, $xpmtCore;    // $xpmtCore["module"][];

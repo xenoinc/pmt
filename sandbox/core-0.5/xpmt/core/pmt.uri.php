@@ -11,9 +11,11 @@
  *  reroute the user's request to the generated page
  *
  * To Do:
- * [ ] Handle requests outlined in /doc/pmt-v1.0-navigation.txt
+ *  [ ] Handle requests outlined in /doc/pmt-v1.0-navigation.txt
+ *  [ ] 2012-1203 * Change property "$seg" from public to private and use member Segment($ndx) instead!
  *
  * Change Log:
+ *  2012-1203 + Added public member SegmentArray() to return the array in property '$this->seg'
  *  2012-0926 + Added public property Count to count the segments on construction
  *  2012-0309 * Added basic functionality
  ***********************************************************/
@@ -43,28 +45,34 @@ class URI
    *  Segments are broken up by the "/"
    *  "p/testProject" >> Array ( [0] => "p", [1] => "testProject" )
    */
-  public $seg = array();    // URL Split up inot parts ("p/ProjName")
+  public $seg = array();    // URL Split up inot parts ("p/ProjName") ** this should be PRIVATE!!!
   public $style = 1;        //
   public $Count = 0;        // Number of items in segment (added 2012-0926)
 
-  private $root;
-  private $request;
-  private $file = "index.php";
+  private $_root;
+  private $_request;
+  private $_file = "index.php";
 
   public function __construct()
   {
+    /**
+     * ToDo:
+     * [ ] 2012-1203 * Rename the loop's var, "$seg" to something unique
+     */
+
+
     // Get root
-    $this->root = str_replace($this->file, "", $_SERVER["SCRIPT_NAME"]);
+    $this->_root = str_replace($this->_file, "", $_SERVER["SCRIPT_NAME"]);
 
     // Get request without query string
     $req = explode("?", $_SERVER["REQUEST_URI"]);
-    $this->request = $req["0"];
+    $this->_request = $req["0"];
 
     // explode segments
-    $this->seg = explode("/", trim($this->request, "/"));
+    $this->seg = explode("/", trim($this->_request, "/"));
 
     // Remove bullshit
-    foreach(explode("/", $this->root) as $seg => $val)
+    foreach(explode("/", $this->_root) as $seg => $val)
     {
       if( !empty($val))
         array_shift($this->seg);
@@ -91,20 +99,40 @@ class URI
    * Safely return the value of the segment index.
    * If it doesn't exist the it will return False.
    *
-   * @param type $seg Segment index number
+   * @param type $segIndex Segment index number
    * @return boolean  Return value of segment index else False
    */
-  public function Segment($seg)
+  public function Segment($segIndex)
   {
-    if(isset($this->seg[$seg]))
-      return $this->seg[$seg];
+    if(isset($this->seg[$segIndex]))
+      return $this->seg[$segIndex];
     else
       return false;
   }
 
+
+  /**
+   * Return the URI Segment Array
+   *
+   * @return array
+   *    Segment Array from private property
+   *
+   * @example
+   *    $uri-SegmentArray = Array( [0]=>"p", [1]=>"projName" );
+   */
+  public function SegmentArray()
+  {
+    return $this->seg;
+  }
+
+
+  /**
+   * Return the file name used in URL
+   * @return string file name
+   */
   public function AnchorFile()
   {
-    return $this->file;
+    return $this->_file;
   }
 
   /**
@@ -118,7 +146,7 @@ class URI
       $arrSegments = func_get_args();
 
     $pth = ($this->style == 1 ?
-            str_replace($this->file, "", $_SERVER["SCRIPT_NAME"])
+            str_replace($this->_file, "", $_SERVER["SCRIPT_NAME"])
             : $_SERVER["SCRIPT_NAME"] . "/"
            );
     return $pth . $this->ArrayToURI($arrSegments);
@@ -128,7 +156,7 @@ class URI
    * Convert Array to URI segments
    * @example array >> "uri/full/path"
    * @param array $arrSegs
-   * @return string
+   * @return string   Full string of arrays including '/'
    */
   private function ArrayToURI($arrSegs = array())
   {

@@ -22,6 +22,7 @@
  *        echo($obj->Output());     // ret_msg and ret_class
  *
  * Change Log:
+ * 2012-13-03 * Updated, Config Complete message.
  * 2012-11-19 + added proc, "ajaxCreateConfig()" to generate user's "config.php" file.
  *            + added proc, "GetPost($param, $def="")". Refactored to minimize re-using code
  *            * Renamed GetDbParams() to GetPostParams()
@@ -389,7 +390,7 @@ function ajaxCreateConfig()
   global $_chkModWiki;
   global $_chkModPO;
 
-  $pmtConf = "$"."pmtConf";
+  $xpmtConf = "$"."xpmtConf";
   $modPath = "$"."modPath";
 
   $retMsg   = "";           // Ajax return message
@@ -493,7 +494,7 @@ function ajaxCreateConfig()
 date_default_timezone_set('America/New_York');
 
 // Main config var
-{$pmtConf} = array(
+{$xpmtConf} = array(
   // Database Connection
   "db" => array(
     "server"  => "{$_txtDbServer}",  // Database server
@@ -518,11 +519,12 @@ date_default_timezone_set('America/New_York');
 
 /**
  * Safely REQUIRE modules. If it doesn't exist then it won't crash the system.
+ * This got moved to, "config.default.php" for safty purposes. We don't want the user to mess with this
  */
-function xpmtUseMod({$modPath})
-{
-  if (file_exists({$modPath})) require_once({$modPath});
-}
+//function xpmtUseMod({$modPath})
+//{
+//  if (file_exists({$modPath})) require_once({$modPath});
+//}
 
 ?>
 CODE;
@@ -536,7 +538,7 @@ CODE;
       fwrite($ptr, $buff);
     fclose($ptr);
 
-    $retMsg .= "<br />Generated user's <b>CONFIG.PHP</b> in root directory.";
+    $retMsg .= "<h2>Configuration complete!</h2> Generated user's <b>CONFIG.PHP</b> in root directory.";
     //pmtDebug("Created CONFIG.PHP");
   }
   catch (Exception $e)
@@ -608,17 +610,17 @@ function IsInstalled()
   if(file_exists("../config.php"))
   {
     require_once "../config.php";
-    $con = mysql_connect( $pmtConf["db"]["server"],
-                          $pmtConf["db"]["user"],
-                          $pmtConf["db"]["pass"]);
+    $con = mysql_connect( $xpmtConf["db"]["server"],
+                          $xpmtConf["db"]["user"],
+                          $xpmtConf["db"]["pass"]);
 
-    mysql_select_db($pmtConf["db"]["dbname"], $con);// $link);
+    mysql_select_db($xpmtConf["db"]["dbname"], $con);// $link);
 
     $ret = mysql_query("SHOW TABLES;", $con);
     while ($arr = mysql_fetch_array($ret))
     {
       // Check if the settings table exists
-      if($ret[0] == $pmtConf["db"]["prefix"] . "settings")
+      if($ret[0] == $xpmtConf["db"]["prefix"] . "settings")
       {
         $installed = true;
         break;

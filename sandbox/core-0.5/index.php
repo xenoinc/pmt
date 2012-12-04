@@ -40,9 +40,14 @@ require_once(PMT_PATH."xpmt/config.default.php");
 
 if(!file_exists("config.php"))
 {
+  // System has not been setup yet, go install now!
+  // Possibly perform a (DoesDirExist() == false) { echo "missing config file and install dir"; }
   header("Location: install/");
-  exit; // suppress from falling through
-} else {
+  exit;
+}
+else
+{
+  // Include user configuration
   require_once("config.php");
 }
 // else { [verify settings are valid] }
@@ -52,6 +57,6 @@ if(!file_exists("config.php"))
 
 // print("path: " . PMT_PATH);
 include_once "xpmt/pmt.php";
-PmtParseURL();
+ParseAndLoad();
 
 ?>

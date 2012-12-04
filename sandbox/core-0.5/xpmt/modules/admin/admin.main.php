@@ -64,7 +64,7 @@ HTM;
    */
   private function GeneratePage()
   {
-    // if ($pmtConf["user"]["online"] == false)
+    // if ($xpmtConf["user"]["online"] == false)
     // { ... } else { ... }
 
     /** [Point to ]

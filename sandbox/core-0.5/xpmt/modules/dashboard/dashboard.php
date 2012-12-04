@@ -16,7 +16,7 @@
  */
 
 // Remove this line when Core-005 is ready
-require_once ("dashboard.main.php");
+//require_once ("dashboard.main.php");
 
 // Used for Module v0.0.5
 $xpmtModule["info"][] = array
@@ -25,8 +25,8 @@ $xpmtModule["info"][] = array
   "version"     => "0.0.5",
   "title"       => "Welcome to xenoPMT",
   "description" => "Welcome screen and main page for all users whether they are logged in or not.",
-  "urn"         => "dashboard",                                 // UniformResourceName of the module (pmt.com/admin)
-  "classname"   => "dashboard",                                 // Name of class inside of "path"
+  "urn"         => "",                                      // UniformResourceName of the module (pmt.com/admin)
+  "classname"   => "dashboard",                             // Name of class inside of "path"
   "path"        => dirname(__FILE__) . "/dashboard.main.php",   // dirname(__FILE__) . "/sample.main.php"
   "core"        => "true",                                  // core system module (true=core)
   "uuid"        => "df9f29f8-1aed-421d-b01c-860c6b89fb14"   // Universally unique identifier
