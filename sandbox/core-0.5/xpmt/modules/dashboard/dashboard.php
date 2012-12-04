@@ -28,7 +28,9 @@ $xpmtModule["info"][] = array
   "urn"         => "",                                      // UniformResourceName of the module (pmt.com/admin)
   "classname"   => "dashboard",                             // Name of class inside of "path"
   "path"        => dirname(__FILE__) . "/dashboard.main.php",   // dirname(__FILE__) . "/sample.main.php"
+  "namespace"   => "xenoPMT\Module\Dashboard",              // Class namespace (usefull for In/Uninstal members
   "core"        => "true",                                  // core system module (true=core)
+  "_core"       => true,                                    // core system module (true=core)
   "uuid"        => "df9f29f8-1aed-421d-b01c-860c6b89fb14"   // Universally unique identifier
 );
 

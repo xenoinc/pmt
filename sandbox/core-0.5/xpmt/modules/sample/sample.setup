@@ -202,6 +202,8 @@ namespace xenoPMT\Module\Sample
 
     function install()
     {
+      global $xpmtConf;
+      
       // 1) Verify if prev-installed / compatable
         // i.   Pull db info for prev install
         // ii.  Check Core Version against this

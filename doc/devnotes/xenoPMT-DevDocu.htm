@@ -1947,7 +1947,7 @@ foreach ($myArray as $row)
 
 </pre>
 </div>
-<div title="Variables" creator="d.suess" modifier="d.suess" created="201211071341" modified="201212040115" changecount="18">
+<div title="Variables" creator="d.suess" modifier="d.suess" created="201211071341" modified="201212040307" changecount="19">
 <pre>Most of these were added in [[Milestone 0.0.5]]. Below is the official list of variables used by this branch of xenoPMT.
 
 !xpmtConfig
@@ -2004,6 +2004,7 @@ $xpmtCore[&quot;user&quot;] = new Member;
 {{{
 $xpmtPage[&quot;icon&quot;] = &quot;&quot;;      // Page custom icon (override standard one set in user.config)
 $xpmtPage[&quot;title&quot;]=&quot;&quot;;       // Page Title
+$xpmtPage[&quot;ex_header&quot;]       // Extra Header Data
 $xpmtPage[&quot;logo&quot;]=&quot;&quot;;        // Site image path
 $xpmtPage[&quot;metabar&quot;]=&quot;&quot;;     // User (login/usr-pref)/settings/logout/about
 $xpmtPage[&quot;toolbar&quot;]=&quot;&quot;;     // Main toolbar
@@ -2011,6 +2012,7 @@ $xpmtPage[&quot;minileft&quot;]=&quot;&quot;;    // Mini-bar Left aligned (bread
 $xpmtPage[&quot;miniright&quot;]=&quot;&quot;;   // Mini-bar Right aligned (module node options)
 $xpmtPage[&quot;htdata&quot;]=&quot;&quot;;      // Main page html data
 $xpmtPage[&quot;path&quot;]=&quot;&quot;;        // Relative path to theme currently in use
+$xpmtPage[&quot;footer&quot;]          // Footer
 
 // Not used currently
 $xpmtCore[&quot;page&quot;][&quot;cache&quot;]      = array(&quot;setting&quot;=&gt;array());

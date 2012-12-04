@@ -71,6 +71,7 @@ require(PMT_PATH."xpmt/modcontroller.php");       // module controller
  */
 
 // Add error handling to ensure that $xpmtConf[][] is configured
+// Change $pmtDB to $xpmtCore["db"]
 $pmtDB = new Database($xpmtConf["db"]["server"],
                       $xpmtConf["db"]["user"],
                       $xpmtConf["db"]["pass"],
@@ -127,16 +128,17 @@ $PAGE_PATH="";      // Relative path to theme currently in use
 //  $xpmtPage["title"]="";      <<<< use this
 
 // Used to generate the body of our skin
-$xpmtPage["icon"]="";        // Path to Icon file
-$xpmtPage["title"]="";       // Page Title
-$xpmtPage["logo"]="";        // Site image path
-$xpmtPage["metabar"]="";     // User (login/usr-pref)/settings/logout/about
-$xpmtPage["toolbar"]="";     // Main toolbar
-$xpmtPage["minileft"]="";    // Mini-bar Left aligned (bread crumbs)
-$xpmtPage["miniright"]="";   // Mini-bar Right aligned (module node options)
-$xpmtPage["htdata"]="";      // Main page html data
-$xpmtPage["path"]="";        // Relative path to theme currently in use
-
+$xpmtPage["icon"]="";         // Path to Icon file
+$xpmtPage["title"]="";        // Page Title
+$xpmtPage["ex_header"]="";    // Extra Header Information
+$xpmtPage["logo"]="";         // Site image path
+$xpmtPage["metabar"]="";      // User (login/usr-pref)/settings/logout/about
+$xpmtPage["toolbar"]="";      // Main toolbar
+$xpmtPage["minileft"]="";     // Mini-bar Left aligned (bread crumbs)
+$xpmtPage["miniright"]="";    // Mini-bar Right aligned (module node options)
+$xpmtPage["htdata"]="";       // Main page html data
+$xpmtPage["path"]="";         // Relative path to theme currently in use
+$xpmtPage["footer"]="";       // Footer
 
 /* ################################################################################ */
 
@@ -177,6 +179,7 @@ function ParseAndLoad()
 
 
   // Step 2 - Load the module ]-------------
+  // ** In 0.0.7, load modules from DB and not just config file
 
   $matchFound = false;    // Did we find a module match?
   $modHeader = array();      // Prepare a blank Module header
@@ -193,12 +196,11 @@ function ParseAndLoad()
   }
 
   if ($matchFound)
-  {
-    // Load the module
+  { // Load the module
     LoadMod2($modHeader["uuid"]);
   }
   else
-  {
+  { // Unknown Module URN / Module not loaded
     $html = "Unknown Module!";
 
     $xpmtPage["htdata"]=$html;
@@ -213,20 +215,144 @@ function ParseAndLoad()
  */
 function LoadMod2($uuid)
 {
+  /*
+   * To Do:
+   * [ ] Step 1 - Properly handle "Moodule not found"
+   *            - In this case give a raw theme with no background ($htdata="");
+   *              and some way to access "Install Module NOW~!" link on the page :)
+   *              - Here you can set $module (class) from $xpmtModule[] and provide
+   *                access to the installer page
+   *
+   * [ ] Step 3 - Load module data
+   * [ ] Step 3 - Provide temp table generate from (modController) until
+   *              the toolbar can be created by AdminPlugin
+   *
+   */
+
+
   // include them all just in case
-  global $xpmtModule, $xpmtCore, $xpmtPage, $xpmtConf;
+  global $xpmtModule, $xpmtCore, $xpmtPage, $xpmtConf, $pmtDB;
+
+  // $theme       - theme :: System theme name to use (PMT_DATA..XI_CORE_SETTINGS.Setting = "theme")
+  // $skin_path   - theme :: Full physical path to theme directory
+  // $relpath     - theme :: Relative (shortened) physical path to theme directory
+  // $skin_file   - theme :: Base theme file (main.php)
+  // $page        - theme :: Full path to MAIN.PHP ($skin_path + $skin_file)
+  // $module      - module :: Module classname
+  // $obj         - module :: Object loaded from classname ($module)
 
 
-  debug ($uuid);
+  //debug ($uuid);
 
-  // step 1 - Skin Part 1 - Set theme path
-  // step 2 - Search for registered module via UUID  { $module = GetClassFromUUID($uuid);
+  // step 1 - Search for registered module via UUID  { $module = GetClassFromUUID($uuid);
   //        + do this via SQL
+  // step 2 - Skin Part 1 - Set theme path
   // step 3 - Check if module has custom skin { file_exists($skin_path . $module . ".php")  ** deprecated!!, use CSS rules and STYLE inject
   // step 4 - Initialize module class!   { $obj = new $module(); }
   // step 5 - Setup $xpmtPage[""] properties from $obj->...
   // step 6 - REQUIRE_ONCE ($page)  -  Actually use the theme & display it
 
+
+  /****************************
+   *  Step 1 - Prepare Module *
+   *
+   * This must set the {$module} variable
+   *
+   ****************************/
+  $_uuid = $pmtDB->FixString($uuid);
+  $_sql = "SELECT `Module_Class`, `Module_Path` FROM {$xpmtConf["db"]["prefix"]}CORE_MODULE WHERE Module_UUID='{$_uuid}' LIMIT 1;";
+
+  $tmpArr = $pmtDB->Query( $_sql);
+  $ret = $pmtDB->FetchArray($tmpArr);
+  if ($ret == false)     // if ($ret === false)   ** use the regular not EXACT just in case **
+  {
+    // Module not found
+    // $htdata = "Module not found";
+
+    pmtDebug("LoadMod2() - Step1 - Module not found");
+    $module = "";
+
+  }
+  else
+  {
+    // Load module from direct pat
+    if (file_exists($ret["Module_Path"]))
+    {
+      require($ret["Module_Path"]);
+      $module = $ret["Module_Class"];
+    }
+    // elseif (... )
+    // { require module path from $xpmtModule[][];  /* as a fail safe */ }
+    else
+    {
+
+      pmtDebug("LoadMod2() - Step1 - Module UUID Found but path is missing");
+
+      // default to base page.. but what if dashboard is missing or errored ?!
+      header("Location: " . $xpmtConf["general"]["base_url"] );    // Option B
+      exit;
+    }
+  }
+
+
+
+
+  /**********************
+   * Step 2 - Get theme *
+   **********************/
+
+  /* Step 2.1 */
+  $theme = GetSetting("theme");
+  if ($theme == "")
+    $theme = "default";
+  if (file_exists(PMT_PATH . "xpmt/themes/" . $theme))
+  { // use custom theme
+    $skin_path = PMT_PATH . "xpmt/themes/" . $theme . "/";
+    $relpath = "xpmt/themes/" . $theme . "/";
+  }else{
+    // using default
+    $skin_path = PMT_PATH . "xpmt/themes/default/";
+    $relpath = "xpmt/themes/default/";
+  }
+
+  // Set DEFAULT skin to MAIN.PHP - check LATER if module has custom skin
+  $skin_file = "main.php";
+  $page = $skin_path . $skin_file;
+
+  /* Step 2.2 */
+  // check if module has custom skin. (i.e. main, project, product, etc.)
+  if (file_exists($skin_path . $module . ".php"))
+  {
+    $skin_file = $module . ".php";
+    $page = $skin_path . $skin_file;
+  }
+
+
+
+  /****************************************
+   * Step 3 - Setup $xpmtPage[] variables *
+   ****************************************/
+
+  // Most of these settings are being set/modified from within the modules on the fly
+  // so there is no need to mess with most of them here. Lets safely access the module
+  if ($module != null)
+  {
+    $obj = new module();
+
+    $xpmtPage["icon"]       = "";                           // Path to Icon file
+    $xpmtPage["title"]      = "";                           // Page Title
+    $xpmtPage["ex_header"]  = "";                           // Extra Header Information
+    $xpmtPage["logo"]       = "";                           // Site image path
+    $xpmtPage["metabar"]    = "";                           // User (login/usr-pref)/settings/logout/about
+    $xpmtPage["toolbar"]    = "";                           // Main toolbar
+    $xpmtPage["minileft"]   = $obj->MiniBarLeft();          // Mini-bar Left aligned (bread crumbs)
+    $xpmtPage["miniright"]  = $obj->MiniBarRight();         // Mini-bar Right aligned (module node options)
+    $xpmtPage["htdata"]     = $obj->PageData();             // Main page html data
+    $xpmtPage["path"]       = "";                           // Relative path to theme currently in use
+    $xpmtPage["footer"]     = "";                           // Footer
+
+    require($page);
+  }
 
 
 }

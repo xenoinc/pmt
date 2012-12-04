@@ -19,8 +19,12 @@
 // which will handle all of the display features
 
 // page data to display
-global $xpmtPage, $xpmtConf;
-// global $PAGE_TITLE, $PAGE_TOOLBAR, $PAGE_METABAR, $PAGE_HTDATA, $PAGE_PATH;
+global $PAGE_TITLE;
+global $PAGE_TOOLBAR;
+global $PAGE_METABAR;
+global $PAGE_HTDATA;
+global $PAGE_PATH;
+global $xpmtConf;
 
 // require ("skin-fctn.php");
 ?>
@@ -35,10 +39,10 @@ global $xpmtPage, $xpmtConf;
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta content="text/html;charset=utf-8" http-equiv="content-type" />
-    <title><?php print($xpmtPage["title"]); ?></title>
-    <link type="text/css" href="<?php echo($xpmtPage["path"]); ?>skin.css" rel="stylesheet" />
-    <link type="text/css" href="<?php echo($xpmtPage["path"]); ?>proj.css" rel="stylesheet" />
-    <?php  echo($xpmtPage["ex_header"]); ?>
+    <title><?php print($PAGE_TITLE); ?></title>
+    <link type="text/css" href="<?php print($PAGE_PATH); ?>skin.css" rel="stylesheet" />
+    <link type="text/css" href="<?php print($PAGE_PATH); ?>proj.css" rel="stylesheet" />
+    <?php  //print($PAGE_PATH . "skin.css"); ?>
   </head>
   <body>
 
@@ -47,17 +51,17 @@ global $xpmtPage, $xpmtConf;
         <!-- logo -->
         <a id="logo" href="/" alt="xenoPMT Dashboard">
           <img height="61" width="214" alt="xenoPMT Dashboard"
-              src="<?php echo($xpmtPage["path"] . "gfx/logo.png"); ?>" />
+              src="<?php print($PAGE_PATH . 'gfx/logo.png'); ?>" />
         </a>
       </div>
       <div id="metabar" class="metanav">
         <!-- (Login / View Profile), Account Settings, Logout -->
-<?php echo($xpmtPage["metabar"]); ?>
+<?php print($PAGE_METABAR); ?>
       </div>
     </div>
     <div id="mainbar" class="tbar">
       <!-- toolbar -->
-      <?php echo($xpmtPage["toolbar"]); ?>
+      <?php print($PAGE_TOOLBAR); ?>
     </div>
 
 
@@ -74,25 +78,25 @@ global $xpmtPage, $xpmtConf;
     <?php } ?>
 
       <div id="minibar_left" class="nav_left">
-        <!-- breadcrumbs left --><?php echo($xpmtPage["minileft"]); ?>
+        <!-- breadcrumbs left --><?php print($PAGE_MINILEFT); ?>
 
       </div>
       <div id="minibar_right" class="nav_right">
         <!-- mini toolbar for module -->
-        <?php echo($xpmtPage["miniright"]); ?>
+        <?php print($PAGE_MINIRIGHT); ?>
 
       </div>
 
       <div id="main">
 <?php
-  echo($xpmtPage["htdata"]);
-  echo("\n");
+  print($PAGE_HTDATA);
+  print("\n");
 ?>
       </div>
     </div>
 
     <div id="footer">
-      <?php echo($xpmtPage["footer"]); ?>
+
     </div>
 
   </body>
