@@ -54,7 +54,7 @@ function ModRedirect($module)
  * @param string $module Template Node (project, user, customer, ..)
  * @param array $arrParams Module Parameter Array
  */
-function LoadModule($module, $arrParams)
+function OLD__LoadModule($module, $arrParams)
 {
   /** [Change Log]
    *  2012-0402 + Added convert of $module="p" >> "project".
