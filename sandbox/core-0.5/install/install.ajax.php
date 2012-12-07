@@ -75,6 +75,7 @@ if(isset($_POST["UpdateStep"]))                         ajaxUpdateStep();
 if(isset($_POST["step3"]) && $_POST["step3"]=="1")      ajaxDatabaseTest();
 if(isset($_POST["step4"]) && $_POST["step4"]=="1")      ajaxInstallXenoPMT();
 if(isset($_POST["step5"]) && $_POST["step5"]=="1")      ajaxCreateConfig();
+if(isset($_POST["step6"]) && $_POST["step6"]=="1")      ajaxInstallModules();
 
 /* ##[ Misc Functions ]########################################## */
 function pmtDebug($buff)
@@ -195,6 +196,9 @@ function ajaxClearDB()
   $pmtDB->Query("DROP DATABASE ".$_txtDbName.";");
   $pmtDB->Query("CREATE DATABASE ".$_txtDbName.";");
   //$pmtDB->Close();                                // throws an error
+
+  if (file_exists("../config.php"))
+    unlink("../config.php");
 
   // 4) Report status
   $retArr = array("dbRet_msg"   => "Dropped and created database, '".$_txtDbName."'.",
@@ -450,7 +454,7 @@ function ajaxCreateConfig()
   $req = 'xpmtUseMod( dirname( __FILE__ ) . "/xpmt/modules/';       // disable automatically for now just in case
 
   // Beta testing only
-  if ($BETA_TESTING)    {$lstMods .= $req . 'sample/sample.php");' . PHP_EOL;}
+  //if ($BETA_TESTING)    {$lstMods .= $req . 'sample/sample.php");' . PHP_EOL;}
   if ($_chkModUUID)     {$lstMods .= $req . 'uuid/uuid.php");' . PHP_EOL;}
 
 
@@ -474,21 +478,20 @@ function ajaxCreateConfig()
   /** Step 4
    * Create use's CONFIG.PHP
    */
-
+  $date = date("Y-m-d, H:m:s");
   $buff = <<<CODE
 <?php
-/**
+/** * *********************************************************
 * xenoPMT
-* Copyright 2010-2012 (C) Xeno Innovations, Inc.
+* Copyright 2011-2013 (C) Xeno Innovations, Inc.
 * ALL RIGHTS RESERVED
 * Author:        Damian J. Suess
 * Document:      config.php
-* Created Date:  Nov 18, 2010, 5:03:43 PM
+* Created Date:  {$date}
 * Description:
 *   This is the Default CORE config file, becareful when editing this
 *   file as it will effect ALL of your sub-projects. Here you
 *   can set your Root-User, Database, Default Skin, etc.
-*
 ***********************************************************/
 
 date_default_timezone_set('America/New_York');
@@ -513,18 +516,12 @@ date_default_timezone_set('America/New_York');
   )
 );
 
-// Modules to include. Needed for first time install of module
-{$lstMods}
-
-
 /**
  * Safely REQUIRE modules. If it doesn't exist then it won't crash the system.
- * This got moved to, "config.default.php" for safty purposes. We don't want the user to mess with this
+ * Procedure can be found in: "config.default.php" for safty purposes.
  */
-//function xpmtUseMod({$modPath})
-//{
-//  if (file_exists({$modPath})) require_once({$modPath});
-//}
+// Modules to include. Needed for first time install of module
+{$lstMods}
 
 ?>
 CODE;
@@ -555,6 +552,57 @@ CODE;
                   "ret_cls" => $retClass);
   echo(json_encode($retArr));
   //pmtDebug("Exiting :: ajaxCreateConfig");
+}
+
+/**
+ * Get the user's config file and install modules
+ */
+function ajaxInstallModules()
+{
+  //pmtDebug("Install Modules");
+  global $pmtModule;
+
+  // Step 1 :: Does config exist?
+  if(file_exists("../config.php"))
+  {
+    // Step 2 :: Cycle through each module
+    // Step 3 :: Install each module
+    // Step 4 :: report back in ret_msg
+
+    require_once("../xpmt/config.default.php");   // Configure default first
+    require_once("../config.php");                // Override w/ user's settings
+    global $xpmtModule;                           // Pull back all config file registered modules
+
+    $retModData = null;                           // Return array of module data
+    $found = false;                               // Check for duplicates
+
+    foreach ($xpmtModule["info"] as $mod)
+    {
+      $retErr = null;
+      //$ret = InstallMod($mod["uuid"], $retErr);
+      $ret = InstallMod($mod, $retErr);
+
+      $errArr = print_r($retErr, true);   // Return error array if any
+      if ($ret == false)
+      {
+        // buffer up the error message's cause of failure for the module
+        $errArr = ""; // dummy
+      }
+    }
+  }
+  else
+  {
+    $ret_cls = "Fail";
+  }
+
+
+  $retMsg = "test yay!";
+  $ret_cls = "Success";
+
+
+  $retArr = array("ret_msg" => $retMsg,
+                  "ret_cls" => $ret_cls);
+  echo(json_encode($retArr));
 }
 
 
@@ -630,4 +678,47 @@ function IsInstalled()
   return $installed;
 }
 
+/**
+ * Install the module
+ * // param string $uuid
+ * @param array Module Header
+ * @param array $errArr
+ */
+//function InstallMod($uuid, &$errArr)
+function InstallMod($modHeader, &$errArr)
+{
+  /**
+   * ToDo:
+   * [ ] Put the REQUIRE_ONCE inside of a try{}catch{} so we
+   */
+
+// debug("UUID: " . $modHeader["uuid"]);
+
+  // Step 1) Require physical path of CLASS.setup.php
+  $pth = $modHeader["path"] . "/" . $modHeader["classname"] . ".setup.php";
+
+  //debug("$pth");
+  require_once($pth);
+
+  // Step 2) Load the namespace
+  $ns = $modHeader["namespace"] . "\\Setup";
+  $modSetup = new $ns($modHeader);
+
+  // Step 3) Run setup member "bool PreInstallCheck($arrCheck)"
+  $bErr = $modSetup->PreInstallErrors($arrErr);
+  if($bErr == true)
+  {
+    // there were errors during pre-check. Report Them!
+  }
+  else
+  {
+    // Success!
+
+    //$bRet = $modSetup->Install();
+  }
+
+  // Step 4) Return back results
+
+
+}
 ?>

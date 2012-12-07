@@ -27,8 +27,10 @@ $xpmtModule["info"][] = array
   "description" => "Control panel to your xenoPMT core system.",
   "urn"         => "admin",                                 // UniformResourceName of the module (pmt.com/admin)
   "classname"   => "admin",                                 // Name of class inside of "path"
-  "path"        => dirname(__FILE__) . "/admin.main.php",   // dirname(__FILE__) . "/sample.main.php"
-  "core"        => "true",                                  // core system module (true=core)
+  "namespace"   => "xenoPMT\Module\Admin",                  // Module's Namespace used by Setup and internal classes
+  "path"        => dirname(__FILE__),                       // dirname(__FILE__) . "/sample.main.php"
+  "mainfile"    => "admin.setup.php",                       // Startup clsas for module
+  "core"        => true,                                    // core system module (true=core)
   "uuid"        => "81d641a2-dbcc-4bde-ad09-40c3260f325b"   // Universally unique identifier
 );
 

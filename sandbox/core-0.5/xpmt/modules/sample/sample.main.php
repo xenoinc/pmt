@@ -16,13 +16,17 @@
  *  2012-0805 * Initial Creation
  ***********************************************************/
 
-class sample implements iModule
+require_once (PMT_PATH . "xpmt/core/pmt.module.php");
+
+// namespace xenoPMT\Module\Sample;
+
+class sample extends pmtModule    // implements iModule
 {
   function __construct()
   {
 
   }
-  
+
   function Title() {
     return "";
   }

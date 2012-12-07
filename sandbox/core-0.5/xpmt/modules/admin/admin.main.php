@@ -15,6 +15,8 @@
  */
 require_once (PMT_PATH . "xpmt/core/pmt.module.php");
 
+// namespace xenoPMT\Module\Admin;
+
 class admin extends pmtModule
 {
 

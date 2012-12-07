@@ -35,20 +35,15 @@ $xpmtConf = array(
   )
 );
 
+
+/**
+ * Safely REQUIRE modules. If it doesn't exist then it won't crash the system.
+ * This got moved to, "config.default.php" for safty purposes. We don't want the user to mess with this
+ */
 // Modules to include. Needed for first time install of module
 xpmtUseMod( dirname( __FILE__ ) . "/xpmt/modules/sample/sample.php");
 xpmtUseMod( dirname( __FILE__ ) . "/xpmt/modules/uuid/uuid.php");
 xpmtUseMod( dirname( __FILE__ ) . "/xpmt/modules/admin/admin.php");
 xpmtUseMod( dirname( __FILE__ ) . "/xpmt/modules/dashboard/dashboard.php");
-
-
-
-/**
- * Safely REQUIRE modules. If it doesn't exist then it won't crash the system.
- */
-function xpmtUseMod($modPath)
-{
-  if (file_exists($modPath)) require_once($modPath);
-}
 
 ?>

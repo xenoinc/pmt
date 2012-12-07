@@ -649,7 +649,13 @@ DebugDisplay();
         <div class="steps" id="step6">
           <?php MakeNav(5, 6);  //MakeNav(5, 6, 7); ?>
           <h1>Finished!</h1>
-
+          <p>
+            Before you leave.. here's a quick install procedure <br /> <br />
+            <button type="button" id="btnInstallModules" class="Buttons">Install Modules</button>
+            <div id="divInstallStatus">
+              <!-- Install Status update -->
+            </div>
+          </p>
           <p>
             No go forth and give you new system a test drive.
           </p>
@@ -673,7 +679,7 @@ DebugDisplay();
           <h1>Step 7</h1>
 
           <p>
-            Step 7
+            <!-- Move step 6's current crap to here and leave the install button there -->
           </p>
 
         </div> <!-- end:step7 -->

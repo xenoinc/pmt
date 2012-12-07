@@ -17,7 +17,7 @@
  */
 
 require_once (PMT_PATH . "xpmt/core/pmt.module.php");
-
+// namespace xenoPMT\Module\UUID;
 class uuid extends pmtModule
 {
   /* Private vars */

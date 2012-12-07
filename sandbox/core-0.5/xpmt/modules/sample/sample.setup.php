@@ -11,11 +11,14 @@
  *
  *
  * Change Log:
- *
+ *  2012-1206 + Added namespace and interface
+ *  2012-1019 * Created skeleton
  */
+
 namespace xenoPMT\Module\Sample
 {
-  class Setup
+  require_once "/../../core/xpmt.i.setup.php";
+  class Setup implements \xenoPMT\Module\ISetup
   {
 
     /* Usage
@@ -48,11 +51,12 @@ namespace xenoPMT\Module\Sample
     public function __construct()
     {
 
+      debug("Setup Sample");
+
+      /*
       // global $xpmtCore["info"]["version_ex"];
       global $xpmtCore;
-
       $this->Verified = false;   // Do not validate until we check module data for matching UUID
-
       if ($this->PreInstallErrors($arrUnused) == false )
       {
         // Get info for privates
@@ -76,6 +80,7 @@ namespace xenoPMT\Module\Sample
       {
         $this->Verified = false;
       }
+      */
     }
 
     /* ######################################## */
@@ -200,10 +205,10 @@ namespace xenoPMT\Module\Sample
     /* ############################################ */
 
 
-    function install()
+    public function Install()
     {
       global $xpmtConf;
-      
+
       // 1) Verify if prev-installed / compatable
         // i.   Pull db info for prev install
         // ii.  Check Core Version against this
@@ -247,7 +252,7 @@ sql;
 
     }
 
-    function uninstall()
+    public function Uninstall()
     {
       // 1) Verify that nothing else is linking back to tickets
       // 2) Execute the uninstall script (ext/sample.uninstall.sql)
@@ -341,7 +346,5 @@ sql;
     }
   }
 }
-
-?>
 
 ?>

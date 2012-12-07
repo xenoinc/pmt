@@ -1,8 +1,8 @@
 <?php
-/* * **********************************************************
+/** **********************************************************
  * Copyright 2012 (C) Xeno Innovations, Inc.
  * ALL RIGHTS RESERVED
- * Author:       Damian Suess
+ * @Author:      Damian Suess
  * Document:     iModule.php
  * Created Date: Mar 22, 2012
  *
@@ -10,17 +10,15 @@
  *  Interface to what the xenoPMT modules must contain.
  *
  * Change Log:
+ *  2012-1206 * placed suggestion for a Namespace
  *  2012-0719 + Added comments for suggested members (Enable/Disable, Install/Uninstall)
  *  2012-0709 * Renamed from "pmtModule.php" to "iModule.php"
  *  2012-0619 + Added Install, Uninstall, Init functions. (NOT Implemented Yet)
  *  2012-0322 + Initial creation
  */
 
-/**
- *
- * @author Damian Suess
- */
-//interface pmtModule
+
+// namespace xenoPMT\Module { }
 interface iModule
 {
   /**
@@ -42,7 +40,7 @@ interface iModule
 
   // public function Initialize();    // initialize data (basically the construct)
 
-  
+
   /**
    * Title of the generated page
    */

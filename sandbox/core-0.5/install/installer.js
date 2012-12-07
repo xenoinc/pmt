@@ -95,6 +95,10 @@ $(document).ready(function()
           CreateUserConfig();
         break;
 
+        case "btnInstallModules":
+          InstallModules();
+        break;
+
         default:
           alert("Unknown button pressed!");
           break;
@@ -445,6 +449,35 @@ function CreateUserConfig()
     },
     error: function() {
       alert("Failure while creating user's, config.php.");
+    }
+  });
+}
+
+/**
+ * Install the list of modules saved into the user's "config.php"
+ */
+function InstallModules()
+{
+  $("#divInstallStatus").removeClass();
+  $.ajax({
+    type: "POST",
+    url:  "install.ajax.php",
+    cache: false,
+    dataType: "json",
+    data:
+      {
+        step6: "1"
+      },
+    beforeSend: function() {
+      $("#divInstallStatus").html("<img src='pix/busy.gif' Installing Modules... />");
+    },
+    success: function(data) {
+      $("#divInstallStatus").html(data.ret_msg);
+      $("#divInstallStatus").removeClass();
+      $("#divInstallStatus").addClass(data.ret_cls);
+    },
+    error: function() {
+      alert("Error while installing modules.");
     }
   });
 }

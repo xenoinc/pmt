@@ -48,16 +48,17 @@ create table if not exists `TBLPMT_CORE_SETTINGS`
 
 CREATE TABLE IF NOT EXISTS `TBLPMT_CORE_MODULE`
 (
-  `Module_Id`       INT UNSIGNED NOT NULL AUTO_INCREMENT,
-  `Module_UUID`     VARCHAR(36) NOT NULL,                           -- Unique Identifer of registered module. No two should be the same
-  `Core`            BOOLEAN NOT NULL DEFAULT FALSE,                 -- Is this a core module? DEFAULT=FALSE
-  `Enabled`         BOOLEAN NOT NULL DEFAULT FALSE,                 -- Disable all new modules by default
-  `Module_Name`     VARCHAR(64) collate utf8_unicode_ci not null,   -- name of module "kb"
-  `Module_Version`  VARCHAR(16),                                    -- Version number/Name (0.2 nighthawk)
-  `Module_Path`     VARCHAR(255) collate utf8_unicode_ci not null,  -- main install path ("/module/kb/kb.php" or "kb.php")
-  `Module_Class`    VARCHAR(255) collate utf8_unicode_ci not null,  -- class name to be called
-  `Module_URN`      VARCHAR(16) NOT NULL,                           -- BASE Uniform Resource Name (kb, p, customer, ..)
-  `Description`     VARCHAR(255) collate utf8_unicode_ci not null,
+  `Module_Id`         INT UNSIGNED NOT NULL AUTO_INCREMENT,
+  `Module_UUID`       VARCHAR(36) NOT NULL,                           -- Unique Identifer of registered module. No two should be the same
+  `Core`              BOOLEAN NOT NULL DEFAULT FALSE,                 -- Is this a core module? DEFAULT=FALSE
+  `Enabled`           BOOLEAN NOT NULL DEFAULT FALSE,                 -- Disable all new modules by default
+  `Module_Name`       VARCHAR(64) collate utf8_unicode_ci not null,   -- Name of module "kb"
+  `Module_Version`    VARCHAR(16),                                    -- Version number/Name (0.2 nighthawk)
+  `Module_Path`       VARCHAR(255) collate utf8_unicode_ci not null,  -- main install path ("/module/kb/kb.php" or "kb.php")
+  `Module_Namespace`  VARCHAR(255) collate utf8_unicode_ci not null,  -- Namespace of the Module (required by class.setup.php)
+  `Module_Class`      VARCHAR(255) collate utf8_unicode_ci not null,  -- Class name to be called
+  `Module_URN`        VARCHAR(16) NOT NULL,                           -- BASE Uniform Resource Name (kb, p, customer, ..)
+  `Description`       VARCHAR(255) collate utf8_unicode_ci not null,
   primary key (`Module_Id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
