@@ -151,19 +151,25 @@ namespace xenoPMT\Module\Dashboard
     // ################################### //
 
     /**
-     * @assert () == true
+     * Verify if we can install or not
      *
      * @return boolean  TRUE = Passed. FALSE = Falied
      */
     private function VerifyPreInstall()
     {
+      /*
+       * To Do
+       * 1. [X] Match UUID
+       * 2. [ ] Check for conflicting URN
+       */
 
       global $xpmtConf;
+      $bRet = false;      // Verify if we can install or not
 
       //{$xpmtConf["db"]["prefix"]}CORE_MODULE
       //select * from xi_core_module where Module_UUID = 'df9f29f8-1aed-421d-b01c-860c6b89fb14';
-      $db = new \mysqli( $xpmtConf["db"]["server"], $xpmtConf["db"]["user"],
-                            $xpmtConf["db"]["pass"], $xpmtConf["db"]["dbname"]);
+      $db = new \mysqli($xpmtConf["db"]["server"],  $xpmtConf["db"]["user"],
+                        $xpmtConf["db"]["pass"],    $xpmtConf["db"]["dbname"]);
       if(!$db->connect_errno)
       {
         $sql = "select * from {$xpmtConf["db"]["prefix"]}CORE_MODULE where `Module_UUID` = '{$this->_uuid}'";
@@ -171,46 +177,72 @@ namespace xenoPMT\Module\Dashboard
         $db->real_query($sql);
         if ($db->field_count > 0)
         {
-          // found something
+          // Step 1 - FAILED- Found matching UUID
           $bRet = false;
+          $this->_verifiedMessages["UUID_Conflict"] = true;
         }
         else
         {
+          // Step 1 - PASSED - No matching UUID
           $bRet = true;
+          $this->_verifiedMessages["UUID_Conflict"] = false;
         }
-
         $db->close();
       }
       else
       {
-
+        // There was an error connecting to the database
+        $this->_verifiedMessages["DbConnect_Failed"] = false;
+        $bRet = false;
       }
+
+
+      // Step 2 - Check if URN is previously used in both DB and ConfigHeaders
+      // To Do later
+
       return false;
     }
 
 
     /**
+     * Check if we can delete this mdoule from the database
      *
      * @return boolean  TRUE = Passed. FALSE = Falied
      */
     private function VerifyPreUninstall()
     {
+      global $xpmtConf;
+      $bRet = false;
 
-      // select * from XI_CORE_MODULES where Module_UUID = 'xxxx';
-      // Delete * from XI_CORE_MODULES where Module_UUID = 'xxxx';
-      //{$xpmtConf["db"]["prefix"]}CORE_MODULE
-      //select * from xi_core_module where Module_UUID = 'df9f29f8-1aed-421d-b01c-860c6b89fb14';
-      $db = new \mysqli( $xpmtConf["db"]["server"], $xpmtConf["db"]["user"],
-                            $xpmtConf["db"]["pass"], $xpmtConf["db"]["dbname"]);
+      $db = new \mysqli($xpmtConf["db"]["server"],  $xpmtConf["db"]["user"],
+                        $xpmtConf["db"]["pass"],    $xpmtConf["db"]["dbname"]);
       if(!$db->connect_errno)
       {
+        $sql = "select * from {$xpmtConf["db"]["prefix"]}CORE_MODULE where `Module_UUID` = '{$this->_uuid}'";
+
+        $db->real_query($sql);
+        if ($db->field_count > 0)
+        {
+          // Found matching item to delete! YAY!
+          $this->_verifiedMessages["UUID_Conflict"] = false;
+          $bRet = true;
+        }
+        else
+        {
+          // Didn't find the module installed
+          $this->_verifiedMessages["UUID_Conflict"] = true;
+          $bRet = false;
+        }
         $db->close();
       }
       else
       {
-
+        // Database loading error
+        $this->_verifiedMessages["DbConnect_Failed"] = true;
+        $bRet = false;
       }
-      return false;
+
+      return $bRet;
     }
 
 
@@ -254,6 +286,7 @@ namespace xenoPMT\Module\Dashboard
         return false;
 
       global $xpmtConf;
+      $bRet = false;
 
       if ($this->_core) $bCore = "TRUE"; else $bCore = "FALSE";
 
@@ -280,19 +313,22 @@ namespace xenoPMT\Module\Dashboard
         '{}');
 sql;
         if($db->query($sql))
-          return true;
+          $bRet = true;
         else
-          return false;
-
+        {
+          $bRet = false;
+          $this->_verifiedMessages["DbQuery_Failed"] = true;
+        }
         $db->close();
-        return true;
       }
       else
       { // connection error
-        return false;
+        $this->_verifiedMessages["DbConnect_Failed"] = true;
+        $bRet = false;
       }
 
-
+      // Return the status pass/fail - true/false
+      return $bRet;
     }
 
     /**
@@ -312,17 +348,29 @@ sql;
 
       if(!$db->connect_errno)
       {
-        // Delete * from XI_CORE_MODULES where Module_UUID = 'xxxx';
+        $sql = "delete from {$xpmtConf["db"]["prefix"]}CORE_MODULE where `Module_UUID` = '{$this->_uuid}';";
+        if ($db->query($sql))
+        {
+          // Passed!
+          $bRet = true;
+        }
+        else
+        {
+          // Failed!
+          $this->_verifiedMessages["DbQuery_Failed"] = true;
+          $bRet = true;
+        }
+
         $db->close();
+
       }
       else
       {
-
+        $this->_verifiedMessages["DbConnect_Failed"] = true;
+        $bRet = false;
       }
 
-
-
-      return false;
+      return $bRet;
     }
 
 
