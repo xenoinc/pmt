@@ -41,11 +41,11 @@ $xpmtConf = array(
 
 // Database Connection
   "db" => array(
-    "server"  => "localhost",   // Database server
-    "user"    => "root",        // Database username
-    "pass"    => "testing123",  // Database password
-    "dbname"  => "PMT_BETA",    // Database name
-    "prefix"  => "XI_"          // Table prefix
+    "server"  => "localhost", // Database server
+    "dbname"  => "PMT_TEST",  // Database name
+    "prefix"  => "XI_",       // Table prefix
+    "user"    => "betauser",  // Database username
+    "pass"    => "betapass",  // Database password
   ),
 
   // General Site Data

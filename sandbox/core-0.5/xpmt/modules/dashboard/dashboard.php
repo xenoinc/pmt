@@ -23,7 +23,7 @@ $xpmtModule["info"][] = array
 (
   "author"      => "Damian Suess",
   "version"     => "0.0.5",
-  "title"       => "Welcome to xenoPMT",
+  "title"       => "xenoPMT Dashboard",
   "description" => "Welcome screen and main page for all users whether they are logged in or not.",
   "urn"         => "",                                      // UniformResourceName of the module (pmt.com/admin)
   "classname"   => "dashboard",                             // Name of class inside of "path"
