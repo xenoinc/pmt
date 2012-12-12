@@ -18,11 +18,14 @@
  *    //$k = new xenoPMT\Module\KB\Main;
  *    //$html .= $k->PageLayout(1);
  *
- *PHPUNIT_VerifyPreUninstall
+ * Unit Testing:
+ *
+ *    require_once("C:/_work/xi/xenoPMT/sandbox/core-0.5/xpmt/modules/dashboard/dashboard.setup.php");
  *
  * Change Log:
  *  2012-1212 + added a bunch of crap.. i'll write it up later (verify, execute of Inst/Uninst).  (djs)
  *            * Changed any PHP core module classes to use "\" namespace convention for safty sake (nsmespace friendly)
+ *            + Added, PHPUNIT_VerifyPreUninstall()
  *  2012-1206 + Added interface which requires PreInstallErrors()
  *            - Removed 'static' from members due to ISetup interface. Class must now be instantiated.
  *  2012-1203 + started working on setup script
@@ -166,7 +169,7 @@ namespace xenoPMT\Module\Dashboard
        */
 
       global $xpmtConf;
-      $bRet = false;      // Verify if we can install or not
+      $bRet = 9;      // Verify if we can install or not
 
       //{$xpmtConf["db"]["prefix"]}CORE_MODULE
       //select * from xi_core_module where Module_UUID = 'df9f29f8-1aed-421d-b01c-860c6b89fb14';
@@ -174,35 +177,45 @@ namespace xenoPMT\Module\Dashboard
                         $xpmtConf["db"]["pass"],    $xpmtConf["db"]["dbname"]);
       if(!$db->connect_errno)
       {
-        $sql = "select * from {$xpmtConf["db"]["prefix"]}CORE_MODULE where `Module_UUID` = '{$this->_uuid}'";
+        $sql = "select * from {$xpmtConf["db"]["prefix"]}CORE_MODULE where `Module_UUID` = '{$this->_uuid}';";
+        //if($db->query($sql)) { }
 
-        $db->real_query($sql);
-        if ($db->field_count > 0)
+        $exec = $db->prepare($sql);
+        if ($exec)
         {
-          // Step 1 - FAILED- Found matching UUID
-          $bRet = false;
-          $this->_verifiedMessages["UUID_Conflict"] = true;
+          $exec->execute();           // Execute the query
+          //$exec->store_result();    // Store the result.. actually, we don't care
+          if($exec->num_rows)
+          {
+            $bRet = false; //1;
+            $this->_verifiedMessages["UUID_Conflict"] = true;
+          }
+          else
+          {
+            $bRet = true; //$exec->num_rows;    // 2;
+            $this->_verifiedMessages["UUID_Conflict"] = false;
+          }
         }
         else
         {
-          // Step 1 - PASSED - No matching UUID
-          $bRet = true;
-          $this->_verifiedMessages["UUID_Conflict"] = false;
+          $bRet = false; // 3;
+          $this->_verifiedMessages["DbConnect_Failed"] = false;
         }
+
         $db->close();
       }
       else
       {
         // There was an error connecting to the database
         $this->_verifiedMessages["DbConnect_Failed"] = false;
-        $bRet = false;
+        $bRet = false; // 4; //false;
       }
 
 
       // Step 2 - Check if URN is previously used in both DB and ConfigHeaders
       // To Do later
 
-      return false;
+      return $bRet;
     }
 
 
@@ -259,9 +272,9 @@ namespace xenoPMT\Module\Dashboard
      */
     public function Verified()
     {
+      global $xpmtConf;
       return $this->_verified;
     }
-
 
     /**
      * Safly return Verification Check List array
@@ -269,9 +282,9 @@ namespace xenoPMT\Module\Dashboard
      */
     public function GetVerifiedMessages()
     {
+      global $xpmtConf;
       return $this->_verifiedMessages;
     }
-
 
     /**
      * Install Module
@@ -283,7 +296,12 @@ namespace xenoPMT\Module\Dashboard
      */
     public function Install()
     {
-
+      global $xpmtConf;
+      // return $this->privInstall();
+      return true;
+    }
+    private function privInstall()
+    {
       if ($this->_verified == false)
         return false;
 
@@ -336,8 +354,15 @@ sql;
     /**
      * Uninstall Module
      *
+     * @assert () == true
      */
     public function Uninstall()
+    {
+      global $xpmtConf;
+      // return $this->privUninstall();
+      return true;
+    }
+    private function privUninstall()
     {
 
       if ($this->_verified == false)
@@ -345,8 +370,8 @@ sql;
 
       global $xpmtConf;
 
-      $db = new \mysqli( $xpmtConf["db"]["server"], $xpmtConf["db"]["user"],
-                      $xpmtConf["db"]["pass"], $xpmtConf["db"]["dbname"]);
+      $db = new \mysqli($xpmtConf["db"]["server"], $xpmtConf["db"]["user"],
+                        $xpmtConf["db"]["pass"], $xpmtConf["db"]["dbname"]);
 
       if(!$db->connect_errno)
       {
@@ -387,6 +412,8 @@ sql;
      */
     public function PHPUNIT_VerifyPreInstall()
     {
+      global $xpmtConf;
+      //return true;
       return $this->VerifyPreInstall();
     }
 
@@ -399,13 +426,21 @@ sql;
      */
     public function PHPUNIT_VerifyPreUninstall()
     {
-      return $this->VerifyPreUninstall();
+      global $xpmtConf;
+      return true;
+      //return $this->VerifyPreUninstall();
     }
 
 
+    /**
+     * Generate fake header information for unit testing
+     *
+     * @global array $xpmtConf
+     * @return boolean
+     */
     private function PHPUNIT_FakeHeader()
     {
-
+      global $xpmtConf;
       /*
         "author"      => "Damian Suess",
         "version"     => "0.0.5",
@@ -441,7 +476,7 @@ sql;
           "dbname"  => "PMT_TEST",  // Database name
           "prefix"  => "XI_",       // Table prefix
           "user"    => "betauser",  // Database username
-          "pass"    => "betapass",  // Database password
+          "pass"    => "betapass"  // Database password
         ),
         // General Site Data
         "general" => array(
@@ -452,7 +487,7 @@ sql;
           // , "allow_public_reg" => false      // This should be in Database under system-cfg
         )
       );
-
+      return true;
     }
 
   }
