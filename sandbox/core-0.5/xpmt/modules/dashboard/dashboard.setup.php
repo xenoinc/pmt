@@ -89,17 +89,24 @@ namespace xenoPMT\Module\Dashboard
      */
     public function __construct($boolInstall = true, $headerInfo = "")
     {
-
       global $xpmtConf;
 
-      $this->_verified = false;
+      // what is our intended action?
       $this->_installModule = $boolInstall;
+
+      // Clear all verification messages!
+      $this->_verified = false;
+      $this->_verifiedMessages["CoreInvalid"] = false;
+      $this->_verifiedMessages["IsInstalled"] = false;
+      $this->_verifiedMessages["URN_Conflict"] = false;
+      $this->_verifiedMessages["UUID_Conflict"] = false;
+      $this->_verifiedMessages["DbConnect_Failed"] = false;
+      $this->_verifiedMessages["DbQuery_Failed"] = false;
 
       if (is_array($headerInfo) == false || $headerInfo == "")
       {
         // We are unit testing. Generate a fake header
         // and plug in some database information
-
         $this->PHPUNIT_FakeHeader();
 
         if($this->_installModule == true)
@@ -109,11 +116,33 @@ namespace xenoPMT\Module\Dashboard
       }
       else
       {
-        if($this->_installModule == true)
-          $this->_verified = $this->VerifyPreInstall();
-        else
-          $this->_verified = $this->VerifyPreUninstall();
 
+        // Verify the UUID!
+
+        if ($this->_uuid != $headerInfo["uuid"])
+        {
+          $this->_verified = false;
+          $this->_verifiedMessages["UUID_Conflict"] = true;
+        }
+        else
+        {
+          // So far so good, now let's verify!
+          $this->_author      = $headerInfo["author"];
+          $this->_version     = "0.0.5";
+          $this->_title       = "xenoPMT Dashboard";
+          $this->_description = "dashboard";
+          $this->_urn         = "";
+          $this->_classname   = "dashboard";
+          $this->_namespace   = "xenoPMT\\Module\\Dashboard";
+          $this->_path        = "dirname(__FILE__)";
+          $this->_mainfile    = "dashboard.main.php";
+          $this->_core        = true;
+
+          if($this->_installModule == true)
+            $this->_verified = $this->VerifyPreInstall();
+          else
+            $this->_verified = $this->VerifyPreUninstall();
+        }
       }
     }
 
@@ -128,7 +157,34 @@ namespace xenoPMT\Module\Dashboard
      */
     private function VerifyPreInstall()
     {
-      // select * from XI_CORE_MODULES where Module_UUID = 'xxxx';
+
+      global $xpmtConf;
+
+      //{$xpmtConf["db"]["prefix"]}CORE_MODULE
+      //select * from xi_core_module where Module_UUID = 'df9f29f8-1aed-421d-b01c-860c6b89fb14';
+      $db = new \mysqli( $xpmtConf["db"]["server"], $xpmtConf["db"]["user"],
+                            $xpmtConf["db"]["pass"], $xpmtConf["db"]["dbname"]);
+      if(!$db->connect_errno)
+      {
+        $sql = "select * from {$xpmtConf["db"]["prefix"]}CORE_MODULE where `Module_UUID` = '{$this->_uuid}'";
+
+        $db->real_query($sql);
+        if ($db->field_count > 0)
+        {
+          // found something
+          $bRet = false;
+        }
+        else
+        {
+          $bRet = true;
+        }
+
+        $db->close();
+      }
+      else
+      {
+
+      }
       return false;
     }
 
@@ -139,7 +195,21 @@ namespace xenoPMT\Module\Dashboard
      */
     private function VerifyPreUninstall()
     {
+
+      // select * from XI_CORE_MODULES where Module_UUID = 'xxxx';
       // Delete * from XI_CORE_MODULES where Module_UUID = 'xxxx';
+      //{$xpmtConf["db"]["prefix"]}CORE_MODULE
+      //select * from xi_core_module where Module_UUID = 'df9f29f8-1aed-421d-b01c-860c6b89fb14';
+      $db = new \mysqli( $xpmtConf["db"]["server"], $xpmtConf["db"]["user"],
+                            $xpmtConf["db"]["pass"], $xpmtConf["db"]["dbname"]);
+      if(!$db->connect_errno)
+      {
+        $db->close();
+      }
+      else
+      {
+
+      }
       return false;
     }
 
@@ -183,33 +253,32 @@ namespace xenoPMT\Module\Dashboard
       if ($this->_verified == false)
         return false;
 
-      global $xpmtConf; // $pmtDB;
+      global $xpmtConf;
 
       if ($this->_core) $bCore = "TRUE"; else $bCore = "FALSE";
-
-      $sql = <<<"sql"
-      INSERT INTO {$xpmtConf["db"]["prefix"]}CORE_MODULE
-      ( `Module_UUID`, `Core`, `Enabled`,
-        `Module_Name`, `Module_Version`, `Module_Path`,
-        `Module_Namespace`,
-        `Module_Class`,
-        `Module_URN`,
-        `Description`
-      ) VALUES (
-      '{$this->_uuid}', $boolCore, FALSE,
-      '{$this->_title}', '{$this->_version}', '{$this->_path}',
-      '{$this->_namespace}',
-      '{$this->_classname}',
-      '{$this->_urn}',
-      '{}');
-sql;
 
       //$tmpArr = $pmtDB->Query( $_sql);
       $db = new \mysqli( $xpmtConf["db"]["server"], $xpmtConf["db"]["user"],
                             $xpmtConf["db"]["pass"], $xpmtConf["db"]["dbname"]);
+
       if(!$db->connect_errno)
       {
-
+        $sql = <<<"sql"
+        INSERT INTO {$xpmtConf["db"]["prefix"]}CORE_MODULE
+        ( `Module_UUID`, `Core`, `Enabled`,
+          `Module_Name`, `Module_Version`, `Module_Path`,
+          `Module_Namespace`,
+          `Module_Class`,
+          `Module_URN`,
+          `Description`
+        ) VALUES (
+        '{$this->_uuid}', $boolCore, FALSE,
+        '{$this->_title}', '{$this->_version}', '{$this->_path}',
+        '{$this->_namespace}',
+        '{$this->_classname}',
+        '{$this->_urn}',
+        '{}');
+sql;
         if($db->query($sql))
           return true;
         else
@@ -238,8 +307,20 @@ sql;
 
       global $xpmtConf;
 
-      // We cannot uninstall the dashboard!!
-      // Well, not unless if there is a solid replacement
+      $db = new \mysqli( $xpmtConf["db"]["server"], $xpmtConf["db"]["user"],
+                      $xpmtConf["db"]["pass"], $xpmtConf["db"]["dbname"]);
+
+      if(!$db->connect_errno)
+      {
+        // Delete * from XI_CORE_MODULES where Module_UUID = 'xxxx';
+        $db->close();
+      }
+      else
+      {
+
+      }
+
+
 
       return false;
     }
