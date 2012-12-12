@@ -21,6 +21,8 @@
  *PHPUNIT_VerifyPreUninstall
  *
  * Change Log:
+ *  2012-1212 + added a bunch of crap.. i'll write it up later (verify, execute of Inst/Uninst).  (djs)
+ *            * Changed any PHP core module classes to use "\" namespace convention for safty sake (nsmespace friendly)
  *  2012-1206 + Added interface which requires PreInstallErrors()
  *            - Removed 'static' from members due to ISetup interface. Class must now be instantiated.
  *  2012-1203 + started working on setup script
