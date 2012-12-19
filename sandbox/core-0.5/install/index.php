@@ -9,29 +9,40 @@
  * Description:
  *  Installer (v0.0.5)
  *
+ * To Do:
+ * 2012-1219
+ *  [ ] Automatically hide "Next" button for certain steps by adding another
+ *      parameter to, "MakeNav($iPrev, $iCur, $iNext, $bHideFwd)" such as:
+ *      * Test/Install Database (when DB/Config.php doesn't not exist)
+ *      * Create Config File
+ *      * Install Modules
+ *
  * Change Log:
+ *  2012-1219 * Added Step 7 back and now Step 6 is the "Install Modules" button
  *  2012-1203 + added id="idFinished" to step 6, "Finished" for a dynamic link to main page
  *  2012-1015 * A lot of updates occurred
  *            + Added BETA_TESTING boolean switch
  *  2012-1013 + Fixed DB Connection Tester. Using:  mysqli(..) not mysql_connect(..)
  *  2012-1004 + Initial creation
  */
+
 /* Steps
  * 0. Check for Request DB Clear
- *  i. Get config(.user).php data of DB conn & remove
- *
- * 1. Display database information form
- *  i. Get Server, User, Pass, DB_Name and Table Prefix
- *
- * 2. Display Admin Config form
- *  i.  user, pass, email and display name
- *  ii. and Use Clean URI (checkbox)
- *
- * 3. Install xenoPMT
- *  i.    Save config file
- *  ii.   Write generic database
- *  iii.
- *
+ *  i   Get config(.user).php data of DB conn & remove
+ * 1. Welcome
+ * 2. Verify Requirements
+ * 3. Database Setup
+ *  i   Get Server, User, Pass, DB_Name and Table Prefix
+ *  ii  Write generic database
+ * 4. Configure your system
+ *  i   Input admin's User, Pass, Email and Display name
+ *  ii  Use Clean URI (checkbox)
+ * 5. Select Modules
+ *  i   Create config.php file from selected modules
+ * 6. Install Modules
+ *  i   Run the "Setup" scripts for your selected modules
+ * 7. Finished!
+ *  i   Link back to main page
  */
 
 require "../xpmt/phpConsole.php";
@@ -48,7 +59,7 @@ if ($BETA_TESTING)
   $_txtDBPass   = "betapass";
 
   $_txtCfgSiteName = "xenoPMT 0.0.5";
-  $_txtCfgBaseUrl = "http://pmt/";
+  $_txtCfgBaseUrl = "http://pmt2/";
   //$_optCfgCleanURI    = true;
   $_txtCfgAdminDisp   = "Administrator";
   $_txtCfgAdminUser   = "admin";
@@ -135,8 +146,9 @@ function DebugDisplay() {
  * @param integer $bak Previous Panel Id Number
  * @param integer $cur Current Panel Id Number
  * @param integer $fwd Next Panel Id Number
+ * @param boolean $bHideFwd  Hide the "Next" button until an action is complete
  */
-function MakeNav($bak="", $cur="", $fwd="")
+function MakeNav($bak="", $cur="", $fwd="", $bHideFwd=false)
 {
   if ($bak == "") { $classBak = "ButtonDisabled"; $idBak=""; $disB="disabled "; } else { $classBak = "Buttons"; $idBak="btnBak".$bak; $disB="";}
   if ($fwd == "") { $classFwd = "ButtonDisabled"; $idFwd=""; $disF="disabled "; } else { $classFwd = "Buttons"; $idFwd="btnFwd".$fwd; $disF="";}
@@ -209,21 +221,18 @@ DebugDisplay();
     <div class="panelMain">
 
       <div id="panelLeft">
-
         <table width="90%">
           <tbody>
-
             <tr id="tblItem1"><td> 1 -</td><td>Welcome!</td></tr>
             <tr id="tblItem2"><td> 2 -</td><td>Verify Requirements</td></tr>
             <tr id="tblItem3"><td> 3 -</td><td>Database Setup</td></tr>
             <tr id="tblItem4"><td> 4 -</td><td>Configure your System</td></tr>
-            <tr id="tblItem5"><td> 5 -</td><td>Install Modules</td></tr>
-            <tr id="tblItem6"><td> 6 -</td><td>Finished</td></tr>
-            <!--<tr id="tblItem7"><td> 7 -</td><td></td></tr>-->
+            <tr id="tblItem5"><td> 5 -</td><td>Select Modules</td></tr>
+            <tr id="tblItem6"><td> 6 -</td><td>Install Modules</td></tr>
+            <tr id="tblItem7"><td> 7 -</td><td>Finished</td></tr>
           </tbody>
         </table>
-
-      </div>
+      </div> <!-- end:panelLEft -->
 
       <div id="panelRight">
 
@@ -418,11 +427,11 @@ DebugDisplay();
 
         </div> <!-- end:step4 -->
 
-        <!-- Step 5 - Install Modules -->
+        <!-- Step 5 - Select Modules -->
         <div class="steps" id="step5">
 
           <?php MakeNav(4,5,6); ?>
-          <h1>Install Modules</h1>
+          <h1>Select Modules</h1>
 
           <div>
             <p>
@@ -645,10 +654,10 @@ DebugDisplay();
         </div> <!-- end:step5 -->
 
 
-        <!-- Step 6 - Finished -->
+        <!-- Step 6 - Install Modules! -->
         <div class="steps" id="step6">
-          <?php MakeNav(5, 6);  //MakeNav(5, 6, 7); ?>
-          <h1>Finished!</h1>
+          <?php /* MakeNav(5, 6); */ MakeNav(5, 6, 7); ?>
+          <h1>Install Modules!</h1>
           <p>
             Before you leave.. here's a quick install procedure <br /> <br />
             <button type="button" id="btnInstallModules" class="Buttons">Install Modules</button>
@@ -656,8 +665,16 @@ DebugDisplay();
               <!-- Install Status update -->
             </div>
           </p>
+        </div> <!-- end:step6 -->
+
+
+        <!-- Step 7 - Finished -->
+        <div class="steps" id="step7">
+          <?php MakeNav(6, 7); ?>
+          <h1>Finished!</h1>
+
           <p>
-            No go forth and give you new system a test drive.
+            No go forth and give you new system a test drive!
           </p>
           <h2 id="idFinished"></h2>
           <p>
@@ -669,19 +686,6 @@ DebugDisplay();
           <p>
             <i>Xeno Innovations Development Team</i>
           </p>
-
-        </div> <!-- end:step6 -->
-
-
-        <!-- Step 7 - Finished -->
-        <div class="steps" id="step7">
-          <?php MakeNav(6, 7); ?>
-          <h1>Step 7</h1>
-
-          <p>
-            <!-- Move step 6's current crap to here and leave the install button there -->
-          </p>
-
         </div> <!-- end:step7 -->
 
       </div> <!-- end:panelRight -->
@@ -690,7 +694,7 @@ DebugDisplay();
     if ($BETA_TESTING)
     {?>
     <div align="center">
-      <a href="#" id="btnClearDb">Clear Database</a>
+      <a href="#" id="btnClearDb">Clear ALL Settings and Database</a>
     </div>
     <?php }
     ?>

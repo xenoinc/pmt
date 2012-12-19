@@ -11,7 +11,7 @@
  *
  * To Do:
  * 2012-11-19 - Proposal
- * [ ]  Refactor variable names to reflect control names. (_dbHost -> txtDbHost)
+ * [X]  Refactor variable names to reflect control names. (_dbHost -> txtDbHost)
  * [ ]  Place procedures in a class and call only the needed members, encapsulating
  *      the class members which don't need to be seen by the rest of the world.
  *      The constructor will perform the GetPostParams crap.
@@ -22,7 +22,12 @@
  *        echo($obj->Output());     // ret_msg and ret_class
  *
  * Change Log:
- * 2012-13-03 * Updated, Config Complete message.
+ * 2012-12-19 * Updated debug message text
+ *            + Added throw new Exception(..) to "ajaxCreateConfig()" when inserting Admin account that already exists. (djs)
+ *            + Addex throw new Exception(..) to "ajaxInstallXenoPMT()" if IsInstalled() == true
+ *            * Fixed error in procedure, IsInstalled() - it was using $ret[0] and not $arr[0]
+ *            * Refactored, ajaxClearDB() to pull from Config.php first, if not then use Debug/Installer's text boxes
+ * 2012-12-03 * Updated, Config Complete message. (djs)
  * 2012-11-19 + added proc, "ajaxCreateConfig()" to generate user's "config.php" file.
  *            + added proc, "GetPost($param, $def="")". Refactored to minimize re-using code
  *            * Renamed GetDbParams() to GetPostParams()
@@ -167,10 +172,10 @@ function GetPost($param, $def="")
 /** 2012-1018 - Removed, this is not needed. jQuery is doing all the work
 function ajaxUpdateStep()
 {
-  //debug("UpdateStep()");
+  //pmtDebug("UpdateStep()");
 
   $ret = $_POST["UpdateStep"];
-  //debug("Go To: " . $ret);
+  //pmtDebug("Go To: " . $ret);
 
   echo json_encode(array("returnValue" => "$ret"));
   // } else {
@@ -180,28 +185,90 @@ function ajaxUpdateStep()
 */
 
 /**
- * Remove database tables and prep for recreation
+ * Removes Config file and Database tables and prep for recreation
  */
 function ajaxClearDB()
 {
   // 1) Extract variables (safely pull from POST)
   global $_txtDbServer, $_txtDbName, $_txtDbPrefix, $_txtDbUser, $_txtDbPass;
-  //GetPostParams();
+
+  $retMsg = "<ul>";     // Used to report info back to UI (user interface)
+
+  // ---[ New ]---
+  //
+  // Step 0 - Perform initial db info configuration
+  if(file_exists("../config.php"))
+  {
+    require_once("../xpmt/config.default.php");   // Configure default first
+    require_once("../config.php");                // Override w/ user's settings
+    global $xpmtConf;
+    $dbServ = $xpmtConf["db"]["server"];
+    $dbName = $xpmtConf["db"]["dbname"];
+    $dbUser = $xpmtConf["db"]["user"];
+    $dbPass = $xpmtConf["db"]["pass"];
+  }
+  else
+  {
+    $retMsg .= "<li>User's <b>config.php</b> not found, trying installer's settings..</li>";
+    $dbServ = $_txtDbServer;
+    $dbName = $_txtDbName;
+    $dbUser = $_txtDbUser;
+    $dbPass = $_txtDbPass;
+  }
+
+  // Step 2 - Connect to DB and Remove it!
+  // NOTE: This step below REQUIRES DB User account to have Drop DB and Create DB privs.
+  try
+  {
+    $mysqli = new mysqli($dbServ, $dbUser, $dbPass, $dbName);
+    if ($mysqli->connect_errno)
+    {
+      // Report DB Connection Error
+      $retMsg .= "<li>Database connection failure! [{$mysqli->connect_errno}]: '{$mysqli->connect_error}'</li>";
+    }
+    else
+    {
+      if ($mysqli->query("DROP DATABASE " . $dbName .";") === TRUE)
+        $retMsg .= "<li>Dropped database.</li>";
+      else
+        $retMsg .= "<li><b>FAILED</b> to drop database!</li>";
+
+      if ($mysqli->query("CREATE DATABASE " . $dbName .";") === TRUE)
+        $retMsg .= "<li>Recreated database.</li>";
+      else
+        $retMsg .= "<li><b>FAILED</b> to recreated database!</li>";
+
+      $mysqli->close(); // make sure it closes successfuly
+    }
+  }
+  catch(Exception $e)
+  {
+    $retMsg .= "<li><b>Database Exception:</b> '{$e}'.</li>";
+  }
+
+  // ----[ OLD ]-------
+  /*
   require_once("../xpmt/core/pmt.db.php");
-
-
   // 2) Connect to db
   $pmtDB = new Database($_txtDbServer, $_txtDbUser, $_txtDbPass);
   // 3) Drop all tables
   $pmtDB->Query("DROP DATABASE ".$_txtDbName.";");
   $pmtDB->Query("CREATE DATABASE ".$_txtDbName.";");
   //$pmtDB->Close();                                // throws an error
+  */
 
   if (file_exists("../config.php"))
+  {
     unlink("../config.php");
+    $retMsg .= "<li>Removed user's 'config.php'.</li>";
+  } else {
+    $retMsg .= "<li>Cannot remove user's 'config.php', file not found.</li>";
+  }
+
+  $retMsg .= "</ul>";
 
   // 4) Report status
-  $retArr = array("dbRet_msg"   => "Dropped and created database, '".$_txtDbName."'.",
+  $retArr = array("dbRet_msg"   => $retMsg,
                   "dbRet_class" => "Success");
   echo json_encode($retArr);
 }
@@ -268,7 +335,7 @@ function ajaxDatabaseTest()
   }
   $retArr = array("dbRet_msg"   => $retMsg,
                   "dbRet_class" => $retClass);
-  //debug(json_encode($retArr));
+  //pmtDebug(json_encode($retArr));
   echo json_encode($retArr);
 }
 
@@ -289,6 +356,9 @@ function ajaxInstallXenoPMT()
   // Step 2) Connect to database
   try
   {
+    if (IsInstalled() == true)
+      throw new Exception("Database is already installed!  To verify, please manually connect and verify there are no tables.");
+
     $mysqli = new mysqli($_txtDbServer, $_txtDbUser, $_txtDbPass, $_txtDbName);
     if ($mysqli->connect_errno)
     {
@@ -320,8 +390,9 @@ function ajaxInstallXenoPMT()
   }
   catch(Exception $e)
   {
-    $retMsg = "MySQL Exception: " . $e->getMessage();
+    $retMsg = "Exception thrown: " . $e->getMessage();
     $retClass = "Fail";
+    //$mysqli->close();
   }
 
   $retArr = array("dbRet_msg"   => $retMsg,
@@ -421,7 +492,7 @@ function ajaxCreateConfig()
       if ($sqlRet)
       {
         $userRows = $sqlRet->num_rows;
-        pmtDebug("User Query returned {$userRows} rows.\n");
+        pmtDebug("'Previous User' check query returned {$userRows} rows. (<i>0=good</i>)\n");
         $sqlRet->close(); /* free result set */
       }
 
@@ -432,7 +503,11 @@ function ajaxCreateConfig()
              "'{$_txtCfgAdminUser}', '{$_txtCfgAdminPass}', '{$_txtCfgAdminEmail}', '{$_txtCfgAdminName}');";
         $mysqli->query($q);
       }
-
+      else
+      {
+        $mysqli->close();
+        throw new Exception("There is already an admin user in the DB called, '$_txtCfgAdminUser'!");
+      }
       $mysqli->close();
     }
   }
@@ -441,6 +516,7 @@ function ajaxCreateConfig()
     $retMsg .= "<br />Failed to add Admin User data into database. Error: {$e}";
     $retClass = "Fail";
     pmtDebug("Failed to add Admin User data into database. Error: {$e}");
+    // $mysqli->close();
   }
 
 
@@ -618,7 +694,7 @@ function ajaxInstallModules()
  */
 function ExecuteSqlFile($sqlFile, $tblPrefix, $objConn, &$arrErrMsg)
 {
-  debug("Entering :: ExecuteSqlFile");
+  pmtDebug("Entering :: ExecuteSqlFile");
 
   pmtDebug("dbFile: '" . $sqlFile . "'  Prefix: '". $tblPrefix ."'");
 
@@ -640,24 +716,29 @@ function ExecuteSqlFile($sqlFile, $tblPrefix, $objConn, &$arrErrMsg)
     }
   }
 
-  debug("Exiting :: ExecuteSqlFile");
+  pmtDebug("Exiting :: ExecuteSqlFile");
 }
 
 
 /**
- * Old method to check if Installed
+ * Old method to check if xenoPMT is Installed.
+ * <ol>
+ *  <li>Does 'config.php' file exists.</li>
+ *  <li>Does "CORE_SETTINGS" table exists.</li>
+ * </ol>
+ *
  * @return boolean true false
  */
 function IsInstalled()
 {
-  //global $_txtDbServer, $_txtDbName, $_txtDbPrefix, $_txtDbUser, $_txtDbPass;
-  //GetPostParams();
-
+  pmtDebug("Entering::IsInstalled()");
 
   $installed = false;
   if(file_exists("../config.php"))
   {
-    require_once "../config.php";
+    require_once("../xpmt/config.default.php");   // Configure default first
+    require_once("../config.php");                // Override w/ user's settings
+    global $xpmtConf;                             // Pull back all config file registered modules
     $con = mysql_connect( $xpmtConf["db"]["server"],
                           $xpmtConf["db"]["user"],
                           $xpmtConf["db"]["pass"]);
@@ -667,14 +748,16 @@ function IsInstalled()
     $ret = mysql_query("SHOW TABLES;", $con);
     while ($arr = mysql_fetch_array($ret))
     {
+      //pmtDebug("DB:: {$arr[0]}");
       // Check if the settings table exists
-      if($ret[0] == $xpmtConf["db"]["prefix"] . "settings")
+      if(strtoupper($arr[0]) == strtoupper($xpmtConf["db"]["prefix"] . "CORE_SETTINGS"))
       {
         $installed = true;
         break;
       }
     }
   }
+  pmtDebug("Exiting::IsInstalled() { return=$installed }");
   return $installed;
 }
 
@@ -692,12 +775,12 @@ function InstallMod($modHeader, &$errArr)
    * [ ] Put the REQUIRE_ONCE inside of a try{}catch{} so we
    */
 
-// debug("UUID: " . $modHeader["uuid"]);
+  //pmtDebug("UUID: " . $modHeader["uuid"]);
 
   // Step 1) Require physical path of CLASS.setup.php
   $pth = $modHeader["path"] . "/" . $modHeader["classname"] . ".setup.php";
 
-  //debug("$pth");
+  //pmtDebug("$pth");
   require_once($pth);
 
   // Step 2) Load the namespace
