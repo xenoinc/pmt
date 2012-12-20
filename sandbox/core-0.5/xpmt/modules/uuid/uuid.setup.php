@@ -34,7 +34,7 @@ namespace xenoPMT\Module\UUID
      *
      * !!![ EOF ]!!!
      */
-    private $_uuid = "00000000-0000-0000-0000-000000000000";
+    private $_uuid = "c6fb97b8-af93-42ce-aac6-de5656c8fdae";
     private $_author;
     private $_version;
     private $_title;
@@ -333,17 +333,17 @@ namespace xenoPMT\Module\UUID
     {
       global $xpmtConf;
 
-      $this->_author      = "...";
+      $this->_author      = "Damian J. Suess";
       $this->_version     = "0.0.5";
-      $this->_title       = "...";
-      $this->_description = "...";
-      $this->_urn         = "...";
-      $this->_classname   = "...";
-      $this->_namespace   = "xenoPMT\\Module\\MODULE_CLASS_NAME";
+      $this->_title       = "UUID Generator";
+      $this->_description = "UUID Generator for creating new module IDs";
+      $this->_urn         = "uuid";
+      $this->_classname   = "uuid";
+      $this->_namespace   = "xenoPMT\\Module\\UUID";
       $this->_path        = "dirname(__FILE__)";
-      $this->_mainfile    = "XXX.main.php";
+      $this->_mainfile    = "uuid.main.php";
       $this->_core        = false;
-      $this->_uuid        = "00000000-0000-0000-0000-000000000000";
+      $this->_uuid        = "c6fb97b8-af93-42ce-aac6-de5656c8fdae";
 
       // MANUALLY Create connection to test database
 

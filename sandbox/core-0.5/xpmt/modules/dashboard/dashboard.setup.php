@@ -19,7 +19,6 @@
  *    //$html .= $k->PageLayout(1);
  *
  * Unit Testing:
- *
  *    require_once("C:/_work/xi/xenoPMT/sandbox/core-0.5/xpmt/modules/dashboard/dashboard.setup.php");
  *
  * Change Log:

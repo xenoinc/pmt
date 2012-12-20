@@ -16,6 +16,12 @@
  *
  *  There are 4 parts to this [Constructor], [Public], [Private] and [Unit Testing]
  *
+ * Sample Unit Testing:
+ *    Add this right after the "namespace" in the UnitTest file. NetBeans freaks doen't automatically
+ *    handle namespaces so we have to manually add this.
+ *
+ *    require_once("C:/_work/xi/xenoPMT/sandbox/core-0.5/xpmt/modules/sample/skeleton.setup.php");
+ *
  * Change Log:
  *  2012-1219 * Created to current xenoPMT Core-v0.0.5 specifications
  */
@@ -39,6 +45,7 @@ namespace xenoPMT\Module\MODULE_CLASS_NAME
      *
      * !!![ EOF ]!!!
      */
+    // const   UUID = "00000000-0000-0000-0000-000000000000";  // Which one is better?  Usage: $u = xenoPMT\Module\MOD_NAME\Setup\UUID;
     private $_uuid = "00000000-0000-0000-0000-000000000000";
     private $_author;
     private $_version;
@@ -98,7 +105,7 @@ namespace xenoPMT\Module\MODULE_CLASS_NAME
     public function __construct($boolInstall = true, $headerInfo = "")
     {
       global $xpmtConf;
-      debug("Entering UUID Setup Constructor");
+      // debug("Entering UUID Setup Constructor");
 
       // what is our intended action?
       $this->_installModule = $boolInstall;
@@ -372,6 +379,17 @@ namespace xenoPMT\Module\MODULE_CLASS_NAME
       );
       return true;
     } // end::PHPUNIT_FakeHeader()
+
+    /**
+     * This is a useless debugging function to ensure your function name
+     * behind the namespace and the class.
+     * @assert () == "xenoPMT\Module\MODULE_CLASS_NAME\Setup::PHPUNIT_WhoAmI"
+     * @return system Method name behind namespace.
+     */
+    public function PHPUNIT_WhoAmI()
+    {
+      return __METHOD__;
+    } // end::PHPUNIT_WhoAmI()
   } // end::class
 } // end::namespace
 

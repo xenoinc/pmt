@@ -10,7 +10,7 @@
  * Description:
  *  Sample module
  *
- *     private $_uuid = "ef64ffb0-19a8-11e2-892e-0800200c9a66";
+ *     private $_uuid = "04a78f00-220f-11e2-81c1-0800200c9a66";
  *
  * Change Log:
  *  2012-1219 * Updated members to reflect new layout
@@ -37,7 +37,7 @@ namespace xenoPMT\Module\Sample
      *
      * !!![ EOF ]!!!
      */
-    private $_uuid = "00000000-0000-0000-0000-000000000000";
+    private $_uuid = "04a78f00-220f-11e2-81c1-0800200c9a66";
     private $_author;
     private $_version;
     private $_title;
@@ -228,6 +228,8 @@ namespace xenoPMT\Module\Sample
       $bRet = false;
 
       /* ... Insert Code ... */
+      // Since this is a sample, pass it.
+      $bRet = true;
 
       /* Code Hints:
        * 1. Check for prev UUID
@@ -247,6 +249,8 @@ namespace xenoPMT\Module\Sample
       $bRet = false;
 
       /* ... Insert Code ... */
+      // Since this is a sample, pass it.
+      $bRet = true;
 
       /* Code Hints:
        * 1. Check for UUID
@@ -270,6 +274,8 @@ namespace xenoPMT\Module\Sample
       $bRet = false;
 
       /* ... Insert Code Here ... */
+      // Since this is a sample, pass it.
+      $bRet = true;
 
       return $bRet;
     } // end::privInstall()
@@ -288,6 +294,8 @@ namespace xenoPMT\Module\Sample
       $bRet = false;
 
       /* ... Insert Code Here ... */
+      // Since this is a sample, pass it.
+      $bRet = true;
 
       return $bRet;
     } // end::privUninstall()
@@ -308,7 +316,7 @@ namespace xenoPMT\Module\Sample
     public function PHPUNIT_VerifyPreInstall()
     {
       global $xpmtConf;
-      return false;
+      return true;
       // return $this->VerifyPreInstall();
     } // end::PHPUNIT_VerifyPreInstall()
 
@@ -322,7 +330,7 @@ namespace xenoPMT\Module\Sample
     public function PHPUNIT_VerifyPreUninstall()
     {
       global $xpmtConf;
-      return false;
+      return true;
       //return $this->VerifyPreUninstall();
     } // end::PHPUNIT_VerifyPreUninstall()
 
@@ -336,17 +344,17 @@ namespace xenoPMT\Module\Sample
     {
       global $xpmtConf;
 
-      $this->_author      = "...";
+      $this->_author      = "Damian J. Suess";
       $this->_version     = "0.0.5";
-      $this->_title       = "...";
-      $this->_description = "...";
-      $this->_urn         = "...";
-      $this->_classname   = "...";
-      $this->_namespace   = "xenoPMT\\Module\\MODULE_CLASS_NAME";
+      $this->_title       = "Sample Module Title";
+      $this->_description = "Sample description for module to show up in admin panel.";
+      $this->_urn         = "sample";
+      $this->_classname   = "sample";
+      $this->_namespace   = "xenoPMT\\Module\\Sample";
       $this->_path        = "dirname(__FILE__)";
-      $this->_mainfile    = "XXX.main.php";
+      $this->_mainfile    = "sample.main.php";
       $this->_core        = false;
-      $this->_uuid        = "00000000-0000-0000-0000-000000000000";
+      $this->_uuid        = "04a78f00-220f-11e2-81c1-0800200c9a66";
 
       // MANUALLY Create connection to test database
 

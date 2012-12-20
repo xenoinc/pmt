@@ -35,7 +35,7 @@ namespace xenoPMT\Module\Admin
      *
      * !!![ EOF ]!!!
      */
-    private $_uuid = "00000000-0000-0000-0000-000000000000";
+    private $_uuid = "81d641a2-dbcc-4bde-ad09-40c3260f325b";
     private $_author;
     private $_version;
     private $_title;
@@ -334,17 +334,17 @@ namespace xenoPMT\Module\Admin
     {
       global $xpmtConf;
 
-      $this->_author      = "...";
+      $this->_author      = "Damian Suess";
       $this->_version     = "0.0.5";
-      $this->_title       = "...";
-      $this->_description = "...";
-      $this->_urn         = "...";
-      $this->_classname   = "...";
-      $this->_namespace   = "xenoPMT\\Module\\MODULE_CLASS_NAME";
+      $this->_title       = "System Administration Panel";
+      $this->_description = "Control panel to your xenoPMT core system.";
+      $this->_urn         = "admin";
+      $this->_classname   = "admin";
+      $this->_namespace   = "xenoPMT\\Module\\Admin";
       $this->_path        = "dirname(__FILE__)";
-      $this->_mainfile    = "XXX.main.php";
-      $this->_core        = false;
-      $this->_uuid        = "00000000-0000-0000-0000-000000000000";
+      $this->_mainfile    = "admin.main.php";
+      $this->_core        = true;
+      $this->_uuid        = "81d641a2-dbcc-4bde-ad09-40c3260f325b";
 
       // MANUALLY Create connection to test database
 
