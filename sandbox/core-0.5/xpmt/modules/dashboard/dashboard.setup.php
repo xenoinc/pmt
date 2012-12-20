@@ -23,9 +23,11 @@
  *    require_once("C:/_work/xi/xenoPMT/sandbox/core-0.5/xpmt/modules/dashboard/dashboard.setup.php");
  *
  * Change Log:
+ *  2012-1219 * Refactored code
  *  2012-1212 + added a bunch of crap.. i'll write it up later (verify, execute of Inst/Uninst).  (djs)
  *            * Changed any PHP core module classes to use "\" namespace convention for safty sake (nsmespace friendly)
  *            + Added, PHPUNIT_VerifyPreUninstall()
+ *            + This WAS 100% finished but then i accidentally hit, Delete on this not the UnitTest! it's swiss cheese now.
  *  2012-1206 + Added interface which requires PreInstallErrors()
  *            - Removed 'static' from members due to ISetup interface. Class must now be instantiated.
  *  2012-1203 + started working on setup script
@@ -36,6 +38,7 @@ namespace xenoPMT\Module\Dashboard
   require_once "/../../core/xpmt.i.setup.php";
   class Setup implements \xenoPMT\Module\ISetup
   {
+
     private $_uuid = "df9f29f8-1aed-421d-b01c-860c6b89fb14";
     private $_author;
     private $_version;
@@ -79,13 +82,13 @@ namespace xenoPMT\Module\Dashboard
 
 
 
-    // ######################################################### //
+    // ################################### //
+    // ##[ Constructor ]################## //
+    // ################################### //
 
     /**
-     *
      * Unit Testing:
      *  If $headerInfo == "" then we are in PHPUnit testing mode!
-     *
      *
      * @global array $xpmtConf
      *
@@ -95,6 +98,7 @@ namespace xenoPMT\Module\Dashboard
     public function __construct($boolInstall = true, $headerInfo = "")
     {
       global $xpmtConf;
+      debug("Entering Dashboard Setup Constructor");
 
       // what is our intended action?
       $this->_installModule = $boolInstall;
@@ -121,9 +125,7 @@ namespace xenoPMT\Module\Dashboard
       }
       else
       {
-
-        // Verify the UUID!
-
+        // Verify our UUID, if it passes, Verify Module Un/install action
         if ($this->_uuid != $headerInfo["uuid"])
         {
           $this->_verified = false;
@@ -149,7 +151,63 @@ namespace xenoPMT\Module\Dashboard
             $this->_verified = $this->VerifyPreUninstall();
         }
       }
-    }
+    } // end::_construct
+
+
+
+    /* ##################################### */
+    /* ##[ Public Members ]################# */
+    /* ##################################### */
+
+    /**
+     * Property - Safly return verification property status
+     * @return boolean
+     */
+    public function Verified()
+    {
+      //global $xpmtConf;
+      return $this->_verified;
+    } // end::Verified()
+
+    /**
+     * Property :: Safly return Verification Check-List property array
+     * @return array
+     */
+    public function GetVerifiedMessages()
+    {
+      //global $xpmtConf;
+      return $this->_verifiedMessages;
+    } // end::GetVerifiedMessages()
+
+    /**
+     * Install Module
+     * If unit testing then override the return statement
+     *
+     * @assert () == true
+     * @return boolean  True  = Successful installation
+     *                  False = Failed to install module
+     */
+    public function Install()
+    {
+      global $xpmtConf;
+      return true;                        // Use ONLY for Unit Testing
+      // return $this->privInstall();     // Perform install process
+    } // end::Install()
+
+    /**
+     * Uninstall Module
+     * If unit testing then override the return statement
+     *
+     * @assert () == true
+     */
+    public function Uninstall()
+    {
+      global $xpmtConf;
+      return true;                        // Use ONLY for Unit Testing
+      // return $this->privUninstall();   // Perform uninstall process
+    } // end::Unisntall()
+
+
 
     // ################################### //
     // ##[ Private Parts ]################ //
@@ -157,8 +215,7 @@ namespace xenoPMT\Module\Dashboard
 
     /**
      * Verify if we can install or not
-     *
-     * @return boolean  TRUE = Passed. FALSE = Falied
+     * @return boolean      True=PASSED, False=FAIL
      */
     private function VerifyPreInstall()
     {
@@ -169,7 +226,7 @@ namespace xenoPMT\Module\Dashboard
        */
 
       global $xpmtConf;
-      $bRet = 9;      // Verify if we can install or not
+      $bRet = false;  //9;      // Verify if we can install or not
 
       //{$xpmtConf["db"]["prefix"]}CORE_MODULE
       //select * from xi_core_module where Module_UUID = 'df9f29f8-1aed-421d-b01c-860c6b89fb14';
@@ -216,13 +273,11 @@ namespace xenoPMT\Module\Dashboard
       // To Do later
 
       return $bRet;
-    }
-
+    } // end::VerifyPreInstall()
 
     /**
      * Check if we can delete this mdoule from the database
-     *
-     * @return boolean  TRUE = Passed. FALSE = Falied
+     * @return boolean      True=PASSED, False=FAIL
      */
     private function VerifyPreUninstall()
     {
@@ -234,7 +289,6 @@ namespace xenoPMT\Module\Dashboard
       if(!$db->connect_errno)
       {
         $sql = "select * from {$xpmtConf["db"]["prefix"]}CORE_MODULE where `Module_UUID` = '{$this->_uuid}'";
-
         $db->real_query($sql);
         if ($db->field_count > 0)
         {
@@ -258,48 +312,13 @@ namespace xenoPMT\Module\Dashboard
       }
 
       return $bRet;
-    }
-
-
-    /* ##################################### */
-    /* ##[ Public Members ]################# */
-    /* ##################################### */
-
+    } // end::VerifyPreUninstall()
 
     /**
-     * Safly return verification status
-     * @return boolean
+     * Actual Installer
+     * @global array $xpmtConf
+     * @return boolean      True=SUCCESS, False=FAIL
      */
-    public function Verified()
-    {
-      global $xpmtConf;
-      return $this->_verified;
-    }
-
-    /**
-     * Safly return Verification Check List array
-     * @return array
-     */
-    public function GetVerifiedMessages()
-    {
-      global $xpmtConf;
-      return $this->_verifiedMessages;
-    }
-
-    /**
-     * Install Module
-     *
-     * @assert () == true
-     *
-     * @return boolean  True = Successful installation
-     *                  False = Failed to install module
-     */
-    public function Install()
-    {
-      global $xpmtConf;
-      // return $this->privInstall();
-      return true;
-    }
     private function privInstall()
     {
       if ($this->_verified == false)
@@ -349,19 +368,14 @@ sql;
 
       // Return the status pass/fail - true/false
       return $bRet;
-    }
+    } // end::privInstall()
 
     /**
-     * Uninstall Module
+     * Actual Uninstaller
      *
-     * @assert () == true
+     * @global array $xpmtConf
+     * @return boolean      True=SUCCESS, False=FAIL
      */
-    public function Uninstall()
-    {
-      global $xpmtConf;
-      // return $this->privUninstall();
-      return true;
-    }
     private function privUninstall()
     {
 
@@ -398,7 +412,7 @@ sql;
       }
 
       return $bRet;
-    }
+    } // end::privUninstall()
 
 
 
@@ -407,6 +421,9 @@ sql;
     /* ##################################### */
 
     /**
+     * If you are testing the Installer then uncomment then use the last
+     * line, otherwise return "true" to pass or  "false" to hault
+     *
      * @assert () == true
      * @return boolean  TRUE = Passed. FALSE = Falied
      */
@@ -415,13 +432,13 @@ sql;
       global $xpmtConf;
       //return true;
       return $this->VerifyPreInstall();
-    }
-
+    } // end::PHPUNIT_VerifyPreInstall
 
     /**
+     * If you are testing the Installer then uncomment then use the last
+     * line, otherwise return "true" to pass or  "false" to hault
      *
      * @assert () == true
-     *
      * @return boolean  TRUE = Passed. FALSE = Falied
      */
     public function PHPUNIT_VerifyPreUninstall()
@@ -429,8 +446,7 @@ sql;
       global $xpmtConf;
       return true;
       //return $this->VerifyPreUninstall();
-    }
-
+    } // end::PHPUNIT_VerifyPreUninstall()
 
     /**
      * Generate fake header information for unit testing
@@ -488,8 +504,8 @@ sql;
         )
       );
       return true;
-    }
+    } // end::PHPUNIT_FakeHeader()
+  } // end::class
+} // end::namespace
 
-  }
-}
 ?>

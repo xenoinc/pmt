@@ -4,19 +4,23 @@
  * Copyright 2012 (C) Xeno Innovations, Inc.
  * ALL RIGHTS RESERVED
  * @Author:       Damian Suess
- * Document:      admin.setup.php
- * Created Date:  2012-12-04
- * Status:        Unstable  ::  {unstable/pre-alpha/alpha/beta/stable}
+ * Document:      skeleton
+ * Created Date:  Dec 19, 2012
+ * Status:        {unstable/pre-alpha/alpha/beta/stable}
  * Description:
- *  Admin module installer
+ *  This is here to be used as a skeleton for module setup files so that
+ *  you can just copy/paste and fill in the rest.
  *
- *  private $_uuid = "81d641a2-dbcc-4bde-ad09-40c3260f325b";
+ *  The Setup class is baised off of the ISetup interface found under the
+ *  namespace, "\xenoPMT\Module\ISetup"
+ *
+ *  There are 4 parts to this [Constructor], [Public], [Private] and [Unit Testing]
  *
  * Change Log:
- *  2012-1206 * Created skeleton
+ *  2012-1219 * Created to current xenoPMT Core-v0.0.5 specifications
  */
 
-namespace xenoPMT\Module\Admin
+namespace xenoPMT\Module\MODULE_CLASS_NAME
 {
   require_once "/../../core/xpmt.i.setup.php";
   class Setup implements \xenoPMT\Module\ISetup
@@ -370,4 +374,5 @@ namespace xenoPMT\Module\Admin
     } // end::PHPUNIT_FakeHeader()
   } // end::class
 } // end::namespace
+
 ?>
