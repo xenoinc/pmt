@@ -60,6 +60,11 @@ $xpmtConf = array(
   )
 );
 
+/* Setup some variable defaults */
+//$xpmtPage["head"]["jquery"] = false;
+
+
+
 /**
  * Safely REQUIRE modules. If it doesn't exist then it won't crash the system.
  * *** This only exists in "config.default.php" ***

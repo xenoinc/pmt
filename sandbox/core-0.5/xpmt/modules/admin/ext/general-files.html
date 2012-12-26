@@ -1,0 +1,45 @@
+<!--
+  Copyright 2013 (C) Xeno Innovations, Inc.
+  All Rights Reserved
+
+Description:
+  This is a sample layout for the "Uploaded Files" administrator
+  Modules should be able to call db XI_CORE_SETTING.Setting="upload_base", "upload_general"
+  to know where files should be uploaded. Modules can either save to their own subfolder under
+  the "upload_base" or if they want to allow sharing of files anywhere (wiki) then it should
+  be placed in the "upload_general" folder.
+
+[Admin > General > Uploaded Files]
+
+
+-->
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <title></title>
+  </head>
+  <body>
+    <!--
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    Uploads Folder           ---[ Test Uplaod ]----------
+     ------------------     |  Select File to upload
+    | files/           |    |  -----------------
+    -------------------     | |_________________|   [...]
+                            |
+    Universal File Folder   | [Test Upload]
+     -------------------    | --------------------------
+    | gen/             |    | | <Status Output>         |
+    -------------------     | |_________________________|
+
+    [Save]  [Reset]
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    <?php
+      $xpmtPage["head"]["jquery"] = true;
+    ?>
+
+    -->
+
+    <div>TODO write content</div>
+  </body>
+</html>
