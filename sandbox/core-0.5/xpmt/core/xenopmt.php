@@ -89,7 +89,7 @@ class xenoPMT
       // Module not found
       // $htdata = "Module not found";
 
-      pmtDebug("LoadMod2() - Step1 - Module not found");
+      pmtDebug("xenoPMT::LoadModule() - Step1 - Module UUID not found");
       $module = "";
       $xpmtPage["htdata"] = "Module not found";
 
@@ -107,7 +107,7 @@ class xenoPMT
       else
       {
 
-        pmtDebug("LoadMod2() - Step1 - Module UUID Found but path is missing");
+        pmtDebug("xenoPMT::LoadModule() - Step1 - Module UUID Found but path is missing");
 
         // default to base page.. but what if dashboard is missing or errored ?!
         header("Location: " . $xpmtConf["general"]["base_url"] );    // Option B

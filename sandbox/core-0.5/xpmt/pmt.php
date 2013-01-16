@@ -80,9 +80,9 @@ $pmtDB = new Database($xpmtConf["db"]["server"],
                       $xpmtConf["db"]["dbname"]);
 define("PMT_TBL", $xpmtConf["db"]["prefix"]);     // This may be removed
 
-$xenoPMT = new xenoPMT;
-$user = new Member;   // $user = new User;
-$uri = new URI;
+$xenoPMT = new xenoPMT;       // Core system Class
+$user = new Member;           // User Class - IsOnline/Group,Login, etc.  $user = new User;
+$uri = new URI;               // URI Parsing class
 $xpmtCore["uri"] = $uri;      // 2012-1203  + Testing to see if it's worth it to consolidate into xpmtCore ass array.
 $xpmtCore["user"] = $user;    // 2012-1203  + Eliminate class variables & place into associative array!
 
@@ -200,14 +200,14 @@ function ParseAndLoad()
   */
 
   $modHeader = $xenoPMT::GetModuleHeaderFromURN($xpmtCore["uri"]->Segment(0), $matchFound);
-
+  //pmtDebug("seg='". $xpmtCore["uri"]->Segment(0) ."'.");
   if ($matchFound)
   { // Load the module
     $xenoPMT::LoadModule($modHeader["uuid"]);
   }
   else
   { // Unknown Module URN / Module not loaded
-    $html = "Unknown Module!";
+    $html = "Unknown Module! seg='". $xpmtCore["uri"]->Segment(0) ."'.";
 
     $xpmtPage["htdata"]=$html;
     $PAGE_HTDATA=$html;
