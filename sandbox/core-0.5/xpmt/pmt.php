@@ -199,19 +199,35 @@ function ParseAndLoad()
   }
   */
 
-  $modHeader = $xenoPMT::GetModuleHeaderFromURN($xpmtCore["uri"]->Segment(0), $matchFound);
-  //pmtDebug("seg='". $xpmtCore["uri"]->Segment(0) ."'.");
+  // Autoconvert URI->Segment(0) to <blank> if = "index.php"
+  //if ($xpmtCore["uri"]->Segment(0) == "index.php")
+  //  $xpmtCore["uri"]->Segment(0) = "";
+
+  $tmpURI = $xpmtCore["uri"]->Segment(0);
+  //pmtDebug("pmt.ParseAndLoad() Module: seg='".$tmpURI."'");
+
+  $modHeader = $xenoPMT::GetModuleHeaderFromURN($tmpURI, $matchFound);
   if ($matchFound)
   { // Load the module
+
+    // Step 1 - Load Module
+    pmtDebug("pmt.ParseAndLoad() MatchFound: ". $matchFound);
     $xenoPMT::LoadModule($modHeader["uuid"]);
+
+    // Step 2  - Load Theme
+
+    echo("--pmt.ParseAndLoad().done--");
+
   }
   else
-  { // Unknown Module URN / Module not loaded
-    $html = "Unknown Module! seg='". $xpmtCore["uri"]->Segment(0) ."'.";
+  {
+    // Unknown Module URN / Module not loaded
+    pmtDebug("pmt.ParseAndLoad() Unknown Module: seg='".$tmpURI."'");
 
+    $html = "Unknown Module! seg='". $tmpURI ."'.";
     $xpmtPage["htdata"]=$html;
     $PAGE_HTDATA=$html;
-    echo($html );
+    echo($html);
 
   }
 }

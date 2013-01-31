@@ -66,9 +66,16 @@
 #     like $1, $2, etc.
 #-----------------------------------------------------------------------
 
+# Options +FollowSymLinks   2013-0122 * testing by adding this if it does anything different
+
 RewriteEngine On
 RewriteCond %{REQUEST_FILENAME} -s [OR]
 RewriteCond %{REQUEST_FILENAME} -l [OR]
 RewriteCond %{REQUEST_FILENAME} -d
 RewriteRule ^.*$ - [NC,L]
 RewriteRule ^.*$ index.php [NC,L]
+
+# 2013-0122
+#   + added this to rewrite "index.php" to a blank page so we don't
+#     confuse this file with a module
+RewriteRule ^index\.php?$ / [NC,R=301,L]

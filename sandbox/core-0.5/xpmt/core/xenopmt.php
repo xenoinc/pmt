@@ -6,13 +6,13 @@
  * @Author:       Damian Suess
  * Document:      xenopmt
  * Created Date:  Dec 4, 2012
- * Status:        {unstable/pre-alpha/alpha/beta/stable}
+ * Status:        pre-alpha {unstable/pre-alpha/alpha/beta/stable}
  * Description:
  *  xenoPMT Core Class
  *
  *  Its still undecided if this should be static or public
  * Change Log:
- *
+ *  2013-0130 * GetModuleHeaderFromURN() fixed logic - we weren't using the $urn param before
  */
 class xenoPMT
 {
@@ -44,7 +44,7 @@ class xenoPMT
      *                access to the installer page
      *
      * [ ] Step 3 - Load module data
-     * [ ] Step 3 - Provide temp table generate from (modController) until
+     * [ ] Step 4 - Provide temp table generate from (modController) until
      *              the toolbar can be created by AdminPlugin
      *
      */
@@ -120,7 +120,7 @@ class xenoPMT
     /**********************
      * Step 2 - Get theme *
      **********************/
-
+    // ToDo - Move this into its own function to be handled by ParseAndLoad not the module??
     /* Step 2.1 */
     $theme = GetSetting("theme");
     if ($theme == "")
@@ -138,6 +138,7 @@ class xenoPMT
     // Set DEFAULT skin to MAIN.PHP - check LATER if module has custom skin
     $skin_file = "main.php";
     $page = $skin_path . $skin_file;
+    pmtDebug("PagePath1: $page");
 
     /* Step 2.2 */
     // check if module has custom skin. (i.e. main, project, product, etc.)
@@ -145,6 +146,7 @@ class xenoPMT
     {
       $skin_file = $module . ".php";
       $page = $skin_path . $skin_file;
+      pmtDebug("PagePath2: $page");
     }
 
 
@@ -158,7 +160,6 @@ class xenoPMT
     if ($module != null)
     {
       $obj = new module();
-
       $xpmtPage["icon"]       = "";                           // Path to Icon file
       $xpmtPage["title"]      = "";                           // Page Title
       $xpmtPage["ex_header"]  = "";                           // Extra Header Information
@@ -170,10 +171,14 @@ class xenoPMT
       $xpmtPage["htdata"]     = $obj->PageData();             // Main page html data
       $xpmtPage["path"]       = "";                           // Relative path to theme currently in use
       $xpmtPage["footer"]     = "";                           // Footer
-
       require($page);
     }
-
+    else
+    {
+      // Added 2013-0130
+      // There was an issue loading the module
+      require($page);
+    }
   }
 
 
@@ -181,6 +186,7 @@ class xenoPMT
   /**
    * Get module header array from UUID input
    *
+   * @version v0.0.1
    * @since xenpPMT Core-0.0.5
    * @global array $xpmtModule  List of modules enabled via Config.php
    * @param string $uuid
@@ -220,7 +226,7 @@ class xenoPMT
    * @example
    *    $xenoPMT::$GetModuleHeaderFromURN("uuid");  // (customer, admin, user, uuid)
    *
-   *
+   * @version v0.0.5
    * @since xenpPMT Core-0.0.5 (2012-1204)
    * @global  array $xpmtModule  List of modules enabled via Config.php
    * @param   string $urn         Uniform Resource Name
@@ -238,8 +244,9 @@ class xenoPMT
 
     foreach( $xpmtModule["info"] as $ndx => $tmpModHeader)
     {
-      //echo($tmpModHeader["urn"]);
-      if ($xpmtCore["uri"]->Count > 0 && $xpmtCore["uri"]->Segment(0) == $tmpModHeader["urn"])
+      // fixed 2013-0130  + we weren't using the $urn param
+      // if ($xpmtCore["uri"]->Count > 0 && $xpmtCore["uri"]->Segment(0) == $tmpModHeader["urn"])
+      if ($urn == $tmpModHeader["urn"])
       {
         $matchFound = true;   // We found a match!
         $modHeader = $tmpModHeader;   // Use this module header!
@@ -250,6 +257,49 @@ class xenoPMT
     return $modHeader;
   }
 
+  /**
+   * Include (user/core) library if not already included
+   *
+   * @version v0.0.0
+   * @since v0.0.7
+   * @param string $libraryName
+   * @return boolean true=success, false=failure to load
+   */
+  public static function lib_include($libraryName)
+  {
+    return false;
+  }
+  /**
+   * List of core/user xpmtLibaries already included
+   *
+   * @version v0.0.0
+   * @since v0.0.7
+   * @since xenpPMT Core-0.0.5
+   * @var array
+   */
+  private $libIncluded = array();
+
+  /**
+   * Is xpmtLibrary enabled
+   * <p>Loops through $this->libIncluded[] to see if it's there</p>
+   *
+   * @version v0.0.0
+   * @since v0.0.7
+   * @param type $libName
+   * @return boolean true=enabled, fales=not enabled
+   */
+  public static function lib_enabled($libName) { return false; }
+
+  /**
+   * Searches through Core and User folder to see if libary is available
+   * to be included.
+   *
+   * @version v0.0.0
+   * @since v0.0.7
+   * @param type $libName
+   * @return boolean true=found false=not found or error
+   */
+  public static function lib_available($libName) {return false; }
 
 }
 
