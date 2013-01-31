@@ -22,6 +22,8 @@
  *    require_once("C:/_work/xi/xenoPMT/sandbox/core-0.5/xpmt/modules/dashboard/dashboard.setup.php");
  *
  * Change Log:
+ *  2013-0131 * Fixed $_verifiedMessages[] in VerifyPreInstall(). it was returning false positives
+ * 
  *  2012-1219 * Refactored code
  *  2012-1212 + added a bunch of crap.. i'll write it up later (verify, execute of Inst/Uninst).  (djs)
  *            * Changed any PHP core module classes to use "\" namespace convention for safty sake (nsmespace friendly)
@@ -241,6 +243,8 @@ namespace xenoPMT\Module\Dashboard
         {
           $exec->execute();           // Execute the query
           //$exec->store_result();    // Store the result.. actually, we don't care
+          $this->_verifiedMessages["DbConnect_Failed"]  = false;
+          $this->_verifiedMessages["DbQuery_Failed"]    = false;
           if($exec->num_rows)
           {
             $bRet = false; //1;
@@ -255,7 +259,7 @@ namespace xenoPMT\Module\Dashboard
         else
         {
           $bRet = false; // 3;
-          $this->_verifiedMessages["DbConnect_Failed"] = false;
+          $this->_verifiedMessages["DbQuery_Failed"] = true;
         }
 
         $db->close();
@@ -263,8 +267,9 @@ namespace xenoPMT\Module\Dashboard
       else
       {
         // There was an error connecting to the database
-        $this->_verifiedMessages["DbConnect_Failed"] = false;
+        $this->_verifiedMessages["DbConnect_Failed"] = true;
         $bRet = false; // 4; //false;
+        // debug("FAIL FAIL FAIL");
       }
 
 

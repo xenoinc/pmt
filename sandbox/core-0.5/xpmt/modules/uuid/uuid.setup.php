@@ -222,7 +222,7 @@ namespace xenoPMT\Module\UUID
     private function VerifyPreInstall()
     {
       global $xpmtConf;
-      $bRet = false;
+      //$bRet = false;
 
       /* ... Insert Code ... */
 
@@ -231,6 +231,25 @@ namespace xenoPMT\Module\UUID
        * 2. Check if required tables, values or modules exist
        */
 
+      // Step 0 - Return NO errors
+      $this->_verifiedMessages["CoreInvalid"]       = false;
+      $this->_verifiedMessages["IsInstalled"]       = false;
+      $this->_verifiedMessages["URN_Conflict"]      = false;
+      $this->_verifiedMessages["UUID_Conflict"]     = false;
+      $this->_verifiedMessages["DbConnect_Failed"]  = false;
+      $this->_verifiedMessages["DbQuery_Failed"]    = false;
+
+      // Step 1 - Check PASS/FAIL for PREV UUID (true=pass)
+
+      $step1 = true;
+
+
+      // Step 2 - Check for required Tables/Values and dependent modules/libs
+      $step2 = true;
+
+
+      // Perform final test logic
+      $bRet = ($step1 & $step2);
       return $bRet;
     } // end::VerifyPreInstall()
 

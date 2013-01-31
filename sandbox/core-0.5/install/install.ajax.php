@@ -22,13 +22,14 @@
  *        echo($obj->Output());     // ret_msg and ret_class
  *
  * Change Log:
- * 2012-12-19 * Updated debug message text
+ *  2013-0131 + Added cheap unit testing step so we cal call functions directly
+ *  2012-1219 * Updated debug message text
  *            + Added throw new Exception(..) to "ajaxCreateConfig()" when inserting Admin account that already exists. (djs)
  *            + Addex throw new Exception(..) to "ajaxInstallXenoPMT()" if IsInstalled() == true
  *            * Fixed error in procedure, IsInstalled() - it was using $ret[0] and not $arr[0]
  *            * Refactored, ajaxClearDB() to pull from Config.php first, if not then use Debug/Installer's text boxes
- * 2012-12-03 * Updated, Config Complete message. (djs)
- * 2012-11-19 + added proc, "ajaxCreateConfig()" to generate user's "config.php" file.
+ *  2012-1203 * Updated, Config Complete message. (djs)
+ *  2012-1119 + added proc, "ajaxCreateConfig()" to generate user's "config.php" file.
  *            + added proc, "GetPost($param, $def="")". Refactored to minimize re-using code
  *            * Renamed GetDbParams() to GetPostParams()
  */
@@ -72,6 +73,10 @@ $_chkModPO = "";
 
 // Pull parameters by default
 GetPostParams();
+
+
+// Added 2013-0131 - Cheap unit testing
+If (isset($_GET["unitest"]) && $_GET["unitest"] =="1")  ajaxInstallModules();
 
 
 // Get where we are suppose to go
@@ -631,7 +636,11 @@ CODE;
 }
 
 /**
- * Get the user's config file and install modules
+ * Get data the user's config file and install the listed modules
+ *
+ * Poor Man's Unit Test:
+ *  http://pmt2/install/install.ajax.php?unitest=1
+ *
  */
 function ajaxInstallModules()
 {
@@ -767,8 +776,7 @@ function IsInstalled()
  * @param array Module Header
  * @param array $errArr
  */
-//function InstallMod($uuid, &$errArr)
-function InstallMod($modHeader, &$errArr)
+function InstallMod($modHeader, &$errArr)  //function InstallMod($uuid, &$errArr)
 {
   /**
    * ToDo:
@@ -785,18 +793,26 @@ function InstallMod($modHeader, &$errArr)
 
   // Step 2) Load the namespace
   $ns = $modHeader["namespace"] . "\\Setup";
-  $modSetup = new $ns($modHeader);
+  $modSetup = new $ns(true, $modHeader);        // Fixed 2013-0131 * We were passing wrong params ($boolInstall, $headerInfo[])
+  // $modSetup = new $ns($modHeader);           // OLD code (pre-2012-1219)
+
 
   // Step 3) Run setup member "bool PreInstallCheck($arrCheck)"
-  $bErr = $modSetup->PreInstallErrors($arrErr);
-  if($bErr == true)
+  // $bErr = $modSetup->PreInstallErrors($arrErr); // Old code (pre-2012-1219)
+  // if($bErr == true) {}
+
+  if ($modSetup->Verified() == false)
   {
-    // there were errors during pre-check. Report Them!
+    // There were errors during pre-check. Report Them!
+
+    // Get error message array
+    $errArr = $modSetup->GetVerifiedMessages();
+    pmtDebug("install.ajax::InstallMod() PreInstallError.. ERR: " . print_r($errArr, true));
   }
   else
   {
     // Success!
-
+    pmtDebug("install.ajax::InstallMod() Success!");
     //$bRet = $modSetup->Install();
   }
 
