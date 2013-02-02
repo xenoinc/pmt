@@ -12,7 +12,8 @@
  *
  * To Do:
  *  [ ] Keep pulling sample info from "sample.setup.php"
- *  [ ] Add column in databsae (and ModHeader) for namespace ("xenoPMT\Module\Dashboard")
+ *  [X] Add column in databsae (and ModHeader) for namespace ("xenoPMT\Module\Dashboard")
+ *  [ ] Uninstaller is unverified
  *  [X] Sample execution of members inside a namespace
  *    //require_once "kb-main.php";
  *    //$k = new xenoPMT\Module\KB\Main;
@@ -23,7 +24,7 @@
  *
  * Change Log:
  *  2013-0131 * Fixed $_verifiedMessages[] in VerifyPreInstall(). it was returning false positives
- * 
+ *
  *  2012-1219 * Refactored code
  *  2012-1212 + added a bunch of crap.. i'll write it up later (verify, execute of Inst/Uninst).  (djs)
  *            * Changed any PHP core module classes to use "\" namespace convention for safty sake (nsmespace friendly)
@@ -95,11 +96,12 @@ namespace xenoPMT\Module\Dashboard
      *
      * @param boolean $boolInstall      TRUE = Install  FALSE = Uninstall
      * @param array $headerInfo
+     * @param boolean $boolAutoEnable   TRUE="Enable on Install"  FALSE="Disabled on Install"
      */
-    public function __construct($boolInstall = true, $headerInfo = "")
+    public function __construct($boolInstall = true, $headerInfo = "", $boolAutoEnable=false)
     {
       global $xpmtConf;
-      debug("Entering Dashboard Setup Constructor");
+      // debug("Entering Dashboard Setup Constructor");
 
       // what is our intended action?
       $this->_installModule = $boolInstall;
@@ -113,6 +115,7 @@ namespace xenoPMT\Module\Dashboard
       $this->_verifiedMessages["DbConnect_Failed"] = false;
       $this->_verifiedMessages["DbQuery_Failed"] = false;
 
+      /* Unit test first */
       if (is_array($headerInfo) == false || $headerInfo == "")
       {
         // We are unit testing. Generate a fake header
@@ -190,8 +193,22 @@ namespace xenoPMT\Module\Dashboard
      */
     public function Install()
     {
+      /* Steps
+       * 1. Make sure Verify flag is OK
+       * 2. Perform Database Inserts
+       *    1. UUID, Core(TF), Enabled(false)
+       * 3. Return boolean
+       */
       global $xpmtConf;
-      return true;                        // Use ONLY for Unit Testing
+      $bRet = false;    // Flag to say pass/fail
+
+      if ($this->Verified() == TRUE)
+      {
+        pmtDebug("Installing Dashboard");
+      }
+
+
+      return $bRet;                        // Use ONLY for Unit Testing
       // return $this->privInstall();     // Perform install process
     } // end::Install()
 
@@ -228,6 +245,12 @@ namespace xenoPMT\Module\Dashboard
 
       global $xpmtConf;
       $bRet = false;  //9;      // Verify if we can install or not
+      /*
+      pmtDebug("Server: {$xpmtConf["db"]["server"]}");
+      pmtDebug("User: {$xpmtConf["db"]["user"]}");
+      pmtDebug("Pass: {$xpmtConf["db"]["pass"]}");
+      pmtDebug("dbname: {$xpmtConf["db"]["dbname"]}");
+      */
 
       //{$xpmtConf["db"]["prefix"]}CORE_MODULE
       //select * from xi_core_module where Module_UUID = 'df9f29f8-1aed-421d-b01c-860c6b89fb14';

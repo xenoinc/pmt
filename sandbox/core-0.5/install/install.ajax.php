@@ -76,7 +76,11 @@ GetPostParams();
 
 
 // Added 2013-0131 - Cheap unit testing
-If (isset($_GET["unitest"]) && $_GET["unitest"] =="1")  ajaxInstallModules();
+If (isset($_GET["unitest"]) && $_GET["unitest"] =="1")
+{
+  ajaxInstallModules();
+  exit();
+}
 
 
 // Get where we are suppose to go
@@ -539,7 +543,8 @@ function ajaxCreateConfig()
   if ($_chkModUUID)     {$lstMods .= $req . 'uuid/uuid.php");' . PHP_EOL;}
 
 
-// Modules to install
+  // Modules to install
+  // Static List from version v0.0.5
   //$req = 'require_once( dirname( __FILE__ ) . "/xpmt/modules/';       // disable automatically for now just in case
   if($_chkModAdmin)     {$lstMods .= $req . 'admin/admin.php");' . PHP_EOL;}
   if($_chkModDashboard) {$lstMods .= $req . 'dashboard/dashboard.php");' . PHP_EOL;}
@@ -575,6 +580,7 @@ function ajaxCreateConfig()
 *   can set your Root-User, Database, Default Skin, etc.
 ***********************************************************/
 
+// TODO: Set this inside the installer
 date_default_timezone_set('America/New_York');
 
 // Main config var
@@ -644,27 +650,31 @@ CODE;
  */
 function ajaxInstallModules()
 {
+  /* Steps:
+   * 1. Load the configs
+   * 2. Cycle through each module
+   * 3. Install each module
+   * 4. Report back in ret_msg  (TODO)
+   */
+
   //pmtDebug("Install Modules");
-  global $pmtModule;
+  global $xpmtModule;          // Pull back all config file registered modules
+  global $xpmtConf;           // Load it so we can pass it into the Module's Setup member
 
   // Step 1 :: Does config exist?
   if(file_exists("../config.php"))
   {
-    // Step 2 :: Cycle through each module
-    // Step 3 :: Install each module
-    // Step 4 :: report back in ret_msg
-
+    // Set the Globals variables before we load them or else it will be overwritten
     require_once("../xpmt/config.default.php");   // Configure default first
     require_once("../config.php");                // Override w/ user's settings
-    global $xpmtModule;                           // Pull back all config file registered modules
 
     $retModData = null;                           // Return array of module data
     $found = false;                               // Check for duplicates
 
+    // Step 2 - Cycle through each module
     foreach ($xpmtModule["info"] as $mod)
     {
       $retErr = null;
-      //$ret = InstallMod($mod["uuid"], $retErr);
       $ret = InstallMod($mod, $retErr);
 
       $errArr = print_r($retErr, true);   // Return error array if any
@@ -727,7 +737,6 @@ function ExecuteSqlFile($sqlFile, $tblPrefix, $objConn, &$arrErrMsg)
 
   pmtDebug("Exiting :: ExecuteSqlFile");
 }
-
 
 /**
  * Old method to check if xenoPMT is Installed.
@@ -804,15 +813,13 @@ function InstallMod($modHeader, &$errArr)  //function InstallMod($uuid, &$errArr
   if ($modSetup->Verified() == false)
   {
     // There were errors during pre-check. Report Them!
-
-    // Get error message array
-    $errArr = $modSetup->GetVerifiedMessages();
-    pmtDebug("install.ajax::InstallMod() PreInstallError.. ERR: " . print_r($errArr, true));
+    $errArr = $modSetup->GetVerifiedMessages();   // // Get error message array
+    // pmtDebug("install.ajax::InstallMod() PreInstallError.. ERR: " . print_r($errArr, true));
   }
   else
   {
     // Success!
-    pmtDebug("install.ajax::InstallMod() Success!");
+    // pmtDebug("install.ajax::InstallMod() Success!");
     //$bRet = $modSetup->Install();
   }
 

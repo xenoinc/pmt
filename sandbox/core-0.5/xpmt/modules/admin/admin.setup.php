@@ -94,7 +94,7 @@ namespace xenoPMT\Module\Admin
     public function __construct($boolInstall = true, $headerInfo = "")
     {
       global $xpmtConf;
-      debug("Entering UUID Setup Constructor");
+      //debug("Entering UUID Setup Constructor");
 
       // what is our intended action?
       $this->_installModule = $boolInstall;
