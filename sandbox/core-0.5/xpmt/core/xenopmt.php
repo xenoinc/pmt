@@ -53,7 +53,7 @@ class xenoPMT
 
     // include them all just in case
     global $xpmtModule, $xpmtCore, $xpmtPage, $xpmtConf, $pmtDB;
-
+    /*
     // $theme       - theme :: System theme name to use (PMT_DATA..XI_CORE_SETTINGS.Setting = "theme")
     // $skin_path   - theme :: Full physical path to theme directory
     // $relpath     - theme :: Relative (shortened) physical path to theme directory
@@ -61,8 +61,9 @@ class xenoPMT
     // $page        - theme :: Full path to MAIN.PHP ($skin_path + $skin_file)
     // $module      - module :: Module classname
     // $obj         - module :: Object loaded from classname ($module)
+    */
 
-
+    /* Steps
     // step 1 - Search for registered module via UUID  { $module = GetClassFromUUID($uuid);
     //        + do this via SQL
     // step 2 - Skin Part 1 - Set theme path
@@ -70,7 +71,7 @@ class xenoPMT
     // step 4 - Initialize module class!   { $obj = new $module(); }
     // step 5 - Setup $xpmtPage[""] properties from $obj->...
     // step 6 - REQUIRE_ONCE ($page)  -  Actually use the theme & display it
-
+    */
 
 
     /****************************

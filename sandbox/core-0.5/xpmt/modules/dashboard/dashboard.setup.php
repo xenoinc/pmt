@@ -95,7 +95,7 @@ namespace xenoPMT\Module\Dashboard
      * @global array $xpmtConf
      *
      * @param boolean $boolInstall      TRUE = Install  FALSE = Uninstall
-     * @param array $headerInfo
+     * @param array $headerInfo         Header data from module's own $xpmtModule["info"][]
      * @param boolean $boolAutoEnable   TRUE="Enable on Install"  FALSE="Disabled on Install"
      */
     public function __construct($boolInstall = true, $headerInfo = "", $boolAutoEnable=false)
@@ -137,17 +137,18 @@ namespace xenoPMT\Module\Dashboard
         }
         else
         {
-          // So far so good, now let's verify!
+          // Yes this is dumb that we're requesting our own header to be passed in. But
+          // its easier than re-cycling through the $xpmtModule array for now.
           $this->_author      = $headerInfo["author"];
-          $this->_version     = "0.0.5";
-          $this->_title       = "xenoPMT Dashboard";
-          $this->_description = "dashboard";
-          $this->_urn         = "";
-          $this->_classname   = "dashboard";
-          $this->_namespace   = "xenoPMT\\Module\\Dashboard";
-          $this->_path        = "dirname(__FILE__)";
-          $this->_mainfile    = "dashboard.main.php";
-          $this->_core        = true;
+          $this->_version     = $headerInfo["version"];
+          $this->_title       = $headerInfo["title"];
+          $this->_description = $headerInfo["description"];
+          $this->_urn         = $headerInfo["urn"];
+          $this->_classname   = $headerInfo["classname"];
+          $this->_namespace   = $headerInfo["namespace"];
+          $this->_path        = $headerInfo["path"];
+          $this->_mainfile    = $headerInfo["mainfile"];
+          $this->_core        = $headerInfo["core"];
 
           if($this->_installModule == true)
             $this->_verified = $this->VerifyPreInstall();
@@ -203,12 +204,9 @@ namespace xenoPMT\Module\Dashboard
       $bRet = false;    // Flag to say pass/fail
 
       if ($this->Verified() == TRUE)
-      {
-        pmtDebug("Installing Dashboard");
-      }
+        $bRet = $this->privInstall();            // pmtDebug("Installing Dashboard");
 
-
-      return $bRet;                        // Use ONLY for Unit Testing
+      return $bRet;                       // Use ONLY for Unit Testing
       // return $this->privInstall();     // Perform install process
     } // end::Install()
 
@@ -221,8 +219,8 @@ namespace xenoPMT\Module\Dashboard
     public function Uninstall()
     {
       global $xpmtConf;
-      return true;                        // Use ONLY for Unit Testing
       // return $this->privUninstall();   // Perform uninstall process
+      return true;                        // Use ONLY for Unit Testing
     } // end::Unisntall()
 
 
@@ -244,7 +242,7 @@ namespace xenoPMT\Module\Dashboard
        */
 
       global $xpmtConf;
-      $bRet = false;  //9;      // Verify if we can install or not
+      $bRet = false;            // Verify if we can install or not
       /*
       pmtDebug("Server: {$xpmtConf["db"]["server"]}");
       pmtDebug("User: {$xpmtConf["db"]["user"]}");
@@ -265,17 +263,21 @@ namespace xenoPMT\Module\Dashboard
         if ($exec)
         {
           $exec->execute();           // Execute the query
-          //$exec->store_result();    // Store the result.. actually, we don't care
+          $exec->store_result();      // Store the result so we can get a row count
           $this->_verifiedMessages["DbConnect_Failed"]  = false;
           $this->_verifiedMessages["DbQuery_Failed"]    = false;
           if($exec->num_rows)
           {
             $bRet = false; //1;
+            //pmtDebug("dashboard.detup.VerifyPreInstall() UUID Rows: " . $exec->num_rows);
             $this->_verifiedMessages["UUID_Conflict"] = true;
           }
           else
           {
-            $bRet = true; //$exec->num_rows;    // 2;
+            /*
+             * Successful query. Now check the data for pre-existing UUID
+             */
+            $bRet = true; // 2;
             $this->_verifiedMessages["UUID_Conflict"] = false;
           }
         }
@@ -371,12 +373,12 @@ namespace xenoPMT\Module\Dashboard
           `Module_URN`,
           `Description`
         ) VALUES (
-        '{$this->_uuid}', $boolCore, FALSE,
+        '{$this->_uuid}', $bCore, FALSE,
         '{$this->_title}', '{$this->_version}', '{$this->_path}',
         '{$this->_namespace}',
         '{$this->_classname}',
         '{$this->_urn}',
-        '{}');
+        '{$this->_description}');
 sql;
         if($db->query($sql))
           $bRet = true;
@@ -501,7 +503,7 @@ sql;
       $this->_author      = "Damian Suess";
       $this->_version     = "0.0.5";
       $this->_title       = "xenoPMT Dashboard";
-      $this->_description = "dashboard";
+      $this->_description = "Welcome screen and main page for all users whether they are logged in or not.";
       $this->_urn         = "";
       $this->_classname   = "dashboard";
       $this->_namespace   = "xenoPMT\\Module\\Dashboard";

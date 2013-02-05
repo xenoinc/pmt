@@ -9,6 +9,8 @@
  * Description:
  *  Event handlers from Ajax/jQuery calls
  *
+ * Test:  http://pmt2/install/install.ajax.php?unitest=1
+ *
  * To Do:
  * 2012-11-19 - Proposal
  * [X]  Refactor variable names to reflect control names. (_dbHost -> txtDbHost)
@@ -792,12 +794,11 @@ function InstallMod($modHeader, &$errArr)  //function InstallMod($uuid, &$errArr
    * [ ] Put the REQUIRE_ONCE inside of a try{}catch{} so we
    */
 
-  //pmtDebug("UUID: " . $modHeader["uuid"]);
+  $errRet = array();      // Error messages returned
 
   // Step 1) Require physical path of CLASS.setup.php
   $pth = $modHeader["path"] . "/" . $modHeader["classname"] . ".setup.php";
 
-  //pmtDebug("$pth");
   require_once($pth);
 
   // Step 2) Load the namespace
@@ -805,22 +806,29 @@ function InstallMod($modHeader, &$errArr)  //function InstallMod($uuid, &$errArr
   $modSetup = new $ns(true, $modHeader);        // Fixed 2013-0131 * We were passing wrong params ($boolInstall, $headerInfo[])
   // $modSetup = new $ns($modHeader);           // OLD code (pre-2012-1219)
 
-
   // Step 3) Run setup member "bool PreInstallCheck($arrCheck)"
   // $bErr = $modSetup->PreInstallErrors($arrErr); // Old code (pre-2012-1219)
   // if($bErr == true) {}
 
   if ($modSetup->Verified() == false)
   {
-    // There were errors during pre-check. Report Them!
+    // Module failed verification, tell us why
     $errArr = $modSetup->GetVerifiedMessages();   // // Get error message array
+
     // pmtDebug("install.ajax::InstallMod() PreInstallError.. ERR: " . print_r($errArr, true));
+    $errRet = $errArr;
   }
   else
   {
-    // Success!
-    // pmtDebug("install.ajax::InstallMod() Success!");
-    //$bRet = $modSetup->Install();
+    // Module was verified & can be installed
+    $bRet = $modSetup->Install();
+
+    //pmtDebug("install.ajax::InstallMod() Install.Return: $bRet");
+    if ($bRet == false)
+    {
+      // false
+    }
+
   }
 
   // Step 4) Return back results
