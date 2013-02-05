@@ -216,7 +216,7 @@ function ParseAndLoad()
 
     // Step 2  - Load Theme
 
-    echo("--pmt.ParseAndLoad().done--");
+    //echo("--pmt.ParseAndLoad().done--");
 
   }
   else

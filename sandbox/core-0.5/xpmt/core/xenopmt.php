@@ -11,8 +11,16 @@
  *  xenoPMT Core Class
  *
  *  Its still undecided if this should be static or public
+ *
+ * ToDo:
+ *  [ ] Complete GetToolbarMain($uuid) to pull from CACHE and DB via UserGroup definitions
+ *  [ ] Generate GetToolbarMeta() to display login, preferences, about, logoff
+ *  [ ] Complete $xpmtPage[..] feature display
+ *
  * Change Log:
- *  2013-0130 * GetModuleHeaderFromURN() fixed logic - we weren't using the $urn param before
+ *  2013-0205 + Added GetToolbarMain($uuid) to generate toolbars [djs]
+ *            + Fixed bugs in LoadModule($uuid) [djs]
+ *  2013-0130 * GetModuleHeaderFromURN() fixed logic - we weren't using the $urn param before [djs]
  */
 class xenoPMT
 {
@@ -100,7 +108,19 @@ class xenoPMT
       // Load module from direct pat
       if (file_exists($ret["Module_Path"]))
       {
-        require($ret["Module_Path"]);
+        // 2013-0205 * Pathced to include Module_Class.PHP
+        //  ... "/" . $ret["Module_Class"] . ".php"
+        // This is not a good way to define the main file. Idealy we should pull
+        // the "mainfile" from this module's header PHP file.
+        //
+        // pmtDebug("LoadModule() Module_Path: '$modPth'");
+        // if (file_exists(PMT_PATH . "custom/mod/" . $ret["Module_Class"] . ".php")) {}
+        // if (file_exists(PMT_PATH . "xpmt/modules/" . $ret["Module_Class"] . ".php")) {}
+
+        $modPth = $ret["Module_Path"] . "/" . $ret["Module_Class"] . ".main.php";
+        pmtDebug("LoadModule() Module_Path: '$modPth'");
+        require($modPth);
+
         $module = $ret["Module_Class"];
       }
       // elseif (... )
@@ -160,17 +180,31 @@ class xenoPMT
     // so there is no need to mess with most of them here. Lets safely access the module
     if ($module != null)
     {
-      $obj = new module();
-      $xpmtPage["icon"]       = "";                           // Path to Icon file
+      // TODO - 2013-0205
+      //  [ ] PATH needs to pull the THEME we're using from the DB
+
+      $obj = new $module();
       $xpmtPage["title"]      = "";                           // Page Title
+        if ($obj->Title() != "")
+              $xpmtPage["title"] = $obj->Title();
+        else  $xpmtPage["title"] = $xpmtConf["general"]["title"];
+
+      $xpmtPage["icon"]       = "";                           // Path to Icon file
       $xpmtPage["ex_header"]  = "";                           // Extra Header Information
       $xpmtPage["logo"]       = "";                           // Site image path
       $xpmtPage["metabar"]    = "";                           // User (login/usr-pref)/settings/logout/about
       $xpmtPage["toolbar"]    = "";                           // Main toolbar
+        if($obj->Toolbar() != "")
+                { $xpmtPage["toolbar"] = $obj->Toolbar(); }
+          else  { $xpmtPage["toolbar"] = self::GetToolbarMain($uuid); }
+
       $xpmtPage["minileft"]   = $obj->MiniBarLeft();          // Mini-bar Left aligned (bread crumbs)
       $xpmtPage["miniright"]  = $obj->MiniBarRight();         // Mini-bar Right aligned (module node options)
       $xpmtPage["htdata"]     = $obj->PageData();             // Main page html data
+
       $xpmtPage["path"]       = "";                           // Relative path to theme currently in use
+        $xpmtPage["path"] = $xpmtConf["general"]["base_url"] . $relpath; // just use something for now
+
       $xpmtPage["footer"]     = "";                           // Footer
       require($page);
     }
@@ -182,7 +216,100 @@ class xenoPMT
     }
   }
 
+  /**
+   * Stage 1) Generate toolbar via static code
+   * Stage 2) Generate toolbar items from databsae settings
+   *
+   * @param string $uuid UUID of the the active module so we can highlight it
+   * @version v0.0.5
+   * @author Damian Suess
+   *
+   * @return string HTML Unsorted List
+   */
+  public static function GetToolbarMain($uuid)
+  {
+    /* Stage 1 (xenoPMT v0.0.5)*/
 
+    // Pull this info from Database
+    $tblModules2 = array(
+        // Module-UUID                            Display Text
+        "df9f29f8-1aed-421d-b01c-860c6b89fb14" => "Dashboard",
+        "c6fb97b8-af93-42ce-aac6-de5656c8fdae" => "UUID",
+        "04a78f00-220f-11e2-81c1-0800200c9a66" => "Sample",
+        "81d641a2-dbcc-4bde-ad09-40c3260f325b" => "Admin"
+        );
+
+    $arrAvailMods = array(
+        // Module       Display
+        // "dashboard" => "Dashboard",
+        "df9f29f8-1aed-421d-b01c-860c6b89fb14" => "Dashboard",
+        "p"         => "Projects",
+        "kb"        => "Knowledge Base",
+        "ticket"    => "Tickets",     /* "ticket" => array ("Tickets", "+"), */
+        "bug"       => "Bugs",
+        "task"      => "Tasks",
+        "product"   => "Products",
+        "customer"  => "Customers",
+        "user"      => "Users",
+        "admin"     => "Admin"
+        );
+    $tab = "        ";
+    $ret = $tab . "<ul>". PHP_EOL;
+    $ndxCount = 0;
+
+    //print (count($a));
+    foreach($arrAvailMods as $key => $value)
+    { //print ("key: $key, Obj: $value <br />");
+
+      $ndxCount++;
+      //if ($tmod[$ndx] == $module)
+      if ($key == $uuid)  // if ($key == $module)     // 2013-0205 * Changed $module to $uuid
+            $active = true;
+      else  $active = false;
+
+      if ($ndxCount == 1)
+      {
+        if($active)
+              $cls = ' class="first active"';
+        else  $cls = ' class="first"';
+      }
+      elseif($ndxCount == count($arrAvailMods))
+      { $cls = ' class="last"'; }
+      else
+      {
+        if ($key == $uuid) // if ($key == $module)     // 2013-0205 * Changed $module to $uuid
+              $cls = ' class="active"';
+        else  $cls = '';
+        //if ($key=="project") $cls = ' class="active"'; else $cls = '';
+      }
+      $ret .= $tab .
+              "  <li" . $cls. ">" .
+              AddLink($key, $value) .
+              "</li>" . PHP_EOL;
+    }
+    $ret .= $tab . "</ul>". PHP_EOL;
+    return $ret;
+
+
+    /* Stage 2  (xenoPMT v0.0.7 */
+    /* 1) Get user group (Anon, Dev, Customer, Manager, etc.)
+     * 2.a) Does toolbar design exist in CACHE? (xenoPMT v0.0.9)
+     * 2.b) Get toolbar group design from database query
+     * 3) Return HTML <UL> of toolbar items
+
+    // Step 1 - Get user group
+    // $user->$UserInfo["Group_Id"]
+
+    // Step 2.b - Pull this info from Database
+    $tblModules2 = array(
+        // Module-UUID                            Display Text
+        "df9f29f8-1aed-421d-b01c-860c6b89fb14" => "Dashboard",
+        "c6fb97b8-af93-42ce-aac6-de5656c8fdae" => "UUID",
+        "04a78f00-220f-11e2-81c1-0800200c9a66" => "Sample",
+        "81d641a2-dbcc-4bde-ad09-40c3260f325b" => "Admin"
+        );
+    */
+  }
 
   /**
    * Get module header array from UUID input
