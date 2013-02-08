@@ -615,7 +615,7 @@ Based on a base filename of &quot;TiddlyWiki.html&quot;, and a date of 2006-11-1
 ** Fixed %M format, thanks to John Antony
 ** Fixed version number and date
 * v1.0.2 (2011-02-21)
-** Addded %(5) format, courtesy of Jaufré Devosse
+** Addded %(5) format, courtesy of Jaufr&#233; Devosse
 * v1.0.1 (?)
 ** Bugfixes to work with newer TiddlyWiki version
 * v1.0.0 (2007-09-29)
@@ -791,15 +791,18 @@ You are free to use this however you like.  I place this code into the public do
 <div title="DefaultTiddlers" creator="d.suess" modifier="d.suess" created="201209012237" modified="201210032135" changecount="4">
 <pre></pre>
 </div>
-<div title="KB (mod)" creator="d.suess" modifier="d.suess" created="201209031656" modified="201209061549" changecount="6">
+<div title="KB (mod)" creator="d.suess" modifier="d.suess" created="201209031656" modified="201302072222" tags="KB, libWiki" changecount="7">
 <pre>!Knowledge Base
 
 One of the first module to get created. The initiative is to create a simple module at first as the skeleton &amp; then expand on it later.  So if you are wondering why this hasn't matured quickly, that's why.
 
-! To Do (Chopping Block)
+! To Do - Feature Request
 * List created items
 * Add DIV section to auto hide
+* Allow users to &quot;star&quot; articles (add to favorites)
+* Use libWiki as the engine for displaying article information
 
+! To Do List
 |!Sub-Section &amp;nbsp;               |!Type  |!Description |h
 |[[Main|KB (mod) - Main]]     |Add    |Search |
 |[[Main|KB (mod) - Main]]     |Add    |Show latest additions (top 10) |
@@ -851,7 +854,7 @@ One of the first module to get created. The initiative is to create a simple mod
 &lt;!-- &lt;h2&gt;Feedback&lt;/h2&gt; --&gt;
 }}}</pre>
 </div>
-<div title="MainMenu" creator="d.suess" modifier="d.suess" created="201209011745" modified="201211200721" changecount="39">
+<div title="MainMenu" creator="d.suess" modifier="d.suess" created="201209011745" modified="201302072226" changecount="40">
 <pre>! xenoPMT
 * [[Core2-Workflow]]
 * [[config.php]]
@@ -863,6 +866,7 @@ One of the first module to get created. The initiative is to create a simple mod
 ! Modules
 * [[Admin    |Admin (mod)]]
 * [[Customer |Customer (mod)]]
+* [[KB       |KB (mod)]]
 * [[Product  |Product (mod)]]
 * [[Project  |Project (mod)]]
 * [[Ticket   |Ticket (mod)]]
@@ -871,6 +875,8 @@ One of the first module to get created. The initiative is to create a simple mod
 * [[List of Mods|Module - List]]
 * [[Workflow|Module - Loader Workflow]]
 * [[Module-Config|Module - v0.0.5 Configuration]]
+! Libraries
+* [[libWiki    |libWiki (lib)]]
 !Milestones
 * [[Milestones]]
 * [[Milestone-0]]
@@ -1230,7 +1236,7 @@ It works by trying to automatically detect the type of data in a column, then so
 
 |!Type |!Description|
 |Date|Various formats for dates, specifically any string format that can be converted to a date/time by Javascript's Date.Parse() method.|
-|Currency|Any string beginning with $, £, or € followed by a numeric string (except no leading sign). Note that it does not do currency conversion, the raw currency values are sorted numerically. {{{/^[$|£|€]{1}\d*\.{0,1}\d+$/}}}|
+|Currency|Any string beginning with $, &#163;, or &#8364; followed by a numeric string (except no leading sign). Note that it does not do currency conversion, the raw currency values are sorted numerically. {{{/^[$|&#163;|&#8364;]{1}\d*\.{0,1}\d+$/}}}|
 |Numeric|Data must consist purely of digits, optional leading plus or minus sign, a single period. Javascript cannot handle the Continental virgule (comma decimal point). {{{/^[\+|\-]{0,1}\d*\.{0,1}\d+$/}}}|
 |File Size|Numeric string (except no leading sign) with b, Kb, Mb, or Gb at the end. Sorts according to the actual value represented by the notation. {{{/^\d*\.{0,1}\d+[K|M|G]{0,1}b$}}}|
 |Text|Anything that does not match the formats listed below. Text is sorted without regard to character case.|
@@ -1247,9 +1253,9 @@ To make a table sortable, append an {{{h}}} to the end of the first row. If the 
 |Bloggs, Fred |$12000.00 |1353 |01.20 |6.156Mb |08/17/2003 05:43 |
 |Turvey, Kevin |$191200.00 |2342 |-33 |1b |02/05/1979 |
 |Mbogo, Arnold |$32010.12 |2755 |-21.673 |1.2Gb |09/08/1998 |
-|Shakespeare, Bill |£122000.00|3211 |6 |33.22Gb |12/11/1961 |
-|Shakespeare, Hamlet |£9000 |9005 |-8 |3Gb |01/01/2002 |
-|Fitz, Marvin |€3300.30 |5554 |+5 |4Kb |05/22/1995 |
+|Shakespeare, Bill |&#163;122000.00|3211 |6 |33.22Gb |12/11/1961 |
+|Shakespeare, Hamlet |&#163;9000 |9005 |-8 |3Gb |01/01/2002 |
+|Fitz, Marvin |&#8364;3300.30 |5554 |+5 |4Kb |05/22/1995 |
 !!Revision History
 &lt;&lt;&lt;
 ''2003.11.?? [?.?.?]'' Stuart Langridge (http://www.kryogenix.org/code/browser/sorttable/) - Core code for DHTML sortable tables. Copyright and license for his code has been carried forward and applies to subsequent additions.
@@ -1374,7 +1380,7 @@ config.macros.sortableGridPlugin.ts_resortTable = function(lnk)
 	var sortfn = M.ts_sort_caseinsensitive;
 	if(!isNaN(Date.parse(itm)))
 		sortfn = M.ts_sort_date;
-	else if(itm.match(/^[$|£|€]{1}\d*\.{0,1}\d+$/)) 
+	else if(itm.match(/^[$|&#163;|&#8364;]{1}\d*\.{0,1}\d+$/)) 
 		sortfn = M.ts_sort_currency;
 	else if(itm.match(/^[\+|\-]{0,1}\d*\.{0,1}\d+$/)) 
 		sortfn = M.ts_sort_numeric;

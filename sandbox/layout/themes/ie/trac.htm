@@ -1,0 +1,171 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+  
+  
+
+
+  <head>
+    <title>
+      Trac 0.13 Demo Project
+    </title>
+      <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+      <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <!--[if IE]><script type="text/javascript">
+      if (/^#__msie303:/.test(window.location.hash))
+        window.location.replace(window.location.hash.replace(/^#__msie303:/, '#'));
+    </script><![endif]-->
+        <link rel="search" href="/demo-0.13/search" />
+        <link rel="help" href="/demo-0.13/wiki/TracGuide" />
+        <link rel="alternate" href="/demo-0.13/wiki/WikiStart?format=txt" type="text/x-trac-wiki" title="Plain Text" />
+        <link rel="start" href="/demo-0.13/wiki" />
+        <!--
+        <link rel="stylesheet" href="/demo-0.13/chrome/common/css/trac.css" type="text/css" />
+        <link rel="stylesheet" href="/demo-0.13/chrome/common/css/wiki.css" type="text/css" />
+        -->
+        <link rel="stylesheet" href="trac.css" type="text/css" />
+        <link rel="stylesheet" href="wiki.css" type="text/css" />
+        <link rel="shortcut icon" href="/demo-0.13/chrome/common/trac.ico" type="image/x-icon" />
+        <link rel="icon" href="/demo-0.13/chrome/common/trac.ico" type="image/x-icon" />
+      <link type="application/opensearchdescription+xml" rel="search" href="/demo-0.13/search/opensearch" title="Search Trac 0.13 Demo Project" />
+      <script type="text/javascript" charset="utf-8" src="/demo-0.13/chrome/common/js/jquery.js"></script>
+      <script type="text/javascript" charset="utf-8" src="/demo-0.13/chrome/common/js/babel.js"></script>
+      <script type="text/javascript" charset="utf-8" src="/demo-0.13/chrome/common/js/messages/en_US.js"></script>
+      <script type="text/javascript" charset="utf-8" src="/demo-0.13/chrome/common/js/trac.js"></script>
+      <script type="text/javascript" charset="utf-8" src="/demo-0.13/chrome/common/js/search.js"></script>
+      <script type="text/javascript" charset="utf-8" src="/demo-0.13/chrome/common/js/folding.js"></script>
+    <script type="text/javascript">
+      jQuery(document).ready(function($) {
+        $("#content").find("h1,h2,h3,h4,h5,h6").addAnchor(_("Link to this section"));
+        $("#content").find(".wikianchor").each(function() {
+          $(this).addAnchor(babel.format(_("Link to #%(id)s"), {id: $(this).attr('id')}));
+        });
+        $(".foldable").enableFolding(true, true);
+      });
+    </script>
+  </head>
+  <body>
+    <div id="banner">
+      <div id="header">
+        <a id="logo" href="http://trac.edgewall.org/demo-0.13/"><img src="http://www.edgewall.org/gfx/trac_logo_demo_13.png" alt="Official Demo Site for Trac 0.13" height="61" width="214" /></a>
+      </div>
+      <form id="search" action="/demo-0.13/search" method="get">
+        <div>
+          <label for="proj-search">Search:</label>
+          <input type="text" id="proj-search" name="q" size="18" value="" />
+          <input type="submit" value="Search" />
+        </div>
+      </form>
+      <div id="metanav" class="nav">
+    <ul>
+      <li class="first"><a href="/demo-0.13/login">Login</a></li><li><a href="/demo-0.13/prefs">Preferences</a></li><li><a href="/demo-0.13/wiki/TracGuide">Help/Guide</a></li><li class="last"><a href="/demo-0.13/about">About Trac</a></li>
+    </ul>
+  </div>
+    </div>
+    <div id="mainnav" class="nav">
+    <ul>
+      <li class="first active"><a href="/demo-0.13/wiki">Wiki</a></li><li><a href="/demo-0.13/timeline">Timeline</a></li><li><a href="/demo-0.13/roadmap">Roadmap</a></li><li><a href="/demo-0.13/browser">Browse Source</a></li><li><a href="/demo-0.13/report">View Tickets</a></li><li><a href="/demo-0.13/newticket">New Ticket</a></li><li class="last"><a href="/demo-0.13/search">Search</a></li>
+    </ul>
+  </div>
+    <div id="main">
+      <div id="pagepath" class="noprint">
+  <a class="pathentry first" title="View WikiStart" href="/demo-0.13/wiki">wiki:</a><a class="pathentry" href="/demo-0.13/wiki/WikiStart" title="View WikiStart">WikiStart</a>
+</div>
+      <div id="ctxtnav" class="nav">
+        <h2>Context Navigation</h2>
+        <ul>
+          <li class="first"><a href="/demo-0.13/wiki/WikiStart">Start Page</a></li><li><a href="/demo-0.13/wiki/TitleIndex">Index</a></li><li class="last"><a href="/demo-0.13/wiki/WikiStart?action=history">History</a></li>
+        </ul>
+        <hr />
+      </div>
+    <div id="content" class="wiki">
+      <div class="wikipage searchable">
+        
+          <div id="wikipage" class="trac-content"><h1 id="WelcometoTrac0.13dev">Welcome to Trac 0.13dev</h1>
+<p>
+Trac is a <strong>minimalistic</strong> approach to <strong>web-based</strong> management of
+<strong>software projects</strong>. Its goal is to simplify effective tracking and handling of software issues, enhancements and overall progress.
+</p>
+<p>
+All aspects of Trac have been designed with the single goal to 
+<strong>help developers write great software</strong> while <strong>staying out of the way</strong>
+and imposing as little as possible on a team's established process and
+culture.
+</p>
+<p>
+As all Wiki pages, this page is editable, this means that you can
+modify the contents of this page simply by using your
+web-browser. Simply click on the "Edit this page" link at the bottom
+of the page. <a class="wiki" href="/demo-0.13/wiki/WikiFormatting">WikiFormatting</a> will give you a detailed description of
+available Wiki formatting commands.
+</p>
+<div style="background: #eee; border: 2px ridge #ddd; float: right; padding: 0 2em; margin: 1em" class="wikipage"><h2 id="AboutthisTrac">About this Trac…</h2>
+<p>
+We use this instance as a test bed for latest trunk and/or various patches. <br />
+You're welcome to create test tickets, pages and milestones.
+</p>
+</div><p>
+<br />
+</p>
+<p>
+<a class="wiki" href="/demo-0.13/wiki/TracGuide">TracGuide</a> is a good place to start.
+</p>
+<p>
+Enjoy! <br />
+<em>The Trac Team</em>
+</p>
+<h2 id="StartingPoints">Starting Points</h2>
+<ul><li><a class="wiki" href="/demo-0.13/wiki/TracGuide">TracGuide</a> --  Built-in Documentation
+</li><li><a class="ext-link" href="http://trac.edgewall.org/"><span class="icon">​</span>The Trac project</a> -- Trac Open Source Project
+</li><li><a class="ext-link" href="http://trac.edgewall.org/wiki/TracFaq"><span class="icon">​</span>Trac FAQ</a> -- Frequently Asked Questions
+</li><li><a class="wiki" href="/demo-0.13/wiki/TracSupport">TracSupport</a> --  Trac Support
+</li></ul><p>
+For a complete list of local wiki pages, see <a class="wiki" href="/demo-0.13/wiki/TitleIndex">TitleIndex</a>.
+</p>
+<p>
+<br style="clear: both" />
+</p>
+</div>
+          
+          <div class="trac-modifiedby">
+            <span><a href="/demo-0.13/wiki/WikiStart?action=diff&amp;version=9" title="Version 9 by cboos: remove trac-admin related paragraphs">Last modified</a> <a class="timeline" href="/demo-0.13/timeline?from=2012-06-27T00%3A26%3A00%2B02%3A00&amp;precision=second" title="See timeline at 2012-06-27T00:26:00+02:00">2 months ago</a></span>
+            <span class="trac-print">Last modified on 2012-06-27T00:26:00+02:00</span>
+          </div>
+        
+        
+      </div>
+      
+    <div id="attachments">
+        <h3 class="foldable">Attachments <span class="trac-count">(1)</span></h3>
+        <div>
+          <ul>
+              <li>
+    <a href="/demo-0.13/attachment/wiki/WikiStart/trac_logo_demo_13.png" title="View attachment">trac_logo_demo_13.png</a><a href="/demo-0.13/raw-attachment/wiki/WikiStart/trac_logo_demo_13.png" class="trac-rawlink" title="Download">​</a>
+       (<span title="6281 bytes">6.1 KB</span>) -
+      added by <em>cboos</em> <a class="timeline" href="/demo-0.13/timeline?from=2010-08-12T17%3A37%3A56%2B02%3A00&amp;precision=second" title="See timeline at 2010-08-12T17:37:56+02:00">2 years ago</a>.
+                <q>logo for this demo instance</q>
+              </li>
+          </ul>
+          <p>
+            Download all attachments as: <a rel="nofollow" href="/demo-0.13/zip-attachment/wiki/WikiStart/">.zip</a>
+          </p>
+        </div>
+    </div>
+
+    </div>
+    <div id="altlinks">
+      <h3>Download in other formats:</h3>
+      <ul>
+        <li class="last first">
+          <a rel="nofollow" href="/demo-0.13/wiki/WikiStart?format=txt">Plain Text</a>
+        </li>
+      </ul>
+    </div>
+    </div>
+    <div id="footer" lang="en" xml:lang="en"><hr />
+      <a id="tracpowered" href="http://trac.edgewall.org/"><img src="/demo-0.13/chrome/common/trac_logo_mini.png" height="30" width="107" alt="Trac Powered" /></a>
+      <p class="left">Powered by <a href="/demo-0.13/about"><strong>Trac 1.0beta1-r11237</strong></a><br />
+        By <a href="http://www.edgewall.org/">Edgewall Software</a>.</p>
+      <p class="right">Visit the Trac open source project at<br /><a href="http://trac.edgewall.org/">http://trac.edgewall.org/</a></p>
+    </div>
+  </body>
+</html>

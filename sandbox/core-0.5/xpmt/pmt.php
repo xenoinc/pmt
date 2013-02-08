@@ -211,7 +211,7 @@ function ParseAndLoad()
   { // Load the module
 
     // Step 1 - Load Module
-    pmtDebug("pmt.ParseAndLoad() MatchFound: ". $matchFound);
+    //pmtDebug("pmt.ParseAndLoad() MatchFound: ". $matchFound);
     $xenoPMT::LoadModule($modHeader["uuid"]);
 
     // Step 2  - Load Theme
@@ -222,8 +222,8 @@ function ParseAndLoad()
   else
   {
     // Unknown Module URN / Module not loaded
-    pmtDebug("pmt.ParseAndLoad() Unknown Module: seg='".$tmpURI."'");
-
+    //pmtDebug("pmt.ParseAndLoad() Unknown Module: seg='".$tmpURI."'");
+    // Reroute to "dashboard/unknown"
     $html = "Unknown Module! seg='". $tmpURI ."'.";
     $xpmtPage["htdata"]=$html;
     $PAGE_HTDATA=$html;
