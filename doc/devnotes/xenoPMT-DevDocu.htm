@@ -615,7 +615,7 @@ Based on a base filename of &quot;TiddlyWiki.html&quot;, and a date of 2006-11-1
 ** Fixed %M format, thanks to John Antony
 ** Fixed version number and date
 * v1.0.2 (2011-02-21)
-** Addded %(5) format, courtesy of Jaufr&#233; Devosse
+** Addded %(5) format, courtesy of Jaufré Devosse
 * v1.0.1 (?)
 ** Bugfixes to work with newer TiddlyWiki version
 * v1.0.0 (2007-09-29)
@@ -754,6 +754,21 @@ You are free to use this however you like.  I place this code into the public do
 ***/
 </pre>
 </div>
+<div title="Bug (mod)" creator="d.suess" modifier="d.suess" created="201302081533" changecount="1">
+<pre>Bugs are viewable by internal personelle only
+
+! Group Access
+* Development, Managers, Admin
+
+! Features
+* Clone bugs (across versions)
+* Set to specific versions and milestones
+* Track development progress while it's being fixed
+* Defer bugs to other versions (i.e. older version is no longer supported but issue still exists)
+* Assign bug to team (dev-group) and user
+* Attach files
+* Add code samples with syntax highlighting</pre>
+</div>
 <div title="Core2-Workflow" creator="d.suess" modifier="d.suess" created="201209012314" modified="201209241852" changecount="10">
 <pre>Below describes the default core loading workflow.
 
@@ -854,7 +869,7 @@ One of the first module to get created. The initiative is to create a simple mod
 &lt;!-- &lt;h2&gt;Feedback&lt;/h2&gt; --&gt;
 }}}</pre>
 </div>
-<div title="MainMenu" creator="d.suess" modifier="d.suess" created="201209011745" modified="201302072226" changecount="40">
+<div title="MainMenu" creator="d.suess" modifier="d.suess" created="201209011745" modified="201302081524" changecount="41">
 <pre>! xenoPMT
 * [[Core2-Workflow]]
 * [[config.php]]
@@ -866,10 +881,13 @@ One of the first module to get created. The initiative is to create a simple mod
 ! Modules
 * [[Admin    |Admin (mod)]]
 * [[Customer |Customer (mod)]]
+* [[Ticket*   |Ticket (mod)]]
+* [[Bug*      |Bug (mod)]]
+* [[Task*     |Task (mod)]]
+* [[Feature*  |Feature (mod)]]
 * [[KB       |KB (mod)]]
 * [[Product  |Product (mod)]]
 * [[Project  |Project (mod)]]
-* [[Ticket   |Ticket (mod)]]
 !!!!Modules Ext
 * [[Overview|Modules]]
 * [[List of Mods|Module - List]]
@@ -1236,7 +1254,7 @@ It works by trying to automatically detect the type of data in a column, then so
 
 |!Type |!Description|
 |Date|Various formats for dates, specifically any string format that can be converted to a date/time by Javascript's Date.Parse() method.|
-|Currency|Any string beginning with $, &#163;, or &#8364; followed by a numeric string (except no leading sign). Note that it does not do currency conversion, the raw currency values are sorted numerically. {{{/^[$|&#163;|&#8364;]{1}\d*\.{0,1}\d+$/}}}|
+|Currency|Any string beginning with $, £, or € followed by a numeric string (except no leading sign). Note that it does not do currency conversion, the raw currency values are sorted numerically. {{{/^[$|£|€]{1}\d*\.{0,1}\d+$/}}}|
 |Numeric|Data must consist purely of digits, optional leading plus or minus sign, a single period. Javascript cannot handle the Continental virgule (comma decimal point). {{{/^[\+|\-]{0,1}\d*\.{0,1}\d+$/}}}|
 |File Size|Numeric string (except no leading sign) with b, Kb, Mb, or Gb at the end. Sorts according to the actual value represented by the notation. {{{/^\d*\.{0,1}\d+[K|M|G]{0,1}b$}}}|
 |Text|Anything that does not match the formats listed below. Text is sorted without regard to character case.|
@@ -1253,9 +1271,9 @@ To make a table sortable, append an {{{h}}} to the end of the first row. If the 
 |Bloggs, Fred |$12000.00 |1353 |01.20 |6.156Mb |08/17/2003 05:43 |
 |Turvey, Kevin |$191200.00 |2342 |-33 |1b |02/05/1979 |
 |Mbogo, Arnold |$32010.12 |2755 |-21.673 |1.2Gb |09/08/1998 |
-|Shakespeare, Bill |&#163;122000.00|3211 |6 |33.22Gb |12/11/1961 |
-|Shakespeare, Hamlet |&#163;9000 |9005 |-8 |3Gb |01/01/2002 |
-|Fitz, Marvin |&#8364;3300.30 |5554 |+5 |4Kb |05/22/1995 |
+|Shakespeare, Bill |£122000.00|3211 |6 |33.22Gb |12/11/1961 |
+|Shakespeare, Hamlet |£9000 |9005 |-8 |3Gb |01/01/2002 |
+|Fitz, Marvin |€3300.30 |5554 |+5 |4Kb |05/22/1995 |
 !!Revision History
 &lt;&lt;&lt;
 ''2003.11.?? [?.?.?]'' Stuart Langridge (http://www.kryogenix.org/code/browser/sorttable/) - Core code for DHTML sortable tables. Copyright and license for his code has been carried forward and applies to subsequent additions.
@@ -1380,7 +1398,7 @@ config.macros.sortableGridPlugin.ts_resortTable = function(lnk)
 	var sortfn = M.ts_sort_caseinsensitive;
 	if(!isNaN(Date.parse(itm)))
 		sortfn = M.ts_sort_date;
-	else if(itm.match(/^[$|&#163;|&#8364;]{1}\d*\.{0,1}\d+$/)) 
+	else if(itm.match(/^[$|£|€]{1}\d*\.{0,1}\d+$/)) 
 		sortfn = M.ts_sort_currency;
 	else if(itm.match(/^[\+|\-]{0,1}\d*\.{0,1}\d+$/)) 
 		sortfn = M.ts_sort_numeric;
@@ -1860,7 +1878,7 @@ exit;
 }}}
 </pre>
 </div>
-<div title="Ticket (mod)" creator="d.suess" modifier="d.suess" created="201209062239" modified="201302011453" tags="ticket" changecount="10">
+<div title="Ticket (mod)" creator="d.suess" modifier="d.suess" created="201209062239" modified="201302081536" tags="ticket" changecount="11">
 <pre>* [[Ticket (mod) - Sections]]
 * [[Ticket (mod) - Permissions]]
 * [[Ticket (mod) - Sandbox]] - Miscellaneous code to be used later on
