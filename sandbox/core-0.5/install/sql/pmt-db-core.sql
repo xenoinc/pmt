@@ -141,5 +141,23 @@ CREATE TABLE IF NOT EXISTS `TBLPMT_CORE_URI`
 
 */
 
-
+/*
+  Proposed table: TBLPMT_CORE_AUDIT
+  Created: 2013-0221
+  Purpose:
+    This table is used to track the changing of the header details of a Ticket/Bug/Task/Request.
+    This way we can tell who opened it, claimed it, moved ownership, updated status, etc.
+  (
+    `Audit_Id`    INT UNSIGNED NOT NULL AUTO_INCREMENT,
+    `Audit_DTTM`  DATETIME,             -- When was this done
+    `Audit_Type`  VARCHAR(24),          -- What was done (ex: 'changed')
+    `Audit_Field` VARCHAR(64),          -- What was changed ('state' (closed/open), 'transfered user/group', 'version', etc)
+    `Value_Old`   VARCHAR(255),         -- Previous setting
+    `Value_New`   VARCHAR(255),         -- New Setting
+    `TBTR_Type`   VARCHAR(8),           -- Ticket, Bug, Task, Request
+    `TBTR_Id`,    INT UNSIGNED,         -- Point back to TBTR item
+    `User_Id`     INT UNSIGNED,                                     -- Because they may be deleted
+    `User_Name`   VARCHAR(50)   COLLATE utf8_unicode_ci NOT NULL,   -- Because they may be deleted or name changed
+  )
+*/
 
