@@ -799,14 +799,37 @@ You are free to use this however you like.  I place this code into the public do
 *** $PAGE[&lt;definitions&gt;]
 *** path, title, header, tbar_meta, tbar_main, tbar_minileft, tbar_miniright, htdata, footer |</pre>
 </div>
-<div title="Customer (mod)" creator="d.suess" modifier="d.suess" created="201210040652" changecount="1">
+<div title="Customer (mod)" creator="d.suess" modifier="d.suess" created="201210040652" modified="201302241542" changecount="8">
 <pre>* [[Customer (mod) - Sections]]
-* [[Customer (mod) - Permissions]]</pre>
+* [[Customer (mod) - Permissions]]
+
+! Customer Registration
+# xenoPMT.com/c/register/
+#* Request Info :: Name, GUID and Customer Id
+# xenoPMT.com/c/reg/101200
+## Verify Info
+## Create Admin Account
+## Register Product(s) w/ GUID
+
+! Customer User Types
+# CUSTOMER_ADMIN
+#* Modify Customer Info
+#* View/Edit Ticket
+#* Edit Product List
+#* Purchase Extended Service
+#* Add/Remove/View ''CUSTOMER_USER'' list
+# CUSTOMER_USER
+#* View Tickets
+#* Comment on Tickets
+#* View KB
+#* View FAQ
+#* View Product List
+</pre>
 </div>
 <div title="DefaultTiddlers" creator="d.suess" modifier="d.suess" created="201209012237" modified="201210032135" changecount="4">
 <pre></pre>
 </div>
-<div title="KB (mod)" creator="d.suess" modifier="d.suess" created="201209031656" modified="201302072222" tags="KB, libWiki" changecount="7">
+<div title="KB (mod)" creator="d.suess" modifier="d.suess" created="201209031656" modified="201302241539" tags="KB, libWiki" changecount="9">
 <pre>!Knowledge Base
 
 One of the first module to get created. The initiative is to create a simple module at first as the skeleton &amp; then expand on it later.  So if you are wondering why this hasn't matured quickly, that's why.
@@ -828,7 +851,9 @@ One of the first module to get created. The initiative is to create a simple mod
 |[[Create|KB (mod) - Create]] |Add    |Add side banner to editor |
 |[[Create|KB (mod) - Create]] |Add    |Make create article run on ajax to handle error messages properly |
 
-</pre>
+! Sample KB To Create
+# Install Fdx Software (PDF)
+# MMT User Guide (PDF)</pre>
 </div>
 <div title="KB (mod) - View" creator="d.suess" modifier="d.suess" created="201209061550" changecount="1">
 <pre>!To Do
@@ -1965,7 +1990,7 @@ foreach ($myArray as $row)
 &lt;/table&gt;
 }}}</pre>
 </div>
-<div title="ToDoList" creator="d.suess" modifier="d.suess" created="201209031640" modified="201209241851" changecount="15">
+<div title="ToDoList" creator="d.suess" modifier="d.suess" created="201209031640" modified="201302241549" changecount="16">
 <pre>!ASAP
 |!Module            |!Sub-Section  |!Description |h
 |[[KB (mod)]]       |Main   |List items |
@@ -1986,7 +2011,20 @@ foreach ($myArray as $row)
 |[[KB (mod)]] |View   |Remove |
 |[[KB (mod)]] |Editor |Add side banner to editor |
 
-</pre>
+!To Do Notes
+{{{
+2013-0224 (notes from 2012)
+DB Changes
+* KB_Attachment (create table)
+* ? PMT_S_USER_TYPES
+* ? Create customer directory (locally
+** .\#_name\
+** .\#_name\readme.txt
+** .\#_name\fdx\
+** .\#_name\phi\
+* Create downloads lib to safely upload/download files and not allow URL link-backs to physical file
+
+}}}</pre>
 </div>
 <div title="Variables" creator="d.suess" modifier="d.suess" created="201211071341" modified="201212040307" changecount="19">
 <pre>Most of these were added in [[Milestone 0.0.5]]. Below is the official list of variables used by this branch of xenoPMT.
