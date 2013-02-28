@@ -1,0 +1,8 @@
+Below is a list of other products similar to
+our xenoPMT Project/Product Management Tracking system.
+
+* Redmine - http://www.redmine.org/projects/redmine
+* Trac
+* Trac.io
+* Bugzilla
+* Mantis BT
