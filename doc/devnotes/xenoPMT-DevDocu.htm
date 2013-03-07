@@ -904,6 +904,30 @@ One of the first module to get created. The initiative is to create a simple mod
 &lt;!-- &lt;h2&gt;Feedback&lt;/h2&gt; --&gt;
 }}}</pre>
 </div>
+<div title="Kanban (mod)" creator="d.suess" modifier="d.suess" created="201303011606" modified="201303011846" changecount="10">
+<pre>Kanban, Scrum, Scrumban.. pick one. This module is intended to assist you in visualizing your projects and where your team is at. This makes use of combining other features of [[xenoPMT]] together such as Tasks and Bugs, to name a couple. If you business uses Tasks to keep track of where you project is at, you can easily visualize it on the Backlog or in Sprint.
+
+!
+
+! Usefulness
+* Product Owners
+** Groom Backlog, Gather Ideas, Plan Releases, Track Progress
+* Scrum Masters
+** Plan Sprints, Run Daily Meetings, Track Sprint, Handle Impediments
+* Developer
+** Track: Time, Track Progress and Work Schedule
+* Quality Assurance
+** ToDo, Run Test Cases, Capture Bugs, Integration
+
+!Similar Products
+* http://www.versionone.com/Product/Agile-Project-Management-Tool-Overview/
+* http://www.agilezen.com/tour/visualize/
+* http://www.targetprocess.com/product/product-owner/
+* http://kompiro.org/jamcircle/en/wiki
+* https://www.kanbanpad.com/
+
+* http://www.slideshare.net/dimka5/introducing-agile-scrum-xp-and-kanban</pre>
+</div>
 <div title="Libraries" creator="d.suess" modifier="d.suess" created="201302142324" modified="201302142325" changecount="3">
 <pre>Libraries like Modules provide features to the xenoPMT system. However, Modules run strictly from URIs and Libraries enhance the functionality of Modules.
 
@@ -916,7 +940,7 @@ One of the first module to get created. The initiative is to create a simple mod
 * libWiki - The parser engine behind the pages to view.
 * libWikiPage - The page creator for the wiki system (?? might place functionality elsewhere??)</pre>
 </div>
-<div title="MainMenu" creator="d.suess" modifier="d.suess" created="201209011745" modified="201302142319" changecount="42">
+<div title="MainMenu" creator="d.suess" modifier="d.suess" created="201209011745" modified="201303011540" changecount="46">
 <pre>! xenoPMT
 * [[Core2-Workflow]]
 * [[config.php]]
@@ -937,13 +961,14 @@ One of the first module to get created. The initiative is to create a simple mod
 * [[Product  |Product (mod)]]
 * [[Project  |Project (mod)]]
 !!!!Modules Ext
-* [[Overview|Modules]]
-* [[List of Mods|Module - List]]
 * [[Workflow|Module - Loader Workflow]]
 * [[Module-Config|Module - v0.0.5 Configuration]]
 ! Libraries
-* [[All Libs   |Libraries]]
 * [[libWiki    |libWiki (lib)]]
+* [[Ticket     |Ticket (lib)]]
+* [[Bug        |Bug (lib)]]
+* [[Task       |Task (lib)]]
+* [[Request    |Request (lib)]]
 !Milestones
 * [[Milestones]]
 * [[Milestone-0]]
@@ -1110,30 +1135,6 @@ The official list is located on the [[Variables]] page.
 |[[Milestone 0.0.5]] |  |
 </pre>
 </div>
-<div title="Module - List" creator="d.suess" modifier="d.suess" created="201209061537" modified="201210040648" changecount="14">
-<pre>! v1.0 - Modules
-| # |Name                | %   | Core |URI    |C|D|A|Description                   |Customer Access |h
-| 4 |[[Admin (mod)]]     | 0%  | Yes  |admin  | | | |Administration and Config Panel (//admin only//) |  |
-| 4 |[[Bug (mod)]]       | 0%  | No   |bug    | |X| |Bug tracker                   |  |
-| 5 |[[Customer (mod)]]  | 0%  | No   |c      |X|X| |Customer information system   |Access their site details and open tickets |
-| 3 |[[Dashboard (mod)]] | 0%  | Yes  |main   |X|X|X|Welcome page                  |Display open tickets, list of products, reg/warranty info and Announcements  |
-| 5 |[[KB (mod)]]        | 75% | No   |kb     |X|X|/|Knowledge Base Articles       |  |
-| 4 |[[Project (mod)]]   | 10% | No   |p      | |X| |Project overview page (//dev only//) |  |
-| 3 |[[Product (mod)]]   | 0%  | No   |prod   |X|X|/|Product overview and tracking |Can view all projects ''or'' only their own registered ones  |
-| 4 |[[Task (mod)]]      | 0%  | No   |task   | |X| |Technical request tracker     |  |
-| 5 |[[Ticket (mod)]]    | 0%  | No   |ticket |X|X|/|Issue Ticketing tracker       |View only their open items. Only CstmrAdmin can view Old  |
-| 3 |[[User (mod)]]      | 0%  | Yes  |user   |X|X| |Product overview and tracking |Can view/edit basic info. CstmrAdmin can make (limited) colleague accounts  |
-| 2 |[[Wiki (mod)]]      | 0%  | No   |wiki   |X|X|/|Self-contained wiki system    |Can view but not edit  |
-//Help://
-''C''ustomer, ''D''evelopment, ''A''nonymous
-
-! v1.5 - New Additions
-|Name           |URI  |Description |h
-|[[Purchase Order|PO (mod)]] |po   |Track orders created for customers and pricing |
-|Svn            |svn  |Source Code Viewer |
-|Git            |git  |Source Code Viewer |
-</pre>
-</div>
 <div title="Module - Loader Workflow" creator="d.suess" modifier="d.suess" created="201209061540" modified="201209062047" changecount="9">
 <pre>!Phase 1
 Currently each module is controlled and launched via the following workflow steps
@@ -1210,13 +1211,34 @@ $xpmtModule[&quot;info&quot;][] = array
 ?&gt;
 }}}</pre>
 </div>
-<div title="Modules" creator="d.suess" modifier="d.suess" created="201209020115" modified="201209061557" tags="module" changecount="18">
+<div title="Modules" creator="d.suess" modifier="d.suess" created="201209020115" modified="201303011606" tags="module" changecount="21">
 <pre>Below is the list of modules and their statuses
 
 !Topics
-* [[Module - List]]
 * [[Module - Loader Workflow]]
-</pre>
+
+! List of Modules - v1.0
+| # |Name                | %   | Core |URI    |C|D|A|Description                   |Customer Access |h
+| 4 |[[Admin (mod)]]     | 0%  | Yes  |admin  | | | |Administration and Config Panel (//admin only//) |  |
+| 4 |[[Bug (mod)]]       | 0%  | No   |bug    | |X| |Bug tracker                   |  |
+| 5 |[[Customer (mod)]]  | 0%  | No   |c      |X|X| |Customer information system   |Access their site details and open tickets |
+| 3 |[[Dashboard (mod)]] | 0%  | Yes  |main   |X|X|X|Welcome page                  |Display open tickets, list of products, reg/warranty info and Announcements  |
+| 5 |[[KB (mod)]]        | 75% | No   |kb     |X|X|/|Knowledge Base Articles       |  |
+| 4 |[[Project (mod)]]   | 10% | No   |p      | |X| |Project overview page (//dev only//) |  |
+| 3 |[[Product (mod)]]   | 0%  | No   |prod   |X|X|/|Product overview and tracking |Can view all projects ''or'' only their own registered ones  |
+| 4 |[[Task (mod)]]      | 0%  | No   |task   | |X| |Technical request tracker     |  |
+| 5 |[[Ticket (mod)]]    | 0%  | No   |ticket |X|X|/|Issue Ticketing tracker       |View only their open items. Only CstmrAdmin can view Old  |
+| 3 |[[User (mod)]]      | 0%  | Yes  |user   |X|X| |Product overview and tracking |Can view/edit basic info. CstmrAdmin can make (limited) colleague accounts  |
+| 2 |[[Wiki (mod)]]      | 0%  | No   |wiki   |X|X|/|Self-contained wiki system    |Can view but not edit  |
+//Help://
+''C''ustomer, ''D''evelopment, ''A''nonymous
+
+! List of Modules - v1.5 (New Additions)
+|Name                           |URI      |Description |h
+|[[Purchase Order|PO (mod)]]    |po       |Track orders created for customers and pricing |
+|[[Svn|SVN (mod)]]              |svn      |Source Code Viewer |
+|[[Git|Git (mod)]]              |git      |Source Code Viewer |
+|[[Kanban Editor|Kanban (mod)]] |kanban   |Project Management Utility |</pre>
 </div>
 <div title="MyPlugins" creator="d.suess" modifier="d.suess" created="201209012343" modified="201209020106" changecount="5">
 <pre>* [[BackupOptionsPlugin]]
@@ -1927,7 +1949,7 @@ exit;
 }}}
 </pre>
 </div>
-<div title="Ticket (mod)" creator="d.suess" modifier="d.suess" created="201209062239" modified="201302281501" tags="ticket" changecount="15">
+<div title="Ticket (mod)" creator="d.suess" modifier="d.suess" created="201209062239" modified="201303071502" tags="ticket" changecount="16">
 <pre>//''Note:''// As of 2013-0228 TBTRs are considered Libraries. Reason for this change is because the TBTR feature is a subset of a module.  I.E. &quot;http://xpmt/proj/ProjName/ticket&quot;
 
 * [[Ticket (mod) - Sections]]
@@ -1945,6 +1967,11 @@ exit;
 * Perform &quot;Actions&quot; hook on tickets when status changes.
 ** This can include emailing owners, CC'd (from header) when the status changes or when someone adds a diary entry
 * Add xenoPMT Ticketing system into NetBeans IDE
+
+! Layout
+* Case Closed
+** Closed to Bug: Must specify which component / sub-component
+** Closed to Bug: Must specify bug report Id(s)  (allow multiple? [no])
 </pre>
 </div>
 <div title="Ticket (mod) - Permissions" creator="d.suess" modifier="d.suess" created="201210040712" modified="201210040728" changecount="2">
@@ -2011,15 +2038,16 @@ foreach ($myArray as $row)
 &lt;/table&gt;
 }}}</pre>
 </div>
-<div title="ToDoList" creator="d.suess" modifier="d.suess" created="201209031640" modified="201302241549" changecount="16">
+<div title="ToDoList" creator="d.suess" modifier="d.suess" created="201209031640" modified="201303011613" changecount="17">
 <pre>!ASAP
 |!Module            |!Sub-Section  |!Description |h
 |[[KB (mod)]]       |Main   |List items |
+|[[Project (mod)]]  |List   |Add links to TBT, Milestones, Wiki (main) |
+|[[Ticket (lib)]]   |       |background system for all Tickets |
 |[[Ticket (mod)]]   |Create |Create tickets |
 |[[Ticket (mod)]]   |View   |View tickets |
 |[[Ticket (mod)]]   |List   |List tickets |
 |[[Customer (mod)]] |       |Create skeleton |
-|[[Project (mod)]]  |List   |Add links to TBT, Milestones, Wiki (main) |
 
 !Later
 |!Module      |!Sub-Section  |!Description |h
@@ -2261,6 +2289,23 @@ $pmtConf = array(
 );
 
 }}}</pre>
+</div>
+<div title="xenoPMT" creator="d.suess" modifier="d.suess" created="201303011641" modified="201303011645" changecount="3">
+<pre>What is //''xenoPMT''//?  In short it is a different Project/Product Management Tool by Xeno Innovations. Where most other utilities specialize in a few things such as bug reporting or just project management, our goal is to extend that much further.
+
+Management goals covered by xenoPMT:
+* Project Management
+** Iterations
+** Roadmaps
+** Ideas
+** Stories
+** Defects
+** Tests
+** Collaboration
+** Reporting
+* Customer Service and Management
+* Purchase Orders
+* Product Pages</pre>
 </div>
 <div title="xenoPMT Core - To Do List" creator="d.suess" modifier="d.suess" created="201209061605" modified="201209061613" changecount="3">
 <pre>Even the core has a todo-list. Some of it crosses into modules to operate its core functionality.
