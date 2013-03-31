@@ -55,8 +55,8 @@ if ($BETA_TESTING)
   $_txtDBServer = "localhost";
   $_txtDBName   = "PMT_TEST";
   $_txtDBPrefix = "XI_";
-  $_txtDBUser   = "betauser";
-  $_txtDBPass   = "betapass";
+  $_txtDBUser   = "testuser";   // "betauser";
+  $_txtDBPass   = "testpass";   // "betapass";
 
   $_txtCfgSiteName = "xenoPMT 0.0.5";
   $_txtCfgBaseUrl = "http://pmt2/";

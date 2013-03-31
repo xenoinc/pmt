@@ -119,7 +119,7 @@ class xenoPMT
         */
 
         $modPth = $ret["Module_Path"] . "/" . $ret["Module_Class"] . ".main.php";
-        pmtDebug("LoadModule() Module_Path: '$modPth'");
+        //pmtDebug("xenoPMT::LoadModule() Module_Path: '$modPth'");
         require($modPth);
 
         $module = $ret["Module_Class"];
@@ -161,7 +161,7 @@ class xenoPMT
     // Set DEFAULT skin to MAIN.PHP - check LATER if module has custom skin
     $skin_file = "main.php";
     $page = $skin_path . $skin_file;
-    pmtDebug("PagePath1: $page");
+    pmtDebug("xenoPMT::LoadMod() Theme - Page Path: $page");
 
     /* Step 2.2 */
     // check if module has custom skin. (i.e. main, project, product, etc.)
@@ -169,10 +169,10 @@ class xenoPMT
     {
       $skin_file = $module . ".php";
       $page = $skin_path . $skin_file;
-      pmtDebug("PagePath2: $page");
+      pmtDebug("xenoPMT::LoadMod() Theme - *Custom* Page Path: $page");
     }
 
-
+    //pmtDebug("xenoPMT::LoadMod() Theme Loaded");
 
     /****************************************
      * Step 3 - Setup $xpmtPage[] variables *
@@ -186,31 +186,50 @@ class xenoPMT
       // TODO - 2013-0205
       //  [ ] PATH needs to pull the THEME we're using from the DB
 
-      //$obj = new $module();
-      $obj = new $moduleNS();       // 2013-0331 + Using "namespace"
-      $xpmtPage["title"]      = "";                           // Page Title
-        if ($obj->Title() != "")
-              $xpmtPage["title"] = $obj->Title();
-        else  $xpmtPage["title"] = $xpmtConf["general"]["title"];
+      pmtDebug("pre-try");
+      try
+      {
+        $obj = new $moduleNS();
+        pmtDebug("try: OK");
+      }
+      catch (Exception $e)
+      {
+        pmtDebug("try: fail");
+        $obj = new $module();
+      }
 
-      $xpmtPage["icon"]       = "";                           // Path to Icon file
-      $xpmtPage["ex_header"]  = "";                           // Extra Header Information
-      $xpmtPage["logo"]       = "";                           // Site image path
-      $xpmtPage["metabar"]    = "";                           // User (login/usr-pref)/settings/logout/about
-      $xpmtPage["toolbar"]    = "";                           // Main toolbar
-        if($obj->Toolbar() != "")
-                { $xpmtPage["toolbar"] = $obj->Toolbar(); }
-          else  { $xpmtPage["toolbar"] = self::GetToolbarMain($uuid); }
+      if ($obj != false)
+      {
+        //$obj = new $module();
+        // $obj = new $moduleNS();       // 2013-0331 + Using "namespace"
+        $xpmtPage["title"]      = "";                           // Page Title
+          if ($obj->Title() != "")
+                $xpmtPage["title"] = $obj->Title();
+          else  $xpmtPage["title"] = $xpmtConf["general"]["title"];
 
-      $xpmtPage["minileft"]   = $obj->MiniBarLeft();          // Mini-bar Left aligned (bread crumbs)
-      $xpmtPage["miniright"]  = $obj->MiniBarRight();         // Mini-bar Right aligned (module node options)
-      $xpmtPage["htdata"]     = $obj->PageData();             // Main page html data
+        $xpmtPage["icon"]       = "";                           // Path to Icon file
+        $xpmtPage["ex_header"]  = "";                           // Extra Header Information
+        $xpmtPage["logo"]       = "";                           // Site image path
+        $xpmtPage["metabar"]    = "";                           // User (login/usr-pref)/settings/logout/about
+        $xpmtPage["toolbar"]    = "";                           // Main toolbar
+          if($obj->Toolbar() != "")
+                  { $xpmtPage["toolbar"] = $obj->Toolbar(); }
+            else  { $xpmtPage["toolbar"] = self::GetToolbarMain($uuid); }
 
-      $xpmtPage["path"]       = "";                           // Relative path to theme currently in use
-        $xpmtPage["path"] = $xpmtConf["general"]["base_url"] . $relpath; // just use something for now
+        $xpmtPage["minileft"]   = $obj->MiniBarLeft();          // Mini-bar Left aligned (bread crumbs)
+        $xpmtPage["miniright"]  = $obj->MiniBarRight();         // Mini-bar Right aligned (module node options)
+        $xpmtPage["htdata"]     = $obj->PageData();             // Main page html data
 
-      $xpmtPage["footer"]     = "";                           // Footer
-      require($page);
+        $xpmtPage["path"]       = "";                           // Relative path to theme currently in use
+          $xpmtPage["path"] = $xpmtConf["general"]["base_url"] . $relpath; // just use something for now
+
+        $xpmtPage["footer"]     = "";                           // Footer
+        require($page);
+      }
+      else
+      {
+        // Error loading class w/ namespace
+      }
     }
     else
     {

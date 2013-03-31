@@ -366,6 +366,13 @@ namespace xenoPMT\Module\Dashboard
 
       if(!$db->connect_errno)
       {
+        pmtDebug("Dashboard.Setup() privInstall() ModuleName: " . $this->_path);
+        pmtDebug("Dashboard.Setup() privInstall() ModuleNamespace: " . $this->_namespace);
+
+        // Clean up '\' on Windows OS Servers.
+        // If (find($_path, "\\" == false && find($_path, "\" == true) {Replace($_path, "\", "\\"); }
+        // If (find($_namespace, "\\" == false && find($_namespace, "\" == true) {Replace($_namespace, "\", "\\"); }
+
         // UPDATE `xi_core_module` SET `Module_Path`='C:\\prog\\Apache2\\htdocs\\pmt2\\xpmt\\modules\\dashboard' WHERE  `Module_Id`=1 LIMIT 1;
         $sql = <<<"sql"
         INSERT INTO {$xpmtConf["db"]["prefix"]}CORE_MODULE
