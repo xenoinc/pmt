@@ -904,12 +904,10 @@ One of the first module to get created. The initiative is to create a simple mod
 &lt;!-- &lt;h2&gt;Feedback&lt;/h2&gt; --&gt;
 }}}</pre>
 </div>
-<div title="Kanban (mod)" creator="d.suess" modifier="d.suess" created="201303011606" modified="201303011846" changecount="10">
-<pre>Kanban, Scrum, Scrumban.. pick one. This module is intended to assist you in visualizing your projects and where your team is at. This makes use of combining other features of [[xenoPMT]] together such as Tasks and Bugs, to name a couple. If you business uses Tasks to keep track of where you project is at, you can easily visualize it on the Backlog or in Sprint.
+<div title="Kanban (mod)" creator="d.suess" modifier="d.suess" created="201303011606" modified="201303310751" changecount="16">
+<pre>Kanban, Scrum, Scrumban.. pick one. This module is intended to assist you in visualizing your projects and where your team is at. This makes use of combining other features of [[xenoPMT]] together such as Tasks and Bugs, to name a couple. If you business uses Tasks to keep track of where you project is at, you can easily visualize it on the Backlog or in Sprint. Remember: Kanban simply means, &quot;bulletin board&quot; in Japanese.
 
-!
-
-! Usefulness
+!! Usefulness
 * Product Owners
 ** Groom Backlog, Gather Ideas, Plan Releases, Track Progress
 * Scrum Masters
@@ -919,14 +917,46 @@ One of the first module to get created. The initiative is to create a simple mod
 * Quality Assurance
 ** ToDo, Run Test Cases, Capture Bugs, Integration
 
-!Similar Products
+!! Features
+* ''Kanban'' (//Buletin Board Viewer//)
+** Ajax driven to auto-edit items if changed in the background
+** View team board from backlog to resolved
+*** Sample: (//Backlog, Open, Review, In-Process, Pending, Resolved//)
+*** Backlog: Items waiting to be performed
+*** Resolved: Items that are completed, just need final verification
+** Pomodoro Timer - Work VERY hard for 25 minutes; rest for 5.
+*** This data is not logged, just a simple javascript timer
+
+* ''Kanban Item details''
+** Displays owner of the item
+** Description of the item (first 128? chars)
+** Items link back to Tickets/Bugs/Tasks/Requests module (&quot;Ticket: 1234&quot;)
+** Automatic color changing background according to DTTM age
+** Columns sort can be set to Age (oldest or newest) or UserNames
+
+* ''Project Editor''
+** Set project name
+** Set Item BG color auto change according to DTTM (chk box to enable)
+** Project Permissions (5)
+*** Items (Add, Edit, View, Delete), Access Proj Settings (yes/no)
+** Setup Columns (Add/Edit/Remove)
+
+* ''Item Editor'' (//overlay//)
+** &quot;Assigned To:&quot; (text box)
+** &quot;Link to TBTR:&quot; (dropdown [(none)TBTR] and Textbox)
+** &quot;Start in (column):&quot; (dropdown)
+** &quot;Start DTTM:&quot;
+** &quot;End DTTM:&quot;
+
+!! Similar Products
 * http://www.versionone.com/Product/Agile-Project-Management-Tool-Overview/
 * http://www.agilezen.com/tour/visualize/
 * http://www.targetprocess.com/product/product-owner/
 * http://kompiro.org/jamcircle/en/wiki
 * https://www.kanbanpad.com/
 
-* http://www.slideshare.net/dimka5/introducing-agile-scrum-xp-and-kanban</pre>
+* http://www.slideshare.net/dimka5/introducing-agile-scrum-xp-and-kanban
+</pre>
 </div>
 <div title="Libraries" creator="d.suess" modifier="d.suess" created="201302142324" modified="201302142325" changecount="3">
 <pre>Libraries like Modules provide features to the xenoPMT system. However, Modules run strictly from URIs and Libraries enhance the functionality of Modules.
@@ -1211,7 +1241,7 @@ $xpmtModule[&quot;info&quot;][] = array
 ?&gt;
 }}}</pre>
 </div>
-<div title="Modules" creator="d.suess" modifier="d.suess" created="201209020115" modified="201303011606" tags="module" changecount="21">
+<div title="Modules" creator="d.suess" modifier="d.suess" created="201209020115" modified="201303310712" tags="module" changecount="23">
 <pre>Below is the list of modules and their statuses
 
 !Topics
@@ -1231,14 +1261,18 @@ $xpmtModule[&quot;info&quot;][] = array
 | 3 |[[User (mod)]]      | 0%  | Yes  |user   |X|X| |Product overview and tracking |Can view/edit basic info. CstmrAdmin can make (limited) colleague accounts  |
 | 2 |[[Wiki (mod)]]      | 0%  | No   |wiki   |X|X|/|Self-contained wiki system    |Can view but not edit  |
 //Help://
-''C''ustomer, ''D''evelopment, ''A''nonymous
+* # - Priority (1=low, 5=high)
+* % - Percent completed
+* Core - Apart of core system (cannot be disabled) or user enabled
+* ''C''ustomer, ''D''evelopment, ''A''nonymous
+* Customer Access - If you allow customers to view the system or now; what their access level is
 
 ! List of Modules - v1.5 (New Additions)
 |Name                           |URI      |Description |h
 |[[Purchase Order|PO (mod)]]    |po       |Track orders created for customers and pricing |
 |[[Svn|SVN (mod)]]              |svn      |Source Code Viewer |
 |[[Git|Git (mod)]]              |git      |Source Code Viewer |
-|[[Kanban Editor|Kanban (mod)]] |kanban   |Project Management Utility |</pre>
+|[[Kanban (mod)]]               |kanban   |Project Management Utility |</pre>
 </div>
 <div title="MyPlugins" creator="d.suess" modifier="d.suess" created="201209012343" modified="201209020106" changecount="5">
 <pre>* [[BackupOptionsPlugin]]
@@ -2038,7 +2072,7 @@ foreach ($myArray as $row)
 &lt;/table&gt;
 }}}</pre>
 </div>
-<div title="ToDoList" creator="d.suess" modifier="d.suess" created="201209031640" modified="201303011613" changecount="17">
+<div title="ToDoList" creator="d.suess" modifier="d.suess" created="201209031640" modified="201303310708" changecount="24">
 <pre>!ASAP
 |!Module            |!Sub-Section  |!Description |h
 |[[KB (mod)]]       |Main   |List items |
@@ -2048,6 +2082,7 @@ foreach ($myArray as $row)
 |[[Ticket (mod)]]   |View   |View tickets |
 |[[Ticket (mod)]]   |List   |List tickets |
 |[[Customer (mod)]] |       |Create skeleton |
+|Cache              |       |xenoPMT Cache Manager  (v0.0.7) |
 
 !Later
 |!Module      |!Sub-Section  |!Description |h
@@ -2072,8 +2107,31 @@ DB Changes
 ** .\#_name\fdx\
 ** .\#_name\phi\
 * Create downloads lib to safely upload/download files and not allow URL link-backs to physical file
+}}}
 
-}}}</pre>
+!Cache System (0.0.7?)
+The ''Cache System'' or &quot;User's Cache&quot; is suggesting that we limit the use of database communication and create a class/system where we can load pulled back data and save it to a GLOBAL Variable in a .PHP to be used later. Most of this data will be the logged-in user's data settings - //most of the system data is already in the initial ''config.php'' file//. This way we can simply ''include_once()'' files. To make the code somewhat seamless, we can setup the class to &quot;pull DB data&quot; and at the same time it will check the //(user's) cache file//:
+{{{
+if (cached file exists) {
+  YES:
+  * Check AGE of file (older than 30min, get a new one)
+  * Return back requested data 
+} else {
+  * if not: create cached .PHP file
+  * Return back requested data 
+}
+}}}
+
+!!! Sample Cached Items:
+* User's selected Theme
+* User's Timezone setting
+* User's Group Name(s)
+
+!!! Sample Cache File Data:
+* Usage: CLASS 
+* Cache Age: 30 min or 1 hour
+* Data Format: JASON? or relative array (//$arr[&quot;tblName&quot;][&quot;column1=A;column2=B;column3=C&quot;] = &quot;some value&quot;;//)
+</pre>
 </div>
 <div title="User (mod)" creator="d.suess" modifier="d.suess" created="201303251649" modified="201303251758" changecount="2">
 <pre>! v0.0.5 Features

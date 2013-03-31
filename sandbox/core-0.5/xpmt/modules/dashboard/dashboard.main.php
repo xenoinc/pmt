@@ -15,7 +15,7 @@
  */
 
 require_once (PMT_PATH . "xpmt/core/pmt.module.php");
-// namespace xenoPMT\Module\Dashboard;
+namespace xenoPMT\Module\Dashboard;
 class dashboard extends pmtModule
 {
   /* Private vars */

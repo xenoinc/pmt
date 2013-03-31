@@ -61,7 +61,6 @@ namespace xenoPMT\Module\Dashboard
     private $_verified = false;
 
     /**
-     *
      * Each associative array item contains a boolean value
      * <ul>
      *  <li><b>CoreInvalid</b>      - Is module valid with this verion of xenoPMT core (xpmtCore["info"]["version_ex"])</li>
@@ -350,6 +349,9 @@ namespace xenoPMT\Module\Dashboard
      */
     private function privInstall()
     {
+      /*
+       * 2013-03-31 * BUG: During INSERT it is not putting in the '\'. must use "\\"
+       */
       if ($this->_verified == false)
         return false;
 
@@ -364,6 +366,7 @@ namespace xenoPMT\Module\Dashboard
 
       if(!$db->connect_errno)
       {
+        // UPDATE `xi_core_module` SET `Module_Path`='C:\\prog\\Apache2\\htdocs\\pmt2\\xpmt\\modules\\dashboard' WHERE  `Module_Id`=1 LIMIT 1;
         $sql = <<<"sql"
         INSERT INTO {$xpmtConf["db"]["prefix"]}CORE_MODULE
         ( `Module_UUID`, `Core`, `Enabled`,

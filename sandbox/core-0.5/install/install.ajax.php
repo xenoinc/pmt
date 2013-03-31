@@ -11,6 +11,15 @@
  *
  * Test:  http://pmt2/install/install.ajax.php?unitest=1
  *
+ * Parameters:
+ *  GET   unitest=1  Perform unit testing
+ *  POST  ClearDB=1  Clear database and start fresh
+ *  POST  UpdateStep
+ *  POST  step3
+ *  POST  step4
+ *  POST  step5
+ *  POST  step6
+ *
  * To Do:
  * 2012-11-19 - Proposal
  * [X]  Refactor variable names to reflect control names. (_dbHost -> txtDbHost)
@@ -24,6 +33,7 @@
  *        echo($obj->Output());     // ret_msg and ret_class
  *
  * Change Log:
+ *  2013-0329 + Added, 'date_default_timezone_set()' to NY as default
  *  2013-0131 + Added cheap unit testing step so we cal call functions directly
  *  2012-1219 * Updated debug message text
  *            + Added throw new Exception(..) to "ajaxCreateConfig()" when inserting Admin account that already exists. (djs)
@@ -38,6 +48,8 @@
 
 require "../xpmt/phpConsole.php";
 PhpConsole::start(true, true, dirname(__FILE__));
+
+date_default_timezone_set('America/New_York');        // [DJS] Added to fix warning in PHP & PhpConsole
 
 // ********************
 $BETA_TESTING = true;
@@ -657,6 +669,8 @@ function ajaxInstallModules()
    * 2. Cycle through each module
    * 3. Install each module
    * 4. Report back in ret_msg  (TODO)
+   *
+   * To Do: This should be ran from the "Next" button in "Step 5"
    */
 
   //pmtDebug("Install Modules");
