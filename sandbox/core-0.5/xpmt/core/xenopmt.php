@@ -1,6 +1,6 @@
 <?php
 
-/* * * *********************************************************
+/* ***********************************************************
  * Copyright 2012 (C) Xeno Innovations, Inc.
  * ALL RIGHTS RESERVED
  * @Author:       Damian Suess
@@ -16,8 +16,11 @@
  *  [ ] Complete GetToolbarMain($uuid) to pull from CACHE and DB via UserGroup definitions
  *  [ ] Generate GetToolbarMeta() to display login, preferences, about, logoff
  *  [ ] Complete $xpmtPage[..] feature display
+ *  [ ] LoadModule() Return back error message in PAGE["HTDATA"] so that we do not create a
+ *      redirect loop (ex: dashboard mod). This requires the use of "LoadTheme()" member
  *
  * Change Log:
+ *  2013-0401 + LoadModule() :: Added is module 'Enabled' test
  *  2013-0331 + Added "LoadTheme()" to display the theme [djs]
  *  2013-0205 + Added GetToolbarMain($uuid) to generate toolbars [djs]
  *            + Fixed bugs in LoadModule($uuid) [djs]
@@ -90,7 +93,8 @@ class xenoPMT
      *
      ****************************/
     $_uuid = $pmtDB->FixString($uuid);
-    $_sql = "SELECT `Module_Class`, `Module_Path`, `Module_Namespace` FROM {$xpmtConf["db"]["prefix"]}CORE_MODULE WHERE Module_UUID='{$_uuid}' LIMIT 1;";
+    $_sql = "SELECT `Module_Class`, `Module_Path`, `Module_Namespace`, `Enabled` ".
+            "FROM {$xpmtConf["db"]["prefix"]}CORE_MODULE WHERE Module_UUID='{$_uuid}' LIMIT 1;";
 
     $tmpArr = $pmtDB->Query( $_sql);
     $ret = $pmtDB->FetchArray($tmpArr);
@@ -118,17 +122,33 @@ class xenoPMT
         // if (file_exists(PMT_PATH . "xpmt/modules/" . $ret["Module_Class"] . ".php")) {}
         */
 
-        $modPth = $ret["Module_Path"] . "/" . $ret["Module_Class"] . ".main.php";
-        //pmtDebug("xenoPMT::LoadModule() Module_Path: '$modPth'");
-        require($modPth);
+        // 2013-0401 + Added 'Enabled' test
+        if ($ret["Enabled"] == FALSE)
+        {
+          pmtDebug("Module is not enabled. Display prompt to user");
 
-        $module = $ret["Module_Class"];
-        $moduleNS = $ret["Module_Namespace"] . "\\" . $module;  // Module Namespace + Class
+          // FOR NOW we will allow it
+
+          $modPth = $ret["Module_Path"] . "/" . $ret["Module_Class"] . ".main.php";
+          require($modPth);
+          $module = $ret["Module_Class"];
+          $moduleNS = $ret["Module_Namespace"] . "\\" . $module;  // Module Namespace + Class
+        }
+        else
+        {
+          $modPth = $ret["Module_Path"] . "/" . $ret["Module_Class"] . ".main.php";
+          //pmtDebug("xenoPMT::LoadModule() Module_Path: '$modPth'");
+          require($modPth);
+          $module = $ret["Module_Class"];
+          $moduleNS = $ret["Module_Namespace"] . "\\" . $module;  // Module Namespace + Class
+        }
       }
       // elseif (... )
       // { require module path from $xpmtModule[][];  /* as a fail safe */ }
       else
       {
+        // ToDo:
+        // Return back error message in PAGE["HTDATA"] so that we do not create a redirect loop (ex: dashboard mod)
         pmtDebug("xenoPMT::LoadModule() - Step1 - Module UUID Found but path is missing. " .
                  "Check TBL_CORE_MODULE.Module_Path settings.");
 

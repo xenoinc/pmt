@@ -20,7 +20,7 @@
  ***********************************************************/
 require_once ("pmt.i.module.php");
 
-class pmtModule implements iModule
+class pmtModule implements \xenoPMT\Module\iModule
 {
 
   /**

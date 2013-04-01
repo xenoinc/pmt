@@ -1,14 +1,14 @@
 <?php
 
-/** * *********************************************************
+/* ***********************************************************
  * Copyright 2012 (C) Xeno Innovations, Inc.
  * ALL RIGHTS RESERVED
  * @Author:       Damian Suess
  * Document:      dashboard
  * Created Date:  Dec 3, 2012
- * Status:        {unstable/pre-alpha/alpha/beta/stable}
+ * Status:        Alpha {unstable/pre-alpha/alpha/beta/stable}
  * Description:
- *
+ *  Dashboard module installer / Uninstaller
  *
  * To Do:
  *  [ ] Keep pulling sample info from "sample.setup.php"
@@ -23,8 +23,9 @@
  *    require_once("C:/_work/xi/xenoPMT/sandbox/core-0.5/xpmt/modules/dashboard/dashboard.setup.php");
  *
  * Change Log:
+ *  2013-0401 * installer: Enabled module by default.
+ *            + Added '\' to '\\' converter for _path & _namespace
  *  2013-0131 * Fixed $_verifiedMessages[] in VerifyPreInstall(). it was returning false positives
- *
  *  2012-1219 * Refactored code
  *  2012-1212 + added a bunch of crap.. i'll write it up later (verify, execute of Inst/Uninst).  (djs)
  *            * Changed any PHP core module classes to use "\" namespace convention for safty sake (nsmespace friendly)
@@ -369,11 +370,35 @@ namespace xenoPMT\Module\Dashboard
         pmtDebug("Dashboard.Setup() privInstall() ModuleName: " . $this->_path);
         pmtDebug("Dashboard.Setup() privInstall() ModuleNamespace: " . $this->_namespace);
 
+        // Added 2013-0401
         // Clean up '\' on Windows OS Servers.
         // If (find($_path, "\\" == false && find($_path, "\" == true) {Replace($_path, "\", "\\"); }
         // If (find($_namespace, "\\" == false && find($_namespace, "\" == true) {Replace($_namespace, "\", "\\"); }
+        // str_replace($search, $replace, $subject);
+        $bkSlash = "\\";
+        $bkSlashDouble = "\\\\";
+        // Use the '===' just incase "\\" is the first char. pos=0 confuses with FALSE
+        pmtDebug("@@ _path SNGL " . strpos($this->_path, $bkSlash));
+        pmtDebug("@@ _path DBL " . strpos($this->_path, $bkSlashDouble));
+
+        if (strpos($this->_path, $bkSlashDouble) === false &&
+            strpos($this->_path, $bkSlash) > 0)
+        {
+          pmtDebug("## Repl '\' _path");
+          $this->_path = str_replace($bkSlash, $bkSlashDouble, $this->_path);
+        }
+
+        if (strpos($this->_namespace, $bkSlashDouble) === false &&
+            strpos($this->_namespace, $bkSlash) > 0)
+        {
+          pmtDebug("## Repl '\' _NS");
+          $this->_namespace = str_replace($bkSlash, $bkSlashDouble, $this->_namespace);
+        }
+        else {          pmtDebug("## NO REPL!!"); }
+        // End update
 
         // UPDATE `xi_core_module` SET `Module_Path`='C:\\prog\\Apache2\\htdocs\\pmt2\\xpmt\\modules\\dashboard' WHERE  `Module_Id`=1 LIMIT 1;
+        // NOTE: This is the only plugin that is ENABLED by default!!
         $sql = <<<"sql"
         INSERT INTO {$xpmtConf["db"]["prefix"]}CORE_MODULE
         ( `Module_UUID`, `Core`, `Enabled`,
@@ -383,7 +408,7 @@ namespace xenoPMT\Module\Dashboard
           `Module_URN`,
           `Description`
         ) VALUES (
-        '{$this->_uuid}', $bCore, FALSE,
+        '{$this->_uuid}', $bCore, TRUE,
         '{$this->_title}', '{$this->_version}', '{$this->_path}',
         '{$this->_namespace}',
         '{$this->_classname}',
