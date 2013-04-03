@@ -25,13 +25,14 @@
  *  [ ] Split LoadModule() and LoadTheme()
  *
  * Change Log:
+ *  2013-0403 * Moved items from "xenopmt.php" to here
  *
  */
 
 namespace xenoPMT\Core
 {
-  require_once "xenoPMTCore.php";
-  class Module extends \xenoPMT\Core
+  require_once "Functions.php";
+  class Module extends \xenoPMT\Core\Functions
   {
     /* Private vars */
 
@@ -62,7 +63,6 @@ namespace xenoPMT\Core
        */
 
       // debug ($uuid);
-
       // include them all just in case
       global $xpmtModule, $xpmtCore, $xpmtPage, $xpmtConf, $pmtDB;
       /*

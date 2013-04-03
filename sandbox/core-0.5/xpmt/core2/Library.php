@@ -19,8 +19,18 @@
  */
 namespace xenoPMT\Core
 {
+  require_once "Functions.php";
   class Library extends \xenoPMT\Core\Functions
   {
+    /**
+     * List of core/user xpmtLibaries already included
+     *
+     * @version v0.0.0
+     * @since v0.0.7
+     * @since xenpPMT Core-0.0.5
+     * @var array
+     */
+    private $libIncluded = array();
 
     /** Library Handler */
 
@@ -38,16 +48,6 @@ namespace xenoPMT\Core
     }
 
     /**
-     * List of core/user xpmtLibaries already included
-     *
-     * @version v0.0.0
-     * @since v0.0.7
-     * @since xenpPMT Core-0.0.5
-     * @var array
-     */
-    private $libIncluded = array();
-
-    /**
      * Is xpmtLibrary enabled
      * <p>Loops through $this->libIncluded[] to see if it's there</p>
      *
@@ -56,7 +56,10 @@ namespace xenoPMT\Core
      * @param type $libName
      * @return boolean true=enabled, fales=not enabled
      */
-    public static function lib_enabled($libName) { return false; }
+    public static function lib_enabled($libName)
+    {
+      return false;
+    }
 
     /**
      * Searches through Core and User folder to see if libary is available
@@ -67,7 +70,10 @@ namespace xenoPMT\Core
      * @param type $libName
      * @return boolean true=found false=not found or error
      */
-    public static function lib_available($libName) {return false; }
+    public static function lib_available($libName)
+    {
+      return false;
+    }
 
   }
 }

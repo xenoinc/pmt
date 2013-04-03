@@ -1,5 +1,4 @@
 <?php
-
 /* * **********************************************************
  * Copyright 2013 (C) Xeno Innovations, Inc.
  * ALL RIGHTS RESERVED
@@ -18,12 +17,10 @@
  *
  */
 
-namespace xenoPMT
+namespace xenoPMT\Core
 {
-  class Core
+  class Functions
   {
-
-
     /**
      * GetSetting
      * Get system setting and save it into global variable $CACHE["setting"][$setting]
@@ -34,7 +31,7 @@ namespace xenoPMT
      * @param string $setting Setting name
      * @return string Setting Value
      */
-    function GetSetting($setting)
+    static function GetSetting($setting)
     {
       /** Setting     Value
        *  theme       <theme-name>
@@ -58,7 +55,6 @@ namespace xenoPMT
       return $ret['value'];
     }
 
-
     /**
      * Get Module Setting
      *  ** in beta **
@@ -67,7 +63,7 @@ namespace xenoPMT
      * @param type $setting
      * @return array
      */
-    function GetModuleSetting($uuid, $setting)
+    static function GetModuleSetting($uuid, $setting)
     {
       global $CACHE;
       global $pmtDB;
@@ -93,7 +89,7 @@ namespace xenoPMT
      * @param string $setting Setting name
      * @return string Setting Value
      */
-    function GetUserSetting($setting)
+    static function GetUserSetting($setting)
     {
       /** Setting     Value
        *  theme       <theme-name>
