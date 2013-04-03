@@ -39,6 +39,7 @@
 namespace xenoPMT\Module\Dashboard
 {
   require_once "/../../core/xpmt.i.setup.php";
+  require_once "/../../core/xenoPMTSetup.php";
   class Setup implements \xenoPMT\Module\ISetup
   {
 
@@ -82,7 +83,7 @@ namespace xenoPMT\Module\Dashboard
      */
     private $_installModule = false;
 
-
+    private $_xenoPMT;
 
     // ################################### //
     // ##[ Constructor ]################## //
@@ -157,7 +158,6 @@ namespace xenoPMT\Module\Dashboard
         }
       }
     } // end::_construct
-
 
 
     /* ##################################### */
