@@ -25,7 +25,7 @@
  */
 namespace xenoPMT\Core
 {
-  class Setup extends \xenoPMT
+  class Setup extends \xenoPMT\Core
   {
     public static function RegisterModule($modName, $modClass, $modNamespace)
     {
