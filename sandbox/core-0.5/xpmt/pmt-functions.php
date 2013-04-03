@@ -3,7 +3,7 @@
 /* * **********************************************************
  * Copyright 2012 (C) Xeno Innovations, Inc.
  * ALL RIGHTS RESERVED
- * Author:       suessdam
+ * Author:       Damian Suess
  * Document:     pmt-functions
  * Created Date: Mar 9, 2012
  *

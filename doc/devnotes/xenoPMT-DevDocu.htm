@@ -769,6 +769,52 @@ You are free to use this however you like.  I place this code into the public do
 * Attach files
 * Add code samples with syntax highlighting</pre>
 </div>
+<div title="Cache" creator="d.suess" modifier="d.suess" created="201304030442" modified="201304030457" changecount="8">
+<pre>System Cache is a very important subject to cover so that we can quickly access settings and data without having to waste resources.  There are 2 important types of Cache that xenoPMT will handle: database settings (//$CACHE[]//)and user's data (//not implemented//).
+
+! $CACHE[][..]
+This method is currently in use. Below is a listing of the usages of this multidimensional array.
+
+!! $CACHE[][..] Array Elements
+* GetSetting($setting)
+** $CACHE['''setting'''][''$setting''] = ''$value''
+** select Setting, Value from TBL_CORE_SETTINGS where Setting='$setting' LIMIT 1;
+** Setting = &quot;theme&quot;, &quot;locale&quot;
+* GetModuleSettings($uuid, $setting)
+** $CACHE['''mod_settings'''][''$uuid''][''$setting''] = ''$value''
+** select Setting, Value from TBL_CORE_MODULE_CONFIG where Setting='' UUID='' LIMIT 1;
+* GetUserSetting($setting)
+** //Not implemented yet//
+** Get current logged in user's setting. (move to &quot;User's Cached&quot; system?)
+
+
+!NEW (User's) Cache System (0.0.7?)
+(//NOT IN USE YET [v0.9]//)
+Save user data to a .PHP file so that we only need to use the INCLUDE(REQUIRE)_ONCE statement versus waste CPU on calling the database constantly. It is suggested to keep these files for maybe 10-30min so that the user can swiftly navigate throughout the system. //In the future this will handle both the $CACHE[] and physical Cache//.
+
+The ''Cache System'' or &quot;User's Cache&quot; is suggesting that we limit the use of database communication and create a class/system where we can load pulled back data and save it to a GLOBAL Variable in a .PHP to be used later. Most of this data will be the logged-in user's data settings - //most of the system data is already in the initial ''config.php'' file//. This way we can simply ''include_once()'' files. To make the code somewhat seamless, we can setup the class to &quot;pull DB data&quot; and at the same time it will check the //(user's) cache file//:
+{{{
+if (cached file exists) {
+  YES:
+  * Check AGE of file (older than 30min, get a new one)
+  * Return back requested data 
+} else {
+  * if not: create cached .PHP file
+  * Return back requested data 
+}
+}}}
+
+!!! Sample Cached Items:
+* User's selected Theme
+* User's Timezone setting
+* User's Group Name(s)
+
+!!! Sample Cache File Data:
+* Usage: CLASS 
+* Cache Age: 30 min or 1 hour
+* Data Format: JASON? or relative array (//$arr[&quot;tblName&quot;][&quot;column1=A;column2=B;column3=C&quot;] = &quot;some value&quot;;//)
+</pre>
+</div>
 <div title="Core2-Workflow" creator="d.suess" modifier="d.suess" created="201209012314" modified="201209241852" changecount="10">
 <pre>Below describes the default core loading workflow.
 
@@ -975,14 +1021,15 @@ One of the first module to get created. The initiative is to create a simple mod
 * libWiki - The parser engine behind the pages to view.
 * libWikiPage - The page creator for the wiki system (?? might place functionality elsewhere??)</pre>
 </div>
-<div title="MainMenu" creator="d.suess" modifier="d.suess" created="201209011745" modified="201303011540" changecount="46">
+<div title="MainMenu" creator="d.suess" modifier="d.suess" created="201209011745" modified="201304030438" changecount="47">
 <pre>! xenoPMT
 * [[Core2-Workflow]]
 * [[config.php]]
 * [[Modules]]
 * [[Libraries]]
-* [[Reports]]
+* [[Cache]]
 * [[Variables]]
+* [[Reports]]
 * [[ToDoList]]
 * [[Test System]]
 ! Modules
@@ -2077,7 +2124,7 @@ foreach ($myArray as $row)
 &lt;/table&gt;
 }}}</pre>
 </div>
-<div title="ToDoList" creator="d.suess" modifier="d.suess" created="201209031640" modified="201303310708" changecount="24">
+<div title="ToDoList" creator="d.suess" modifier="d.suess" created="201209031640" modified="201304030446" changecount="25">
 <pre>!ASAP
 |!Module            |!Sub-Section  |!Description |h
 |[[KB (mod)]]       |Main   |List items |
@@ -2087,7 +2134,7 @@ foreach ($myArray as $row)
 |[[Ticket (mod)]]   |View   |View tickets |
 |[[Ticket (mod)]]   |List   |List tickets |
 |[[Customer (mod)]] |       |Create skeleton |
-|Cache              |       |xenoPMT Cache Manager  (v0.0.7) |
+|[[Cache]]          |       |xenoPMT Cache Manager  (v0.0.7) |
 
 !Later
 |!Module      |!Sub-Section  |!Description |h
@@ -2113,29 +2160,6 @@ DB Changes
 ** .\#_name\phi\
 * Create downloads lib to safely upload/download files and not allow URL link-backs to physical file
 }}}
-
-!Cache System (0.0.7?)
-The ''Cache System'' or &quot;User's Cache&quot; is suggesting that we limit the use of database communication and create a class/system where we can load pulled back data and save it to a GLOBAL Variable in a .PHP to be used later. Most of this data will be the logged-in user's data settings - //most of the system data is already in the initial ''config.php'' file//. This way we can simply ''include_once()'' files. To make the code somewhat seamless, we can setup the class to &quot;pull DB data&quot; and at the same time it will check the //(user's) cache file//:
-{{{
-if (cached file exists) {
-  YES:
-  * Check AGE of file (older than 30min, get a new one)
-  * Return back requested data 
-} else {
-  * if not: create cached .PHP file
-  * Return back requested data 
-}
-}}}
-
-!!! Sample Cached Items:
-* User's selected Theme
-* User's Timezone setting
-* User's Group Name(s)
-
-!!! Sample Cache File Data:
-* Usage: CLASS 
-* Cache Age: 30 min or 1 hour
-* Data Format: JASON? or relative array (//$arr[&quot;tblName&quot;][&quot;column1=A;column2=B;column3=C&quot;] = &quot;some value&quot;;//)
 </pre>
 </div>
 <div title="User (mod)" creator="d.suess" modifier="d.suess" created="201303251649" modified="201303251758" changecount="2">
