@@ -12,6 +12,8 @@
  *  The library system is a collection of procedures that allows us
  *  to access a particular module's features anywhere else in the system.
  *
+ *  It is suggested to place library functions inside of the "/MODNAME/lib" folder
+ *
  * ToDo:
  *
  * Change Log:

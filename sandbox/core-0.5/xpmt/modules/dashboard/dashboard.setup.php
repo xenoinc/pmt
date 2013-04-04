@@ -39,7 +39,7 @@
 namespace xenoPMT\Module\Dashboard
 {
   require_once "/../../core/xpmt.i.setup.php";
-  require_once "/../../core/xenoPMTSetup.php";
+  require_once "/../../core2/Setup.php";
   class Setup implements \xenoPMT\Module\ISetup
   {
 
@@ -241,6 +241,12 @@ namespace xenoPMT\Module\Dashboard
        * 2. [ ] Check for conflicting URN
        */
 
+      // test:
+      require_once "/../../core2/Setup.php";
+      \xenoPMT\Core\Setup::CheckURIConflict();
+      // end test
+
+
       global $xpmtConf;
       $bRet = false;            // Verify if we can install or not
       /*
@@ -350,6 +356,10 @@ namespace xenoPMT\Module\Dashboard
      */
     private function privInstall()
     {
+      // test:
+      \xenoPMT\Core\Setup::RegisterModule("moname", "class", "ns");
+      // end test
+
       /*
        * 2013-03-31 * BUG: During INSERT it is not putting in the '\'. must use "\\"
        */

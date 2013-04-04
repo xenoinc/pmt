@@ -30,6 +30,11 @@ namespace xenoPMT\Core
   {
     public static function RegisterModule($modName, $modClass, $modNamespace)
     {
+      // let's just hope this works here
+      global $xpmtConf;
+
+      pmtDebug("REG 1: {$xpmtConf['db']['server']}; 2:{$xpmtConf['db']['user']};" .
+               "3: {$xpmtConf['db']['pass']}; 4: {$xpmtConf['db']['dbname']}");
 
     }
 
@@ -38,7 +43,22 @@ namespace xenoPMT\Core
      */
     public static function CheckURIConflict()
     {
+      global $xpmtConf;
 
+      pmtDebug("CHK 1: {$xpmtConf['db']['server']}; 2:{$xpmtConf['db']['user']};" .
+               "3: {$xpmtConf['db']['pass']}; 4: {$xpmtConf['db']['dbname']}");
+
+      //{$xpmtConf["db"]["prefix"]}CORE_MODULE
+      //select * from xi_core_module where Module_UUID = 'df9f29f8-1aed-421d-b01c-860c6b89fb14';
+      /*
+      $db = new \mysqli($xpmtConf["db"]["server"],  $xpmtConf["db"]["user"],
+                        $xpmtConf["db"]["pass"],    $xpmtConf["db"]["dbname"]);
+      if(!$db->connect_errno)
+      {
+        $sql = "select * from {$xpmtConf["db"]["prefix"]}CORE_MODULE where `Module_UUID` = '{$this->_uuid}';";
+      }
+
+      */
     }
   }
 }
