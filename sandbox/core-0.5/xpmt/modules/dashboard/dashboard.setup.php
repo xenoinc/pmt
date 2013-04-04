@@ -357,7 +357,7 @@ namespace xenoPMT\Module\Dashboard
     private function privInstall()
     {
       // test:
-      \xenoPMT\Core\Setup::RegisterModule("moname", "class", "ns");
+      $tmpRet = \xenoPMT\Core\Setup::RegisterModule("moname", "class", "ns");
       // end test
 
       /*
