@@ -31,11 +31,59 @@ namespace xenoPMT\Core
   // Extending is probably NOT needed here (yet)
   class Setup extends \xenoPMT\Core\Functions
   {
-    public static function RegisterModule($modName, $modClass, $modNamespace)
+
+    // Private Parts
+    private $_uuid;
+    private $_version;
+    private $_title;
+    private $_description;
+    private $_urn;
+    private $_classname;
+    private $_namespace;
+    private $_path;
+    private $_mainfile;
+    private $_core;
+
+    private static function structToVar($objModInfo)
     {
+      /*
+      $this->_uuid        = $objModInfo->Module_UUID;
+      $this->_core        = $objModInfo->Core;
+      //                  = $objModInfo->Enabled;
+      $this->_title       = $objModInfo->Module_Name;
+      $this->_classname   = $objModInfo->Module_Version;
+      $this->_path        = $objModInfo->Module_Path;
+      $this->_namespace   = $objModInfo->Module_Namespace;
+      $this->_classname   = $objModInfo->Module_Class;
+      $this->_urn         = $objModInfo->Module_URN;
+      $this->_description = $objModInfo->Description;
+      $this->_path        = $objModInfo->Module_Path;
+
+      /*
+      // Test
+      debug($objModInfo->Module_UUID);
+      debug($objModInfo->IsCore);
+      debug($objModInfo->IsEnabled);
+      debug($objModInfo->Module_Name);
+      debug($objModInfo->Module_Version);
+      debug($objModInfo->Module_Path);
+      debug($objModInfo->Module_Namespace);
+      debug($objModInfo->Module_Class);
+      debug($objModInfo->Module_URN);
+      debug($objModInfo->Description);
+      */
+    }
+
+    // Public static members
+    public static function RegisterModule($objModInfo, &$objErr)
+    {
+      pmtDebug("xenoPMT\Core\Setup.RegisterModule Entering");
       // let's just hope this works here
-      global $xpmtConf;
-      $objStruct = Struct::factory(
+      global $xpmtConf;   // used for DB values
+      $retStatus = true;  // Pass/Fail Registeration
+
+      // Create structure
+      $objStruct = \xenoPMT\Core\Misc\Struct::Initialize(
           "CoreInvalid",
           "IsInstalled",
           "URN_Conflict",
@@ -43,14 +91,106 @@ namespace xenoPMT\Core
           "DbConnect_Failed",
           "DbQuery_Failed"
         );
-      $regStatus = $ojbStruct->create(false, false, false, false, false, false);
-      $regStatus->CoreInvalid = true;
-      pmtDebug("REG 1: {$xpmtConf['db']['server']}; 2:{$xpmtConf['db']['user']};" .
-               "3: {$xpmtConf['db']['pass']}; 4: {$xpmtConf['db']['dbname']}"
-               );
-      
-               // o
-      return false;
+      $objErr= $objStruct->Create(false, false, false, false, false, false);
+
+      // put structured class properties into this class' private parts
+      //self::structToVar($objModInfo);
+      $_uuid        = $objModInfo->Module_UUID;
+      $_core        = $objModInfo->Core;
+      //                  = $objModInfo->Enabled;
+      $_title       = $objModInfo->Module_Name;
+      $_classname   = $objModInfo->Module_Version;
+      $_path        = $objModInfo->Module_Path;
+      $_namespace   = $objModInfo->Module_Namespace;
+      $_classname   = $objModInfo->Module_Class;
+      $_urn         = $objModInfo->Module_URN;
+      $_description = $objModInfo->Description;
+      $_path        = $objModInfo->Module_Path;
+
+
+      if ($_core) $bCore = "TRUE"; else $bCore = "FALSE";
+
+      //return true;
+
+      //pmtDebug("REG 1: {$xpmtConf['db']['server']}; 2:{$xpmtConf['db']['user']};" .
+      //         "3: {$xpmtConf['db']['pass']}; 4: {$xpmtConf['db']['dbname']}");
+
+      //$tmpArr = $pmtDB->Query( $_sql);
+      $db = new \mysqli( $xpmtConf["db"]["server"], $xpmtConf["db"]["user"],
+                         $xpmtConf["db"]["pass"], $xpmtConf["db"]["dbname"]);
+
+      if(!$db->connect_errno)
+      {
+        //pmtDebug("Setup.RegMod() privInstall() ModuleName: " . $_path);
+        //pmtDebug("Setup.RegMod() privInstall() ModuleNamespace: " . $_namespace);
+
+        // Added 2013-0401
+        // Clean up '\' on Windows OS Servers.
+        // If (find($_path, "\\" == false && find($_path, "\" == true) {Replace($_path, "\", "\\"); }
+        // If (find($_namespace, "\\" == false && find($_namespace, "\" == true) {Replace($_namespace, "\", "\\"); }
+        // str_replace($search, $replace, $subject);
+        $bkSlash = "\\";
+        $bkSlashDouble = "\\\\";
+        // Use the '===' just incase "\\" is the first char. pos=0 confuses with FALSE
+        //pmtDebug("Setup.RegMod() @@ _path SNGL " . strpos($_path, $bkSlash));
+        //pmtDebug("Setup.RegMod() @@ _path DBL " . strpos($_path, $bkSlashDouble));
+
+        /*
+         * Note: This will not replace anything on a Windows machine if path
+         *  is, "\\server\folder". So don't do it. "c:\path" only works
+         */
+        if (strpos($_path, $bkSlashDouble) === false &&
+            strpos($_path, $bkSlash) > 0)
+        {
+          //pmtDebug("Setup.RegMod() ## Replaced '\' _path");
+          $_path = str_replace($bkSlash, $bkSlashDouble, $_path);
+        }
+
+        if (strpos($_namespace, $bkSlashDouble) === false &&
+            strpos($_namespace, $bkSlash) > 0)
+        {
+          //pmtDebug("Setup.RegMod() ## Replaced '\' _NS");
+          $_namespace = str_replace($bkSlash, $bkSlashDouble, $_namespace);
+        }
+        // End PATH & Namespace "\" to "\\" fix
+
+        if ($_core) $bCore = "TRUE"; else $bCore = "FALSE";
+
+
+        // UPDATE `xi_core_module` SET `Module_Path`='C:\\prog\\Apache2\\htdocs\\pmt2\\xpmt\\modules\\dashboard' WHERE  `Module_Id`=1 LIMIT 1;
+        // NOTE: This is the only plugin that is ENABLED by default!!
+        $sql = <<<"sql"
+        INSERT INTO {$xpmtConf["db"]["prefix"]}CORE_MODULE
+        ( `Module_UUID`, `Core`, `Enabled`,
+          `Module_Name`, `Module_Version`, `Module_Path`,
+          `Module_Namespace`,
+          `Module_Class`,
+          `Module_URN`,
+          `Description`
+        ) VALUES (
+        '{$_uuid}', $bCore, {$objModInfo->Enabled},
+        '{$_title}', '{$_version}', '{$_path}',
+        '{$_namespace}',
+        '{$_classname}',
+        '{$_urn}',
+        '{$_description}');
+sql;
+        if($db->query($sql))
+          $bRet = true;
+        else
+        {
+          $bRet = false;
+          $_verifiedMessages["DbQuery_Failed"] = true;
+        }
+        $db->close();
+      }
+      else
+      { // connection error
+        $_verifiedMessages["DbConnect_Failed"] = true;
+        $bRet = false;
+      }
+      pmtDebug("xenoPMT\Core\Setup.RegisterModule Exiting::{$retStatus}");
+      return $retStatus;
     }
 
     /**

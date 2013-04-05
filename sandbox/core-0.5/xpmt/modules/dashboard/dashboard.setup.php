@@ -38,8 +38,10 @@
 
 namespace xenoPMT\Module\Dashboard
 {
-  require_once "/../../core/xpmt.i.setup.php";
-  require_once "/../../core2/Setup.php";
+  require_once "/../../core/xpmt.i.setup.php";  // Interface for Setup class
+  require_once "/../../core2/Setup.php";        // /xenoPMT\Core\Setup Class
+  require_once "/../../core2/misc/Struct.php";  // Structure class
+
   class Setup implements \xenoPMT\Module\ISetup
   {
 
@@ -357,7 +359,13 @@ namespace xenoPMT\Module\Dashboard
     private function privInstall()
     {
       // test:
-      $tmpRet = \xenoPMT\Core\Setup::RegisterModule("moname", "class", "ns");
+        /*'{$this->_uuid}', $bCore, TRUE,
+        '{$this->_title}', '{$this->_version}', '{$this->_path}',
+        '{$this->_namespace}',
+        '{$this->_classname}',
+        '{$this->_urn}',
+        '{$this->_description}');/*
+      $tmpRet = \xenoPMT\Core\Setup::RegisterModule($structModInfo, $structErrRet);
       // end test
 
       /*

@@ -31,7 +31,7 @@ namespace xenoPMT\Core\Misc
      * only empty properties
      * @return \self (structure object with null properties)
      */
-    public static function factory()
+    public static function Initialize()
     {
       $struct = new self;
       foreach (func_get_args() as $value)
@@ -43,7 +43,7 @@ namespace xenoPMT\Core\Misc
      * Create a new variable witht he struct type $this
      * @return \xenoPMT\Core\Misc\Struct
      */
-    public function create()
+    public function Create()
     {
       // clone the empty blueprint-struct ($this) inot the new data $struct
       $struct = clone $this;

@@ -1,6 +1,6 @@
 <?php
 
-/** * *********************************************************
+/* * *********************************************************
  * Copyright 2012 (C) Xeno Innovations, Inc.
  * ALL RIGHTS RESERVED
  * @Author:       Damian Suess
@@ -15,9 +15,13 @@
  * Change Log:
  *  2012-1206 * Created skeleton
  */
+
 namespace xenoPMT\Module\UUID
 {
-  require_once "/../../core/xpmt.i.setup.php";
+  require_once "/../../core/xpmt.i.setup.php";  // Interface for Setup class
+  require_once "/../../core2/Setup.php";        // /xenoPMT\Core\Setup Class
+  require_once "/../../core2/misc/Struct.php";  // Structure class
+
   class Setup implements \xenoPMT\Module\ISetup
   {
     /**
@@ -190,8 +194,8 @@ namespace xenoPMT\Module\UUID
     public function Install()
     {
       global $xpmtConf;
-      return true;                        // Use ONLY for Unit Testing
-      // return $this->privInstall();     // Perform install process
+      //return true;                        // Use ONLY for Unit Testing
+       return $this->privInstall();     // Perform install process
     } // end::Install()
 
     /**
@@ -279,16 +283,79 @@ namespace xenoPMT\Module\UUID
      */
     private function privInstall()
     {
+      /*
+       * 2013-03-31 * BUG: During INSERT it is not putting in the '\'. must use "\\"
+       */
+      if ($this->_verified == false)
+      {
+        debug("UUID failed verification");
+        return false;
+      }
+      else
+        debug("UUID Installing");
+
+      global $xpmtConf;
+
+      // test new method to register:
+      /*
+        '{$this->_uuid}', $bCore, TRUE,
+        '{$this->_title}', '{$this->_version}', '{$this->_path}',
+        '{$this->_namespace}',
+        '{$this->_classname}',
+        '{$this->_urn}',
+        '{$this->_description}');
+      */
+      $objStructModInfo = \xenoPMT\Core\Misc\Struct::Initialize(
+          "Module_UUID",      "IsCore",         "IsEnabled",
+          "Module_Name",      "Module_Version", "Module_Path",
+          "Module_Namespace", "Module_Class",   "Module_URN",
+          "Description");
+      $objModInfo = $objStructModInfo->Create(
+          $this->_uuid,      $this->_core,      "TRUE",
+          $this->_title,     $this->_version,   $this->_path,
+          $this->_namespace, $this->_classname, $this->_urn,
+          $this->_description);
+
+      $objErrRet = null;  // Struct containing error ret statuses
+
+      $retStatus = \xenoPMT\Core\Setup::RegisterModule($objModInfo, $objErrRet);
+      if ($retStatus == true)
+      {
+        /* Proceed with further setup since we got Green-Light-Go! */
+
+        pmtDebug("UUID Setup: Registered Successfully!");
+        $objErrRet = null;  // cleanup object
+      }
+      else
+      {
+        // Report back the errors
+        pmtDebug("UUID Setup: Failed to register");
+        $this->_verifiedMessages["DbQuery_Failed"]    = $objErrRet->DbQuery_Failed;
+        $this->_verifiedMessages["CoreInvalid"]       = $objErrRet->CoreInvalid;
+        $this->_verifiedMessages["IsInstalled"]       = $objErrRet->IsInstalled;
+        $this->_verifiedMessages["URN_Conflict"]      = $objErrRet->URN_Conflict;
+        $this->_verifiedMessages["UUID_Conflict"]     = $objErrRet->UUID_Conflict;
+        $this->_verifiedMessages["DbConnect_Failed"]  = $objErrRet->DbConnect_Failed;
+        $this->_verifiedMessages["DbQuery_Failed"]    = $objErrRet->DbQuery_Failed;
+      }
+      // end test
+
+      // Return the status pass/fail - true/false
+      return $retStatus;
+    } // end::privInstall()
+
+    private function privInstall__OLD()
+    {
       if ($this->_verified == false)
         return false;
 
       global $xpmtConf;
       $bRet = false;
-
       /* ... Insert Code Here ... */
 
       return $bRet;
     } // end::privInstall()
+
 
     /**
      * Actual Uninstaller
