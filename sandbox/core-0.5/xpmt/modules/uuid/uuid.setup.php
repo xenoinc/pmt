@@ -232,24 +232,35 @@ namespace xenoPMT\Module\UUID
 
       /* Code Hints:
        * 1. Check for prev UUID
+       *  RET: IsInstalled, UUID_CONFLICT
        * 2. Check if required tables, values or modules exist
+       * 3. Check if URN conflicts
+       *  RET: URN_Conflict
        */
 
-      // Step 0 - Return NO errors
-      $this->_verifiedMessages["CoreInvalid"]       = false;
-      $this->_verifiedMessages["IsInstalled"]       = false;
-      $this->_verifiedMessages["URN_Conflict"]      = false;
-      $this->_verifiedMessages["UUID_Conflict"]     = false;
-      $this->_verifiedMessages["DbConnect_Failed"]  = false;
-      $this->_verifiedMessages["DbQuery_Failed"]    = false;
+      // Step 0 - Prepare Error Return Structure
+      // Create structure (Added: 2013-0409)
+      $objStruct = \xenoPMT\Core\Misc\Struct::Initialize(
+          "CoreInvalid",
+          "IsInstalled",
+          "URN_Conflict",
+          "UUID_Conflict",
+          "DbConnect_Failed",
+          "DbQuery_Failed"
+        );
+      $objErr= $objStruct->Create(false, false, false, false, false, false);
 
       // Step 1 - Check PASS/FAIL for PREV UUID (true=pass)
 
-      $step1 = true;
+      // $step1 = true;  // passed
+      require_once "/../../core2/Setup.php";
+      $step1 = \xenoPMT\Core\Setup::CheckConflict($objModInfo, $objErr);
 
 
       // Step 2 - Check for required Tables/Values and dependent modules/libs
       $step2 = true;
+
+      // Step 3 - Check for URN conflict
 
 
       // Perform final test logic
@@ -288,11 +299,11 @@ namespace xenoPMT\Module\UUID
        */
       if ($this->_verified == false)
       {
-        debug("UUID failed verification");
+        pmtDebug("uuid.setup.Install() Cannot install, verification previously failed.");
         return false;
       }
       else
-        debug("UUID Installing");
+        pmtDebug("uuid.setup.Install() Installing...");
 
       global $xpmtConf;
 
@@ -322,7 +333,6 @@ namespace xenoPMT\Module\UUID
       if ($retStatus == true)
       {
         /* Proceed with further setup since we got Green-Light-Go! */
-
         pmtDebug("UUID Setup: Registered Successfully!");
         $objErrRet = null;  // cleanup object
       }

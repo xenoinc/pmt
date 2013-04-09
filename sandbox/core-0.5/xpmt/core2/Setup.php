@@ -33,6 +33,7 @@ namespace xenoPMT\Core
   {
 
     // Private Parts
+    // ** Since this class is STATIC we can't use "$this->_VAR"
     private $_uuid;
     private $_version;
     private $_title;
@@ -40,9 +41,10 @@ namespace xenoPMT\Core
     private $_urn;
     private $_classname;
     private $_namespace;
-    private $_path;
-    private $_mainfile;
-    private $_core;
+    private $_path;         // Path to module
+    private $_mainfile;     // Startup file
+    private $_enabled;      // BOOL Is module enabled by default
+    private $_core;         // BOOL Is module apart of CORE (true) or user created (false)
 
     private static function structToVar($objModInfo)
     {
@@ -96,16 +98,15 @@ namespace xenoPMT\Core
       // put structured class properties into this class' private parts
       //self::structToVar($objModInfo);
       $_uuid        = $objModInfo->Module_UUID;
-      $_core        = $objModInfo->Core;
-      //                  = $objModInfo->Enabled;
+      $_core        = $objModInfo->IsCore;            // undefiend??
+      $_enabled     = $objModInfo->IsEnabled;         // "TRUE" / "FALSE"
       $_title       = $objModInfo->Module_Name;
-      $_classname   = $objModInfo->Module_Version;
+      $_version     = $objModInfo->Module_Version;
       $_path        = $objModInfo->Module_Path;
       $_namespace   = $objModInfo->Module_Namespace;
       $_classname   = $objModInfo->Module_Class;
       $_urn         = $objModInfo->Module_URN;
       $_description = $objModInfo->Description;
-      $_path        = $objModInfo->Module_Path;
 
 
       if ($_core) $bCore = "TRUE"; else $bCore = "FALSE";
@@ -168,7 +169,7 @@ namespace xenoPMT\Core
           `Module_URN`,
           `Description`
         ) VALUES (
-        '{$_uuid}', $bCore, {$objModInfo->Enabled},
+        '{$_uuid}', {$bCore}, {$_enabled},
         '{$_title}', '{$_version}', '{$_path}',
         '{$_namespace}',
         '{$_classname}',
@@ -194,9 +195,9 @@ sql;
     }
 
     /**
-     * Verifies if there is an URI conflict witht he requesting module
+     * Verifies if there is are URN or UUID conflicts with the requesting module
      */
-    public static function CheckURIConflict()
+    public static function CheckConflict($objModInfo, &$objStruct)
     {
 
 

@@ -191,8 +191,8 @@ namespace xenoPMT\Module\Admin
     public function Install()
     {
       global $xpmtConf;
-      return true;                        // Use ONLY for Unit Testing
-      // return $this->privInstall();     // Perform install process
+      // return true;                        // Use ONLY for Unit Testing
+      return $this->privInstall();     // Perform install process
     } // end::Install()
 
     /**
@@ -279,6 +279,73 @@ namespace xenoPMT\Module\Admin
      * @return boolean      True=SUCCESS, False=FAIL
      */
     private function privInstall()
+    {
+      /*
+       * 2013-03-31 * BUG: During INSERT it is not putting in the '\'. must use "\\"
+       */
+      if ($this->_verified == false)
+      {
+        pmtDebug("admin.setup.Install() Cannot install, verification previously failed.");
+        return false;
+      }
+      else
+        pmtDebug("admin.setup.Install() Installing...");
+
+      global $xpmtConf;
+
+      // test new method to register:
+      /*
+        '{$this->_uuid}', $bCore, TRUE,
+        '{$this->_title}', '{$this->_version}', '{$this->_path}',
+        '{$this->_namespace}',
+        '{$this->_classname}',
+        '{$this->_urn}',
+        '{$this->_description}');
+      */
+      $objStructModInfo = \xenoPMT\Core\Misc\Struct::Initialize(
+          "Module_UUID",      "IsCore",         "IsEnabled",
+          "Module_Name",      "Module_Version", "Module_Path",
+          "Module_Namespace", "Module_Class",   "Module_URN",
+          "Description");
+      $objModInfo = $objStructModInfo->Create(
+          $this->_uuid,      $this->_core,      "TRUE",
+          $this->_title,     $this->_version,   $this->_path,
+          $this->_namespace, $this->_classname, $this->_urn,
+          $this->_description);
+
+      $objErrRet = null;  // Struct containing error ret statuses
+
+      $retStatus = \xenoPMT\Core\Setup::RegisterModule($objModInfo, $objErrRet);
+      if ($retStatus == true)
+      {
+        /* Proceed with further setup since we got Green-Light-Go! */
+        pmtDebug("admin.setup.Install() Registered Successfully!");
+        $objErrRet = null;  // cleanup object
+      }
+      else
+      {
+        // Report back the errors
+        pmtDebug("admin.setup.Install() Failed to register");
+        $this->_verifiedMessages["DbQuery_Failed"]    = $objErrRet->DbQuery_Failed;
+        $this->_verifiedMessages["CoreInvalid"]       = $objErrRet->CoreInvalid;
+        $this->_verifiedMessages["IsInstalled"]       = $objErrRet->IsInstalled;
+        $this->_verifiedMessages["URN_Conflict"]      = $objErrRet->URN_Conflict;
+        $this->_verifiedMessages["UUID_Conflict"]     = $objErrRet->UUID_Conflict;
+        $this->_verifiedMessages["DbConnect_Failed"]  = $objErrRet->DbConnect_Failed;
+        $this->_verifiedMessages["DbQuery_Failed"]    = $objErrRet->DbQuery_Failed;
+      }
+      // end test
+
+      // Return the status pass/fail - true/false
+      return $retStatus;
+    } // end::privInstall()
+
+     /**
+     * Actual Installer
+     * @global array $xpmtConf
+     * @return boolean      True=SUCCESS, False=FAIL
+     */
+    private function privInstall__old()
     {
       if ($this->_verified == false)
         return false;

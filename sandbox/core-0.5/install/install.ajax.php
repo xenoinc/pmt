@@ -33,6 +33,8 @@
  *        echo($obj->Output());     // ret_msg and ret_class
  *
  * Change Log:
+ *  2013-0409 * ajaxClearDB() :: Moved "global $xpmtConf;" before 'Require_Once()' because
+ *              it was overwriting config file's values
  *  2013-0329 + Added, 'date_default_timezone_set()' to NY as default
  *  2013-0131 + Added cheap unit testing step so we cal call functions directly
  *  2012-1219 * Updated debug message text
@@ -49,6 +51,7 @@
 require "../xpmt/phpConsole.php";
 PhpConsole::start(true, true, dirname(__FILE__));
 
+// Set default timezone
 date_default_timezone_set('America/New_York');        // [DJS] Added to fix warning in PHP & PhpConsole
 
 // ********************
@@ -212,6 +215,10 @@ function ajaxUpdateStep()
  */
 function ajaxClearDB()
 {
+  /* Change Log:
+   *  2013-0409 * Moved "global $xpmtConf;" before 'Require_Once()' because it was
+   *              overwriting config file's values
+   */
   // 1) Extract variables (safely pull from POST)
   global $_txtDbServer, $_txtDbName, $_txtDbPrefix, $_txtDbUser, $_txtDbPass;
 
@@ -222,9 +229,9 @@ function ajaxClearDB()
   // Step 0 - Perform initial db info configuration
   if(file_exists("../config.php"))
   {
+    global $xpmtConf;
     require_once("../xpmt/config.default.php");   // Configure default first
     require_once("../config.php");                // Override w/ user's settings
-    global $xpmtConf;
     $dbServ = $xpmtConf["db"]["server"];
     $dbName = $xpmtConf["db"]["dbname"];
     $dbUser = $xpmtConf["db"]["user"];
@@ -707,7 +714,7 @@ function ajaxInstallModules()
   }
 
 
-  $retMsg = "test yay!";
+  $retMsg = "ajaxInstallModules() Completed!";
   $ret_cls = "Success";
 
 

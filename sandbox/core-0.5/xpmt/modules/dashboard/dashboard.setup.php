@@ -244,8 +244,8 @@ namespace xenoPMT\Module\Dashboard
        */
 
       // test:
-      require_once "/../../core2/Setup.php";
-      \xenoPMT\Core\Setup::CheckURIConflict();
+      // require_once "/../../core2/Setup.php";
+      // \xenoPMT\Core\Setup::CheckURIConflict();
       // end test
 
 

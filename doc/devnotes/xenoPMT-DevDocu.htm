@@ -1009,17 +1009,29 @@ One of the first module to get created. The initiative is to create a simple mod
 * http://www.slideshare.net/dimka5/introducing-agile-scrum-xp-and-kanban
 </pre>
 </div>
-<div title="Libraries" creator="d.suess" modifier="d.suess" created="201302142324" modified="201302142325" changecount="3">
+<div title="Libraries" creator="d.suess" modifier="d.suess" created="201302142324" modified="201304081631" changecount="7">
 <pre>Libraries like Modules provide features to the xenoPMT system. However, Modules run strictly from URIs and Libraries enhance the functionality of Modules.
+! Core Libs (class)
+* [[Security (lib)]] - Log-in and verification system
+*# Regular log on - save status (timeout) via Cookie
+*# Optional - Allow Captcha verification
+*# Optional - User must select a picture to upload in order to log-in (fingerprint like)
+*# Optional - Verify country origin. Save to DB, &quot;Allow access from this Country/Region)
 
-! List of Libs
+! 3rd Party Libs
 * jQuery
 * markitup - Editor box for pages
 
 ! List of proposed Libs
-* libDownload - Securely download files from URL (GET?)
-* libWiki - The parser engine behind the pages to view.
-* libWikiPage - The page creator for the wiki system (?? might place functionality elsewhere??)</pre>
+* [[libDownload (lib)]]- Securely download files from URL (GET?)
+** Download link is active for a 1-time download and expires after 5min-24hrs (user defined)
+** Ex1: ''PERM'' {{{http://xenoPMT/download/file/myfile.zip}}}
+** Ex2: ''TEMP'' {{{http://xenoPMT/download/tmphash/ASDF1234}}}
+** //This should be a [[Modual]], but it has its own library functions//
+* [[libWiki (lib)]] - The parser engine behind the pages to view.
+* [[libWikiPage (lib)]] - The page creator for the wiki system (?? might place functionality elsewhere??)
+* [[libTicket (lib)]] - Ticket accessing system (TBTR)
+* [[SelfUpdate (lib)]] - Apart of the core system. This will check for updates and auto-update the xenoPMT core system</pre>
 </div>
 <div title="MainMenu" creator="d.suess" modifier="d.suess" created="201209011745" modified="201304030438" changecount="47">
 <pre>! xenoPMT
@@ -1293,7 +1305,7 @@ $xpmtModule[&quot;info&quot;][] = array
 ?&gt;
 }}}</pre>
 </div>
-<div title="Modules" creator="d.suess" modifier="d.suess" created="201209020115" modified="201303310712" tags="module" changecount="23">
+<div title="Modules" creator="d.suess" modifier="d.suess" created="201209020115" modified="201304071215" tags="module" changecount="25">
 <pre>Below is the list of modules and their statuses
 
 !Topics
@@ -1324,7 +1336,11 @@ $xpmtModule[&quot;info&quot;][] = array
 |[[Purchase Order|PO (mod)]]    |po       |Track orders created for customers and pricing |
 |[[Svn|SVN (mod)]]              |svn      |Source Code Viewer |
 |[[Git|Git (mod)]]              |git      |Source Code Viewer |
-|[[Kanban (mod)]]               |kanban   |Project Management Utility |</pre>
+|[[Kanban (mod)]]               |kanban   |Project Management Utility |
+
+! General Options (Suggestion)
+To access the configuration of (most) modules we suggest using the, &quot;options&quot; URI. Example being {{{http://xenoPMT/dashboard/options}}}.
+This way the URI parser will check the $uri-&gt;seg[2] = &quot;options&quot;</pre>
 </div>
 <div title="MyPlugins" creator="d.suess" modifier="d.suess" created="201209012343" modified="201209020106" changecount="5">
 <pre>* [[BackupOptionsPlugin]]

@@ -10,11 +10,12 @@
  *   Core tables for the PMT system
  *
  * Change Log:
- * 2012-1004  * (djs) Renamed TBLPMT_MODULE_CONFIG (from _config_module)
- * 2012-0907  + (djs) Enabled TBLPMT_MODULE and added UUID column
+ *  2013-0409 + (djs) Added default INSERT INTO CORE_SETTINGS for timezone
+ *  2012-1004 * (djs) Renamed TBLPMT_MODULE_CONFIG (from _config_module)
+ *  2012-0907 + (djs) Enabled TBLPMT_MODULE and added UUID column
  *            -       Removed TBLPMT_MODULE_URI (not currently needed)
- * 2012-0619  + (djs) Added outline for new table TBLPMT_MODULE
- * 2012-0224  * (djs) Consulidating tables for Milestone 0.1 to this file.
+ *  2012-0619 + (djs) Added outline for new table TBLPMT_MODULE
+ *  2012-0224 * (djs) Consulidating tables for Milestone 0.1 to this file.
  **********************************************************************/
 
 /**
@@ -32,12 +33,15 @@
  */
 
 /* Test table */
-create table if not exists `TBLPMT_CORE_SETTINGS`
+CREATE TABLE IF NOT EXISTS `TBLPMT_CORE_SETTINGS`
 (
   `Setting` varchar(255) collate utf8_unicode_ci not null,
   `Value`   longtext collate utf8_unicode_ci not null,
   primary key (`Setting`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+/* Insert basic settings */
+INSERT INTO `TBLPMT_CORE_SETTINGS` (`Setting`, `Value`) VALUES ('timezone', 'America/New_York');
 
 /*
   Module registry
@@ -45,7 +49,6 @@ create table if not exists `TBLPMT_CORE_SETTINGS`
   Updated:
     2012-0907 + Added column UUID to identify modules and their forks
 */
-
 CREATE TABLE IF NOT EXISTS `TBLPMT_CORE_MODULE`
 (
   `Module_Id`         INT UNSIGNED NOT NULL AUTO_INCREMENT,
@@ -66,7 +69,7 @@ CREATE TABLE IF NOT EXISTS `TBLPMT_CORE_MODULE`
   Module Configuration Settings
 
 */
-create table if not exists `TBLPMT_CORE_MODULE_CONFIG`
+CREATE TABLE IF NOT EXISTS `TBLPMT_CORE_MODULE_CONFIG`
 (
   `Module_UUID`   VARCHAR(36),
   `Setting` varchar(255) collate utf8_unicode_ci not null,
