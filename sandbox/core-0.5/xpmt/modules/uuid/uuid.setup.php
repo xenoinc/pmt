@@ -21,7 +21,8 @@ namespace xenoPMT\Module\UUID
   require_once "/../../core/xpmt.i.setup.php";  // Interface for Setup class
   require_once "/../../core2/Setup.php";        // /xenoPMT\Core\Setup Class
   require_once "/../../core2/misc/Struct.php";  // Structure class
-  require_once "/../../core2/misc/ModuleProperties.php";  // Module Info Properties Class
+  require_once "/../../core2/Properties/ModuleInfo.php";  // Module Info Properties Class
+  require_once "/../../core2/Properties/ModuleSetupError.php";  // Module Setup Errors Properties Class
 
   class Setup implements \xenoPMT\Module\ISetup
   {
@@ -229,8 +230,6 @@ namespace xenoPMT\Module\UUID
       global $xpmtConf;
       //$bRet = false;
 
-      /* ... Insert Code ... */
-
       /* Code Hints:
        * 1. Check for prev UUID
        *  RET: IsInstalled, UUID_CONFLICT
@@ -239,32 +238,23 @@ namespace xenoPMT\Module\UUID
        *  RET: URN_Conflict
        */
 
-      // Step 0 - Prepare Error Return Structure
-      // Create structure (Added: 2013-0409)
-      /*
-      $objStruct = \xenoPMT\Core\Misc\Struct::Initialize(
-          "CoreInvalid",
-          "IsInstalled",
-          "URN_Conflict",
-          "UUID_Conflict",
-          "DbConnect_Failed",
-          "DbQuery_Failed"
-        );
-      $objErr = $objStruct->Create(false, false, false, false, false, false);
-      */
-      $objErr = \xenoPMT\Core\Setup::CreateStructModSetupError();
-
       // Step 1 - Check PASS/FAIL for PREV UUID (true=pass)
 
       // $step1 = true;  // passed
       // require_once "/../../core2/Setup.php";       // it was already included above
       // Return overall Pass/Fail and what failed in $objErr
 
-      $objModInfo = new \xenoPMT\Core\Misc\ModuleProperties();
+      $objModInfo = new \xenoPMT\Core\Properties\ModuleInfo();
       $objModInfo->URN = $this->_urn;
       $objModInfo->UUID = $this->_uuid;
+      $objErr = new \xenoPMT\Core\Properties\ModuleSetupError();
       $step1 = \xenoPMT\Core\Setup::CheckConflict($objModInfo, $objErr);
-
+      if ($step1 == false)
+      {
+        // there was an error verifying UUID and/or URN
+        $this->_verifiedMessages[""];
+        $this->_verifiedMessages[""];
+      }
 
       // Step 2 - Check for required Tables/Values and dependent modules/libs
       $step2 = true;

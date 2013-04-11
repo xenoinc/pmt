@@ -27,7 +27,8 @@ namespace xenoPMT\Core
 {
   require_once "Functions.php";   // xenoPMT Core Functionality
   require_once "misc/Struct.php"; // Structure class
-  require_once "misc/ModuleProperties.php";  // Module Info Properties Class
+  require_once "Properties/ModuleInfo.php";         // Module Info Properties Class
+  require_once "Properties/ModuleSetupError.php";   // Module Setup Errors Properties Class
 
   // Extending is probably NOT needed here (yet)
   class Setup extends \xenoPMT\Core\Functions
@@ -36,6 +37,8 @@ namespace xenoPMT\Core
     /**
      * Creates the default Structure Class for Module Error Return
      * @return object ModSetup Error Struct Class
+     *
+     * @deprecated since version 0.0.5 See Class: \xenoPMT\Core\Properties\ModuleSetupErrors
      */
     public static function CreateStructModSetupError()
     {
@@ -202,14 +205,23 @@ sql;
      * @param $objStruct  Error return
      * @return boolean    Overall Pass/Fail of the verification
      */
-    public static function CheckConflict($objModInfo, &$objStruct)
+    public static function CheckConflict($objModInfo, &$objModErr)
     {
-      global $xpmtConf;
-      pmtDebug("CHK 1: {$xpmtConf['db']['server']}; 2:{$xpmtConf['db']['user']};" .
-               "3: {$xpmtConf['db']['pass']}; 4: {$xpmtConf['db']['dbname']}");
-      $bRet = false;            // Verify if we can install or not
+      /*
+       * TODO:
+       *  Replace all of the $this-> references to point to the objModInfo
+       *  and also the objModErr
+       */
 
-      /**
+      global $xpmtConf;
+      pmtDebug(
+          "CheckConflict 1: {$xpmtConf['db']['server']}; ".
+          "2:{$xpmtConf['db']['user']};" .
+          "3: {$xpmtConf['db']['pass']}; " .
+          "4: {$xpmtConf['db']['dbname']}");
+
+      $objModErr = new \xenoPMT\Core\Properties\ModuleSetupError();
+      $bRet = false;            // Verify if we can install or not
 
       //{$xpmtConf["db"]["prefix"]}CORE_MODULE
       //select * from xi_core_module where Module_UUID = 'df9f29f8-1aed-421d-b01c-860c6b89fb14';
@@ -218,51 +230,59 @@ sql;
 
       if(!$db->connect_errno)
       {
-        $sql = "select * from {$xpmtConf["db"]["prefix"]}CORE_MODULE where `Module_UUID` = '{$this->_uuid}';";
-        //if($db->query($sql)) { }
+        //$sql = "select * from {$xpmtConf["db"]["prefix"]}CORE_MODULE ".
+        //    "where `Module_UUID` = '{$this->_uuid}';";
+        //$ojbModInfo->UUID;
+        //$ojbModInfo->URN;
+        $sql = "select * from {$xpmtConf["db"]["prefix"]}CORE_MODULE ".
+               "where `Module_UUID` = '{$objModInfo->UUID}'".
+               ";";   //" or `Module_URN` = '{$objModInfo->URN}';";
 
         $exec = $db->prepare($sql);
         if ($exec)
         {
           $exec->execute();           // Execute the query
           $exec->store_result();      // Store the result so we can get a row count
-          $this->_verifiedMessages["DbConnect_Failed"]  = false;
-          $this->_verifiedMessages["DbQuery_Failed"]    = false;
+
+          $objModErr->DbConnect_Failed  = false;
+          $objModErr->DbQuery_Failed    = false;
+
           if($exec->num_rows)
           {
             $bRet = false; //1;
             //pmtDebug("dashboard.detup.VerifyPreInstall() UUID Rows: " . $exec->num_rows);
-            $this->_verifiedMessages["UUID_Conflict"] = true;
+
+            // TODO:
+            // Check if UUID or URN conflict
+            $objModErr->UUID_Conflict = true;
           }
           else
           {
             // Successful query. Now check the data for pre-existing UUID
             $bRet = true; // 2;
-            $this->_verifiedMessages["UUID_Conflict"] = false;
+            $objModErr->UUID_Conflict = false;
+            $objModErr->URN_Conflict = false;
           }
         }
         else
         {
           $bRet = false; // 3;
-          $this->_verifiedMessages["DbQuery_Failed"] = true;
+          $objModErr->DbQuery_Failed = true;
         }
-
         $db->close();
       }
       else
       {
         // There was an error connecting to the database
-        $this->_verifiedMessages["DbConnect_Failed"] = true;
+        $objModErr->DbConnect_Failed = true;
         $bRet = false; // 4; //false;
         // debug("FAIL FAIL FAIL");
       }
-
 
       // Step 2 - Check if URN is previously used in both DB and ConfigHeaders
       // To Do later
 
       return $bRet;
-    */
     }
   }
 }

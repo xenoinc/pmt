@@ -17,9 +17,9 @@
  *
  */
 
-namespace xenoPMT\Core\Misc
+namespace xenoPMT\Core\Properties
 {
-  class ModuleProperties
+  class ModuleInfo
   {
     public $UUID;               // String
     public $IsCore = false;     // Boolean
@@ -31,6 +31,26 @@ namespace xenoPMT\Core\Misc
     public $Classname;          //
     public $URN;                //
     public $Description;        // Description of module
+
+    public function __construct
+        (
+        $uuid, $isCore, $isEnabled,
+        $title, $version, $path,
+        $namespace, $classname, $urn,
+        $description)
+    {
+      $this->UUID = $uuid;
+      $this->IsCore = $isCore;
+      $this->IsEnabled = $isEnabled;
+      $this->Name = $title;
+      $this->Version = $version;
+      $this->Path = $path;
+      $this->Namespace = $namespace;
+      $this->Classname = $classname;
+      $this->URN = $urn;
+      $this->Description = $description;
+      // return $this;
+    }
   }
 }
 ?>
