@@ -27,54 +27,56 @@ namespace xenoPMT\Core
 {
   require_once "Functions.php";   // xenoPMT Core Functionality
   require_once "misc/Struct.php"; // Structure class
+  require_once "misc/ModuleProperties.php";  // Module Info Properties Class
 
   // Extending is probably NOT needed here (yet)
   class Setup extends \xenoPMT\Core\Functions
   {
 
-    // Private Parts
-    // ** Since this class is STATIC we can't use "$this->_VAR"
-    private $_uuid;
-    private $_version;
-    private $_title;
-    private $_description;
-    private $_urn;
-    private $_classname;
-    private $_namespace;
-    private $_path;         // Path to module
-    private $_mainfile;     // Startup file
-    private $_enabled;      // BOOL Is module enabled by default
-    private $_core;         // BOOL Is module apart of CORE (true) or user created (false)
-
-    private static function structToVar($objModInfo)
+    /**
+     * Creates the default Structure Class for Module Error Return
+     * @return object ModSetup Error Struct Class
+     */
+    public static function CreateStructModSetupError()
     {
-      /*
-      $this->_uuid        = $objModInfo->Module_UUID;
-      $this->_core        = $objModInfo->Core;
-      //                  = $objModInfo->Enabled;
-      $this->_title       = $objModInfo->Module_Name;
-      $this->_classname   = $objModInfo->Module_Version;
-      $this->_path        = $objModInfo->Module_Path;
-      $this->_namespace   = $objModInfo->Module_Namespace;
-      $this->_classname   = $objModInfo->Module_Class;
-      $this->_urn         = $objModInfo->Module_URN;
-      $this->_description = $objModInfo->Description;
-      $this->_path        = $objModInfo->Module_Path;
+      $objStruct = \xenoPMT\Core\Misc\Struct::Initialize(
+          "CoreInvalid",
+          "IsInstalled",
+          "URN_Conflict",
+          "UUID_Conflict",
+          "DbConnect_Failed",
+          "DbQuery_Failed"
+        );
+      $objErr= $objStruct->Create(false, false, false, false, false, false);
 
-      /*
-      // Test
-      debug($objModInfo->Module_UUID);
-      debug($objModInfo->IsCore);
-      debug($objModInfo->IsEnabled);
-      debug($objModInfo->Module_Name);
-      debug($objModInfo->Module_Version);
-      debug($objModInfo->Module_Path);
-      debug($objModInfo->Module_Namespace);
-      debug($objModInfo->Module_Class);
-      debug($objModInfo->Module_URN);
-      debug($objModInfo->Description);
-      */
+      return $objErr;
     }
+
+    /**
+     *
+     * @return object Module Info Struct Class
+     */
+    public static function CreateStructModInfo()
+    {
+      // TODO:
+      //  ? Should we return just the Stuct and Create values later?
+      //  * Really we should use a Class not a pseudo struct class
+      /*
+      $objStructModInfo = \xenoPMT\Core\Misc\Struct::Initialize(
+          "Module_UUID",      "IsCore",         "IsEnabled",
+          "Module_Name",      "Module_Version", "Module_Path",
+          "Module_Namespace", "Module_Class",   "Module_URN",
+          "Description");
+      /*
+       $objModInfo = $objStructModInfo->Create(
+          $this->_uuid,      $this->_core,      "TRUE",
+          $this->_title,     $this->_version,   $this->_path,
+          $this->_namespace, $this->_classname, $this->_urn,
+          $this->_description);
+      */
+      return false;   // $objStructModInfo;
+    }
+
 
     // Public static members
     public static function RegisterModule($objModInfo, &$objErr)
@@ -196,11 +198,12 @@ sql;
 
     /**
      * Verifies if there is are URN or UUID conflicts with the requesting module
+     * @param $objModInfo \xenoPMT\Core\Misc\ModuleProperties
+     * @param $objStruct  Error return
+     * @return boolean    Overall Pass/Fail of the verification
      */
     public static function CheckConflict($objModInfo, &$objStruct)
     {
-
-
       global $xpmtConf;
       pmtDebug("CHK 1: {$xpmtConf['db']['server']}; 2:{$xpmtConf['db']['user']};" .
                "3: {$xpmtConf['db']['pass']}; 4: {$xpmtConf['db']['dbname']}");

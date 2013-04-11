@@ -21,6 +21,7 @@ namespace xenoPMT\Module\UUID
   require_once "/../../core/xpmt.i.setup.php";  // Interface for Setup class
   require_once "/../../core2/Setup.php";        // /xenoPMT\Core\Setup Class
   require_once "/../../core2/misc/Struct.php";  // Structure class
+  require_once "/../../core2/misc/ModuleProperties.php";  // Module Info Properties Class
 
   class Setup implements \xenoPMT\Module\ISetup
   {
@@ -240,6 +241,7 @@ namespace xenoPMT\Module\UUID
 
       // Step 0 - Prepare Error Return Structure
       // Create structure (Added: 2013-0409)
+      /*
       $objStruct = \xenoPMT\Core\Misc\Struct::Initialize(
           "CoreInvalid",
           "IsInstalled",
@@ -248,12 +250,19 @@ namespace xenoPMT\Module\UUID
           "DbConnect_Failed",
           "DbQuery_Failed"
         );
-      $objErr= $objStruct->Create(false, false, false, false, false, false);
+      $objErr = $objStruct->Create(false, false, false, false, false, false);
+      */
+      $objErr = \xenoPMT\Core\Setup::CreateStructModSetupError();
 
       // Step 1 - Check PASS/FAIL for PREV UUID (true=pass)
 
       // $step1 = true;  // passed
-      require_once "/../../core2/Setup.php";
+      // require_once "/../../core2/Setup.php";       // it was already included above
+      // Return overall Pass/Fail and what failed in $objErr
+
+      $objModInfo = new \xenoPMT\Core\Misc\ModuleProperties();
+      $objModInfo->URN = $this->_urn;
+      $objModInfo->UUID = $this->_uuid;
       $step1 = \xenoPMT\Core\Setup::CheckConflict($objModInfo, $objErr);
 
 
@@ -264,7 +273,7 @@ namespace xenoPMT\Module\UUID
 
 
       // Perform final test logic
-      $bRet = ($step1 & $step2);
+      $bRet = ($step1 & $step2);      // do we want && (logical) or & (bitwise)
       return $bRet;
     } // end::VerifyPreInstall()
 
