@@ -1219,7 +1219,7 @@ The official list is located on the [[Variables]] page.
 * See page: [[Milestone 0.0.5]]
 </pre>
 </div>
-<div title="Milestones" creator="d.suess" modifier="d.suess" created="201210032306" modified="201210032333" changecount="6">
+<div title="Milestones" creator="d.suess" modifier="d.suess" created="201210032306" modified="201304151335" changecount="7">
 <pre>|!Milestone Series   |!Milestone 1    |!Milestone 2    |!Milestone 3    |h
 |[[Milestone-0]]     |[[Milestone-1]] |[[Milestone-2]] |[[Milestone-3]] |
 |[[Milestone 0.0.1]] |  |
@@ -1227,7 +1227,9 @@ The official list is located on the [[Variables]] page.
 |[[Milestone 0.0.3]] |  |
 |[[Milestone 0.0.4]] |  |
 |[[Milestone 0.0.5]] |  |
-</pre>
+
+! Version Rules
+During the 0.0.x phase of xenoPMT any ODD Minor/Revision versions (v0.0.1, 0.0.5) notes that the CORE system is under development changes. This gives the chance for Modules to be re-written and adjusted in the EVEN Minor/Revision numbers (i.e. 0.0.6).</pre>
 </div>
 <div title="Module - Loader Workflow" creator="d.suess" modifier="d.suess" created="201209061540" modified="201209062047" changecount="9">
 <pre>!Phase 1
@@ -2140,7 +2142,7 @@ foreach ($myArray as $row)
 &lt;/table&gt;
 }}}</pre>
 </div>
-<div title="ToDoList" creator="d.suess" modifier="d.suess" created="201209031640" modified="201304151217" changecount="35">
+<div title="ToDoList" creator="d.suess" modifier="d.suess" created="201209031640" modified="201304151314" changecount="36">
 <pre>!Current Workbench
 * Move ~LoadTheme() out of ~LoadModule()
 
@@ -2154,6 +2156,10 @@ foreach ($myArray as $row)
 ** Next move its code over to &quot;Sample.Setup.php&quot;
 * Admin.Setup.php - Complete installer &amp; use UUID.Setup.PHP as it's template
 * Dashboard.Setup.php - Change code to be like UUID.Setup.php
+* Install()
+** Test/Run database table installer
+* Uninstaller()
+** //This has still not been touched yet! Test it using the ''Admin Module''//
 
 !!! Installer
 * Return back error message results when a module fails Verification or fails to install. 

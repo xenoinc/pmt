@@ -20,6 +20,7 @@
  * [ ] Move "DebugMode" as a variable in "config.default.php" as { $pmtDebugMode = true; }
  *
  * Change Log:
+ * 2013-0415 * Fixed TBLPMT_BUG - a comma was missing after defining Related_Bug_Id
  * 2012-0709 - removed unused code & created "index-test.php"
  * 2012-0112 - remvoed front page. we're using a dynamic generator
  * 2010-1030 - Initial Creation

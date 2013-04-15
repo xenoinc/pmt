@@ -236,7 +236,7 @@ CREATE TABLE IF NOT EXISTS `TBLPMT_TICKET_ATTACHMENT`
 CREATE TABLE IF NOT EXISTS `TBLPMT_BUG`
 (
   `Bug_Id`            INT UNSIGNED NOT NULL AUTO_INCREMENT,
-  `Related_Bug_Id`    INT UNSIGNED            -- Used for cloning bugs across different versions
+  `Related_Bug_Id`    INT UNSIGNED,           -- Used for cloning bugs across different versions
   `Created_Dttm`      DATETIME,               -- Created DateTime
   `Updated_Dttm`      DATETIME,               -- Modified DateTime
   `Priority_Enum`     VARCHAR(15) COLLATE utf8_unicode_ci,  -- Priority Name:  major, minor, critical  [TBLPMT_S_TBT_ENUM.enum_name]

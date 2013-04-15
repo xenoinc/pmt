@@ -11,6 +11,10 @@
  *  Valid RFC 4122 Compliant Universally Unique Identifier (UUID) version 3, 4 and 5.
  *  http://www.ietf.org/rfc/rfc4122.txt
  *
+ * ToDo:
+ *  [ ] Add raido buttons to allow user to select which UUID Generator Version to use
+ *      (this provides a good test-bed for module Ajax)
+ *  [ ] use xpmtPage->CSS property to set custom CSS rules
  *
  * Change Log:
  *  2013-0415 * Move class to be inside of Namespace since installer is telling us to do so

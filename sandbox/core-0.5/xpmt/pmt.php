@@ -1,5 +1,5 @@
 <?php
-/************************************************************
+/* ***********************************************************
  * pmTrack (xiPMT, xiPMTrack)
  * Copyright 2010-2012 (C) Xeno Innovations, Inc.
  * ALL RIGHTS RESERVED
@@ -136,6 +136,7 @@ $PAGE_PATH="";      // Relative path to theme currently in use
 //  $xpmtPage["title"]="";      <<<< use this
 
 // Used to generate the body of our skin
+// TODO: Possibly place $xpmtPage into its own Property Class ($xpmtPage->Icon)
 $xpmtPage["icon"]="";         // Path to Icon file
 $xpmtPage["title"]="";        // Page Title
 $xpmtPage["ex_header"]="";    // Extra Header Information
@@ -216,29 +217,29 @@ function ParseAndLoad()
   if ($matchFound)
   { // Load the module
 
-    // Step 1 - Load Module
+    // Step 2.1 - Load Module
     // pmtDebug("pmt.ParseAndLoad() MatchFound: ". $matchFound);
     // pmtDebug("pmt.ParseAndLoad() UUID: " . $modHeader["uuid"]);
     $xenoPMT::LoadModule($modHeader["uuid"]);
 
-    // Step 2  - Load Theme
-
+    // Step 2.2  - Load Theme?? - Not HERE, this should be Step3
     //echo("--pmt.ParseAndLoad().done--");
-
   }
   else
   {
     // Unknown Module URN / Module not loaded
-    pmtDebug("pmt.ParseAndLoad() Unknown Module: seg='".$tmpURI."'");
+    pmtDebug("pmt.ParseAndLoad() Unknown Module: seg='{$tmpURI}'");
     // Reroute to "dashboard/unknown"
-    $html = "Unknown Module! seg='". $tmpURI ."'.";
+    $html = "Unknown URN or Module is not installed! URN segment provided: '". $tmpURI ."'.";
     $xpmtPage["htdata"]=$html;
     $PAGE_HTDATA=$html;
     echo($html);
   }
 
+  // Step 3 - Load Theme Layer ]---------------------
+
   // Load HTDATA into theme
-  //$xenoPMT->LoadTheme();
+  $xenoPMT::LoadTheme();
 
   // pmtDebug("[pmt.php] ParseAndLoad() Check: .done.");
 }

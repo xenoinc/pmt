@@ -19,6 +19,7 @@
  *  [ ] Complete $xpmtPage[..] feature display
  *  [ ] LoadModule() Return back error message in PAGE["HTDATA"] so that we do not create a
  *      redirect loop (ex: dashboard mod). This requires the use of "LoadTheme()" member
+ *  [ ] Move theme portion of LoadModule() to LoadTheme()
  *
  * Change Log:
  *  2013-0401 + LoadModule() :: Added is module 'Enabled' test
@@ -34,13 +35,9 @@ class xenoPMT
 
   /* Public Vars */
 
-  function __construct() {
+  function __construct() { }
 
-  }
-
-  function __destruct() {
-
-  }
+  function __destruct() { }
 
 
   /*
@@ -164,8 +161,9 @@ class xenoPMT
     /**********************
      * Step 2 - Get theme *
      **********************/
+    /* ### Start MOVE Marker ### */
     // ToDo - Move this into its own function {LoadTheme()} to be handled by ParseAndLoad not the module??
-    /* Step 2.1 */
+    // Step 2.1
     $theme = GetSetting("theme");
     if ($theme == "")
       $theme = "default";
@@ -184,7 +182,7 @@ class xenoPMT
     $page = $skin_path . $skin_file;
     pmtDebug("xenoPMT::LoadModule() Theme - Page Path: $page");
 
-    /* Step 2.2 */
+    // Step 2.2
     // check if module has custom skin. (i.e. main, project, product, etc.)
     if (file_exists($skin_path . $module . ".php"))
     {
@@ -193,7 +191,9 @@ class xenoPMT
       pmtDebug("xenoPMT::LoadModule() Theme - *Custom* Page Path: $page");
     }
 
+    /*   ### END MOVE MARKER */
     //pmtDebug("xenoPMT::LoadMod() Theme Loaded");
+
 
     /****************************************
      * Step 3 - Setup $xpmtPage[] variables *
@@ -211,11 +211,11 @@ class xenoPMT
       try
       {
         $obj = new $moduleNS();
-        pmtDebug("xenoPMT::LoadModule() Try Namespace: Using Mod's Namespace");
+        pmtDebug("xenoPMT::LoadModule() [step3] Try Namespace: Using Mod's Namespace");
       }
       catch (Exception $e)
       {
-        pmtDebug("xenoPMT::LoadModule()  Try Namespace: fail (no NS specified)");
+        pmtDebug("xenoPMT::LoadModule() [step3] Try Namespace: fail (no NS specified)");
         $obj = new $module();
       }
 
@@ -250,6 +250,7 @@ class xenoPMT
       else
       {
         // Error loading class w/ namespace
+        pmtDebug("LoadModule() Error loading Class Object!");
       }
     }
     else
@@ -274,8 +275,44 @@ class xenoPMT
      */
 
     global $xpmtPage, $pmtDB;
+    global $xpmtPage2; // obj of Page Properties
 
+    /*****************************
+     * Step 1 - Initialize Theme *
+     ****************************/
+    // NOTE: This is all OLD code. It does not check for Custom User Themes in the root folder
+
+    // Step 1.1
+    $theme = GetSetting("theme");
+    if ($theme == "")
+      $theme = "default";
+    if (file_exists(PMT_PATH . "xpmt/themes/" . $theme))
+    { // use custom theme
+      $skin_path = PMT_PATH . "xpmt/themes/" . $theme . "/";
+      $relpath = "xpmt/themes/" . $theme . "/";
+    }else{
+      // using default
+      $skin_path = PMT_PATH . "xpmt/themes/default/";
+      $relpath = "xpmt/themes/default/";
+    }
+
+    // Set DEFAULT skin to MAIN.PHP - check LATER if module has custom skin
+    $skin_file = "main.php";
+    $page = $skin_path . $skin_file;
+    pmtDebug("xenoPMT::LoadModule() Theme - Page Path: $page");
+
+    // Step 1.2
+    // Check if module has custom skin (i.e: main, Project, Product, etc.
+    if (file_exists($skin_path . $module . ".php"))
+    {
+      $skin_file = $module . ".php";
+      $page = $skin_path . $skin_file;
+      pmtDebug("xenoPMT::LoadModule() Theme - *Custom* Page Path: $page");
+    }
+
+    require($page);
   }
+
 
   /**
    * Stage 1) Generate toolbar via static code
