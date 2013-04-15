@@ -13,5 +13,7 @@
  * Change Log:
  *
  */
-
+namespace xenoPMT\Module\Admin
+{
+}
 ?>

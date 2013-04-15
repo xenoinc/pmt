@@ -1813,7 +1813,7 @@ else
     
 //}}}</pre>
 </div>
-<div title="StyleSheet" creator="d.suess" modifier="d.suess" created="201209012305" modified="201209020224" changecount="4">
+<div title="StyleSheet" creator="d.suess" modifier="d.suess" created="201209012305" modified="201304151144" changecount="6">
 <pre>/*{{{*/
 
 .editor {font-size:1.1em;}
@@ -1994,7 +1994,7 @@ table.listView th, table.listView td, table.listView tr {padding:0 3px 0 3px;}
 /*}}}*/
 </pre>
 </div>
-<div title="SystemSettings" creator="d.suess" modifier="d.suess" created="201209012233" modified="201209012348" changecount="122">
+<div title="SystemSettings" creator="d.suess" modifier="d.suess" created="201209012233" modified="201304151142" changecount="123">
 <pre>chkAutoSave: true
 txtBackupFolder: bak
 txtUserName: d.suess</pre>
@@ -2140,8 +2140,48 @@ foreach ($myArray as $row)
 &lt;/table&gt;
 }}}</pre>
 </div>
-<div title="ToDoList" creator="d.suess" modifier="d.suess" created="201209031640" modified="201304030446" changecount="25">
-<pre>!ASAP
+<div title="ToDoList" creator="d.suess" modifier="d.suess" created="201209031640" modified="201304151217" changecount="35">
+<pre>!Current Workbench
+* Move ~LoadTheme() out of ~LoadModule()
+
+!To Do Notes
+!! 2013-0415
+!!! \xenoPMT\Core\Setup.php
+* Add URN verify to ~CheckConflict();
+
+!!! Module - Module.SETUP.PHP
+* UUID.Setup.php - Complete Verify and Installer using NS objects. This is going to be the template for all modules since it is VERY simple
+** Next move its code over to &quot;Sample.Setup.php&quot;
+* Admin.Setup.php - Complete installer &amp; use UUID.Setup.PHP as it's template
+* Dashboard.Setup.php - Change code to be like UUID.Setup.php
+
+!!! Installer
+* Return back error message results when a module fails Verification or fails to install. 
+* Remove all pmtDebug() calls where needed.
+
+!!! Core - ~LoadModule() / ~LoadTheme()
+* Move &quot;~LoadTheme()&quot; outside of &quot;~LoadModule()&quot;
+** Display module load errors cleanly: (URN [module] does not exist, Permissions Failed)
+
+!!! Dashboard / ~LoadTheme()
+* Add log-in feature again
+** Its been broken since migration away from v0.0.4
+* Add theme footer back (missing since v0.0.4)
+
+
+!! 2013-0224 (notes from 2012)
+!!! DB Changes
+* KB_Attachment (create table)
+* ? PMT_S_USER_TYPES
+* ? Create customer directory (locally
+** .\#_name\
+** .\#_name\readme.txt
+** .\#_name\fdx\
+** .\#_name\phi\
+* Create downloads lib to safely upload/download files and not allow URL link-backs to physical file
+
+
+!ASAP
 |!Module            |!Sub-Section  |!Description |h
 |[[KB (mod)]]       |Main   |List items |
 |[[Project (mod)]]  |List   |Add links to TBT, Milestones, Wiki (main) |
@@ -2163,19 +2203,6 @@ foreach ($myArray as $row)
 |[[KB (mod)]] |View   |Remove |
 |[[KB (mod)]] |Editor |Add side banner to editor |
 
-!To Do Notes
-{{{
-2013-0224 (notes from 2012)
-DB Changes
-* KB_Attachment (create table)
-* ? PMT_S_USER_TYPES
-* ? Create customer directory (locally
-** .\#_name\
-** .\#_name\readme.txt
-** .\#_name\fdx\
-** .\#_name\phi\
-* Create downloads lib to safely upload/download files and not allow URL link-backs to physical file
-}}}
 </pre>
 </div>
 <div title="User (mod)" creator="d.suess" modifier="d.suess" created="201303251649" modified="201303251758" changecount="2">

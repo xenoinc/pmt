@@ -13,6 +13,7 @@
  *  Its still undecided if this should be static or public
  *
  * ToDo:
+ *  [ ] Post BugReport to PHP. PHP fails to catch object creation success/failure {see LoadModule()}
  *  [ ] Complete GetToolbarMain($uuid) to pull from CACHE and DB via UserGroup definitions
  *  [ ] Generate GetToolbarMeta() to display login, preferences, about, logoff
  *  [ ] Complete $xpmtPage[..] feature display
@@ -181,7 +182,7 @@ class xenoPMT
     // Set DEFAULT skin to MAIN.PHP - check LATER if module has custom skin
     $skin_file = "main.php";
     $page = $skin_path . $skin_file;
-    pmtDebug("xenoPMT::LoadMod() Theme - Page Path: $page");
+    pmtDebug("xenoPMT::LoadModule() Theme - Page Path: $page");
 
     /* Step 2.2 */
     // check if module has custom skin. (i.e. main, project, product, etc.)
@@ -189,7 +190,7 @@ class xenoPMT
     {
       $skin_file = $module . ".php";
       $page = $skin_path . $skin_file;
-      pmtDebug("xenoPMT::LoadMod() Theme - *Custom* Page Path: $page");
+      pmtDebug("xenoPMT::LoadModule() Theme - *Custom* Page Path: $page");
     }
 
     //pmtDebug("xenoPMT::LoadMod() Theme Loaded");
@@ -206,15 +207,15 @@ class xenoPMT
       // TODO - 2013-0205
       //  [ ] PATH needs to pull the THEME we're using from the DB
 
-      pmtDebug("pre-try");
+      // TODO: Post BugReport to PHP. PHP fails to catch object creation success/failure
       try
       {
         $obj = new $moduleNS();
-        pmtDebug("try: OK");
+        pmtDebug("xenoPMT::LoadModule() Try Namespace: Using Mod's Namespace");
       }
       catch (Exception $e)
       {
-        pmtDebug("try: fail");
+        pmtDebug("xenoPMT::LoadModule()  Try Namespace: fail (no NS specified)");
         $obj = new $module();
       }
 

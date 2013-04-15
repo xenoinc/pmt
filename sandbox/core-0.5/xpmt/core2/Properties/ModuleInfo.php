@@ -21,9 +21,27 @@ namespace xenoPMT\Core\Properties
 {
   class ModuleInfo
   {
+    /**
+     *
+     * @var string Universal Uniquie Identifier of Module
+     */
     public $UUID;               // String
+
+    /**
+     * Is Module apart of the xenoPMT "Core" system
+     * @var boolean
+     *    True = Is a Core module and cannot be uninstalled
+     */
     public $IsCore = false;     // Boolean
+
+    /**
+     * Is the module automatically enabled when installed?
+     * @var boolean
+     *    True  = Automatically Enabled
+     *    False = (default) Disable module on install
+     */
     public $IsEnabled = false;  // Boolean
+
     public $Name;               // Title of module
     public $Version;            //
     public $Path;               // Physical path

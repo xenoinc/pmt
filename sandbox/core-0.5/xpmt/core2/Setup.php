@@ -214,12 +214,14 @@ sql;
        */
 
       global $xpmtConf;
+      /*
       pmtDebug(
           "CheckConflict 1: {$xpmtConf['db']['server']}; ".
           "2:{$xpmtConf['db']['user']};" .
           "3: {$xpmtConf['db']['pass']}; " .
           "4: {$xpmtConf['db']['dbname']}");
-
+      */
+      
       $objModErr = new \xenoPMT\Core\Properties\ModuleSetupError();
       $bRet = false;            // Verify if we can install or not
 

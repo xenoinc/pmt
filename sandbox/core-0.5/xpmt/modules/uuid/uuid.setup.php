@@ -6,13 +6,16 @@
  * @Author:       Damian Suess
  * Document:      uuid.setup.php
  * Created Date:  Oct 29, 2012
- * Status:        {unstable/pre-alpha/alpha/beta/stable}
+ * Status:        unstable {unstable/pre-alpha/alpha/beta/stable}
  * Description:
  *  UUID Gemerator Installer
  *
  *  private $_uuid = "c6fb97b8-af93-42ce-aac6-de5656c8fdae";
  *
  * Change Log:
+ *  2013-0415 + Added property private, $this->_objModInfo to cleanly pass header info
+ *            + Added private property, $this->_objModError to quickly pass setup errors
+ *              and to minimize spelling errors when using the older associative array.
  *  2012-1206 * Created skeleton
  */
 
@@ -51,6 +54,21 @@ namespace xenoPMT\Module\UUID
     private $_path;
     private $_mainfile;
     private $_core;
+
+    /**
+     * @var object \xenoPMT\Core\Properties\ModuleInfo
+     * @version v0.0.5.2
+     * @since 2013-04-15
+     */
+    private $_objModInfo;
+
+
+    /**
+     * @var object \xenoPMT\Core\Properties\ModuleSetupError
+     * @version v0.0.5.2
+     * @since 2013-04-15
+     */
+    private $_objModError;
 
     /**
      * Module has be verified and there are not duplicates in database
@@ -98,6 +116,9 @@ namespace xenoPMT\Module\UUID
      */
     public function __construct($boolInstall = true, $headerInfo = "")
     {
+      // TODO:
+      //  ? Replace $headerInfo with $objModInfo class properties. For intellisense we should
+      //    still declare $headInfo,  $this->_obj = new \ModInfo(); and $this->_obj = $headInfo
       global $xpmtConf;
       // debug("Entering UUID Setup Constructor");
 
@@ -112,6 +133,8 @@ namespace xenoPMT\Module\UUID
       $this->_verifiedMessages["UUID_Conflict"] = false;
       $this->_verifiedMessages["DbConnect_Failed"] = false;
       $this->_verifiedMessages["DbQuery_Failed"] = false;
+      // Added 2013-0415
+      $this->_objModError = new \xenoPMT\Core\Properties\ModuleSetupError();
 
       // Are we in UNIT TESTING mode?
       if (is_array($headerInfo) == false || $headerInfo == "")
@@ -121,6 +144,13 @@ namespace xenoPMT\Module\UUID
         // We are unit testing. Generate a fake header
         // and plug in some database information
         $this->PHPUNIT_FakeHeader();
+
+        // Added 2013-0415 (not used in current scope, but declared for future reference)
+        $this->_objModInfo = new \xenoPMT\Core\Properties\ModuleInfo(
+          $this->_uuid,       $this->_core,       true, // $this->_isEnabled,
+          $this->_title,      $this->_version,    $this->_path,
+          $this->_namespace,  $this->_classname,  $this->_urn,
+          $this->_description);
 
         if($this->_installModule == true)
           $this->_verified = $this->PHPUNIT_VerifyPreInstall();
@@ -150,6 +180,15 @@ namespace xenoPMT\Module\UUID
           $this->_path        = $headerInfo["path"];
           $this->_mainfile    = $headerInfo["mainfile"];
           $this->_core        = $headerInfo["core"];
+
+          // Added 2013-0415
+          //  + Placing into this properties class makes it cleaner
+          //    to pass the entire object
+          $this->_objModInfo = new \xenoPMT\Core\Properties\ModuleInfo(
+            $this->_uuid,       $this->_core,       true, // $this->_isEnabled,
+            $this->_title,      $this->_version,    $this->_path,
+            $this->_namespace,  $this->_classname,  $this->_urn,
+            $this->_description);
 
           if($this->_installModule == true)
             $this->_verified = $this->VerifyPreInstall();
@@ -224,6 +263,10 @@ namespace xenoPMT\Module\UUID
     /**
      * Verify if we can install or not
      * @return boolean      True=PASSED, False=FAIL
+     *
+     * Changes:
+     *  2013-0415 + started using _objModInfo and _objModError.
+     *            * Changed $bRet to use Logical (&&) operator versus bitwise (&)
      */
     private function VerifyPreInstall()
     {
@@ -241,29 +284,32 @@ namespace xenoPMT\Module\UUID
       // Step 1 - Check PASS/FAIL for PREV UUID (true=pass)
 
       // $step1 = true;  // passed
-      // require_once "/../../core2/Setup.php";       // it was already included above
       // Return overall Pass/Fail and what failed in $objErr
 
-      $objModInfo = new \xenoPMT\Core\Properties\ModuleInfo();
-      $objModInfo->URN = $this->_urn;
-      $objModInfo->UUID = $this->_uuid;
-      $objErr = new \xenoPMT\Core\Properties\ModuleSetupError();
-      $step1 = \xenoPMT\Core\Setup::CheckConflict($objModInfo, $objErr);
+      $this->_objModError->ClearErrors();
+
+      $step1 = \xenoPMT\Core\Setup::CheckConflict($this->_objModInfo, $this->_objModError);
       if ($step1 == false)
       {
         // there was an error verifying UUID and/or URN
-        $this->_verifiedMessages[""];
-        $this->_verifiedMessages[""];
+        $this->_verifiedMessages["URN_Conflict"] = $this->_objModError->URN_Conflict;
+        $this->_verifiedMessages["UUID_Conflict"] = $this->_objModError->UUID_Conflict;
+
+        //pmtDebug("PreVerify: URN: '{$this->_objModError->URN_Conflict}'");
+        //pmtDebug("PreVerify: UUID: '{$this->_objModError->UUID_Conflict}'");
       }
 
       // Step 2 - Check for required Tables/Values and dependent modules/libs
       $step2 = true;
 
       // Step 3 - Check for URN conflict
+      // TODO: This should be being done in Step 1 (FINISH IT)
 
 
       // Perform final test logic
-      $bRet = ($step1 & $step2);      // do we want && (logical) or & (bitwise)
+      $bRet = ($step1 && $step2);      // do we want && (logical) or & (bitwise)
+
+      //pmtDebug("UUID Setup PreVerifyInstall: '{$bRet}'");
       return $bRet;
     } // end::VerifyPreInstall()
 

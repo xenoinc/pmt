@@ -9,6 +9,9 @@
  * Status:        {unstable/pre-alpha/alpha/beta/stable}
  * Description:
  *  Dashboard module entry point
+ * ToDo:
+ *  [ ] Add reference to WikiLib to quickly customize main page
+ *  [ ] Create logic for signed-in users versus non-signed-in
  *
  * Change Log:
  *  2013-0331 + Enabled & fixed namespace (NS). NS needs to be the first item so that required_once() can be used.

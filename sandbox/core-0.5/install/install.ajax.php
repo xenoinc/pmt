@@ -466,7 +466,7 @@ function ajaxCreateConfig()
                       "so we can generate 'config.php' and then change back privs when done.",
         "ret_cls" => "Fail");
     echo(json_encode($retArr));
-    pmtDebug("Exiting :: ajaxCreateConfig");
+    pmtDebug("Exiting :: ajaxCreateConfig with ERROR. Root directory is not writable and cann't create CONFIG.PHP");
     return;
   }
 
@@ -522,7 +522,7 @@ function ajaxCreateConfig()
       if ($sqlRet)
       {
         $userRows = $sqlRet->num_rows;
-        pmtDebug("'Previous User' check query returned {$userRows} rows. (<i>0=good</i>)\n");
+        // pmtDebug("'Previous User' check query returned {$userRows} rows. (<i>0=good</i>)\n");
         $sqlRet->close(); /* free result set */
       }
 
@@ -736,9 +736,9 @@ function ajaxInstallModules()
  */
 function ExecuteSqlFile($sqlFile, $tblPrefix, $objConn, &$arrErrMsg)
 {
-  pmtDebug("Entering :: ExecuteSqlFile");
+  //pmtDebug("Entering :: ExecuteSqlFile");
 
-  pmtDebug("dbFile: '" . $sqlFile . "'  Prefix: '". $tblPrefix ."'");
+  //pmtDebug("dbFile: '" . $sqlFile . "'  Prefix: '". $tblPrefix ."'");
 
   $arrErrMsg = array(); // Create new array
 
@@ -758,7 +758,7 @@ function ExecuteSqlFile($sqlFile, $tblPrefix, $objConn, &$arrErrMsg)
     }
   }
 
-  pmtDebug("Exiting :: ExecuteSqlFile");
+  //pmtDebug("Exiting :: ExecuteSqlFile");
 }
 
 /**
