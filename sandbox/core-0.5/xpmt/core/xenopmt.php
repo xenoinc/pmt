@@ -28,6 +28,8 @@
  *            + Fixed bugs in LoadModule($uuid) [djs]
  *  2013-0130 * GetModuleHeaderFromURN() fixed logic - we weren't using the $urn param before [djs]
  */
+
+
 class xenoPMT
 {
   /* Private vars */
@@ -275,7 +277,7 @@ class xenoPMT
      */
 
     global $xpmtPage, $pmtDB;
-    global $xpmtPage2; // obj of Page Properties
+    global $xpmtPageObj; // obj of Page Properties
 
     /*****************************
      * Step 1 - Initialize Theme *

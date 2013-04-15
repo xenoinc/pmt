@@ -12,6 +12,9 @@
  *  data between the LoadModule() and LoadTheme() methods
  *  so we can properly display the module * ToDo:
  *
+ * Note:
+ *  This will only work with newer themes (v0.0.7). Not the older ones
+ *
  * Change Log:
  *
  */
@@ -25,6 +28,9 @@ namespace xenoPMT\Core\Properties
    */
   class Page
   {
+    private $_modPath;
+    private $_modClass;
+    private $_modNamespace;
 
     /***[ Page module members/properties ]*****/
 
@@ -32,7 +38,26 @@ namespace xenoPMT\Core\Properties
      * Physical path to module
      * @var string
      */
-    public $ModulePath;
+    public function ModulePath()
+    {
+      $numArgs = func_num_args();
+      if ($numArgs > 0)
+      { // Set
+        // echo "Second argument is: " . func_get_arg(1) . "<br />\n";
+
+        $argArr = func_get_args();
+        $this->_modPath = $argArr[0];
+
+        return;
+        // for ($i = 0; $i < $numArgs; $i++) {
+        //  echo "Argument $i is: " . $argArr[$i] . "<br />\n";
+        // }
+      }
+      else
+      { // Get
+        return $this->_modPath;
+      }
+    }
 
     /**
      * Name of the module's class name to load
@@ -46,6 +71,14 @@ namespace xenoPMT\Core\Properties
      */
     public $ModuleNamespace;
 
+    /***[ Page Location ]*********************/
+
+    /**
+     * Universal Resource Name (kb, ticket, user, admin, ..)
+     * @var string
+     */
+    public $URN;
+
     /***[ Page theme members/properties ]********************/
 
     /**
@@ -53,7 +86,13 @@ namespace xenoPMT\Core\Properties
      * @var string
      */
     public $Icon;
-    public $Title;        // Page Title
+
+    /**
+     * Page Title.
+     * This is what will go inside of the <title>...</title> tag
+     * @var string
+     */
+    public $Title;
 
     /**
      * Extra Header Information such as custom CSS or JavaScript
@@ -66,13 +105,19 @@ namespace xenoPMT\Core\Properties
      * (realitive) Path to site's logo image
      * @var string
      */
-    public $Logo;         // Site image path
+    public $Logo;
 
     public $Metabar;      // User (login/usr-pref)/settings/logout/about
     public $Toolbar;      // Main toolbar
     public $MiniLeft;     // Mini-bar Left aligned (bread crumbs)
     public $MiniRight;    // Mini-bar Right aligned (module node options)
-    public $HtData;       // Main page html data
+
+    /**
+     * Body of the page to display
+     * (possibly rename to "HTML_Body" or "HTMLBody")
+     * @var string
+     */
+    public $HTDATA;       // Main page html data
 
     /**
      * Relative path to theme currently in use
@@ -86,6 +131,23 @@ namespace xenoPMT\Core\Properties
      * @var string
      */
     public $Footer;
+
+    /**
+     * Input default settings
+     */
+    public function __construct()
+    {
+      $this->Footer = '<img src="https://www.ohloh.net/p/pmt/widgets/project_thin_badge.gif" />';
+    }
+
+    /**
+     * Show the body of our selected theme. This will automatically
+     * fill out our page.
+     */
+    public function DisplayPage()
+    {
+      require($this->HTData);
+    }
 
     /*
       protected $_unknownMembers = array();

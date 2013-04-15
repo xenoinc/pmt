@@ -149,6 +149,10 @@ $xpmtPage["htdata"]="";       // Main page html data
 $xpmtPage["path"]="";         // Relative path to theme currently in use
 $xpmtPage["footer"]="";       // Footer
 
+require_once("core2/properties/Page.php");
+$xpmtPageObj = new \xenoPMT\Core\Properties\Page();
+
+
 /* ################################################################################ */
 
 
@@ -233,7 +237,7 @@ function ParseAndLoad()
     $html = "Unknown URN or Module is not installed! URN segment provided: '". $tmpURI ."'.";
     $xpmtPage["htdata"]=$html;
     $PAGE_HTDATA=$html;
-    echo($html);
+    echo("[[Test[pmt.php's ParseAndLoad()] NO Namespace]] <br />" . $html);
   }
 
   // Step 3 - Load Theme Layer ]---------------------
