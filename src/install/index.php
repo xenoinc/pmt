@@ -1,6 +1,5 @@
 <?php
-//p
-//hpinfo();
+//phpinfo();
 //exit;
 
 
@@ -27,6 +26,7 @@
  *      [ ] Remove usage of so many _POSTs and use ajax
  *
  * Change Log:
+ *  2013-0415 * Fixed Default ADMIN creation. Group_Id is no longer a column in XI_USER. See XI_GROUP
  *  2012-0923 + Added default value for System Title
  *  2012-0603 * Updated XIPMT_USER table column `Name` to `Display_Name`
  *  2012-0424 * Repaired Reset links & prompt message
@@ -161,12 +161,13 @@ elseif (isset($_GET["reset"]) && $_GET["reset"] == "db")
     // Administration Account
     $pmtDB->Query(
             "INSERT INTO ".$pmtConf["db"]["prefix"]."USER ".
-            "(`User_Name`, `Password`, `Display_Name`, `Email`, `Group_Id`, `Active`, `Session_Hash`) VALUES (" .
+            "(`User_Name`, `Password`, `Display_Name`, `Email`, " . /** `Group_Id`, */
+             "`Active`, `Session_Hash`) VALUES (" .
             "'admin', " .                 // User
             "'".sha1('admin')."',".       // Password
             "'xenoPMT Administrator', " . // Display name the world sees
             "'asdf@asdf.com', " .         // Email
-            "1, " .                       // Group_Id (ADMIN)
+            /** "1, " . */                // Group_Id (ADMIN)
             "true," .                     // Active
             "''" .                        // Session_Hash
             ");");

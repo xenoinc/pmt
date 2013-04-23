@@ -10,79 +10,80 @@
  * Description:
  *  Administration module entry point
  *
+ * ToDo:
+ *  [ ] Add Mini-Toolbar (Left) - links for:
+ *      User Editor, Module Editor, System Settings
  * Change Log:
+ *  2013-0415 * Moved class inside its own Namespace
  *
  */
-require_once (PMT_PATH . "xpmt/core/pmt.module.php");
 
-// namespace xenoPMT\Module\Admin;
-
-class admin extends pmtModule
+namespace xenoPMT\Module\Admin
 {
-
-  /* Private vars */
-  private $_title;      // Title of the page
-  private $_toolbar;    // override teh toolbar at least until Core-0.0.5 can do it on its own.
-  private $_pagedata;   // page data (Anon / Logged-in)
-
-
-  /* Public Vars */
-
-  function __construct()
-  {
-    $this->_title     = "xenoPMT System Administration";
-    $this->_toolbar   = "";
-    $this->_pagedata   = $this->GeneratePage();   // Figure out what to display
-  }
-
-  function __destruct()
+  require_once (PMT_PATH . "xpmt/core/pmt.module.php");
+  class admin extends \pmtModule
   {
 
-  }
+    /* Private vars */
+    private $_title;      // Title of the page
+    private $_toolbar;    // override teh toolbar at least until Core-0.0.5 can do it on its own.
+    private $_pagedata;   // page data (Anon / Logged-in)
 
-  public function PageData()
-  {
-    // No need to perform login check.. just generate the damn UUID
 
-    $htm = <<<HTM
+    /* Public Vars */
+
+    function __construct()
+    {
+      $this->_title     = "xenoPMT System Administration";
+      $this->_toolbar   = "";
+      $this->_pagedata   = $this->GeneratePage();   // Figure out what to display
+    }
+
+    function __destruct()
+    {
+
+    }
+
+    public function PageData()
+    {
+      // No need to perform login check.. just generate the damn UUID
+
+      $htm = <<<HTM
 <h1>Welcome to <b><i>xeno</i>PMT</b></h1>
 <p>
-  Under Construction.
+  Admin Panel Under Construction.
 </p>
 <p>&nbsp;</p>
 <p>- Xeno Innovations, Inc. -</p>
 HTM;
 
-    return $htm;
+      return $htm;
+    }
 
-  }
+    // ================================
 
-  // ================================
-
-  /**
-   * Checks a series if items to generate Welcome Page data
-   *
-   * @return string HTML Page Data
-   */
-  private function GeneratePage()
-  {
-    // if ($xpmtConf["user"]["online"] == false)
-    // { ... } else { ... }
-
-    /** [Point to ]
-     * Module           :: http://pmt/admin/module/
-     *  Module Config   :: http://pmt/admin/module/<modname>
-     * User/Group       :: http://pmt/admin/user/
-     * System Config    :: http://pmt/admin/system
+    /**
+     * Checks a series if items to generate Welcome Page data
+     *
+     * @return string HTML Page Data
      */
+    private function GeneratePage()
+    {
+      // if ($xpmtConf["user"]["online"] == false)
+      // { ... } else { ... }
+
+      /** [Point to ]
+       * Module           :: http://pmt/admin/module/
+       *  Module Config   :: http://pmt/admin/module/<modname>
+       * User/Group       :: http://pmt/admin/user/
+       * System Config    :: http://pmt/admin/system
+       */
 
 
-    $htdata = "";
-    return $htdata;
+      $htdata = "";
+      return $htdata;
+    }
   }
-
-
 }
 
 ?>
-

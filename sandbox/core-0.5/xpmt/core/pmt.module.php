@@ -18,9 +18,11 @@
  *            + Added Footer() - Still needs code to implement it
  *  2012-0723 * Added basic functionality
  ***********************************************************/
+// namespace \xenoPMT\Module { class Raw BasicStructure { } }  ;  class myMod extends \xenoPMT\Module\Raw { }
+// namespace \xenoPMT { class Module { } }  ;  class myMod extends \xenoPMT\Module { }  <--- this one
 require_once ("pmt.i.module.php");
 
-class pmtModule implements iModule
+class pmtModule implements \xenoPMT\Module\iModule
 {
 
   /**

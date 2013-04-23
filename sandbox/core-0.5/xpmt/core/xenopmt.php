@@ -1,6 +1,6 @@
 <?php
 
-/** * *********************************************************
+/* ***********************************************************
  * Copyright 2012 (C) Xeno Innovations, Inc.
  * ALL RIGHTS RESERVED
  * @Author:       Damian Suess
@@ -13,15 +13,23 @@
  *  Its still undecided if this should be static or public
  *
  * ToDo:
+ *  [ ] Post BugReport to PHP. PHP fails to catch object creation success/failure {see LoadModule()}
  *  [ ] Complete GetToolbarMain($uuid) to pull from CACHE and DB via UserGroup definitions
  *  [ ] Generate GetToolbarMeta() to display login, preferences, about, logoff
  *  [ ] Complete $xpmtPage[..] feature display
+ *  [ ] LoadModule() Return back error message in PAGE["HTDATA"] so that we do not create a
+ *      redirect loop (ex: dashboard mod). This requires the use of "LoadTheme()" member
+ *  [ ] Move theme portion of LoadModule() to LoadTheme()
  *
  * Change Log:
+ *  2013-0401 + LoadModule() :: Added is module 'Enabled' test
+ *  2013-0331 + Added "LoadTheme()" to display the theme [djs]
  *  2013-0205 + Added GetToolbarMain($uuid) to generate toolbars [djs]
  *            + Fixed bugs in LoadModule($uuid) [djs]
  *  2013-0130 * GetModuleHeaderFromURN() fixed logic - we weren't using the $urn param before [djs]
  */
+
+
 class xenoPMT
 {
   /* Private vars */
@@ -29,13 +37,9 @@ class xenoPMT
 
   /* Public Vars */
 
-  function __construct() {
+  function __construct() { }
 
-  }
-
-  function __destruct() {
-
-  }
+  function __destruct() { }
 
 
   /*
@@ -54,7 +58,7 @@ class xenoPMT
      * [ ] Step 3 - Load module data
      * [ ] Step 4 - Provide temp table generate from (modController) until
      *              the toolbar can be created by AdminPlugin
-     *
+     * [ ] Protect against infinite loop in Step 1.
      */
 
     // debug ($uuid);
@@ -89,25 +93,25 @@ class xenoPMT
      *
      ****************************/
     $_uuid = $pmtDB->FixString($uuid);
-    $_sql = "SELECT `Module_Class`, `Module_Path` FROM {$xpmtConf["db"]["prefix"]}CORE_MODULE WHERE Module_UUID='{$_uuid}' LIMIT 1;";
+    $_sql = "SELECT `Module_Class`, `Module_Path`, `Module_Namespace`, `Enabled` ".
+            "FROM {$xpmtConf["db"]["prefix"]}CORE_MODULE WHERE Module_UUID='{$_uuid}' LIMIT 1;";
 
     $tmpArr = $pmtDB->Query( $_sql);
     $ret = $pmtDB->FetchArray($tmpArr);
     if ($ret == false)     // if ($ret === false)   ** use the regular not EXACT just in case **
     {
       // Module not found
-      // $htdata = "Module not found";
-
       pmtDebug("xenoPMT::LoadModule() - Step1 - Module UUID not found");
-      $module = "";
+      $module = "";     // Module class Name
+      $moduleNS = "";   // blank module with namespace
       $xpmtPage["htdata"] = "Module not found";
-
     }
     else
     {
       // Load module from direct pat
       if (file_exists($ret["Module_Path"]))
       {
+        /*
         // 2013-0205 * Pathced to include Module_Class.PHP
         //  ... "/" . $ret["Module_Class"] . ".php"
         // This is not a good way to define the main file. Idealy we should pull
@@ -116,21 +120,39 @@ class xenoPMT
         // pmtDebug("LoadModule() Module_Path: '$modPth'");
         // if (file_exists(PMT_PATH . "custom/mod/" . $ret["Module_Class"] . ".php")) {}
         // if (file_exists(PMT_PATH . "xpmt/modules/" . $ret["Module_Class"] . ".php")) {}
+        */
 
-        $modPth = $ret["Module_Path"] . "/" . $ret["Module_Class"] . ".main.php";
-        pmtDebug("LoadModule() Module_Path: '$modPth'");
-        require($modPth);
+        // 2013-0401 + Added 'Enabled' test
+        if ($ret["Enabled"] == FALSE)
+        {
+          pmtDebug("Module is not enabled. Display prompt to user");
 
-        $module = $ret["Module_Class"];
+          // FOR NOW we will allow it
+
+          $modPth = $ret["Module_Path"] . "/" . $ret["Module_Class"] . ".main.php";
+          require($modPth);
+          $module = $ret["Module_Class"];
+          $moduleNS = $ret["Module_Namespace"] . "\\" . $module;  // Module Namespace + Class
+        }
+        else
+        {
+          $modPth = $ret["Module_Path"] . "/" . $ret["Module_Class"] . ".main.php";
+          //pmtDebug("xenoPMT::LoadModule() Module_Path: '$modPth'");
+          require($modPth);
+          $module = $ret["Module_Class"];
+          $moduleNS = $ret["Module_Namespace"] . "\\" . $module;  // Module Namespace + Class
+        }
       }
       // elseif (... )
       // { require module path from $xpmtModule[][];  /* as a fail safe */ }
       else
       {
+        // ToDo:
+        // Return back error message in PAGE["HTDATA"] so that we do not create a redirect loop (ex: dashboard mod)
+        pmtDebug("xenoPMT::LoadModule() - Step1 - Module UUID Found but path is missing. " .
+                 "Check TBL_CORE_MODULE.Module_Path settings.");
 
-        pmtDebug("xenoPMT::LoadModule() - Step1 - Module UUID Found but path is missing");
-
-        // default to base page.. but what if dashboard is missing or errored ?!
+        // default to base page.. but what if dashboard is missing or errored ?! (YES, it will do an infinite loop)
         header("Location: " . $xpmtConf["general"]["base_url"] );    // Option B
         exit;
       }
@@ -141,8 +163,9 @@ class xenoPMT
     /**********************
      * Step 2 - Get theme *
      **********************/
-    // ToDo - Move this into its own function to be handled by ParseAndLoad not the module??
-    /* Step 2.1 */
+    /* ### Start MOVE Marker ### */
+    // ToDo - Move this into its own function {LoadTheme()} to be handled by ParseAndLoad not the module??
+    // Step 2.1
     $theme = GetSetting("theme");
     if ($theme == "")
       $theme = "default";
@@ -159,17 +182,19 @@ class xenoPMT
     // Set DEFAULT skin to MAIN.PHP - check LATER if module has custom skin
     $skin_file = "main.php";
     $page = $skin_path . $skin_file;
-    pmtDebug("PagePath1: $page");
+    pmtDebug("xenoPMT::LoadModule() Theme - Page Path: $page");
 
-    /* Step 2.2 */
+    // Step 2.2
     // check if module has custom skin. (i.e. main, project, product, etc.)
     if (file_exists($skin_path . $module . ".php"))
     {
       $skin_file = $module . ".php";
       $page = $skin_path . $skin_file;
-      pmtDebug("PagePath2: $page");
+      pmtDebug("xenoPMT::LoadModule() Theme - *Custom* Page Path: $page");
     }
 
+    /*   ### END MOVE MARKER */
+    //pmtDebug("xenoPMT::LoadMod() Theme Loaded");
 
 
     /****************************************
@@ -178,35 +203,57 @@ class xenoPMT
 
     // Most of these settings are being set/modified from within the modules on the fly
     // so there is no need to mess with most of them here. Lets safely access the module
-    if ($module != null)
+    //if ($module != null)  // removed 2013-0331
+    if ($moduleNS != null)
     {
       // TODO - 2013-0205
       //  [ ] PATH needs to pull the THEME we're using from the DB
 
-      $obj = new $module();
-      $xpmtPage["title"]      = "";                           // Page Title
-        if ($obj->Title() != "")
-              $xpmtPage["title"] = $obj->Title();
-        else  $xpmtPage["title"] = $xpmtConf["general"]["title"];
+      // TODO: Post BugReport to PHP. PHP fails to catch object creation success/failure
+      try
+      {
+        $obj = new $moduleNS();
+        pmtDebug("xenoPMT::LoadModule() [step3] Try Namespace: Using Mod's Namespace");
+      }
+      catch (Exception $e)
+      {
+        pmtDebug("xenoPMT::LoadModule() [step3] Try Namespace: fail (no NS specified)");
+        $obj = new $module();
+      }
 
-      $xpmtPage["icon"]       = "";                           // Path to Icon file
-      $xpmtPage["ex_header"]  = "";                           // Extra Header Information
-      $xpmtPage["logo"]       = "";                           // Site image path
-      $xpmtPage["metabar"]    = "";                           // User (login/usr-pref)/settings/logout/about
-      $xpmtPage["toolbar"]    = "";                           // Main toolbar
-        if($obj->Toolbar() != "")
-                { $xpmtPage["toolbar"] = $obj->Toolbar(); }
-          else  { $xpmtPage["toolbar"] = self::GetToolbarMain($uuid); }
+      if ($obj != false)
+      {
+        //$obj = new $module();
+        // $obj = new $moduleNS();       // 2013-0331 + Using "namespace"
+        $xpmtPage["title"]      = "";                           // Page Title
+          if ($obj->Title() != "")
+                $xpmtPage["title"] = $obj->Title();
+          else  $xpmtPage["title"] = $xpmtConf["general"]["title"];
 
-      $xpmtPage["minileft"]   = $obj->MiniBarLeft();          // Mini-bar Left aligned (bread crumbs)
-      $xpmtPage["miniright"]  = $obj->MiniBarRight();         // Mini-bar Right aligned (module node options)
-      $xpmtPage["htdata"]     = $obj->PageData();             // Main page html data
+        $xpmtPage["icon"]       = "";                           // Path to Icon file
+        $xpmtPage["ex_header"]  = "";                           // Extra Header Information
+        $xpmtPage["logo"]       = "";                           // Site image path
+        $xpmtPage["metabar"]    = "";                           // User (login/usr-pref)/settings/logout/about
+        $xpmtPage["toolbar"]    = "";                           // Main toolbar
+          if($obj->Toolbar() != "")
+                  { $xpmtPage["toolbar"] = $obj->Toolbar(); }
+            else  { $xpmtPage["toolbar"] = self::GetToolbarMain($uuid); }
 
-      $xpmtPage["path"]       = "";                           // Relative path to theme currently in use
-        $xpmtPage["path"] = $xpmtConf["general"]["base_url"] . $relpath; // just use something for now
+        $xpmtPage["minileft"]   = $obj->MiniBarLeft();          // Mini-bar Left aligned (bread crumbs)
+        $xpmtPage["miniright"]  = $obj->MiniBarRight();         // Mini-bar Right aligned (module node options)
+        $xpmtPage["htdata"]     = $obj->PageData();             // Main page html data
 
-      $xpmtPage["footer"]     = "";                           // Footer
-      require($page);
+        $xpmtPage["path"]       = "";                           // Relative path to theme currently in use
+          $xpmtPage["path"] = $xpmtConf["general"]["base_url"] . $relpath; // just use something for now
+
+        $xpmtPage["footer"]     = "";                           // Footer
+        require($page);
+      }
+      else
+      {
+        // Error loading class w/ namespace
+        pmtDebug("LoadModule() Error loading Class Object!");
+      }
     }
     else
     {
@@ -215,6 +262,59 @@ class xenoPMT
       require($page);
     }
   }
+
+  /**
+   * Get the selected theme to use and display the page data
+   * @since v0.0.5
+   * Added: 2013-03-31
+   */
+  public static function LoadTheme()
+  {
+    /* TODO
+     * 1. Check if the user wants a different Theme (cache)
+     * 2. Get the system's selected theme to use (cache)
+     * 3. Get HTTP code from loaded module
+     */
+
+    global $xpmtPage, $pmtDB;
+    global $xpmtPageObj; // obj of Page Properties
+
+    /*****************************
+     * Step 1 - Initialize Theme *
+     ****************************/
+    // NOTE: This is all OLD code. It does not check for Custom User Themes in the root folder
+
+    // Step 1.1
+    $theme = GetSetting("theme");
+    if ($theme == "")
+      $theme = "default";
+    if (file_exists(PMT_PATH . "xpmt/themes/" . $theme))
+    { // use custom theme
+      $skin_path = PMT_PATH . "xpmt/themes/" . $theme . "/";
+      $relpath = "xpmt/themes/" . $theme . "/";
+    }else{
+      // using default
+      $skin_path = PMT_PATH . "xpmt/themes/default/";
+      $relpath = "xpmt/themes/default/";
+    }
+
+    // Set DEFAULT skin to MAIN.PHP - check LATER if module has custom skin
+    $skin_file = "main.php";
+    $page = $skin_path . $skin_file;
+    pmtDebug("xenoPMT::LoadModule() Theme - Page Path: $page");
+
+    // Step 1.2
+    // Check if module has custom skin (i.e: main, Project, Product, etc.
+    if (file_exists($skin_path . $module . ".php"))
+    {
+      $skin_file = $module . ".php";
+      $page = $skin_path . $skin_file;
+      pmtDebug("xenoPMT::LoadModule() Theme - *Custom* Page Path: $page");
+    }
+
+    require($page);
+  }
+
 
   /**
    * Stage 1) Generate toolbar via static code
@@ -384,50 +484,6 @@ class xenoPMT
 
     return $modHeader;
   }
-
-  /**
-   * Include (user/core) library if not already included
-   *
-   * @version v0.0.0
-   * @since v0.0.7
-   * @param string $libraryName
-   * @return boolean true=success, false=failure to load
-   */
-  public static function lib_include($libraryName)
-  {
-    return false;
-  }
-  /**
-   * List of core/user xpmtLibaries already included
-   *
-   * @version v0.0.0
-   * @since v0.0.7
-   * @since xenpPMT Core-0.0.5
-   * @var array
-   */
-  private $libIncluded = array();
-
-  /**
-   * Is xpmtLibrary enabled
-   * <p>Loops through $this->libIncluded[] to see if it's there</p>
-   *
-   * @version v0.0.0
-   * @since v0.0.7
-   * @param type $libName
-   * @return boolean true=enabled, fales=not enabled
-   */
-  public static function lib_enabled($libName) { return false; }
-
-  /**
-   * Searches through Core and User folder to see if libary is available
-   * to be included.
-   *
-   * @version v0.0.0
-   * @since v0.0.7
-   * @param type $libName
-   * @return boolean true=found false=not found or error
-   */
-  public static function lib_available($libName) {return false; }
 
 }
 

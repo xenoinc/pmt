@@ -769,6 +769,52 @@ You are free to use this however you like.  I place this code into the public do
 * Attach files
 * Add code samples with syntax highlighting</pre>
 </div>
+<div title="Cache" creator="d.suess" modifier="d.suess" created="201304030442" modified="201304030457" changecount="8">
+<pre>System Cache is a very important subject to cover so that we can quickly access settings and data without having to waste resources.  There are 2 important types of Cache that xenoPMT will handle: database settings (//$CACHE[]//)and user's data (//not implemented//).
+
+! $CACHE[][..]
+This method is currently in use. Below is a listing of the usages of this multidimensional array.
+
+!! $CACHE[][..] Array Elements
+* GetSetting($setting)
+** $CACHE['''setting'''][''$setting''] = ''$value''
+** select Setting, Value from TBL_CORE_SETTINGS where Setting='$setting' LIMIT 1;
+** Setting = &quot;theme&quot;, &quot;locale&quot;
+* GetModuleSettings($uuid, $setting)
+** $CACHE['''mod_settings'''][''$uuid''][''$setting''] = ''$value''
+** select Setting, Value from TBL_CORE_MODULE_CONFIG where Setting='' UUID='' LIMIT 1;
+* GetUserSetting($setting)
+** //Not implemented yet//
+** Get current logged in user's setting. (move to &quot;User's Cached&quot; system?)
+
+
+!NEW (User's) Cache System (0.0.7?)
+(//NOT IN USE YET [v0.9]//)
+Save user data to a .PHP file so that we only need to use the INCLUDE(REQUIRE)_ONCE statement versus waste CPU on calling the database constantly. It is suggested to keep these files for maybe 10-30min so that the user can swiftly navigate throughout the system. //In the future this will handle both the $CACHE[] and physical Cache//.
+
+The ''Cache System'' or &quot;User's Cache&quot; is suggesting that we limit the use of database communication and create a class/system where we can load pulled back data and save it to a GLOBAL Variable in a .PHP to be used later. Most of this data will be the logged-in user's data settings - //most of the system data is already in the initial ''config.php'' file//. This way we can simply ''include_once()'' files. To make the code somewhat seamless, we can setup the class to &quot;pull DB data&quot; and at the same time it will check the //(user's) cache file//:
+{{{
+if (cached file exists) {
+  YES:
+  * Check AGE of file (older than 30min, get a new one)
+  * Return back requested data 
+} else {
+  * if not: create cached .PHP file
+  * Return back requested data 
+}
+}}}
+
+!!! Sample Cached Items:
+* User's selected Theme
+* User's Timezone setting
+* User's Group Name(s)
+
+!!! Sample Cache File Data:
+* Usage: CLASS 
+* Cache Age: 30 min or 1 hour
+* Data Format: JASON? or relative array (//$arr[&quot;tblName&quot;][&quot;column1=A;column2=B;column3=C&quot;] = &quot;some value&quot;;//)
+</pre>
+</div>
 <div title="Core2-Workflow" creator="d.suess" modifier="d.suess" created="201209012314" modified="201209241852" changecount="10">
 <pre>Below describes the default core loading workflow.
 
@@ -825,6 +871,11 @@ You are free to use this however you like.  I place this code into the public do
 #* View FAQ
 #* View Product List
 </pre>
+</div>
+<div title="Dashboard (mod)" creator="d.suess" modifier="d.suess" created="201303311435" modified="201303311436" changecount="2">
+<pre>!TO DO
+* Fix Desktop.Setup.php &gt; privInstall()
+** for _path and _namespace, replace &quot;\&quot; with &quot;//&quot;</pre>
 </div>
 <div title="DefaultTiddlers" creator="d.suess" modifier="d.suess" created="201209012237" modified="201210032135" changecount="4">
 <pre></pre>
@@ -904,12 +955,10 @@ One of the first module to get created. The initiative is to create a simple mod
 &lt;!-- &lt;h2&gt;Feedback&lt;/h2&gt; --&gt;
 }}}</pre>
 </div>
-<div title="Kanban (mod)" creator="d.suess" modifier="d.suess" created="201303011606" modified="201303011846" changecount="10">
-<pre>Kanban, Scrum, Scrumban.. pick one. This module is intended to assist you in visualizing your projects and where your team is at. This makes use of combining other features of [[xenoPMT]] together such as Tasks and Bugs, to name a couple. If you business uses Tasks to keep track of where you project is at, you can easily visualize it on the Backlog or in Sprint.
+<div title="Kanban (mod)" creator="d.suess" modifier="d.suess" created="201303011606" modified="201303310751" changecount="16">
+<pre>Kanban, Scrum, Scrumban.. pick one. This module is intended to assist you in visualizing your projects and where your team is at. This makes use of combining other features of [[xenoPMT]] together such as Tasks and Bugs, to name a couple. If you business uses Tasks to keep track of where you project is at, you can easily visualize it on the Backlog or in Sprint. Remember: Kanban simply means, &quot;bulletin board&quot; in Japanese.
 
-!
-
-! Usefulness
+!! Usefulness
 * Product Owners
 ** Groom Backlog, Gather Ideas, Plan Releases, Track Progress
 * Scrum Masters
@@ -919,35 +968,80 @@ One of the first module to get created. The initiative is to create a simple mod
 * Quality Assurance
 ** ToDo, Run Test Cases, Capture Bugs, Integration
 
-!Similar Products
+!! Features
+* ''Kanban'' (//Buletin Board Viewer//)
+** Ajax driven to auto-edit items if changed in the background
+** View team board from backlog to resolved
+*** Sample: (//Backlog, Open, Review, In-Process, Pending, Resolved//)
+*** Backlog: Items waiting to be performed
+*** Resolved: Items that are completed, just need final verification
+** Pomodoro Timer - Work VERY hard for 25 minutes; rest for 5.
+*** This data is not logged, just a simple javascript timer
+
+* ''Kanban Item details''
+** Displays owner of the item
+** Description of the item (first 128? chars)
+** Items link back to Tickets/Bugs/Tasks/Requests module (&quot;Ticket: 1234&quot;)
+** Automatic color changing background according to DTTM age
+** Columns sort can be set to Age (oldest or newest) or UserNames
+
+* ''Project Editor''
+** Set project name
+** Set Item BG color auto change according to DTTM (chk box to enable)
+** Project Permissions (5)
+*** Items (Add, Edit, View, Delete), Access Proj Settings (yes/no)
+** Setup Columns (Add/Edit/Remove)
+
+* ''Item Editor'' (//overlay//)
+** &quot;Assigned To:&quot; (text box)
+** &quot;Link to TBTR:&quot; (dropdown [(none)TBTR] and Textbox)
+** &quot;Start in (column):&quot; (dropdown)
+** &quot;Start DTTM:&quot;
+** &quot;End DTTM:&quot;
+
+!! Similar Products
 * http://www.versionone.com/Product/Agile-Project-Management-Tool-Overview/
 * http://www.agilezen.com/tour/visualize/
 * http://www.targetprocess.com/product/product-owner/
 * http://kompiro.org/jamcircle/en/wiki
 * https://www.kanbanpad.com/
 
-* http://www.slideshare.net/dimka5/introducing-agile-scrum-xp-and-kanban</pre>
+* http://www.slideshare.net/dimka5/introducing-agile-scrum-xp-and-kanban
+</pre>
 </div>
-<div title="Libraries" creator="d.suess" modifier="d.suess" created="201302142324" modified="201302142325" changecount="3">
+<div title="Libraries" creator="d.suess" modifier="d.suess" created="201302142324" modified="201304081631" changecount="7">
 <pre>Libraries like Modules provide features to the xenoPMT system. However, Modules run strictly from URIs and Libraries enhance the functionality of Modules.
+! Core Libs (class)
+* [[Security (lib)]] - Log-in and verification system
+*# Regular log on - save status (timeout) via Cookie
+*# Optional - Allow Captcha verification
+*# Optional - User must select a picture to upload in order to log-in (fingerprint like)
+*# Optional - Verify country origin. Save to DB, &quot;Allow access from this Country/Region)
 
-! List of Libs
+! 3rd Party Libs
 * jQuery
 * markitup - Editor box for pages
 
 ! List of proposed Libs
-* libDownload - Securely download files from URL (GET?)
-* libWiki - The parser engine behind the pages to view.
-* libWikiPage - The page creator for the wiki system (?? might place functionality elsewhere??)</pre>
+* [[libDownload (lib)]]- Securely download files from URL (GET?)
+** Download link is active for a 1-time download and expires after 5min-24hrs (user defined)
+** Ex1: ''PERM'' {{{http://xenoPMT/download/file/myfile.zip}}}
+** Ex2: ''TEMP'' {{{http://xenoPMT/download/tmphash/ASDF1234}}}
+** //This should be a [[Modual]], but it has its own library functions//
+* [[libWiki (lib)]] - The parser engine behind the pages to view.
+* [[libWikiPage (lib)]] - The page creator for the wiki system (?? might place functionality elsewhere??)
+* [[libTicket (lib)]] - Ticket accessing system (TBTR)
+* [[SelfUpdate (lib)]] - Apart of the core system. This will check for updates and auto-update the xenoPMT core system</pre>
 </div>
-<div title="MainMenu" creator="d.suess" modifier="d.suess" created="201209011745" modified="201303011540" changecount="46">
+<div title="MainMenu" creator="d.suess" modifier="d.suess" created="201209011745" modified="201304030438" changecount="47">
 <pre>! xenoPMT
 * [[Core2-Workflow]]
 * [[config.php]]
 * [[Modules]]
 * [[Libraries]]
-* [[Reports]]
+* [[Cache]]
 * [[Variables]]
+* [[Reports]]
 * [[ToDoList]]
 * [[Test System]]
 ! Modules
@@ -1125,7 +1219,7 @@ The official list is located on the [[Variables]] page.
 * See page: [[Milestone 0.0.5]]
 </pre>
 </div>
-<div title="Milestones" creator="d.suess" modifier="d.suess" created="201210032306" modified="201210032333" changecount="6">
+<div title="Milestones" creator="d.suess" modifier="d.suess" created="201210032306" modified="201304151335" changecount="7">
 <pre>|!Milestone Series   |!Milestone 1    |!Milestone 2    |!Milestone 3    |h
 |[[Milestone-0]]     |[[Milestone-1]] |[[Milestone-2]] |[[Milestone-3]] |
 |[[Milestone 0.0.1]] |  |
@@ -1133,7 +1227,9 @@ The official list is located on the [[Variables]] page.
 |[[Milestone 0.0.3]] |  |
 |[[Milestone 0.0.4]] |  |
 |[[Milestone 0.0.5]] |  |
-</pre>
+
+! Version Rules
+During the 0.0.x phase of xenoPMT any ODD Minor/Revision versions (v0.0.1, 0.0.5) notes that the CORE system is under development changes. This gives the chance for Modules to be re-written and adjusted in the EVEN Minor/Revision numbers (i.e. 0.0.6).</pre>
 </div>
 <div title="Module - Loader Workflow" creator="d.suess" modifier="d.suess" created="201209061540" modified="201209062047" changecount="9">
 <pre>!Phase 1
@@ -1211,7 +1307,7 @@ $xpmtModule[&quot;info&quot;][] = array
 ?&gt;
 }}}</pre>
 </div>
-<div title="Modules" creator="d.suess" modifier="d.suess" created="201209020115" modified="201303011606" tags="module" changecount="21">
+<div title="Modules" creator="d.suess" modifier="d.suess" created="201209020115" modified="201304071215" tags="module" changecount="25">
 <pre>Below is the list of modules and their statuses
 
 !Topics
@@ -1231,14 +1327,22 @@ $xpmtModule[&quot;info&quot;][] = array
 | 3 |[[User (mod)]]      | 0%  | Yes  |user   |X|X| |Product overview and tracking |Can view/edit basic info. CstmrAdmin can make (limited) colleague accounts  |
 | 2 |[[Wiki (mod)]]      | 0%  | No   |wiki   |X|X|/|Self-contained wiki system    |Can view but not edit  |
 //Help://
-''C''ustomer, ''D''evelopment, ''A''nonymous
+* # - Priority (1=low, 5=high)
+* % - Percent completed
+* Core - Apart of core system (cannot be disabled) or user enabled
+* ''C''ustomer, ''D''evelopment, ''A''nonymous
+* Customer Access - If you allow customers to view the system or now; what their access level is
 
 ! List of Modules - v1.5 (New Additions)
 |Name                           |URI      |Description |h
 |[[Purchase Order|PO (mod)]]    |po       |Track orders created for customers and pricing |
 |[[Svn|SVN (mod)]]              |svn      |Source Code Viewer |
 |[[Git|Git (mod)]]              |git      |Source Code Viewer |
-|[[Kanban Editor|Kanban (mod)]] |kanban   |Project Management Utility |</pre>
+|[[Kanban (mod)]]               |kanban   |Project Management Utility |
+
+! General Options (Suggestion)
+To access the configuration of (most) modules we suggest using the, &quot;options&quot; URI. Example being {{{http://xenoPMT/dashboard/options}}}.
+This way the URI parser will check the $uri-&gt;seg[2] = &quot;options&quot;</pre>
 </div>
 <div title="MyPlugins" creator="d.suess" modifier="d.suess" created="201209012343" modified="201209020106" changecount="5">
 <pre>* [[BackupOptionsPlugin]]
@@ -1711,7 +1815,7 @@ else
     
 //}}}</pre>
 </div>
-<div title="StyleSheet" creator="d.suess" modifier="d.suess" created="201209012305" modified="201209020224" changecount="4">
+<div title="StyleSheet" creator="d.suess" modifier="d.suess" created="201209012305" modified="201304151144" changecount="6">
 <pre>/*{{{*/
 
 .editor {font-size:1.1em;}
@@ -1892,7 +1996,7 @@ table.listView th, table.listView td, table.listView tr {padding:0 3px 0 3px;}
 /*}}}*/
 </pre>
 </div>
-<div title="SystemSettings" creator="d.suess" modifier="d.suess" created="201209012233" modified="201209012348" changecount="122">
+<div title="SystemSettings" creator="d.suess" modifier="d.suess" created="201209012233" modified="201304151142" changecount="123">
 <pre>chkAutoSave: true
 txtBackupFolder: bak
 txtUserName: d.suess</pre>
@@ -2038,8 +2142,52 @@ foreach ($myArray as $row)
 &lt;/table&gt;
 }}}</pre>
 </div>
-<div title="ToDoList" creator="d.suess" modifier="d.suess" created="201209031640" modified="201303011613" changecount="17">
-<pre>!ASAP
+<div title="ToDoList" creator="d.suess" modifier="d.suess" created="201209031640" modified="201304151314" changecount="36">
+<pre>!Current Workbench
+* Move ~LoadTheme() out of ~LoadModule()
+
+!To Do Notes
+!! 2013-0415
+!!! \xenoPMT\Core\Setup.php
+* Add URN verify to ~CheckConflict();
+
+!!! Module - Module.SETUP.PHP
+* UUID.Setup.php - Complete Verify and Installer using NS objects. This is going to be the template for all modules since it is VERY simple
+** Next move its code over to &quot;Sample.Setup.php&quot;
+* Admin.Setup.php - Complete installer &amp; use UUID.Setup.PHP as it's template
+* Dashboard.Setup.php - Change code to be like UUID.Setup.php
+* Install()
+** Test/Run database table installer
+* Uninstaller()
+** //This has still not been touched yet! Test it using the ''Admin Module''//
+
+!!! Installer
+* Return back error message results when a module fails Verification or fails to install. 
+* Remove all pmtDebug() calls where needed.
+
+!!! Core - ~LoadModule() / ~LoadTheme()
+* Move &quot;~LoadTheme()&quot; outside of &quot;~LoadModule()&quot;
+** Display module load errors cleanly: (URN [module] does not exist, Permissions Failed)
+
+!!! Dashboard / ~LoadTheme()
+* Add log-in feature again
+** Its been broken since migration away from v0.0.4
+* Add theme footer back (missing since v0.0.4)
+
+
+!! 2013-0224 (notes from 2012)
+!!! DB Changes
+* KB_Attachment (create table)
+* ? PMT_S_USER_TYPES
+* ? Create customer directory (locally
+** .\#_name\
+** .\#_name\readme.txt
+** .\#_name\fdx\
+** .\#_name\phi\
+* Create downloads lib to safely upload/download files and not allow URL link-backs to physical file
+
+
+!ASAP
 |!Module            |!Sub-Section  |!Description |h
 |[[KB (mod)]]       |Main   |List items |
 |[[Project (mod)]]  |List   |Add links to TBT, Milestones, Wiki (main) |
@@ -2048,6 +2196,7 @@ foreach ($myArray as $row)
 |[[Ticket (mod)]]   |View   |View tickets |
 |[[Ticket (mod)]]   |List   |List tickets |
 |[[Customer (mod)]] |       |Create skeleton |
+|[[Cache]]          |       |xenoPMT Cache Manager  (v0.0.7) |
 
 !Later
 |!Module      |!Sub-Section  |!Description |h
@@ -2060,20 +2209,7 @@ foreach ($myArray as $row)
 |[[KB (mod)]] |View   |Remove |
 |[[KB (mod)]] |Editor |Add side banner to editor |
 
-!To Do Notes
-{{{
-2013-0224 (notes from 2012)
-DB Changes
-* KB_Attachment (create table)
-* ? PMT_S_USER_TYPES
-* ? Create customer directory (locally
-** .\#_name\
-** .\#_name\readme.txt
-** .\#_name\fdx\
-** .\#_name\phi\
-* Create downloads lib to safely upload/download files and not allow URL link-backs to physical file
-
-}}}</pre>
+</pre>
 </div>
 <div title="User (mod)" creator="d.suess" modifier="d.suess" created="201303251649" modified="201303251758" changecount="2">
 <pre>! v0.0.5 Features

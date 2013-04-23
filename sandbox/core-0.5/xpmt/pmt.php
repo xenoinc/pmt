@@ -1,5 +1,5 @@
 <?php
-/************************************************************
+/* ***********************************************************
  * pmTrack (xiPMT, xiPMTrack)
  * Copyright 2010-2012 (C) Xeno Innovations, Inc.
  * ALL RIGHTS RESERVED
@@ -11,6 +11,7 @@
  * Core-Entry point.
  *
  * To Do:
+ * [ ] Step 4.1.1 + Make sure tables / tbl_ver match up in TBL_CORE_SETTINGS
  * [ ] Handle Plugins (Milestone 0.5)
  * [ ] Change "$PAGE_TITLE" to use associatve array $xpmtPage[] or $xpmtCore["page"][]
  * [ ] Include langauge pack (Milestone 0.5)
@@ -79,6 +80,10 @@ $pmtDB = new Database($xpmtConf["db"]["server"],
                       $xpmtConf["db"]["pass"],
                       $xpmtConf["db"]["dbname"]);
 define("PMT_TBL", $xpmtConf["db"]["prefix"]);     // This may be removed
+// TODO: Step 4.1.1:
+//  Perform quick test to make sure {PMT_TBL."CORE_SETTINGS"} and version match!! else
+//  send the user to the Installer / Upgrade system / Version Mismatch page!!
+
 
 $xenoPMT = new xenoPMT;       // Core system Class
 $user = new Member;           // User Class - IsOnline/Group,Login, etc.  $user = new User;
@@ -131,6 +136,7 @@ $PAGE_PATH="";      // Relative path to theme currently in use
 //  $xpmtPage["title"]="";      <<<< use this
 
 // Used to generate the body of our skin
+// TODO: Possibly place $xpmtPage into its own Property Class ($xpmtPage->Icon)
 $xpmtPage["icon"]="";         // Path to Icon file
 $xpmtPage["title"]="";        // Page Title
 $xpmtPage["ex_header"]="";    // Extra Header Information
@@ -142,6 +148,10 @@ $xpmtPage["miniright"]="";    // Mini-bar Right aligned (module node options)
 $xpmtPage["htdata"]="";       // Main page html data
 $xpmtPage["path"]="";         // Relative path to theme currently in use
 $xpmtPage["footer"]="";       // Footer
+
+require_once("core2/properties/Page.php");
+$xpmtPageObj = new \xenoPMT\Core\Properties\Page();
+
 
 /* ################################################################################ */
 
@@ -162,11 +172,11 @@ function ParseAndLoad()
 
 
   // Step 1 - Cleanup segment data ]-------------
-  if (count($xpmtCore["uri"]->Count) == 0)      // if (count($uri->seg) == 0)
-    $uRoot = "";
-  else
-    $uRoot = $xpmtCore["uri"]->Segment(0);
-
+  if (count($xpmtCore["uri"]->Count) == 0) {  // if (count($uri->seg) == 0)
+    $uRoot = "";                              // pmtDebug("URI Count: 0");
+  } else {
+    $uRoot = $xpmtCore["uri"]->Segment(0);    // pmtDebug("URI Count: " . count($xpmtCore["uri"]->Count));
+  }
   //$uRoot = $xpmtCore["uri"]->seg[0];
   //pmtDebug("uri.seg[0]: '" . $uRoot . "'");
 
@@ -181,10 +191,9 @@ function ParseAndLoad()
   echo("</small><hr>");
   */
 
-
   // Step 2 - Load the module ]-------------
-  // ** In 0.0.7, load modules from DB and not just config file
   /*
+  // ** In 0.0.7, load modules from DB and not just config file
   $matchFound = false;    // Did we find a module match?
   $modHeader = array();      // Prepare a blank Module header
   foreach( $xpmtModule["info"] as $ndx => $tmpModHeader)
@@ -206,30 +215,37 @@ function ParseAndLoad()
   $tmpURI = $xpmtCore["uri"]->Segment(0);
   //pmtDebug("pmt.ParseAndLoad() Module: seg='".$tmpURI."'");
 
-  $modHeader = $xenoPMT::GetModuleHeaderFromURN($tmpURI, $matchFound);
+  $matchFound = false;  // Was a matching Module from the provided URI found?
+  $modHeader = $xenoPMT->GetModuleHeaderFromURN($tmpURI, $matchFound);
+  //pmtDebug("pmt.ParseAndLoad() modHeader: " . print_r($modHeader, true));
   if ($matchFound)
   { // Load the module
 
-    // Step 1 - Load Module
-    //pmtDebug("pmt.ParseAndLoad() MatchFound: ". $matchFound);
+    // Step 2.1 - Load Module
+    // pmtDebug("pmt.ParseAndLoad() MatchFound: ". $matchFound);
+    // pmtDebug("pmt.ParseAndLoad() UUID: " . $modHeader["uuid"]);
     $xenoPMT::LoadModule($modHeader["uuid"]);
 
-    // Step 2  - Load Theme
-
+    // Step 2.2  - Load Theme?? - Not HERE, this should be Step3
     //echo("--pmt.ParseAndLoad().done--");
-
   }
   else
   {
     // Unknown Module URN / Module not loaded
-    //pmtDebug("pmt.ParseAndLoad() Unknown Module: seg='".$tmpURI."'");
+    pmtDebug("pmt.ParseAndLoad() Unknown Module: seg='{$tmpURI}'");
     // Reroute to "dashboard/unknown"
-    $html = "Unknown Module! seg='". $tmpURI ."'.";
+    $html = "Unknown URN or Module is not installed! URN segment provided: '". $tmpURI ."'.";
     $xpmtPage["htdata"]=$html;
     $PAGE_HTDATA=$html;
-    echo($html);
-
+    echo("[[Test[pmt.php's ParseAndLoad()] NO Namespace]] <br />" . $html);
   }
+
+  // Step 3 - Load Theme Layer ]---------------------
+
+  // Load HTDATA into theme
+  $xenoPMT::LoadTheme();
+
+  // pmtDebug("[pmt.php] ParseAndLoad() Check: .done.");
 }
 
 

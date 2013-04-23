@@ -98,6 +98,12 @@ class Member
      */
     global $pmtDB;
 
+    if ($pmtDB == null)
+    {
+      //pmtDebug("pmt.member.php : failed to load pmtDB");
+      return;
+    }
+
     if(!isset($_COOKIE["xenopmt_user"])) $_COOKIE["xenopmt_user"] = "";
     if(!isset($_COOKIE["xenopmt_hash"])) $_COOKIE["xenopmt_hash"] = "";
 
@@ -105,6 +111,9 @@ class Member
     $t__tbl = PMT_TBL;
     $t__usr = $pmtDB->FixString($_COOKIE['xenopmt_user']);
     $t__pas = $pmtDB->FixString($_COOKIE['xenopmt_hash']);
+    //pmtDebug("usr: " . $__usr);
+
+
     $tmp = <<<QUERY
   SELECT u.User_Id, u.User_Name, u.Display_Name, g.Group_Id
   FROM {$t__tbl}USER u
@@ -126,72 +135,76 @@ QUERY;
         "Session_Hash='" . $pmtDB->FixString($_COOKIE['xenopmt_hash']) . "' LIMIT 1;";
     */
     $q = $pmtDB->Query($tmp);
-    if($pmtDB->NumRows($q))
+    if ($q == null )
     {
-      // We're logged in still
-      $this->UserInfo = $pmtDB->FetchArray($q);
-      $this->UserInfo["Online"] = true;         // use this for now on
-      $this->Online = true;                     // Kept for legacy purposes
-
-      /**
-       * Old way [pre 2012-0908]
-
-        $grp = $this->UserInfo["Group_Id"];
-        $tmp =
-            "SELECT * FROM ".PMT_TBL."USER_GROUP WHERE " .
-            "Group_Id='" . $grp . "' LIMIT 1";
-        $this->group = $pmtDB->QueryFirst($tmp);
-      */
-
-      // Version 1 ]======================================
-      /*
-      $gid = $this->UserInfo["Group_Id"];
-      $tmp =
-          "SELECT `Group_Id`, `Group_Name` FROM ".PMT_TBL."GROUP WHERE " .
-          "Group_Id=" . $gid . " LIMIT 1";
-
-      try
+      pmtDebug("query was null");
+    }
+    else
+    {
+      $ret33 =$pmtDB->NumRows($q);
+      // pmtDebug("ret: " . $ret33);
+      if($ret33)
       {
-        $q = $pmtDB->Query($tmp);
-        if($pmtDB->NumRows($q))
-          $this->GroupInfo = $pmtDB->FetchArray($q);
+        // We're logged in still
+        $this->UserInfo = $pmtDB->FetchArray($q);
+        $this->UserInfo["Online"] = true;         // use this for now on
+        $this->Online = true;                     // Kept for legacy purposes
 
-      } catch (Exception $e) {
-        pmtDebug("Exception:' $e'");
-      }
-      */
+        /**
+         * Old way [pre 2012-0908]
 
-      // VERSION 2 (USE THIS) ]======================================
-      // First, mod TBL_USER to work in the absence of TBL_USER.Group_Id
-      // and to rely on TBL_User_Group.Group_Id
+          $grp = $this->UserInfo["Group_Id"];
+          $tmp =
+              "SELECT * FROM ".PMT_TBL."USER_GROUP WHERE " .
+              "Group_Id='" . $grp . "' LIMIT 1";
+          $this->group = $pmtDB->QueryFirst($tmp);
+        */
 
-      $dbPrefix = PMT_TBL;
-      $uid = $this->UserInfo["User_Id"];
-      $tmp = <<<"EOT"
-SELECT `g`.`Group_Id`, `g`.`Group_Name`
-FROM {$dbPrefix}USER_GROUP ug
-  join {$dbPrefix}GROUP g
-  on ug.Group_Id = g.Group_Id
-WHERE
-  ug.User_Id = {$uid};
+        // Version 1 ]======================================
+        /*
+        $gid = $this->UserInfo["Group_Id"];
+        $tmp =
+            "SELECT `Group_Id`, `Group_Name` FROM ".PMT_TBL."GROUP WHERE " .
+            "Group_Id=" . $gid . " LIMIT 1";
+
+        try
+        {
+          $q = $pmtDB->Query($tmp);
+          if($pmtDB->NumRows($q))
+            $this->GroupInfo = $pmtDB->FetchArray($q);
+        } catch (Exception $e) {
+          pmtDebug("Exception:' $e'");
+        }
+        */
+
+        // VERSION 2 (USE THIS) ]======================================
+        // First, mod TBL_USER to work in the absence of TBL_USER.Group_Id
+        // and to rely on TBL_User_Group.Group_Id
+
+        $dbPrefix = PMT_TBL;
+        $uid = $this->UserInfo["User_Id"];
+        $tmp = <<<"EOT"
+  SELECT `g`.`Group_Id`, `g`.`Group_Name`
+  FROM {$dbPrefix}USER_GROUP ug
+    join {$dbPrefix}GROUP g
+    on ug.Group_Id = g.Group_Id
+  WHERE
+    ug.User_Id = {$uid};
 EOT;
-
-      try{
-        $q = $pmtDB->Query($tmp);
-        if($pmtDB->NumRows($q))
-          $this->GroupInfo = $pmtDB->FetchArray($q);
-      } catch (Exception $e) {
-        pmtDebug("Exception:' $e'");
+        try{
+          $q = $pmtDB->Query($tmp);
+          if($pmtDB->NumRows($q))
+            $this->GroupInfo = $pmtDB->FetchArray($q);
+        } catch (Exception $e) {
+          pmtDebug("Exception:' $e'");
+        }
       }
-
-
     }
 
-    // -=-=-=-=-=-=-=-=-=-=-=-=
+      // -=-=-=-=-=-=-=-=-=-=-=-=
 
-    // TODO: Setup user SystemHook
-    //($hook = SystemHook::Hook("User_Construction")) ? eval($hook) : false;
-
+      // TODO: Setup user SystemHook
+      //($hook = SystemHook::Hook("User_Construction")) ? eval($hook) : false;
   }
 
   public function __destruct() {

@@ -11,6 +11,15 @@
  *
  * Test:  http://pmt2/install/install.ajax.php?unitest=1
  *
+ * Parameters:
+ *  GET   unitest=1  Perform unit testing
+ *  POST  ClearDB=1  Clear database and start fresh
+ *  POST  UpdateStep
+ *  POST  step3
+ *  POST  step4
+ *  POST  step5
+ *  POST  step6
+ *
  * To Do:
  * 2012-11-19 - Proposal
  * [X]  Refactor variable names to reflect control names. (_dbHost -> txtDbHost)
@@ -24,6 +33,9 @@
  *        echo($obj->Output());     // ret_msg and ret_class
  *
  * Change Log:
+ *  2013-0409 * ajaxClearDB() :: Moved "global $xpmtConf;" before 'Require_Once()' because
+ *              it was overwriting config file's values
+ *  2013-0329 + Added, 'date_default_timezone_set()' to NY as default
  *  2013-0131 + Added cheap unit testing step so we cal call functions directly
  *  2012-1219 * Updated debug message text
  *            + Added throw new Exception(..) to "ajaxCreateConfig()" when inserting Admin account that already exists. (djs)
@@ -38,6 +50,9 @@
 
 require "../xpmt/phpConsole.php";
 PhpConsole::start(true, true, dirname(__FILE__));
+
+// Set default timezone
+date_default_timezone_set('America/New_York');        // [DJS] Added to fix warning in PHP & PhpConsole
 
 // ********************
 $BETA_TESTING = true;
@@ -200,6 +215,10 @@ function ajaxUpdateStep()
  */
 function ajaxClearDB()
 {
+  /* Change Log:
+   *  2013-0409 * Moved "global $xpmtConf;" before 'Require_Once()' because it was
+   *              overwriting config file's values
+   */
   // 1) Extract variables (safely pull from POST)
   global $_txtDbServer, $_txtDbName, $_txtDbPrefix, $_txtDbUser, $_txtDbPass;
 
@@ -210,9 +229,9 @@ function ajaxClearDB()
   // Step 0 - Perform initial db info configuration
   if(file_exists("../config.php"))
   {
+    global $xpmtConf;
     require_once("../xpmt/config.default.php");   // Configure default first
     require_once("../config.php");                // Override w/ user's settings
-    global $xpmtConf;
     $dbServ = $xpmtConf["db"]["server"];
     $dbName = $xpmtConf["db"]["dbname"];
     $dbUser = $xpmtConf["db"]["user"];
@@ -447,7 +466,7 @@ function ajaxCreateConfig()
                       "so we can generate 'config.php' and then change back privs when done.",
         "ret_cls" => "Fail");
     echo(json_encode($retArr));
-    pmtDebug("Exiting :: ajaxCreateConfig");
+    pmtDebug("Exiting :: ajaxCreateConfig with ERROR. Root directory is not writable and cann't create CONFIG.PHP");
     return;
   }
 
@@ -503,7 +522,7 @@ function ajaxCreateConfig()
       if ($sqlRet)
       {
         $userRows = $sqlRet->num_rows;
-        pmtDebug("'Previous User' check query returned {$userRows} rows. (<i>0=good</i>)\n");
+        // pmtDebug("'Previous User' check query returned {$userRows} rows. (<i>0=good</i>)\n");
         $sqlRet->close(); /* free result set */
       }
 
@@ -657,6 +676,8 @@ function ajaxInstallModules()
    * 2. Cycle through each module
    * 3. Install each module
    * 4. Report back in ret_msg  (TODO)
+   *
+   * To Do: This should be ran from the "Next" button in "Step 5"
    */
 
   //pmtDebug("Install Modules");
@@ -693,7 +714,7 @@ function ajaxInstallModules()
   }
 
 
-  $retMsg = "test yay!";
+  $retMsg = "ajaxInstallModules() Completed!";
   $ret_cls = "Success";
 
 
@@ -715,9 +736,9 @@ function ajaxInstallModules()
  */
 function ExecuteSqlFile($sqlFile, $tblPrefix, $objConn, &$arrErrMsg)
 {
-  pmtDebug("Entering :: ExecuteSqlFile");
+  //pmtDebug("Entering :: ExecuteSqlFile");
 
-  pmtDebug("dbFile: '" . $sqlFile . "'  Prefix: '". $tblPrefix ."'");
+  //pmtDebug("dbFile: '" . $sqlFile . "'  Prefix: '". $tblPrefix ."'");
 
   $arrErrMsg = array(); // Create new array
 
@@ -737,7 +758,7 @@ function ExecuteSqlFile($sqlFile, $tblPrefix, $objConn, &$arrErrMsg)
     }
   }
 
-  pmtDebug("Exiting :: ExecuteSqlFile");
+  //pmtDebug("Exiting :: ExecuteSqlFile");
 }
 
 /**
