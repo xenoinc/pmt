@@ -1,0 +1,25 @@
+./xpmt/modules/
+
+This directory is used to house the modules so we don't cludde the main path
+with your numerous other files. The goal is so that each each module will be
+contained in its own directory to keep things nice and neat.
+
+The 0.1 system automatically searches for either for 'ClassName.php' or
+"ClassName/ClassName.php" to keep things simple.
+
+In the future each module will be registered in the database and included via
+user or system config.php ("./config.php" or "./xpmt/config.default.php").
+During execution the system checks the manually included modules' header file
+and tests against the database if it was installed and enabled. If it was not
+then through the Administrative Panel (admin mod) the admin may install and
+enable the module as well as set group permission levels.
+
+That change is coming soon, just hasn't been tested yet.
+
+
+
+Thanks,
+ - Development Team
+   Xeno Innovations, Inc.
+
+[eof]

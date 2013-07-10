@@ -1,0 +1,10 @@
+./xpmt/modules/ticket/v1.0
+
+Sample structure for the v0.4 module loader. Might as well get it ready for action.
+
+
+Thanks,
+ - Development Team
+   Xeno Innovations, Inc.
+
+[eof]

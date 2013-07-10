@@ -1,0 +1,390 @@
+/*
+  Document   : skin.css
+  Created on : Mar 22, 2012, 6:24:41 PM
+  Author     : Damian Suess
+  Description:
+    Default theme style sheet
+
+  Change Log:
+  2012-0920 * Center and slim mode
+            + Moved "container" to incompase entire page & not just main body
+  2012-0904 + Added hack to allow inline-block lists to display properly in
+              IE (damn IE). It may not be proper, but it works.
+      zoom: 1;
+      *display: inline;
+*/
+
+
+/* ** Main body ** */
+body{
+  background: none repeat scroll 0 0 #FFFFFF;
+  color: #000000;
+  margin: 10px;
+  padding: 0;
+  font: 13px Verdana,Arial,'Bitstream Vera Sans',Helvetica,sans-serif;
+  /* 2012-0920 - center and slim */
+  text-align: center;
+}
+body, th, tr {
+    font: 13px Verdana,Arial,'Bitstream Vera Sans',Helvetica,sans-serif;
+}
+
+/* Remove underlines from toolbar items */
+:link, *:visited{
+    border-bottom: 1px dotted #BBBBBB;
+    color: #BB0000;
+    text-decoration: none;
+}
+:link:hover, *:visited:hover{
+    background-color: #EEEEEE;
+    color: #555555;
+}
+
+.buttons { margin: 0.5em 0.5em 0.5em 0; }
+.buttons form,
+.buttons form div { display: inline; }
+.buttons input {    margin: 1em 0.5em 0.1em 0; }
+
+/* **[ Skin Stuff ]************************************ */
+
+#container {
+  /* width: 100%; */
+  /* 2012-0920 - center and slim */
+  width: 1024px;
+  margin: 0 auto;
+  text-align: left;
+}
+
+/* ** Header ** */
+#header
+{ }
+
+/* Logo */
+#logo hr { display: none }
+#logo h1 { margin: 1.5em 0 -1.5em; padding: 0 }
+#logo img { border: none; margin: 0 0 /* -3em */ }
+#logo *:link, #logo *:link:hover,
+#logo *:visited, #logo *:visited:hover
+{
+  background: none repeat scroll 0 0 transparent;
+  border: medium none;
+  color: #555555;
+  margin-bottom: 2px;
+  padding: 0;
+}
+
+/* ** Navigation - Meta Toolbar ** */
+#metabar { padding-top: .3em; }
+
+.metanav h2,
+.metanav hr { display: none }
+
+.metanav ul {
+ font-size: 10px;
+ list-style: none;
+ margin: 0;
+ padding: 0;
+ text-align: right;
+}
+.metanav li
+{
+  border-right: 1px solid #d7d7d7;
+  display: inline-block;
+  padding: 0 .75em;
+  white-space: nowrap;
+  /* IE7 hack to make inline-block effective on block element */
+  zoom: 1;
+  *display: inline;
+}
+.metanav li.last { border-right: none }
+
+
+/* ################################### */
+/* ################################### */
+/* ** Navigation - Main Toolbar ** */
+#mainbar{
+  border: 1px solid #e4e4e4;
+  border-radius: 0.5em 0.5em 0.5em 0.5em;     /* full definition */
+  /* border-radius: .5em; */                  /* simplified */
+  box-shadow: 0 0.5em 1.5em #EEEEEE;
+  font: 10px verdana, 'bitstream Vera Sans', helvetica, arial, sans-serif;
+  margin: 0.66em 0 0.33em;
+}
+#mainbar li {
+  background: url("gfx/topbar_gradient.png") repeat scroll 0 0 white;
+  border: 1px solid #e4e4e4;
+  margin: -1px 0.0em 0 -0.4em;
+  padding: 0.3em 0;
+}
+#mainbar li:hover{ border: 1px solid #666666;}
+#mainbar *:link:hover, #mainbar *:visited:hover {
+  background: url("gfx/topbar_gradient2.png") repeat-x scroll 0 0 #000000;
+  box-shadow: 0 0.1em 0.6em 0 #666666;
+  color: #bbbbff;
+}
+#mainbar .active { border: 1px solid #666666; }
+#mainbar .active *:link, #mainbar .active *:visited {
+  background: url("gfx/topbar_gradient2.png") repeat-x scroll 0 0 #000000;
+  color: #bbbbff;
+  font-weight: bold;
+}
+#mainbar .first, #mainbar .first *:link {
+  border-top-left-radius: 0.5em;
+  border-bottom-left-radius: 0.5em;
+}
+#mainbar .last, #mainbar .last *:link {
+  border-top-right-radius: 0.5em;
+  border-bottom-right-radius: 0.5em;
+}
+#mainbar *:link, #mainbar *:visited {
+    border-bottom: medium none;
+    box-shadow: 0 0.1em 0.3em 0 #999999;
+    color: #000000;
+    padding: 0.3em 20px;
+}
+
+
+
+
+
+
+/* ** TBAR class used in ID 'mainbar' ** */
+.tbar h2, .nav hr {display: none;}
+.tbar ul {
+  font-size: 10px;
+  list-style: none outside none;
+  margin: 0;
+  padding: 0;
+  text-align: left;   /* Main bar is left aligned */
+}
+.tbar li{
+  border-left: 1px solid #d7d7d7;
+  display: inline-block;   /* Works on Chrome & FFox, not IE */
+  /*display: inline;*/              /* work on IE but breaks UL size */
+  padding: 0 0.75em;
+  white-space: nowrap;
+  /* IE7 hack to make inline-block effective on block element */
+  zoom: 1;
+  *display: inline;
+}
+.tbar li.first { border-left:none; }  /* we're left aligned, don't show first boarder */
+
+/* use if right aligned */ /*
+.tbar li.last{ border-right:none; }
+*/
+
+
+/* ################################### */
+/* ################################### */
+/* ** Main Window ** */
+
+/* holder of Module gui */
+#pagebody {
+
+}
+
+#main {
+ position: relative; /* reference for absolute positioning of children */
+ margin: .3em auto;
+ padding: .5em 1em;
+ border: 1px solid #e4e4e4;
+ border-radius: .5em;
+ box-shadow: 0 .5em 1.5em #eee;
+}
+/*
+#main .paging { margin: 0 0 2em; padding: .5em 0 0;
+  font-size: 85%; line-height: 2em; text-align: center;
+}
+#main .paging .current {
+  padding: .1em .3em;
+  border: 1px solid #333;
+  background: #999; color: #fff;
+}
+
+#main .paging :link,
+#main .paging :visited {
+  padding: .1em .3em;
+  border: 1px solid #666;
+  background: transparent; color: #666;
+}
+#main .paging :link:hover,
+#main .paging :visited:hover {
+  background: #999; color: #fff;  border-color: #333;
+}
+#main .paging .previous a,
+#main .paging .next a {
+  font-size: 150%; font-weight: bold; border: none;
+}
+#main .paging .previous a:hover,
+#main .paging .next a:hover {
+  background: transparent; color: #666;
+}
+
+#main h2 .numresults { color: #666; font-size: 90%; }
+
+*/
+
+
+
+/* ** Breadcrubms ** */
+
+
+/* left aligned */
+#minibar_left {
+ font-size: 10px;
+ float: left;
+ padding: .4em 0;
+}
+#minibar_left :link,
+#minibar_left :visited {
+  margin: 0 .2em;
+  border-bottom: 1px dotted #BBBBBB;
+  text-decoration: none;
+}
+
+#minibar_left .first:link,
+#minibar_left .first:visited { color: #999888 }
+#minibar_left .sep { color: #666; padding: 0 .1em }
+#minibar_left .pathentry { float: left }
+
+
+
+/* right aligned */
+#minibar_right {
+  /* float: right; */   /* if this is used, it will combine #miniBar_ with #main */
+  font-size: 10px;
+  min-height: 1em;
+  padding: .4em 0;
+}
+#minibar_right li ul {
+ background: #f7f7f7;
+ color: #ccc;
+ border: 1px solid;
+ padding: 0;
+ display: inline;
+ margin: 0;
+}
+#minibar_right li li { padding: 0; }
+#minibar_right li li :link, #minibar_right li li :visited { padding: 0 1em }
+#minibar_right li li :link:hover, #minibar_right li li :visited:hover {
+ background: #bba;
+ color: #fff;
+}
+
+.nav_right h2,
+.nav_right hr { display: none }
+.nav_right ul {
+  font-size: 10px;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  text-align: right;
+}
+.nav_right li {
+  border-right: 1px solid #d7d7d7;
+  display: inline-block;
+  padding: 0 .75em;
+  white-space: nowrap;
+  /* IE7 hack to make inline-block effective on block element */
+  zoom: 1;
+  *display: inline;
+}
+.nav_right li.last { border-right: none }
+
+/* todo: Add Class .nav_left for Div ID minibar_left list items to show properly */
+
+.nav_left ul {
+  font-size: 10px;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  text-align: left;
+}
+.nav_left li {
+  border-right: 1px solid #d7d7d7;
+  display: inline-block;
+  padding: 0 .75em;
+  white-space: nowrap;
+  /* IE7 hack to make inline-block effective on block element */
+  zoom: 1;
+  *display: inline;
+}
+.nav_left li.last { border-right: none }
+
+/* ################################### */
+/* ################################### */
+/* ** Login Form ** */
+
+
+.login_form h1 {
+  color: white;
+  font-size: 16px;
+  font-weight: bold;
+  background: #829AA8;
+  background: -moz-linear-gradient(#829AA8,#405A6A);
+  background: -webkit-linear-gradient(#829AA8,#405A6A);
+  -ms-filter: "progid:DXImageTransform.Microsoft.gradient(startColorstr='#829aa8',endColorstr='#405a6a')";
+  border: 1px solid #677C89;
+  border-bottom-color: #6B808D;
+  border-radius: 3px 3px 0 0;
+  text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.7);
+  margin: 0;
+  padding: 8px 18px;
+}
+
+.login_form .formbody {
+  padding: 2em;
+  background-color: #E9F1F4;
+  overflow: hidden;
+  border-style: solid;
+  border-width: 1px 1px 2px;
+  border-color: #E9F1F4 #D8DEE2 #D8DEE2;
+  border-radius: 0 0 3px 3px;
+}
+
+
+/* Error and Success Message box */
+.message {
+	background: #F6F6F6;
+	border: 1px solid #e4e4e4;
+	padding: 4px;
+}
+.message.error {
+	background: #ffeded;
+	border-color: #ffc9c9;
+}
+.message.good {
+	background: #edfff0;
+	border-color: #c9ffd3;
+}
+
+/* ################################### */
+/* ################################### */
+/* ** Tables ** */
+.tablethin {
+  border: 1px solid #000000;
+  border-top: 1px solid #000AAA;
+  border-left: 1px solid #000AAA;
+}
+.tablethin td{ padding: 6px; }
+
+.tblheader
+{
+  border-top: 1px solid #000AAA;
+  border-bottom: 1px solid #000AAA;
+  font-weight: bold;
+  font-size: 12px;
+  background: #d2d2f1;
+}
+.tblheader.first, .tblheader.first th { border-top: 0;}
+
+.tblheader th {
+  border-top: 1px solid #000AAA;
+  border-bottom: 1px solid #000AAA;
+  padding: 6px;
+}
+
+.tablerowdark
+{
+  backcolor: #e4e4f8;
+}

@@ -1,0 +1,16 @@
+This folder space is reserved for the SVN module
+
+usage:
+
+  Revision changes by number:
+  URL:      http://pmt/svn/<repo-name>/r/<rev-number>
+  Purpose:  List the files changed in this revision and then
+            perform the diff view of the changes in each file.
+            At top of the page list the files that were touched
+            and href links to the content below.
+  
+  Revision changes by file:
+  URL:      http://pmt/svn/<repo-name>/f/<file-path/>
+  Purpose:  Review change history for particular file.
+            This will list each revision entry and a link to the
+            revision number.

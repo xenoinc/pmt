@@ -1,0 +1,15 @@
+This folder space is reserved for the Wiki module
+
+URL:      http://pmt/wiki/<page-name>
+URL:      http://pmt/wiki/<page-name>/<sub-page>
+
+Description:
+  Wiki system for xenoPMT. The rules for this wiki system will
+  be baised off of MediaWiki's syntax to keep compatability with
+  one of the most common systems available.
+
+  The syntax in Wiki is going to be the same Knowledge Base system (for now).
+  However, the difference between the two are as follows
+    1) KB is inteded for a single page use.
+    2) KB URL titles are strictly numerical where Wiki has ASCII title.
+    

@@ -1,0 +1,458 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-stylesheet type="text/xsl" href="inquiry.xslt"?>
+<InquiryInfo>
+   <InquiryParmInput>
+      <InputInq>2665617</InputInq>
+   </InquiryParmInput>
+   <InquiryCount>1</InquiryCount>
+   <CurrentDate>09/11/2012</CurrentDate>
+   <InquiryParmAll>
+      <InqArray>2665617</InqArray>
+   </InquiryParmAll>
+   <applixinquiry>
+      <account_contact_id>50806</account_contact_id>
+      <account_id>1829</account_id>
+      <acct_location_id>2162</acct_location_id>
+      <anonymous_contact>                                                                                                    </anonymous_contact>
+      <anonymous_contact_flg>N</anonymous_contact_flg>
+      <asset_id>[N/A]</asset_id>
+      <assign_dt>[N/A]</assign_dt>
+      <bug_report_id>[N/A]</bug_report_id>
+      <call_source>External - Web</call_source>
+      <callback_dt>2012-09-12 11:32:00.000</callback_dt>
+      <callback_last_notification_dt>[N/A]</callback_last_notification_dt>
+      <callback_number>7247418793</callback_number>
+      <change_dt>2012-09-11 15:19:20.450</change_dt>
+      <change_uid>SUESSDAM</change_uid>
+      <claim_notification_dt>[N/A]</claim_notification_dt>
+      <close_in_time>[N/A]</close_in_time>
+      <closed_by>[N/A]</closed_by>
+      <closed_dt>[N/A]</closed_dt>
+      <closed_dt_actual>[N/A]</closed_dt_actual>
+      <complaint_install_category>Production</complaint_install_category>
+      <complaint_product>MedCarousel</complaint_product>
+      <complaint_product_id>114</complaint_product_id>
+      <complaint_version>8.0.2</complaint_version>
+      <consult_rep>SUESSDAM</consult_rep>
+      <downtime_flg>N</downtime_flg>
+      <downtime_minutes>[N/A]</downtime_minutes>
+      <downtime_product_id>[N/A]</downtime_product_id>
+      <escal_dt>[N/A]</escal_dt>
+      <escal_level>[N/A]</escal_level>
+      <escal_notes>[N/A]</escal_notes>
+      <ext_alt>[N/A]</ext_alt>
+      <form>[N/A]</form>
+      <hot_call_flg>N</hot_call_flg>
+      <inquiry_id>2665617</inquiry_id>
+      <log_close>[N/A]</log_close>
+      <logged_by>TROSKYJO</logged_by>
+      <logged_dt>09/11/2012</logged_dt>
+      <logged_dt_actual>2012-09-11 11:32:00.000</logged_dt_actual>
+      <no_asset_reason>missing asset</no_asset_reason>
+      <owner_grp>CSA</owner_grp>
+      <owner_rep>[N/A]</owner_rep>
+      <phone_alt>[N/A]</phone_alt>
+      <priority>Normal</priority>
+      <rep_respond>[N/A]</rep_respond>
+      <request_id>[N/A]</request_id>
+      <resolution_category2>[N/A]</resolution_category2>
+      <resolution_category3>[N/A]</resolution_category3>
+      <resolution_category4>[N/A]</resolution_category4>
+      <resolution_category5>[N/A]</resolution_category5>
+      <resolution_install_category>[N/A]</resolution_install_category>
+      <resolution_product>[N/A]</resolution_product>
+      <resolution_product_id>[N/A]</resolution_product_id>
+      <resolution_type>[N/A]</resolution_type>
+      <resolution_version>[N/A]</resolution_version>
+      <respond_dt>[N/A]</respond_dt>
+      <respond_in_time>[N/A]</respond_in_time>
+      <return_dt>[N/A]</return_dt>
+      <should_close_dt>[N/A]</should_close_dt>
+      <should_respond_dt>[N/A]</should_respond_dt>
+      <sla_violation_flg>N</sla_violation_flg>
+      <solution_rating>[N/A]</solution_rating>
+      <solve_counter>[N/A]</solve_counter>
+      <solve_inquiry_id>[N/A]</solve_inquiry_id>
+      <status>Open</status>
+      <sync_dt>[N/A]</sync_dt>
+      <sync_uid>[N/A]</sync_uid>
+      <transfer_dt>09/11/2012</transfer_dt>
+      <transfer_flag>[N/A]</transfer_flag>
+      <transfer_grp>PSPT</transfer_grp>
+      <transfer_rep>SUESSDAM</transfer_rep>
+      <unit_id>[N/A]</unit_id>
+      <resolution_duration>[N/A]</resolution_duration>
+      <active_rep>SUESSDAM</active_rep>
+      <active_grp>PSPT</active_grp>
+      <record_saved_flg>Y</record_saved_flg>
+      <complaint_inst_product_id>57370</complaint_inst_product_id>
+      <resolution_inst_product_id>[N/A]</resolution_inst_product_id>
+      <sla>[N/A]</sla>
+      <billable_flg>N</billable_flg>
+      <robot_fill_type>Manual Fill</robot_fill_type>
+      <consult2_rep>[N/A]</consult2_rep>
+      <initial_callback_dt>2012-09-11 12:27:00.000</initial_callback_dt>
+      <experienceid>[N/A]</experienceid>
+      <koid>[N/A]</koid>
+      <sw_sessionid>                    </sw_sessionid>
+      <product_ownerrep>[N/A]</product_ownerrep>
+      <knowledge_base_flg>N</knowledge_base_flg>
+      <create_dt>2012-09-11 11:32:58.000</create_dt>
+      <customer_viewable>Y</customer_viewable>
+      <frequency>Continuous/Repeatable                             </frequency>
+      <impact>Other                                                                                               </impact>
+      <internal_only>N</internal_only>
+      <secondary_contact_name>                                                  </secondary_contact_name>
+      <secondary_contact_phone>                                </secondary_contact_phone>
+      <severity>NORMAL</severity>
+      <summary_txt>TIC Displays after label printed                                                                                                                                                                                                                          </summary_txt>
+      <urgency>Functioning - not urgent                                                                            </urgency>
+      <cisco_csq_id>21</cisco_csq_id>
+      <age>0</age>
+      <asset>
+         <acceptance_date>[N/A]</acceptance_date>
+         <account_id>[N/A]</account_id>
+         <acct_location_id>[N/A]</acct_location_id>
+         <asset_id>[N/A]</asset_id>
+         <category>[N/A]</category>
+         <change_dt>[N/A]</change_dt>
+         <change_uid>[N/A]</change_uid>
+         <customer_supplied_flg>[N/A]</customer_supplied_flg>
+         <description>[N/A]</description>
+         <form>[N/A]</form>
+         <go_live_date>[N/A]</go_live_date>
+         <install_date>[N/A]</install_date>
+         <model>[N/A]</model>
+         <model_type>[N/A]</model_type>
+         <phase_number>[N/A]</phase_number>
+         <phase_type>[N/A]</phase_type>
+         <serial_number>[N/A]</serial_number>
+         <sync_dt>[N/A]</sync_dt>
+         <sync_uid>[N/A]</sync_uid>
+         <unit_id>[N/A]</unit_id>
+         <active>[N/A]</active>
+         <monitor_type>[N/A]</monitor_type>
+         <pc_type>[N/A]</pc_type>
+         <scanner_type>[N/A]</scanner_type>
+         <configuration_code>[N/A]</configuration_code>
+         <deinstall_dt>[N/A]</deinstall_dt>
+         <environment>[N/A]</environment>
+         <item>[N/A]</item>
+         <location>[N/A]</location>
+         <parent_asset_id>[N/A]</parent_asset_id>
+         <product_code>[N/A]</product_code>
+         <product_line>[N/A]</product_line>
+         <proj_num>[N/A]</proj_num>
+         <record_saved_flg>[N/A]</record_saved_flg>
+         <replacement>[N/A]</replacement>
+         <return_dt>[N/A]</return_dt>
+         <robot_restock>[N/A]</robot_restock>
+         <seq>[N/A]</seq>
+         <ship_date>[N/A]</ship_date>
+         <station_id>[N/A]</station_id>
+         <support_end_dt>[N/A]</support_end_dt>
+         <task_num>[N/A]</task_num>
+         <refresh_dt>[N/A]</refresh_dt>
+         <customer_provided>[N/A]</customer_provided>
+      </asset>
+      <account>
+         <account_id>1829</account_id>
+         <active>Y</active>
+         <change_dt>2012-09-05 08:51:29.100</change_dt>
+         <change_uid>BURTJOSH</change_uid>
+         <ext>[N/A]</ext>
+         <ext_account_id>2372000</ext_account_id>
+         <fax>[N/A]</fax>
+         <hotsite_flg>N</hotsite_flg>
+         <name>North Country Hospital</name>
+         <network_id>0</network_id>
+         <phone>[N/A]</phone>
+         <purchasing_group>NOV</purchasing_group>
+         <region_id>0</region_id>
+         <status>Customer</status>
+         <sync_dt>[N/A]</sync_dt>
+         <sync_uid>[N/A]</sync_uid>
+         <type>Business</type>
+         <betasite_expiration_dt>[N/A]</betasite_expiration_dt>
+         <betasite_flg> </betasite_flg>
+         <email_list>monique.fournier@mckesson.com;joan.trosky@mckesson.com;</email_list>
+         <alert>Beta Escalation Procedure - See BB                              </alert>
+         <inactivation_dt>[N/A]</inactivation_dt>
+      </account>
+      <bugvi/>
+      <diary>
+         <create_rep>[N/A]</create_rep>
+         <diary_txt>When a position or depth label is printed, the assignment information remains displayed on the TIC.  I would expect that this information would clear out once the labels are printed.<br />
+
+<br />
+
+Beta Site</diary_txt>
+         <create_dt>2012-09-11 11:32:00</create_dt>
+         <topic>Complaint</topic>
+      </diary>
+      <diary>
+         <change_dt>2012-09-11 12:14:18.000</change_dt>
+         <change_uid>TROSKYJO                        </change_uid>
+         <create_dt>2012-09-11 12:14:18</create_dt>
+         <create_rep>TROSKYJO                        </create_rep>
+         <diary_id>5164192</diary_id>
+         <diary_txt>Call Transferred to group CSA by TROSKYJO</diary_txt>
+         <form>MAH INQUIRY DIARY</form>
+         <inquiry_id>2665617</inquiry_id>
+         <reference_parent_id>2665617</reference_parent_id>
+         <reference_type>inquiry</reference_type>
+         <sync_dt>[N/A]</sync_dt>
+         <sync_uid>[N/A]</sync_uid>
+         <topic>Transferred</topic>
+         <visit_id>[N/A]</visit_id>
+         <request_id>[N/A]</request_id>
+         <adc_case_id>[N/A]</adc_case_id>
+         <technical_request_id>[N/A]</technical_request_id>
+         <contains_phi>[N/A]</contains_phi>
+         <customer_viewable>[N/A]</customer_viewable>
+         <email_list>[N/A]</email_list>
+         <internal_only>[N/A]</internal_only>
+         <email_sent>[N/A]</email_sent>
+         <send_email>[N/A]</send_email>
+         <transfer_rep>group CSA</transfer_rep>
+      </diary>
+      <diary>
+         <change_dt>2012-09-11 12:27:27.197</change_dt>
+         <change_uid>MANNERIA                        </change_uid>
+         <create_dt>2012-09-11 12:27:00</create_dt>
+         <create_rep>MANNERIA                        </create_rep>
+         <diary_id>5164237</diary_id>
+         <diary_txt>Case # 2665617<br />
+
+        Joan  , This email is to acknowledge that we have received your web inquiry. We have entered it into our tracking system so an analyst can research your issue and afterwards, follow up with an update.  You may check the status at anytime via the McKesson Automation Customer Site available at https://customer.automation.mckesson.com.   If you need immediate assistance, please contact the McKesson Customer Support Desk at 800-700-8737.<br />
+
+Thank you - McKesson Customer Support<br />
+
+</diary_txt>
+         <form>MAH INQUIRY DIARY</form>
+         <inquiry_id>2665617</inquiry_id>
+         <reference_parent_id>2665617</reference_parent_id>
+         <reference_type>Inquiry</reference_type>
+         <sync_dt>[N/A]</sync_dt>
+         <sync_uid>[N/A]</sync_uid>
+         <topic>Callback</topic>
+         <visit_id>[N/A]</visit_id>
+         <request_id>[N/A]</request_id>
+         <adc_case_id>[N/A]</adc_case_id>
+         <technical_request_id>[N/A]</technical_request_id>
+         <contains_phi>N</contains_phi>
+         <customer_viewable>Y</customer_viewable>
+         <email_list>joan.trosky@mckesson.com                                                                                                        </email_list>
+         <internal_only>N</internal_only>
+         <email_sent>Y</email_sent>
+         <send_email>Y</send_email>
+      </diary>
+      <diary>
+         <change_dt>2012-09-11 12:27:33.000</change_dt>
+         <change_uid>MANNERIA                        </change_uid>
+         <create_dt>2012-09-11 12:27:33</create_dt>
+         <create_rep>MANNERIA                        </create_rep>
+         <diary_id>5164238</diary_id>
+         <diary_txt>Call Transferred to group CUST by MANNERIA</diary_txt>
+         <form>MAH INQUIRY DIARY</form>
+         <inquiry_id>2665617</inquiry_id>
+         <reference_parent_id>2665617</reference_parent_id>
+         <reference_type>inquiry</reference_type>
+         <sync_dt>[N/A]</sync_dt>
+         <sync_uid>[N/A]</sync_uid>
+         <topic>Transferred</topic>
+         <visit_id>[N/A]</visit_id>
+         <request_id>[N/A]</request_id>
+         <adc_case_id>[N/A]</adc_case_id>
+         <technical_request_id>[N/A]</technical_request_id>
+         <contains_phi>[N/A]</contains_phi>
+         <customer_viewable>[N/A]</customer_viewable>
+         <email_list>[N/A]</email_list>
+         <internal_only>[N/A]</internal_only>
+         <email_sent>[N/A]</email_sent>
+         <send_email>[N/A]</send_email>
+         <transfer_rep>group CUST</transfer_rep>
+      </diary>
+      <diary>
+         <change_dt>2012-09-11 13:36:24.000</change_dt>
+         <change_uid>BRANCHOM                        </change_uid>
+         <create_dt>2012-09-11 13:36:24</create_dt>
+         <create_rep>BRANCHOM                        </create_rep>
+         <diary_id>5164359</diary_id>
+         <diary_txt>Call Transferred to BRANCHOM by BRANCHOM</diary_txt>
+         <form>MAH INQUIRY DIARY</form>
+         <inquiry_id>2665617</inquiry_id>
+         <reference_parent_id>2665617</reference_parent_id>
+         <reference_type>inquiry</reference_type>
+         <sync_dt>[N/A]</sync_dt>
+         <sync_uid>[N/A]</sync_uid>
+         <topic>Transferred</topic>
+         <visit_id>[N/A]</visit_id>
+         <request_id>[N/A]</request_id>
+         <adc_case_id>[N/A]</adc_case_id>
+         <technical_request_id>[N/A]</technical_request_id>
+         <contains_phi>[N/A]</contains_phi>
+         <customer_viewable>[N/A]</customer_viewable>
+         <email_list>[N/A]</email_list>
+         <internal_only>[N/A]</internal_only>
+         <email_sent>[N/A]</email_sent>
+         <send_email>[N/A]</send_email>
+         <transfer_rep>BRANCHOM</transfer_rep>
+      </diary>
+      <diary>
+         <change_dt>2012-09-11 13:39:19.000</change_dt>
+         <change_uid>BRANCHOM                        </change_uid>
+         <create_dt>2012-09-11 13:39:19</create_dt>
+         <create_rep>BRANCHOM                        </create_rep>
+         <diary_id>5164363</diary_id>
+         <diary_txt>Call Transferred to group CUST by BRANCHOM</diary_txt>
+         <form>MAH INQUIRY DIARY</form>
+         <inquiry_id>2665617</inquiry_id>
+         <reference_parent_id>2665617</reference_parent_id>
+         <reference_type>inquiry</reference_type>
+         <sync_dt>[N/A]</sync_dt>
+         <sync_uid>[N/A]</sync_uid>
+         <topic>Transferred</topic>
+         <visit_id>[N/A]</visit_id>
+         <request_id>[N/A]</request_id>
+         <adc_case_id>[N/A]</adc_case_id>
+         <technical_request_id>[N/A]</technical_request_id>
+         <contains_phi>[N/A]</contains_phi>
+         <customer_viewable>[N/A]</customer_viewable>
+         <email_list>[N/A]</email_list>
+         <internal_only>[N/A]</internal_only>
+         <email_sent>[N/A]</email_sent>
+         <send_email>[N/A]</send_email>
+         <transfer_rep>group CUST</transfer_rep>
+      </diary>
+      <diary>
+         <change_dt>2012-09-11 14:15:00.000</change_dt>
+         <change_uid>WOODSTW                         </change_uid>
+         <create_dt>2012-09-11 14:15:00</create_dt>
+         <create_rep>WOODSTW                         </create_rep>
+         <diary_id>5164478</diary_id>
+         <diary_txt>Call Transferred to WOODSTW by WOODSTW</diary_txt>
+         <form>MAH INQUIRY DIARY</form>
+         <inquiry_id>2665617</inquiry_id>
+         <reference_parent_id>2665617</reference_parent_id>
+         <reference_type>inquiry</reference_type>
+         <sync_dt>[N/A]</sync_dt>
+         <sync_uid>[N/A]</sync_uid>
+         <topic>Transferred</topic>
+         <visit_id>[N/A]</visit_id>
+         <request_id>[N/A]</request_id>
+         <adc_case_id>[N/A]</adc_case_id>
+         <technical_request_id>[N/A]</technical_request_id>
+         <contains_phi>[N/A]</contains_phi>
+         <customer_viewable>[N/A]</customer_viewable>
+         <email_list>[N/A]</email_list>
+         <internal_only>[N/A]</internal_only>
+         <email_sent>[N/A]</email_sent>
+         <send_email>[N/A]</send_email>
+         <transfer_rep>WOODSTW</transfer_rep>
+      </diary>
+      <diary>
+         <change_dt>2012-09-11 14:23:41.240</change_dt>
+         <change_uid>WOODSTW                         </change_uid>
+         <create_dt>2012-09-11 14:23:00</create_dt>
+         <create_rep>WOODSTW                         </create_rep>
+         <diary_id>5164502</diary_id>
+         <diary_txt>WOODSTW consulted with SUESSDAM<br />
+
+Damian will review the call.</diary_txt>
+         <form>MAH INQUIRY DIARY CONSULT</form>
+         <inquiry_id>2665617</inquiry_id>
+         <reference_parent_id>2665617</reference_parent_id>
+         <reference_type>inquiry</reference_type>
+         <sync_dt>[N/A]</sync_dt>
+         <sync_uid>[N/A]</sync_uid>
+         <topic>Consult</topic>
+         <visit_id>[N/A]</visit_id>
+         <request_id>[N/A]</request_id>
+         <adc_case_id>[N/A]</adc_case_id>
+         <technical_request_id>[N/A]</technical_request_id>
+         <contains_phi>[N/A]</contains_phi>
+         <customer_viewable>[N/A]</customer_viewable>
+         <email_list>[N/A]</email_list>
+         <internal_only>Y</internal_only>
+         <email_sent>[N/A]</email_sent>
+         <send_email>[N/A]</send_email>
+      </diary>
+      <diary>
+         <change_dt>2012-09-11 14:59:35.120</change_dt>
+         <change_uid>WOODSTW                         </change_uid>
+         <create_dt>2012-09-11 14:59:00</create_dt>
+         <create_rep>WOODSTW                         </create_rep>
+         <diary_id>5164617</diary_id>
+         <diary_txt>Damian consulted Wayne Barker on this issue.  I am passing the call to Damian's queue to open a bug.</diary_txt>
+         <form>MAH INQUIRY DIARY</form>
+         <inquiry_id>2665617</inquiry_id>
+         <reference_parent_id>2665617</reference_parent_id>
+         <reference_type>Inquiry</reference_type>
+         <sync_dt>[N/A]</sync_dt>
+         <sync_uid>[N/A]</sync_uid>
+         <topic>Diagnosis</topic>
+         <visit_id>[N/A]</visit_id>
+         <request_id>[N/A]</request_id>
+         <adc_case_id>[N/A]</adc_case_id>
+         <technical_request_id>[N/A]</technical_request_id>
+         <contains_phi>N</contains_phi>
+         <customer_viewable>N</customer_viewable>
+         <email_list>[N/A]</email_list>
+         <internal_only>Y</internal_only>
+         <email_sent>N</email_sent>
+         <send_email>N</send_email>
+      </diary>
+      <diary>
+         <change_dt>2012-09-11 15:00:14.000</change_dt>
+         <change_uid>WOODSTW                         </change_uid>
+         <create_dt>2012-09-11 15:00:14</create_dt>
+         <create_rep>WOODSTW                         </create_rep>
+         <diary_id>5164622</diary_id>
+         <diary_txt>Call Transferred to SUESSDAM by WOODSTW</diary_txt>
+         <form>MAH INQUIRY DIARY</form>
+         <inquiry_id>2665617</inquiry_id>
+         <reference_parent_id>2665617</reference_parent_id>
+         <reference_type>inquiry</reference_type>
+         <sync_dt>[N/A]</sync_dt>
+         <sync_uid>[N/A]</sync_uid>
+         <topic>Transferred</topic>
+         <visit_id>[N/A]</visit_id>
+         <request_id>[N/A]</request_id>
+         <adc_case_id>[N/A]</adc_case_id>
+         <technical_request_id>[N/A]</technical_request_id>
+         <contains_phi>[N/A]</contains_phi>
+         <customer_viewable>[N/A]</customer_viewable>
+         <email_list>[N/A]</email_list>
+         <internal_only>[N/A]</internal_only>
+         <email_sent>[N/A]</email_sent>
+         <send_email>[N/A]</send_email>
+         <transfer_rep>SUESSDAM</transfer_rep>
+      </diary>
+      <diary>
+         <change_dt>2012-09-11 15:19:14.853</change_dt>
+         <change_uid>SUESSDAM                        </change_uid>
+         <create_dt>2012-09-11 15:18:00</create_dt>
+         <create_rep>SUESSDAM                        </create_rep>
+         <diary_id>5164683</diary_id>
+         <diary_txt>I will double check with software development to ensure if this is working by designed or not.</diary_txt>
+         <form>MAH INQUIRY DIARY</form>
+         <inquiry_id>2665617</inquiry_id>
+         <reference_parent_id>2665617</reference_parent_id>
+         <reference_type>Inquiry</reference_type>
+         <sync_dt>[N/A]</sync_dt>
+         <sync_uid>[N/A]</sync_uid>
+         <topic>Diagnosis</topic>
+         <visit_id>[N/A]</visit_id>
+         <request_id>[N/A]</request_id>
+         <adc_case_id>[N/A]</adc_case_id>
+         <technical_request_id>[N/A]</technical_request_id>
+         <contains_phi>N</contains_phi>
+         <customer_viewable>Y</customer_viewable>
+         <email_list>[N/A]</email_list>
+         <internal_only>N</internal_only>
+         <email_sent>N</email_sent>
+         <send_email>N</send_email>
+      </diary>
+   </applixinquiry>
+</InquiryInfo>
