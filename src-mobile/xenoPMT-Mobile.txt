@@ -1,0 +1,20 @@
+﻿
+= xenoPMT-Android =
+Android client for bug reports
+
+Features:
+* Simple graphs
+* Brain storm with Kanban Board!
+* Bugs Reporting
+* QA-Testing
+* Create and update defects without being tied down to a laptop.
+** Great for working in the field.
+
+= Project Spaces =
+* xenoPMT-Android (b4a-client)
+* xPMT-NetBeans
+
+= Other clients =
+* xenoPMT NetBeans
+** Bug tracking
+

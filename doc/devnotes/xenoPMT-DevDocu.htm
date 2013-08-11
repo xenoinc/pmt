@@ -889,6 +889,30 @@ if (cached file exists) {
 #* View Product List
 </pre>
 </div>
+<div title="Customize" creator="d.suess" modifier="d.suess" created="201308111447" changecount="1">
+<pre>* [[StyleSheet]]
+* [[StyleSheetColors]]
+
+
+TiddlyWiki is inherently flexible; with some knowledge of HTML and CSS, the entire layout can be easily adjusted.
+
+All layout and style definitions are stored in shadow tiddlers which come with a standard TiddlyWiki, and can be edited directly in TiddlyWiki...
+!&quot;&quot;&quot;HTML Templates&quot;&quot;&quot;
+The overall layout in TiddlyWiki is defined using HTML Template tiddlers...
+| !Shadow Tiddler | !Description |h
+|[[PageTemplate]] |HTML code for the composition of the overall page design.|
+|[[ViewTemplate]] |HTML code for the individual [[Tiddler]] layout |
+|[[EditTemplate]] |HTML code for the tiddler editing mode |
+!&quot;&quot;&quot;StyleSheets&quot;&quot;&quot;
+Styles in TiddlyWiki are defined using [[css|www.w3schools.com/css]] in various StyleSheets...
+| !Shadow Tiddler | !Description |h
+|[[StyleSheetColors]] |default color styles |
+|[[StyleSheetLayout]] |default layout styles |
+|[[StyleSheetLocale]] |locale-specific styles |
+|[[StyleSheetPrint]] |default printing styles |
+|[[StyleSheet]] |custom user styles |
+''Note'': The color scheme of a TiddlyWiki is defined using [[Slices]] in the shadow tiddler called [[ColorPalette]].</pre>
+</div>
 <div title="Dashboard (mod)" creator="d.suess" modifier="d.suess" created="201303311435" modified="201303311436" changecount="2">
 <pre>!TO DO
 * Fix Desktop.Setup.php &gt; privInstall()
@@ -1050,7 +1074,7 @@ One of the first module to get created. The initiative is to create a simple mod
 * [[libTicket (lib)]] - Ticket accessing system (TBTR)
 * [[SelfUpdate (lib)]] - Apart of the core system. This will check for updates and auto-update the xenoPMT core system</pre>
 </div>
-<div title="MainMenu" creator="d.suess" modifier="d.suess" created="201209011745" modified="201307232157" changecount="50">
+<div title="MainMenu" creator="d.suess" modifier="d.suess" created="201209011745" modified="201308111445" changecount="52">
 <pre>! xenoPMT
 * [[Core2-Workflow]]
 * [[config.php]]
@@ -1095,6 +1119,7 @@ One of the first module to get created. The initiative is to create a simple mod
 * [[SiteTitle]]
 * [[SiteSubtitle]]
 * [[StyleSheet]]
+* [[Customize]]
 !! Help
 * [[MyPlugins]]
 * [[MarkUp | http://oldwiki.tiddlywiki.org/wiki/TiddlyWiki_Markup]]
@@ -1326,7 +1351,7 @@ $xpmtModule[&quot;info&quot;][] = array
 ?&gt;
 }}}</pre>
 </div>
-<div title="Modules" creator="d.suess" modifier="d.suess" created="201209020115" modified="201304071215" tags="module" changecount="25">
+<div title="Modules" creator="d.suess" modifier="d.suess" created="201209020115" modified="201308111600" tags="module" changecount="29">
 <pre>Below is the list of modules and their statuses
 
 !Topics
@@ -1358,6 +1383,8 @@ $xpmtModule[&quot;info&quot;][] = array
 |[[Svn|SVN (mod)]]              |svn      |Source Code Viewer |
 |[[Git|Git (mod)]]              |git      |Source Code Viewer |
 |[[Kanban (mod)]]               |kanban   |Project Management Utility |
+|[[QA Testing (mod)]]           |qa-test  |Testing utility kind of like ALM (but better). Create burn-up charts, create descriptive testing plans (scenarios), track each test's step and statuses as you perform them, then review your team's overall status. |
+
 
 ! General Options (Suggestion)
 To access the configuration of (most) modules we suggest using the, &quot;options&quot; URI. Example being {{{http://xenoPMT/dashboard/options}}}.
@@ -1366,6 +1393,30 @@ This way the URI parser will check the $uri-&gt;seg[2] = &quot;options&quot;</pr
 <div title="MyPlugins" creator="d.suess" modifier="d.suess" created="201209012343" modified="201209020106" changecount="5">
 <pre>* [[BackupOptionsPlugin]]
 * [[SortableGridPlugin]]</pre>
+</div>
+<div title="PageTemplate" creator="d.suess" modifier="d.suess" created="201308111557" changecount="1">
+<pre>&lt;!--{{{--&gt;
+&lt;div class='header' role='banner' macro='gradient vert [[ColorPalette::PrimaryLight]] [[ColorPalette::PrimaryMid]]'&gt;
+&lt;div class='headerShadow'&gt;
+&lt;span class='siteTitle' refresh='content' tiddler='SiteTitle'&gt;&lt;/span&gt;&amp;nbsp;
+&lt;span class='siteSubtitle' refresh='content' tiddler='SiteSubtitle'&gt;&lt;/span&gt;
+&lt;/div&gt;
+&lt;div class='headerForeground'&gt;
+&lt;span class='siteTitle' refresh='content' tiddler='SiteTitle'&gt;&lt;/span&gt;&amp;nbsp;
+&lt;span class='siteSubtitle' refresh='content' tiddler='SiteSubtitle'&gt;&lt;/span&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div id='mainMenu' role='navigation' refresh='content' tiddler='MainMenu'&gt;&lt;/div&gt;
+&lt;div id='sidebar'&gt;
+&lt;div id='sidebarOptions' role='navigation' refresh='content' tiddler='SideBarOptions'&gt;&lt;/div&gt;
+&lt;div id='sidebarTabs' role='complementary' refresh='content' force='true' tiddler='SideBarTabs'&gt;&lt;/div&gt;
+&lt;/div&gt;
+&lt;div id='displayArea' role='main'&gt;
+&lt;div id='messageArea'&gt;&lt;/div&gt;
+&lt;div id='tiddlerDisplay'&gt;&lt;/div&gt;
+&lt;/div&gt;
+&lt;!--}}}--&gt;
+</pre>
 </div>
 <div title="Product (mod)" creator="d.suess" modifier="d.suess" created="201210040653" changecount="1">
 <pre>* [[Product (mod) - Sections]]
@@ -1834,12 +1885,504 @@ else
     
 //}}}</pre>
 </div>
-<div title="StyleSheet" creator="d.suess" modifier="d.suess" created="201209012305" modified="201304151144" changecount="6">
+<div title="StyleSheet" creator="d.suess" modifier="d.suess" created="201209012305" modified="201308111448" changecount="10">
 <pre>/*{{{*/
 
 .editor {font-size:1.1em;}
 .editor input, .editor textarea {display:block; width:100%; font:inherit; font-family:consolas,monospace;}
 
+/* alternating color tables */
+.viewer tr.oddRow { background-color: #fff; }
+.viewer tr.evenRow { background-color: #ffe; }
+
+
+/* test 
+h1, h2, h3 {
+	margin-top: 0.7em;
+}
+.info_source {
+	margin-left: 56px;
+}
+
+.tiddler .viewer {
+	margin:0;
+}
+.viewer .tagcloudTag {
+	border:none;
+	background:#ddf;
+        line-height:1.2em;
+}
+
+.viewer .tagcloudTag:hover{
+        background:#ccf;
+}
+
+.viewer pre {
+        font-size:1em;
+}
+
+.viewer .annotation pre {
+	background-color:[[ColorPalette::TertiaryPale]];
+}
+
+.viewer .table100 {
+	width: 100%;
+}
+
+.viewer table,
+table.twtable {
+	margin: 0.8em 0;
+}
+
+.viewer .error td,
+.twtable .error td {
+	background-color: #fcc;
+}
+
+.viewer td, .viewer tr,
+.twtable td, .twtable tr {
+	vertical-align:top;
+	background: white;
+}
+
+.inlineList li {
+	margin-right: 10px;
+	display: inline-block;
+}
+
+.right {
+	float:right;
+	margin:0 1em 10px 10px;
+}
+
+.justifyright {
+	text-align: right;
+}
+
+.justifyfull {
+	text-align: justify;
+}
+
+.serialized{
+	margin:1em 1em 1em 0;
+}
+
+#searchResults .button {
+	background:white;
+	float:right;
+	margin:0.5em 0 0 1em;
+	padding:0.5em 1em;
+}
+
+#menuBar {
+	padding: 0.3em 0;
+}
+
+#mainMenu a {
+	padding: 5px 10px;
+	font-size: 0.9em;
+	margin: 0;
+	line-height: 1em;
+	display: inline-block;
+}
+
+#sidebarOptions .tiddlyLink,
+#sidebarOptions .button {
+	font-size: 0.7em;
+	font-weight:normal;
+	float: right;
+	padding: 5px 15px;
+	color: #fff;
+	display:inline;
+	cursor: pointer;
+	line-height: 1em;
+	text-align: center;
+	margin: 0 !important;
+	display: block;
+	width:auto;
+}
+
+#sidebarOptions .tiddlyLink:hover {
+	color: #fff;
+}
+
+.annotation {
+	display:block;
+	margin:0.5em 0 0 0;
+	background-color:[[ColorPalette::PrimaryPale]];
+	border:none;
+}
+
+#sidebarTabs .tabsetWrapper .tabset .tabSelected {
+	border-color: [[ColorPalette::PrimaryLight]];
+}
+
+#sidebarTabs .tabsetWrapper .tabContents {
+	border-color: [[ColorPalette::PrimaryLight]];
+}
+
+.tiddler {
+	border-top-color: [[ColorPalette::PrimaryLight]];
+}
+
+.tiddler:hover {
+	border-top-color: [[ColorPalette::PrimaryMid]];
+}
+
+#messageArea .button{
+	
+color:[[ColorPalette::Background]];
+	background:transparent;
+	text-decoration:none;
+}
+
+#messageArea .button:hover{
+	text-decoration:underline;
+}
+
+.viewer blockquote {
+	border-left: 1px solid[[ColorPalette::PrimaryMid]];
+	background-color:[[ColorPalette::TertiaryPale]];
+	line-height: 1.5em;
+	padding-left: 0.5em;
+	margin: 0.5em;
+}
+
+#messageArea {
+	top: 0 !important;
+	left: 30%;
+	width: 30%;
+}
+
+.viewer table, table.twtable {
+	border:1px solid [[ColorPalette::TertiaryLight]] !important;
+}
+.viewer th, .viewer thead td, .twtable th, .twtable thead td, .twtable thead tr.evenrow td{
+	background:[[ColorPalette::SecondaryPale]];
+	border:1px solid [[ColorPalette::TertiaryLight]] !important;
+	font-weight:bold;color:[[ColorPalette::Foreground]];
+}
+.viewer td, .viewer tr, .twtable td, .twtable tr {
+	border:1px solid [[ColorPalette::TertiaryLight]] !important;
+}
+.viewer tr.evenRow td, .twtable tr.oddrow td {
+	background:[[ColorPalette::TertiaryPale]];
+}
+.viewer th .linkified .tiddlyLink {
+	font-weight: bold;
+	color:[[ColorPalette::PrimaryMid]];
+}
+.viewer th .linkified .tiddlyLink:hover {
+	color:[[ColorPalette::PrimaryLight]];
+}
+
+.highlight,
+.marked {
+	background:[[ColorPalette::SecondaryPale]];
+}
+
+.tiddlyLink:hover .highlight,
+.tiddlyLink:hover .marked {
+	background:[[ColorPalette::PrimaryLight]];
+}
+
+.alert{
+	color:red;
+}
+
+.viewer .listWrapper li {
+	margin-top:1px;
+	background:[[ColorPalette::TertiaryPale]];
+	list-style-type:none;
+	padding:0;
+}
+.viewer .listWrapper li .tiddlyLink {
+	display:block;
+	padding:0 4px;
+}
+.viewer .listWrapper li.listTitle {
+	background:transparent;
+}
+
+.viewer a.bookmarklet,
+.viewer span.bookmarklet {
+	color:#6A6;
+	font-weight:bold;
+}
+
+.viewer a.bookmarklet:hover,
+.viewer span.bookmarklet:hover {
+	color:#393;
+	font-weight:bold;
+	background:none;
+}
+
+.viewer ul.timeline li.listTitle {
+	margin-left: 0;
+}
+
+.viewer ul.timeline li.listLink {
+	margin-left: 1em;
+	list-style-type:none;
+	color:[[ColorPalette::TertiaryMid]];
+}
+
+.viewer .noTitle li.listTitle{
+	display:none;
+}
+
+.fancyTimeline .listTitle{
+	margin-top:5px;
+	font-size:1.2em;
+	color:[[ColorPalette::PrimaryLight]];
+}
+
+.source {
+	float:right;
+	margin-right:1em;
+}
+
+dd{
+	margin-left: 1em;
+}
+
+.tiddlerCustomFields input {
+	width:300px;
+}
+
+.tiddlerCustomFields .fieldName {
+	width:100px;
+}
+
+.editSpaceSiteIcon .originButton img, .editSpaceSiteIcon .originButton svg {
+	margin: 0;
+}
+
+.editorHeading {
+	top: 16px;
+}
+
+.heading .editor input {
+	padding-left:3px;
+}
+
+.tiddler .editor {
+	padding: 0px;
+}
+
+.tiddler .titleBar{
+	margin-left:0px;
+}
+
+.tiddler .heading .title {
+	font-size:24px;
+	line-height:24px;
+}
+
+.tagInfo {
+	margin:0;
+}
+
+.tiddler .originButton div {
+	display:inline;
+}
+
+.originButton img,
+.originButton svg {
+	vertical-align: -5%;
+	margin-right: 3px;
+}
+
+.originButton .roundelLabel {
+	margin-right:5px;
+}
+
+.siteIcon .label {
+	padding: 0;
+	color:[[ColorPalette::TertiaryMid]];
+}
+
+.tiddler .subtitle:hover {
+	font-weight:normal;
+	color:[[ColorPalette::TertiaryMid]];
+}
+
+.titleBar .siteIcon,
+.titleBar .label {
+	display:inline !important;
+}
+
+.titleBar a {
+	color:[[ColorPalette::TertiaryLight]];
+}
+
+.titleBar a:hover {
+	background:transparent;
+	color:[[ColorPalette::PrimaryLight]];
+}
+
+.titleBar .siteIcon img {
+	display:none;
+}
+
+.tiddler .titleBar span .button,
+.tiddler .titleBar span .button:hover {
+	border:0;
+	padding:0;
+	margin:0;
+}
+
+.tiddler .titleBar span a,
+.tiddler .titleBar span .button, {
+	font-style:normal;
+	color: [[ColorPalette::PrimaryMid]] !important;
+}
+
+.tiddler .titleBar span a:hover,
+.tiddler .titleBar span .button:hover {
+	font-style:normal;
+	color: [[ColorPalette::PrimaryLight]] !important;
+}
+
+*/
+
+/*}}}*/
+</pre>
+</div>
+<div title="StyleSheetColors" creator="d.suess" modifier="d.suess" created="201308111441" changecount="1">
+<pre>/*{{{*/
+body {background:[[ColorPalette::Background]]; color:[[ColorPalette::Foreground]];}
+
+a {color:[[ColorPalette::PrimaryMid]];}
+a:hover {background-color:[[ColorPalette::PrimaryMid]]; color:[[ColorPalette::Background]];}
+a img {border:0;}
+
+h1,h2,h3,h4,h5,h6 {color:[[ColorPalette::SecondaryDark]]; background:transparent;}
+h1 {border-bottom:2px solid [[ColorPalette::TertiaryLight]];}
+h2,h3 {border-bottom:1px solid [[ColorPalette::TertiaryLight]];}
+
+.button {color:[[ColorPalette::PrimaryDark]]; border:1px solid [[ColorPalette::Background]];}
+.button:hover {color:[[ColorPalette::PrimaryDark]]; background:[[ColorPalette::SecondaryLight]]; border-color:[[ColorPalette::SecondaryMid]];}
+.button:active {color:[[ColorPalette::Background]]; background:[[ColorPalette::SecondaryMid]]; border:1px solid [[ColorPalette::SecondaryDark]];}
+
+.header {background:[[ColorPalette::PrimaryMid]];}
+.headerShadow {color:[[ColorPalette::Foreground]];}
+.headerShadow a {font-weight:normal; color:[[ColorPalette::Foreground]];}
+.headerForeground {color:[[ColorPalette::Background]];}
+.headerForeground a {font-weight:normal; color:[[ColorPalette::PrimaryPale]];}
+
+.tabSelected {color:[[ColorPalette::PrimaryDark]];
+	background:[[ColorPalette::TertiaryPale]];
+	border-left:1px solid [[ColorPalette::TertiaryLight]];
+	border-top:1px solid [[ColorPalette::TertiaryLight]];
+	border-right:1px solid [[ColorPalette::TertiaryLight]];
+}
+.tabUnselected {color:[[ColorPalette::Background]]; background:[[ColorPalette::TertiaryMid]];}
+.tabContents {color:[[ColorPalette::PrimaryDark]]; background:[[ColorPalette::TertiaryPale]]; border:1px solid [[ColorPalette::TertiaryLight]];}
+.tabContents .button {border:0;}
+
+#sidebar {}
+#sidebarOptions input {border:1px solid [[ColorPalette::PrimaryMid]];}
+#sidebarOptions .sliderPanel {background:[[ColorPalette::PrimaryPale]];}
+#sidebarOptions .sliderPanel a {border:none;color:[[ColorPalette::PrimaryMid]];}
+#sidebarOptions .sliderPanel a:hover {color:[[ColorPalette::Background]]; background:[[ColorPalette::PrimaryMid]];}
+#sidebarOptions .sliderPanel a:active {color:[[ColorPalette::PrimaryMid]]; background:[[ColorPalette::Background]];}
+
+.wizard {background:[[ColorPalette::PrimaryPale]]; border:1px solid [[ColorPalette::PrimaryMid]];}
+.wizard h1 {color:[[ColorPalette::PrimaryDark]]; border:none;}
+.wizard h2 {color:[[ColorPalette::Foreground]]; border:none;}
+.wizardStep {background:[[ColorPalette::Background]]; color:[[ColorPalette::Foreground]];
+	border:1px solid [[ColorPalette::PrimaryMid]];}
+.wizardStep.wizardStepDone {background:[[ColorPalette::TertiaryLight]];}
+.wizardFooter {background:[[ColorPalette::PrimaryPale]];}
+.wizardFooter .status {background:[[ColorPalette::PrimaryDark]]; color:[[ColorPalette::Background]];}
+.wizard .button {color:[[ColorPalette::Foreground]]; background:[[ColorPalette::SecondaryLight]]; border: 1px solid;
+	border-color:[[ColorPalette::SecondaryPale]] [[ColorPalette::SecondaryDark]] [[ColorPalette::SecondaryDark]] [[ColorPalette::SecondaryPale]];}
+.wizard .button:hover {color:[[ColorPalette::Foreground]]; background:[[ColorPalette::Background]];}
+.wizard .button:active {color:[[ColorPalette::Background]]; background:[[ColorPalette::Foreground]]; border: 1px solid;
+	border-color:[[ColorPalette::PrimaryDark]] [[ColorPalette::PrimaryPale]] [[ColorPalette::PrimaryPale]] [[ColorPalette::PrimaryDark]];}
+
+.wizard .notChanged {background:transparent;}
+.wizard .changedLocally {background:#80ff80;}
+.wizard .changedServer {background:#8080ff;}
+.wizard .changedBoth {background:#ff8080;}
+.wizard .notFound {background:#ffff80;}
+.wizard .putToServer {background:#ff80ff;}
+.wizard .gotFromServer {background:#80ffff;}
+
+#messageArea {border:1px solid [[ColorPalette::SecondaryMid]]; background:[[ColorPalette::SecondaryLight]]; color:[[ColorPalette::Foreground]];}
+#messageArea .button {color:[[ColorPalette::PrimaryMid]]; background:[[ColorPalette::SecondaryPale]]; border:none;}
+
+.popupTiddler {background:[[ColorPalette::TertiaryPale]]; border:2px solid [[ColorPalette::TertiaryMid]];}
+
+.popup {background:[[ColorPalette::TertiaryPale]]; color:[[ColorPalette::TertiaryDark]]; border-left:1px solid [[ColorPalette::TertiaryMid]]; border-top:1px solid [[ColorPalette::TertiaryMid]]; border-right:2px solid [[ColorPalette::TertiaryDark]]; border-bottom:2px solid [[ColorPalette::TertiaryDark]];}
+.popup hr {color:[[ColorPalette::PrimaryDark]]; background:[[ColorPalette::PrimaryDark]]; border-bottom:1px;}
+.popup li.disabled {color:[[ColorPalette::TertiaryMid]];}
+.popup li a, .popup li a:visited {color:[[ColorPalette::Foreground]]; border: none;}
+.popup li a:hover {background:[[ColorPalette::SecondaryLight]]; color:[[ColorPalette::Foreground]]; border: none;}
+.popup li a:active {background:[[ColorPalette::SecondaryPale]]; color:[[ColorPalette::Foreground]]; border: none;}
+.popupHighlight {background:[[ColorPalette::Background]]; color:[[ColorPalette::Foreground]];}
+.listBreak div {border-bottom:1px solid [[ColorPalette::TertiaryDark]];}
+
+.tiddler .defaultCommand {font-weight:bold;}
+
+.shadow .title {color:[[ColorPalette::TertiaryDark]];}
+
+.title {color:[[ColorPalette::SecondaryDark]];}
+.subtitle {color:[[ColorPalette::TertiaryDark]];}
+
+.toolbar {color:[[ColorPalette::PrimaryMid]];}
+.toolbar a {color:[[ColorPalette::TertiaryLight]];}
+.selected .toolbar a {color:[[ColorPalette::TertiaryMid]];}
+.selected .toolbar a:hover {color:[[ColorPalette::Foreground]];}
+
+.tagging, .tagged {border:1px solid [[ColorPalette::TertiaryPale]]; background-color:[[ColorPalette::TertiaryPale]];}
+.selected .tagging, .selected .tagged {background-color:[[ColorPalette::TertiaryLight]]; border:1px solid [[ColorPalette::TertiaryMid]];}
+.tagging .listTitle, .tagged .listTitle {color:[[ColorPalette::PrimaryDark]];}
+.tagging .button, .tagged .button {border:none;}
+
+.footer {color:[[ColorPalette::TertiaryLight]];}
+.selected .footer {color:[[ColorPalette::TertiaryMid]];}
+
+.error, .errorButton {color:[[ColorPalette::Foreground]]; background:[[ColorPalette::Error]];}
+.warning {color:[[ColorPalette::Foreground]]; background:[[ColorPalette::SecondaryPale]];}
+.lowlight {background:[[ColorPalette::TertiaryLight]];}
+
+.zoomer {background:none; color:[[ColorPalette::TertiaryMid]]; border:3px solid [[ColorPalette::TertiaryMid]];}
+
+.imageLink, #displayArea .imageLink {background:transparent;}
+
+.annotation {background:[[ColorPalette::SecondaryLight]]; color:[[ColorPalette::Foreground]]; border:2px solid [[ColorPalette::SecondaryMid]];}
+
+.viewer .listTitle {list-style-type:none; margin-left:-2em;}
+.viewer .button {border:1px solid [[ColorPalette::SecondaryMid]];}
+.viewer blockquote {border-left:3px solid [[ColorPalette::TertiaryDark]];}
+
+.viewer table, table.twtable {border:2px solid [[ColorPalette::TertiaryDark]];}
+.viewer th, .viewer thead td, .twtable th, .twtable thead td {background:[[ColorPalette::SecondaryMid]]; border:1px solid [[ColorPalette::TertiaryDark]]; color:[[ColorPalette::Background]];}
+.viewer td, .viewer tr, .twtable td, .twtable tr {border:1px solid [[ColorPalette::TertiaryDark]];}
+
+.viewer pre {border:1px solid [[ColorPalette::SecondaryLight]]; background:[[ColorPalette::SecondaryPale]];}
+.viewer code {color:[[ColorPalette::SecondaryDark]];}
+.viewer hr {border:0; border-top:dashed 1px [[ColorPalette::TertiaryDark]]; color:[[ColorPalette::TertiaryDark]];}
+
+.highlight, .marked {background:[[ColorPalette::SecondaryLight]];}
+
+.editor input {border:1px solid [[ColorPalette::PrimaryMid]];}
+.editor textarea {border:1px solid [[ColorPalette::PrimaryMid]]; width:100%;}
+.editorFooter {color:[[ColorPalette::TertiaryMid]];}
+.readOnly {background:[[ColorPalette::TertiaryPale]];}
+
+#backstageArea {background:[[ColorPalette::Foreground]]; color:[[ColorPalette::TertiaryMid]];}
+#backstageArea a {background:[[ColorPalette::Foreground]]; color:[[ColorPalette::Background]]; border:none;}
+#backstageArea a:hover {background:[[ColorPalette::SecondaryLight]]; color:[[ColorPalette::Foreground]]; }
+#backstageArea a.backstageSelTab {background:[[ColorPalette::Background]]; color:[[ColorPalette::Foreground]];}
+#backstageButton a {background:none; color:[[ColorPalette::Background]]; border:none;}
+#backstageButton a:hover {background:[[ColorPalette::Foreground]]; color:[[ColorPalette::Background]]; border:none;}
+#backstagePanel {background:[[ColorPalette::Background]]; border-color: [[ColorPalette::Background]] [[ColorPalette::TertiaryDark]] [[ColorPalette::TertiaryDark]] [[ColorPalette::TertiaryDark]];}
+.backstagePanelFooter .button {border:none; color:[[ColorPalette::Background]];}
+.backstagePanelFooter .button:hover {color:[[ColorPalette::Foreground]];}
+#backstageCloak {background:[[ColorPalette::Foreground]]; opacity:0.6; filter:alpha(opacity=60);}
 /*}}}*/
 </pre>
 </div>
@@ -2161,11 +2704,17 @@ foreach ($myArray as $row)
 &lt;/table&gt;
 }}}</pre>
 </div>
-<div title="ToDoList" creator="d.suess" modifier="d.suess" created="201209031640" modified="201304151314" changecount="36">
+<div title="ToDoList" creator="d.suess" modifier="d.suess" created="201209031640" modified="201308111616" changecount="37">
 <pre>!Current Workbench
 * Move ~LoadTheme() out of ~LoadModule()
 
 !To Do Notes
+
+!! 2013-0811
+* Mobile application - bug reporting, qa-testing and more.
+* NetBeans bug tracking add-on
+
+
 !! 2013-0415
 !!! \xenoPMT\Core\Setup.php
 * Add URN verify to ~CheckConflict();
