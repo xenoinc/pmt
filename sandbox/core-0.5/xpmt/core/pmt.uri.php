@@ -1,5 +1,6 @@
 <?php
-/************************************************************
+
+/* * **********************************************************
  * Copyright 2010-12 (C) Xeno Innovations, Inc.
  * ALL RIGHTS RESERVED
  * Author:       fuct
@@ -18,7 +19,7 @@
  *  2012-1203 + Added public member SegmentArray() to return the array in property '$this->seg'
  *  2012-0926 + Added public property Count to count the segments on construction
  *  2012-0309 * Added basic functionality
- ***********************************************************/
+ * ********************************************************* */
 
 /**
  * URI Values
@@ -36,11 +37,11 @@
  *
  *
  */
-
 // namespace xenoPMT\Core {
 
 class URI
 {
+
   /**
    *  Segments are broken up by the "/"
    *  "p/testProject" >> Array ( [0] => "p", [1] => "testProject" )
@@ -48,7 +49,6 @@ class URI
   public $seg = array();    // URL Split up inot parts ("p/ProjName") ** this should be PRIVATE!!!
   public $style = 1;        //
   public $Count = 0;        // Number of items in segment (added 2012-0926)
-
   private $_root;
   private $_request;
   private $_file = "index.php";
@@ -59,8 +59,6 @@ class URI
      * ToDo:
      * [ ] 2012-1203 * Rename the loop's var, "$seg" to something unique
      */
-
-
     // Get root
     $this->_root = str_replace($this->_file, "", $_SERVER["SCRIPT_NAME"]);
 
@@ -72,14 +70,14 @@ class URI
     $this->seg = explode("/", trim($this->_request, "/"));
 
     // Remove bullshit
-    foreach(explode("/", $this->_root) as $seg => $val)
+    foreach (explode("/", $this->_root) as $seg => $val)
     {
-      if( !empty($val))
+      if (!empty($val))
         array_shift($this->seg);
     }
 
     // remove indedx.php if its there & ignore any error generated (@)
-    if(@$this->seg["0"] == "index.php")
+    if (@$this->seg["0"] == "index.php")
       array_shift($this->seg);
 
     $this->Count = count($this->seg);
@@ -104,12 +102,11 @@ class URI
    */
   public function Segment($segIndex)
   {
-    if(isset($this->seg[$segIndex]))
+    if (isset($this->seg[$segIndex]))
       return $this->seg[$segIndex];
     else
       return false;
   }
-
 
   /**
    * Return the URI Segment Array
@@ -124,7 +121,6 @@ class URI
   {
     return $this->seg;
   }
-
 
   /**
    * Return the file name used in URL
@@ -160,13 +156,12 @@ class URI
    */
   private function ArrayToURI($arrSegs = array())
   {
-    if(count($arrSegs) < 1 || !is_array($arrSegs))
+    if (count($arrSegs) < 1 || !is_array($arrSegs))
       return;
 
-    foreach($arrSegs as $key => $val)
+    foreach ($arrSegs as $key => $val)
       $segs[] = $val;
     return implode("/", $segs);
-
   }
 
 }

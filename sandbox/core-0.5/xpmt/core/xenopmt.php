@@ -1,6 +1,6 @@
 <?php
 
-/* ***********************************************************
+/**
  * Copyright 2012 (C) Xeno Innovations, Inc.
  * ALL RIGHTS RESERVED
  * @Author:       Damian Suess
@@ -13,23 +13,22 @@
  *  Its still undecided if this should be static or public
  *
  * ToDo:
+ *  [ ] Move theme portion of LoadModule() to LoadTheme()
  *  [ ] Post BugReport to PHP. PHP fails to catch object creation success/failure {see LoadModule()}
  *  [ ] Complete GetToolbarMain($uuid) to pull from CACHE and DB via UserGroup definitions
  *  [ ] Generate GetToolbarMeta() to display login, preferences, about, logoff
  *  [ ] Complete $xpmtPage[..] feature display
  *  [ ] LoadModule() Return back error message in PAGE["HTDATA"] so that we do not create a
  *      redirect loop (ex: dashboard mod). This requires the use of "LoadTheme()" member
- *  [ ] Move theme portion of LoadModule() to LoadTheme()
  *
  * Change Log:
+ *  2013-0819 - LoadModule() Removed the loading of page HTML. This should be done in the LoadTheme() method [djs]
  *  2013-0401 + LoadModule() :: Added is module 'Enabled' test
  *  2013-0331 + Added "LoadTheme()" to display the theme [djs]
  *  2013-0205 + Added GetToolbarMain($uuid) to generate toolbars [djs]
  *            + Fixed bugs in LoadModule($uuid) [djs]
  *  2013-0130 * GetModuleHeaderFromURN() fixed logic - we weren't using the $urn param before [djs]
  */
-
-
 class xenoPMT
 {
   /* Private vars */
@@ -41,9 +40,9 @@ class xenoPMT
 
   function __destruct() { }
 
-
-  /*
+  /**
    * Load module via UUID
+   * @param string $uuid    Module's Unique Identifier
    */
   public static function LoadModule($uuid)
   {
@@ -62,41 +61,40 @@ class xenoPMT
      */
 
     // debug ($uuid);
-
     // include them all just in case
     global $xpmtModule, $xpmtCore, $xpmtPage, $xpmtConf, $pmtDB;
+
     /*
-    // $theme       - theme :: System theme name to use (PMT_DATA..XI_CORE_SETTINGS.Setting = "theme")
-    // $skin_path   - theme :: Full physical path to theme directory
-    // $relpath     - theme :: Relative (shortened) physical path to theme directory
-    // $skin_file   - theme :: Base theme file (main.php)
-    // $page        - theme :: Full path to MAIN.PHP ($skin_path + $skin_file)
-    // $module      - module :: Module classname
-    // $obj         - module :: Object loaded from classname ($module)
-    */
+      // $theme       - theme :: System theme name to use (PMT_DATA..XI_CORE_SETTINGS.Setting = "theme")
+      // $skin_path   - theme :: Full physical path to theme directory
+      // $relpath     - theme :: Relative (shortened) physical path to theme directory
+      // $skin_file   - theme :: Base theme file (main.php)
+      // $page        - theme :: Full path to MAIN.PHP ($skin_path + $skin_file)
+      // $module      - module :: Module classname
+      // $obj         - module :: Object loaded from classname ($module)
+     */
 
     /* Steps
-    // step 1 - Search for registered module via UUID  { $module = GetClassFromUUID($uuid);
-    //        + do this via SQL
-    // step 2 - Skin Part 1 - Set theme path
-    // step 3 - Check if module has custom skin { file_exists($skin_path . $module . ".php")  ** deprecated!!, use CSS rules and STYLE inject
-    // step 4 - Initialize module class!   { $obj = new $module(); }
-    // step 5 - Setup $xpmtPage[""] properties from $obj->...
-    // step 6 - REQUIRE_ONCE ($page)  -  Actually use the theme & display it
-    */
+      // step 1 - Search for registered module via UUID  { $module = GetClassFromUUID($uuid);
+      //        + do this via SQL
+      // step 2 - Skin Part 1 - Set theme path
+      // step 3 - Check if module has custom skin { file_exists($skin_path . $module . ".php")  ** deprecated!!, use CSS rules and STYLE inject
+      // step 4 - Initialize module class!   { $obj = new $module(); }
+      // step 5 - Setup $xpmtPage[""] properties from $obj->...
+      // step 6 - REQUIRE_ONCE ($page)  -  Actually use the theme & display it
+     */
 
 
-    /****************************
-     *  Step 1 - Prepare Module *
-     *
-     * This must set the {$module} variable
-     *
-     ****************************/
+    /* ************************************ *
+     *  Step 1 - Prepare Module             *
+     * This must set the {$module} variable *
+     * ************************************ */
+
     $_uuid = $pmtDB->FixString($uuid);
-    $_sql = "SELECT `Module_Class`, `Module_Path`, `Module_Namespace`, `Enabled` ".
+    $_sql = "SELECT `Module_Class`, `Module_Path`, `Module_Namespace`, `Enabled` " .
             "FROM {$xpmtConf["db"]["prefix"]}CORE_MODULE WHERE Module_UUID='{$_uuid}' LIMIT 1;";
 
-    $tmpArr = $pmtDB->Query( $_sql);
+    $tmpArr = $pmtDB->Query($_sql);
     $ret = $pmtDB->FetchArray($tmpArr);
     if ($ret == false)     // if ($ret === false)   ** use the regular not EXACT just in case **
     {
@@ -112,15 +110,15 @@ class xenoPMT
       if (file_exists($ret["Module_Path"]))
       {
         /*
-        // 2013-0205 * Pathced to include Module_Class.PHP
-        //  ... "/" . $ret["Module_Class"] . ".php"
-        // This is not a good way to define the main file. Idealy we should pull
-        // the "mainfile" from this module's header PHP file.
-        //
-        // pmtDebug("LoadModule() Module_Path: '$modPth'");
-        // if (file_exists(PMT_PATH . "custom/mod/" . $ret["Module_Class"] . ".php")) {}
-        // if (file_exists(PMT_PATH . "xpmt/modules/" . $ret["Module_Class"] . ".php")) {}
-        */
+          // 2013-0205 * Pathced to include Module_Class.PHP
+          //  ... "/" . $ret["Module_Class"] . ".php"
+          // This is not a good way to define the main file. Idealy we should pull
+          // the "mainfile" from this module's header PHP file.
+          //
+          // pmtDebug("LoadModule() Module_Path: '$modPth'");
+          // if (file_exists(PMT_PATH . "custom/mod/" . $ret["Module_Class"] . ".php")) {}
+          // if (file_exists(PMT_PATH . "xpmt/modules/" . $ret["Module_Class"] . ".php")) {}
+         */
 
         // 2013-0401 + Added 'Enabled' test
         if ($ret["Enabled"] == FALSE)
@@ -150,19 +148,20 @@ class xenoPMT
         // ToDo:
         // Return back error message in PAGE["HTDATA"] so that we do not create a redirect loop (ex: dashboard mod)
         pmtDebug("xenoPMT::LoadModule() - Step1 - Module UUID Found but path is missing. " .
-                 "Check TBL_CORE_MODULE.Module_Path settings.");
+          "Check TBL_CORE_MODULE.Module_Path settings.");
 
         // default to base page.. but what if dashboard is missing or errored ?! (YES, it will do an infinite loop)
-        header("Location: " . $xpmtConf["general"]["base_url"] );    // Option B
+        header("Location: " . $xpmtConf["general"]["base_url"]);    // Option B
         exit;
       }
     }
 
 
 
-    /**********************
+    /* ****************** *
      * Step 2 - Get theme *
-     **********************/
+     * ****************** */
+
     /* ### Start MOVE Marker ### */
     // ToDo - Move this into its own function {LoadTheme()} to be handled by ParseAndLoad not the module??
     // Step 2.1
@@ -173,7 +172,9 @@ class xenoPMT
     { // use custom theme
       $skin_path = PMT_PATH . "xpmt/themes/" . $theme . "/";
       $relpath = "xpmt/themes/" . $theme . "/";
-    }else{
+    }
+    else
+    {
       // using default
       $skin_path = PMT_PATH . "xpmt/themes/default/";
       $relpath = "xpmt/themes/default/";
@@ -197,18 +198,18 @@ class xenoPMT
     //pmtDebug("xenoPMT::LoadMod() Theme Loaded");
 
 
-    /****************************************
+    /* ************************************ *
      * Step 3 - Setup $xpmtPage[] variables *
-     ****************************************/
+     * ************************************ */
 
     // Most of these settings are being set/modified from within the modules on the fly
     // so there is no need to mess with most of them here. Lets safely access the module
     //if ($module != null)  // removed 2013-0331
+    pmtDebug("xenoPMT::LoadModule() - moduleNS: $moduleNS");
     if ($moduleNS != null)
     {
       // TODO - 2013-0205
       //  [ ] PATH needs to pull the THEME we're using from the DB
-
       // TODO: Post BugReport to PHP. PHP fails to catch object creation success/failure
       try
       {
@@ -225,29 +226,36 @@ class xenoPMT
       {
         //$obj = new $module();
         // $obj = new $moduleNS();       // 2013-0331 + Using "namespace"
-        $xpmtPage["title"]      = "";                           // Page Title
-          if ($obj->Title() != "")
-                $xpmtPage["title"] = $obj->Title();
-          else  $xpmtPage["title"] = $xpmtConf["general"]["title"];
+        $xpmtPage["title"] = "";                           // Page Title
+        if ($obj->Title() != "")
+          $xpmtPage["title"] = $obj->Title();
+        else
+          $xpmtPage["title"] = $xpmtConf["general"]["title"];
 
         $xpmtPage["icon"]       = "";                           // Path to Icon file
         $xpmtPage["ex_header"]  = "";                           // Extra Header Information
         $xpmtPage["logo"]       = "";                           // Site image path
         $xpmtPage["metabar"]    = "";                           // User (login/usr-pref)/settings/logout/about
         $xpmtPage["toolbar"]    = "";                           // Main toolbar
-          if($obj->Toolbar() != "")
-                  { $xpmtPage["toolbar"] = $obj->Toolbar(); }
-            else  { $xpmtPage["toolbar"] = self::GetToolbarMain($uuid); }
+
+        if ($obj->Toolbar() != "")
+          $xpmtPage["toolbar"] = $obj->Toolbar();
+        else
+          $xpmtPage["toolbar"] = self::GetToolbarMain($uuid);
 
         $xpmtPage["minileft"]   = $obj->MiniBarLeft();          // Mini-bar Left aligned (bread crumbs)
         $xpmtPage["miniright"]  = $obj->MiniBarRight();         // Mini-bar Right aligned (module node options)
         $xpmtPage["htdata"]     = $obj->PageData();             // Main page html data
 
         $xpmtPage["path"]       = "";                           // Relative path to theme currently in use
-          $xpmtPage["path"] = $xpmtConf["general"]["base_url"] . $relpath; // just use something for now
+        $xpmtPage["path"]       = $xpmtConf["general"]["base_url"] . $relpath; // just use something for now
 
         $xpmtPage["footer"]     = "";                           // Footer
-        require($page);
+
+        // Removed 2013-0819
+        // We should render the page data through the xenoPMT::LoadTheme() method
+        //
+        //require($page);
       }
       else
       {
@@ -259,7 +267,11 @@ class xenoPMT
     {
       // Added 2013-0130
       // There was an issue loading the module
-      require($page);
+      //
+      // Removed 2013-0819 - We should render the page data through the xenoPMT::LoadTheme() method
+      //
+      //require($page);
+      //require($page);
     }
   }
 
@@ -279,20 +291,25 @@ class xenoPMT
     global $xpmtPage, $pmtDB;
     global $xpmtPageObj; // obj of Page Properties
 
-    /*****************************
+    /* ************************* *
      * Step 1 - Initialize Theme *
-     ****************************/
-    // NOTE: This is all OLD code. It does not check for Custom User Themes in the root folder
+     * ************************* */
 
+    // NOTE: This is all OLD code. It does not check for Custom User Themes in the root folder
     // Step 1.1
     $theme = GetSetting("theme");
     if ($theme == "")
       $theme = "default";
+
+    pmtDebug("xenoPMT::LoadTheme() - GetSetting('theme'): $theme");
+
     if (file_exists(PMT_PATH . "xpmt/themes/" . $theme))
     { // use custom theme
       $skin_path = PMT_PATH . "xpmt/themes/" . $theme . "/";
       $relpath = "xpmt/themes/" . $theme . "/";
-    }else{
+    }
+    else
+    {
       // using default
       $skin_path = PMT_PATH . "xpmt/themes/default/";
       $relpath = "xpmt/themes/default/";
@@ -301,20 +318,22 @@ class xenoPMT
     // Set DEFAULT skin to MAIN.PHP - check LATER if module has custom skin
     $skin_file = "main.php";
     $page = $skin_path . $skin_file;
-    pmtDebug("xenoPMT::LoadModule() Theme - Page Path: $page");
+    pmtDebug("xenoPMT::LoadTheme() - Page Path: $page");
 
     // Step 1.2
     // Check if module has custom skin (i.e: main, Project, Product, etc.
+    // Module is coming form a UUID lookup
+    $module = ""; // just added since it's not defined
     if (file_exists($skin_path . $module . ".php"))
     {
       $skin_file = $module . ".php";
       $page = $skin_path . $skin_file;
-      pmtDebug("xenoPMT::LoadModule() Theme - *Custom* Page Path: $page");
+      pmtDebug("xenoPMT::LoadTheme() - *Custom* Page Path: $page");
     }
 
+    //pmtDebug("xenoPMT::LoadTheme() - Page: $page");
     require($page);
   }
-
 
   /**
    * Stage 1) Generate toolbar via static code
@@ -328,66 +347,70 @@ class xenoPMT
    */
   public static function GetToolbarMain($uuid)
   {
-    /* Stage 1 (xenoPMT v0.0.5)*/
+    /* Stage 1 (xenoPMT v0.0.5) */
 
     // Pull this info from Database
     $tblModules2 = array(
-        // Module-UUID                            Display Text
-        "df9f29f8-1aed-421d-b01c-860c6b89fb14" => "Dashboard",
-        "c6fb97b8-af93-42ce-aac6-de5656c8fdae" => "UUID",
-        "04a78f00-220f-11e2-81c1-0800200c9a66" => "Sample",
-        "81d641a2-dbcc-4bde-ad09-40c3260f325b" => "Admin"
-        );
+      // Module-UUID                            Display Text
+      "df9f29f8-1aed-421d-b01c-860c6b89fb14" => "Dashboard",
+      "c6fb97b8-af93-42ce-aac6-de5656c8fdae" => "UUID",
+      "04a78f00-220f-11e2-81c1-0800200c9a66" => "Sample",
+      "81d641a2-dbcc-4bde-ad09-40c3260f325b" => "Admin"
+    );
 
     $arrAvailMods = array(
-        // Module       Display
-        // "dashboard" => "Dashboard",
-        "df9f29f8-1aed-421d-b01c-860c6b89fb14" => "Dashboard",
-        "p"         => "Projects",
-        "kb"        => "Knowledge Base",
-        "ticket"    => "Tickets",     /* "ticket" => array ("Tickets", "+"), */
-        "bug"       => "Bugs",
-        "task"      => "Tasks",
-        "product"   => "Products",
-        "customer"  => "Customers",
-        "user"      => "Users",
-        "admin"     => "Admin"
-        );
+      // Module       Display
+      // "dashboard" => "Dashboard",
+      "df9f29f8-1aed-421d-b01c-860c6b89fb14" => "Dashboard",
+      "p" => "Projects",
+      "kb" => "Knowledge Base",
+      "ticket" => "Tickets", /* "ticket" => array ("Tickets", "+"), */
+      "bug" => "Bugs",
+      "task" => "Tasks",
+      "product" => "Products",
+      "customer" => "Customers",
+      "user" => "Users",
+      "admin" => "Admin"
+    );
     $tab = "        ";
-    $ret = $tab . "<ul>". PHP_EOL;
+    $ret = $tab . "<ul>" . PHP_EOL;
     $ndxCount = 0;
 
     //print (count($a));
-    foreach($arrAvailMods as $key => $value)
+    foreach ($arrAvailMods as $key => $value)
     { //print ("key: $key, Obj: $value <br />");
-
       $ndxCount++;
       //if ($tmod[$ndx] == $module)
       if ($key == $uuid)  // if ($key == $module)     // 2013-0205 * Changed $module to $uuid
-            $active = true;
-      else  $active = false;
+        $active = true;
+      else
+        $active = false;
 
       if ($ndxCount == 1)
       {
-        if($active)
-              $cls = ' class="first active"';
-        else  $cls = ' class="first"';
+        if ($active)
+          $cls = ' class="first active"';
+        else
+          $cls = ' class="first"';
       }
-      elseif($ndxCount == count($arrAvailMods))
-      { $cls = ' class="last"'; }
+      elseif ($ndxCount == count($arrAvailMods))
+      {
+        $cls = ' class="last"';
+      }
       else
       {
         if ($key == $uuid) // if ($key == $module)     // 2013-0205 * Changed $module to $uuid
-              $cls = ' class="active"';
-        else  $cls = '';
+          $cls = ' class="active"';
+        else
+          $cls = '';
         //if ($key=="project") $cls = ' class="active"'; else $cls = '';
       }
       $ret .= $tab .
-              "  <li" . $cls. ">" .
-              AddLink($key, $value) .
-              "</li>" . PHP_EOL;
+        "  <li" . $cls . ">" .
+        AddLink($key, $value) .
+        "</li>" . PHP_EOL;
     }
-    $ret .= $tab . "</ul>". PHP_EOL;
+    $ret .= $tab . "</ul>" . PHP_EOL;
     return $ret;
 
 
@@ -397,18 +420,18 @@ class xenoPMT
      * 2.b) Get toolbar group design from database query
      * 3) Return HTML <UL> of toolbar items
 
-    // Step 1 - Get user group
-    // $user->$UserInfo["Group_Id"]
+      // Step 1 - Get user group
+      // $user->$UserInfo["Group_Id"]
 
-    // Step 2.b - Pull this info from Database
-    $tblModules2 = array(
-        // Module-UUID                            Display Text
-        "df9f29f8-1aed-421d-b01c-860c6b89fb14" => "Dashboard",
-        "c6fb97b8-af93-42ce-aac6-de5656c8fdae" => "UUID",
-        "04a78f00-220f-11e2-81c1-0800200c9a66" => "Sample",
-        "81d641a2-dbcc-4bde-ad09-40c3260f325b" => "Admin"
-        );
-    */
+      // Step 2.b - Pull this info from Database
+      $tblModules2 = array(
+      // Module-UUID                            Display Text
+      "df9f29f8-1aed-421d-b01c-860c6b89fb14" => "Dashboard",
+      "c6fb97b8-af93-42ce-aac6-de5656c8fdae" => "UUID",
+      "04a78f00-220f-11e2-81c1-0800200c9a66" => "Sample",
+      "81d641a2-dbcc-4bde-ad09-40c3260f325b" => "Admin"
+      );
+     */
   }
 
   /**
@@ -461,7 +484,6 @@ class xenoPMT
    * @param   boolean $matchFound
    * @return  array Module Header Data. NULL if not found
    */
-
   public static function GetModuleHeaderFromURN($urn, &$matchFound)
   {
     global $xpmtModule, $xpmtCore;
@@ -470,7 +492,7 @@ class xenoPMT
     $matchFound = false;    // Did we find a module match?
     $modHeader = array();      // Prepare a blank Module header
 
-    foreach( $xpmtModule["info"] as $ndx => $tmpModHeader)
+    foreach ($xpmtModule["info"] as $ndx => $tmpModHeader)
     {
       // fixed 2013-0130  + we weren't using the $urn param
       // if ($xpmtCore["uri"]->Count > 0 && $xpmtCore["uri"]->Segment(0) == $tmpModHeader["urn"])
@@ -481,10 +503,7 @@ class xenoPMT
         break;
       }
     }
-
     return $modHeader;
   }
-
 }
-
 ?>

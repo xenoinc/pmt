@@ -167,7 +167,7 @@ $xpmtPageObj = new \xenoPMT\Core\Properties\Page();
  */
 function ParseAndLoad()
 {
-  global $xpmtCore, $xpmtModule,$xpmtPage, $PAGE_HTDATA;    // , $xpmtConf;
+  global $xpmtCore, $xpmtModule, $xpmtPage, $PAGE_HTDATA;    // , $xpmtConf;
   global $xenoPMT;
 
 
@@ -217,7 +217,8 @@ function ParseAndLoad()
 
   $matchFound = false;  // Was a matching Module from the provided URI found?
   $modHeader = $xenoPMT->GetModuleHeaderFromURN($tmpURI, $matchFound);
-  //pmtDebug("pmt.ParseAndLoad() modHeader: " . print_r($modHeader, true));
+
+  // pmtDebug("pmt.ParseAndLoad() modHeader: " . print_r($modHeader, true));
   if ($matchFound)
   { // Load the module
 
