@@ -768,7 +768,7 @@ You are free to use this however you like.  I place this code into the public do
 ***/
 </pre>
 </div>
-<div title="Bug (mod)" creator="d.suess" modifier="d.suess" created="201302081533" modified="201307232139" tags="module bug" changecount="5">
+<div title="Bug (mod)" creator="d.suess" modifier="d.suess" created="201302081533" modified="201308281850" tags="module bug" changecount="10">
 <pre>Bugs are viewable by internal personelle only
 
 ! Group Access
@@ -784,7 +784,28 @@ You are free to use this however you like.  I place this code into the public do
 * Add code samples with syntax highlighting
 * Milestones and Versions //- proposal//
 ** Milestones are apart of Versions.
-** Versions are apart of Projects.</pre>
+** Versions are apart of Projects.
+* Sub-Module:
+** Defect Ranking Score 
+*** Asking a series of questions to assist in ranking the severity of the issue from 0-999.
+*** The drop-down can be as simple as YES/NO or &quot;yes - workaround exists; yes - does not exist&quot;.
+** Example {{{
+Does this defect result in patient(s) receiving INCORRECT or MISSED medication(s)?	Patient Care	
+Does this defect DELAY patient(s) receiving medication(s)?	Patient Care	
+Does this defect result in MISLEADING information?	Patient Care	
+Does this defect result in any harm or hazardous situation per the health/safety risk checklist?	Patient Care	
+Does this defect present a VALID drug diversion risk?	Customer Satisfaction	
+Does this defect completely prevent ESSENTIAL software or hardware functionality?	Customer Satisfaction	
+Does this defect detract from software USABILITY?	Customer Satisfaction	
+Does this defect SIGNIFICANTLY impact the customer's financial operations?	Customer Satisfaction	
+How often will a customer experience the symptoms of this defect?	Customer Satisfaction	
+% Customers SUSCEPTIBLE to this defect	Customer Satisfaction	
+How much does this defect impact internal SUPPORT departments?	Mckesson Internal	
+Has this defect been ESCALATED to Senior Leadership within McKesson?	Mckesson Internal	
+Does this defect present a significant legal or financial LIABILITY to McKesson?	Mckesson Internal	
+Is this a LATENT issue (exists but not apparent to the customer)?	Mckesson Internal	
+}}}
+</pre>
 </div>
 <div title="Cache" creator="d.suess" modifier="d.suess" created="201304030442" modified="201304030457" changecount="8">
 <pre>System Cache is a very important subject to cover so that we can quickly access settings and data without having to waste resources.  There are 2 important types of Cache that xenoPMT will handle: database settings (//$CACHE[]//)and user's data (//not implemented//).
