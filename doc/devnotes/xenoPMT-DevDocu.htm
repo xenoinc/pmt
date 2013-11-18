@@ -521,10 +521,10 @@ noscript {display:none;} /* Fixes a feature in Firefox 1.5.0.2 where print previ
 </div>
 <!--POST-SHADOWAREA-->
 <div id="storeArea">
-<div title="About" creator="d.suess" modifier="d.suess" created="201311160540" changecount="1">
+<div title="About" creator="d.suess" modifier="d.suess" created="201311160540" modified="201311180038" changecount="2">
 <pre>Project Management and Tracking system
 
-Possible rename to &quot;Convergence&quot; because many features, usages, projects, products and documentation are converging into one place so you can manage your business.
+Possible rename to &quot;''Convergence''&quot; because features, usages, projects, products and documentation are converging into one place so you can manage your business.
 
 There are many ideas and concepts for xenoPMT such as
 * Allow hosting for many businesses into one place
@@ -778,13 +778,14 @@ You are free to use this however you like.  I place this code into the public do
 ***/
 </pre>
 </div>
-<div title="Bug (mod)" creator="d.suess" modifier="d.suess" created="201302081533" modified="201308281850" tags="module bug" changecount="10">
+<div title="Bug (mod)" creator="d.suess" modifier="d.suess" created="201302081533" modified="201311180033" tags="module bug" changecount="13">
 <pre>Bugs are viewable by internal personelle only
 
 ! Group Access
 * Development, Managers, Admin
 
 ! Features
+* Set default text as either Ghost text or actual Text (w/ markup)
 * Clone bugs (across versions)
 * Set to specific versions and milestones
 * Track development progress while it's being fixed
@@ -799,7 +800,37 @@ You are free to use this however you like.  I place this code into the public do
 ** Defect Ranking Score 
 *** Asking a series of questions to assist in ranking the severity of the issue from 0-999.
 *** The drop-down can be as simple as YES/NO or &quot;yes - workaround exists; yes - does not exist&quot;.
-** Example {{{
+** ''Example below''
+
+
+! Samples
+
+!! Sample default text 
+{{{
+Issue:
+
+
+What steps will reproduce the problem?
+1.
+2.
+3.
+
+What is the expected output?
+
+
+What do you see instead?
+
+
+What operating system and OS Version? (Android, 4.3)
+
+
+Please provide any additional information below.
+
+}}}
+
+!! Sample defect scoring form
+This form contains dropdown boxes. Each one has their own value
+{{{
 Does this defect result in patient(s) receiving INCORRECT or MISSED medication(s)?	Patient Care	
 Does this defect DELAY patient(s) receiving medication(s)?	Patient Care	
 Does this defect result in MISLEADING information?	Patient Care	
@@ -810,12 +841,11 @@ Does this defect detract from software USABILITY?	Customer Satisfaction
 Does this defect SIGNIFICANTLY impact the customer's financial operations?	Customer Satisfaction	
 How often will a customer experience the symptoms of this defect?	Customer Satisfaction	
 % Customers SUSCEPTIBLE to this defect	Customer Satisfaction	
-How much does this defect impact internal SUPPORT departments?	Mckesson Internal	
-Has this defect been ESCALATED to Senior Leadership within McKesson?	Mckesson Internal	
-Does this defect present a significant legal or financial LIABILITY to McKesson?	Mckesson Internal	
-Is this a LATENT issue (exists but not apparent to the customer)?	Mckesson Internal	
-}}}
-</pre>
+How much does this defect impact internal SUPPORT departments?	Company Internal	
+Has this defect been ESCALATED to Senior Leadership within McKesson?	Company Internal	
+Does this defect present a significant legal or financial LIABILITY to our **Company**?	Company Internal	
+Is this a LATENT issue (exists but not apparent to the customer)?	Company Internal	
+}}}</pre>
 </div>
 <div title="Cache" creator="d.suess" modifier="d.suess" created="201304030442" modified="201304030457" changecount="8">
 <pre>System Cache is a very important subject to cover so that we can quickly access settings and data without having to waste resources.  There are 2 important types of Cache that xenoPMT will handle: database settings (//$CACHE[]//)and user's data (//not implemented//).
@@ -1105,7 +1135,7 @@ One of the first module to get created. The initiative is to create a simple mod
 * [[libTicket (lib)]] - Ticket accessing system (TBTR)
 * [[SelfUpdate (lib)]] - Apart of the core system. This will check for updates and auto-update the xenoPMT core system</pre>
 </div>
-<div title="MainMenu" creator="d.suess" modifier="d.suess" created="201209011745" modified="201311160536" changecount="53">
+<div title="MainMenu" creator="d.suess" modifier="d.suess" created="201209011745" modified="201311180035" changecount="54">
 <pre>! xenoPMT
 * [[About]]
 * [[Core2-Workflow]]
@@ -1154,7 +1184,7 @@ One of the first module to get created. The initiative is to create a simple mod
 * [[Customize]]
 !! Help
 * [[MyPlugins]]
-* [[MarkUp | http://oldwiki.tiddlywiki.org/wiki/TiddlyWiki_Markup]]
+* [[MarkUp | http://tiddlywiki.tiddlyspace.com/TiddlyWiki%20Markup]]
 * v&lt;&lt;version&gt;&gt;</pre>
 </div>
 <div title="Milestone 0.0.1" creator="d.suess" modifier="d.suess" created="201210032306" changecount="1">
