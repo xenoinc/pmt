@@ -7,7 +7,7 @@
  * Created Date:  2013-0403 / 2012-1204
  * Status:        unstable {unstable/pre-alpha/alpha/beta/stable}
  * Description:
- *  This class handles the loadig and access of Modules
+ *  This class handles the loading and access of Modules
  *
  *  xenoPMT Core Class
  *  Its still undecided if this should be static or public

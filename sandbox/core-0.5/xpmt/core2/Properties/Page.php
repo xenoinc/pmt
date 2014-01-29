@@ -10,7 +10,9 @@
  * Description:
  *  This class is intended to easily pass property/member
  *  data between the LoadModule() and LoadTheme() methods
- *  so we can properly display the module * ToDo:
+ *  so we can properly display the module
+ *
+ * ToDo:
  *
  * Note:
  *  This will only work with newer themes (v0.0.7). Not the older ones
