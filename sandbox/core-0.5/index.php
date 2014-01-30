@@ -20,6 +20,7 @@
  * [ ] Move "DebugMode" as a variable in "config.default.php" as { $pmtDebugMode = true; }
  *
  * Change Log:
+ * 2014-0129 - removed PHP closing tag from page so we don't accidentally call header too early
  * 2012-0709 - removed unused code & created "index-test.php"
  * 2012-0112 - remvoed front page. we're using a dynamic generator
  * 2010-1030 - Initial Creation
@@ -57,4 +58,3 @@ else
 include_once "xpmt/pmt.php";
 ParseAndLoad();
 
-?>

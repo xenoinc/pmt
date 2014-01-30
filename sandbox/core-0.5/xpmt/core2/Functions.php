@@ -11,6 +11,7 @@
  *  which extend from this (core) one.
  *
  * ToDo:
+ *  [ ] Replace PMT_TBL with $xpmtConf["db"]["prefix"] (2014-0129)
  *  [ ] Refactor moded code from "pmt-function.php" to work here
  *
  * Change Log:

@@ -11,6 +11,8 @@
  * Core-Entry point.
  *
  * To Do:
+ * [ ] MOVE ParseAndLoad() to "./Core/xenopmt.php" (2014-0129)
+ * [ ] ParseAndLoad() - Create DB setting for 404 handler message when module could not be found (2014-0129)
  * [ ] Step 4.1.1 + Make sure tables / tbl_ver match up in TBL_CORE_SETTINGS
  * [ ] Handle Plugins (Milestone 0.5)
  * [ ] Change "$PAGE_TITLE" to use associatve array $xpmtPage[] or $xpmtCore["page"][]
@@ -19,7 +21,7 @@
  *      that our system handles the default settings.
  *
  * Change Log:
- *  2012-1204 + Addex static core class, xenoPMT
+ *  2012-1204 + Added static core class, xenoPMT
  *  2012-1203 * Changed global variables to associative arrays like $xpmtCore[][];
  *            + $xpmtCore["uri"] = $uri; Testing to see if it's worth it to consolidate into xpmtCore ass array.
  *  2012-0716 + Added "config.default.php" to be accessed before user custom file is accessed
@@ -79,7 +81,8 @@ $pmtDB = new Database($xpmtConf["db"]["server"],
                       $xpmtConf["db"]["user"],
                       $xpmtConf["db"]["pass"],
                       $xpmtConf["db"]["dbname"]);
-define("PMT_TBL", $xpmtConf["db"]["prefix"]);     // This may be removed
+define("PMT_TBL", $xpmtConf["db"]["prefix"]);     // This SHOULD be removed, just use $xpmtConf for optimization (2014-0129)
+
 // TODO: Step 4.1.1:
 //  Perform quick test to make sure {PMT_TBL."CORE_SETTINGS"} and version match!! else
 //  send the user to the Installer / Upgrade system / Version Mismatch page!!
@@ -170,6 +173,9 @@ function ParseAndLoad()
   global $xpmtCore, $xpmtModule, $xpmtPage, $PAGE_HTDATA;    // , $xpmtConf;
   global $xenoPMT;
 
+  /* ToDo:
+   *  [ ] Create DB setting for 404 handler message when module could not be found
+   */
 
   // Step 1 - Cleanup segment data ]-------------
   if (count($xpmtCore["uri"]->Count) == 0) {  // if (count($uri->seg) == 0)
@@ -191,7 +197,7 @@ function ParseAndLoad()
   echo("</small><hr>");
   */
 
-  // Step 2 - Load the module ]-------------
+  // Step 2 (FUTURE-v0.0.7) - Load the module ]-------------
   /*
   // ** In 0.0.7, load modules from DB and not just config file
   $matchFound = false;    // Did we find a module match?
@@ -208,6 +214,7 @@ function ParseAndLoad()
   }
   */
 
+  // Step 2 (v0.0.5) - Get Module Info from URN ]-------------------
   // Autoconvert URI->Segment(0) to <blank> if = "index.php"
   //if ($xpmtCore["uri"]->Segment(0) == "index.php")
   //  $xpmtCore["uri"]->Segment(0) = "";
@@ -218,30 +225,33 @@ function ParseAndLoad()
   $matchFound = false;  // Was a matching Module from the provided URI found?
   $modHeader = $xenoPMT->GetModuleHeaderFromURN($tmpURI, $matchFound);
 
+
+  // Step 3 (v0.0.5) - Attempt to LoadModule using UUID ]--------------------------
   // pmtDebug("pmt.ParseAndLoad() modHeader: " . print_r($modHeader, true));
   if ($matchFound)
   { // Load the module
 
-    // Step 2.1 - Load Module
+    // Step 3.1 - Load Module
     // pmtDebug("pmt.ParseAndLoad() MatchFound: ". $matchFound);
     // pmtDebug("pmt.ParseAndLoad() UUID: " . $modHeader["uuid"]);
     $xenoPMT::LoadModule($modHeader["uuid"]);
 
-    // Step 2.2  - Load Theme?? - Not HERE, this should be Step3
+    // Step 3.2  - Load Theme?? - Not HERE, this should be Step3
     //echo("--pmt.ParseAndLoad().done--");
   }
   else
   {
     // Unknown Module URN / Module not loaded
     pmtDebug("pmt.ParseAndLoad() Unknown Module: seg='{$tmpURI}'");
-    // Reroute to "dashboard/unknown"
+
+    // TODO: Reroute to "dashboard/unknown". Get 404 handler from Database setting!! (this needs created yet)
     $html = "Unknown URN or Module is not installed! URN segment provided: '". $tmpURI ."'.";
     $xpmtPage["htdata"]=$html;
     $PAGE_HTDATA=$html;
     echo("[[Test[pmt.php's ParseAndLoad()] NO Namespace]] <br />" . $html);
   }
 
-  // Step 3 - Load Theme Layer ]---------------------
+  // Step 4 - Load Theme Layer ]---------------------
 
   // Load HTDATA into theme
   $xenoPMT::LoadTheme();

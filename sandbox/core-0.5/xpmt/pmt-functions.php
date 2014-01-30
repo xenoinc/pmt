@@ -15,6 +15,7 @@
  *    ["mod_setting"]   - Module Config setting
  *
  * TO DO:
+ *  [ ] Replace PMT_TBL with $xpmtConf["db"]["prefix"] (2014-0129)
  *  [ ] Locale - Add functionaly for arrays
  *  [ ] Locale - Add SystemHook "function_locale"
  *  [ ] GetUserSetting - Get user & setting

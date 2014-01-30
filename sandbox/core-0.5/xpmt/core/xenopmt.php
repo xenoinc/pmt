@@ -13,7 +13,9 @@
  *  Its still undecided if this should be static or public
  *
  * ToDo:
- *  [ ] Move theme portion of LoadModule() to LoadTheme()
+ *  [ ] Move ParseAndLoad() to this class! (2014-0129)
+ *  [ ] Move theme portion of LoadModule() to LoadTheme() (2014-0129)
+ *  [ ] Make use of \xenoPMT\Core\Error::ERROR_TYPE_NONE messages (2014-0129)
  *  [ ] Post BugReport to PHP. PHP fails to catch object creation success/failure {see LoadModule()}
  *  [ ] Complete GetToolbarMain($uuid) to pull from CACHE and DB via UserGroup definitions
  *  [ ] Generate GetToolbarMeta() to display login, preferences, about, logoff
@@ -22,6 +24,9 @@
  *      redirect loop (ex: dashboard mod). This requires the use of "LoadTheme()" member
  *
  * Change Log:
+ *  2014-0129 * Added note to put ParseAndLoad() here! [djs]
+ *            + Added the Error class "\xenoPMT\Core\Error" for proper error handling
+ *            + Added code folding
  *  2013-0819 - LoadModule() Removed the loading of page HTML. This should be done in the LoadTheme() method [djs]
  *  2013-0401 + LoadModule() :: Added is module 'Enabled' test
  *  2013-0331 + Added "LoadTheme()" to display the theme [djs]
@@ -29,8 +34,12 @@
  *            + Fixed bugs in LoadModule($uuid) [djs]
  *  2013-0130 * GetModuleHeaderFromURN() fixed logic - we weren't using the $urn param before [djs]
  */
+
+require_once PMT_PATH."xpmt/core2/Error.php";
 class xenoPMT
 {
+
+  //<editor-fold defaultstate="collapsed" desc="constructor">
   /* Private vars */
 
 
@@ -40,6 +49,19 @@ class xenoPMT
 
   function __destruct() { }
 
+  //</editor-fold>
+
+  //<editor-fold defaultstate="collapsed" desc="Loading and Displaying of Module ">
+
+  /**
+   * ParseAndLoad the site's arguments, load modules/themes and display the site
+   */
+  public static function ParseAndLoad()
+  {
+    /* 2014-0129 * MOVE code from "./xpmt/pmt.php" to here */
+    
+  }
+
   /**
    * Load module via UUID
    * @param string $uuid    Module's Unique Identifier
@@ -48,21 +70,31 @@ class xenoPMT
   {
     /*
      * To Do:
-     * [ ] Step 1 - Properly handle "Moodule not found"
-     *            - In this case give a raw theme with no background ($htdata="");
-     *              and some way to access "Install Module NOW~!" link on the page :)
-     *              - Here you can set $module (class) from $xpmtModule[] and provide
-     *                access to the installer page
-     *
-     * [ ] Step 3 - Load module data
-     * [ ] Step 4 - Provide temp table generate from (modController) until
-     *              the toolbar can be created by AdminPlugin
-     * [ ] Protect against infinite loop in Step 1.
+     *  [ ] Consider returning back error message numbers (2014-0129)
+     *      $msg = \xenoPMT\Core\Error\GetMessage($errNum)
+     *      ERROR_TYPE_MODULE_BAD_UUID        - Module not found
+     *      ERROR_TYPE_MODULE_ACCESS_DENIED   - User doesn't have permissions
+     *      ERROR_TYPE_MODULE_DISABLED        - Module not currently enabled
+     *      ERROR_TYPE_UNKNOWN                - Unknown error
+     *      ERROR_TYPE_NONE                   - No errors
+     *  [ ] Step 1
+     *      - Properly handle "Moodule not found"
+     *      - In this case give a raw theme with no background ($htdata="");
+     *        and some way to access "Install Module NOW~!" link on the page :)
+     *      - Here you can set $module (class) from $xpmtModule[] and provide
+     *        access to the installer page
+     *  [ ] Step 3  - Load module data
+     *  [ ] Step 4  - Provide temp table generate from (modController) until
+     *                the toolbar can be created by AdminPlugin
+     *  [ ] Protect against infinite loop in Step 1.
      */
 
     // debug ($uuid);
     // include them all just in case
     global $xpmtModule, $xpmtCore, $xpmtPage, $xpmtConf, $pmtDB;
+
+    // Setup error handling (added 2014-0129)
+    $errRet = \xenoPMT\Core\Error::ERROR_TYPE_NONE;
 
     /*
       // $theme       - theme :: System theme name to use (PMT_DATA..XI_CORE_SETTINGS.Setting = "theme")
@@ -89,6 +121,8 @@ class xenoPMT
      *  Step 1 - Prepare Module             *
      * This must set the {$module} variable *
      * ************************************ */
+
+    // TODO: Consider removing this step since it's already called from ParseAndLoad() (2014-0129)
 
     $_uuid = $pmtDB->FixString($uuid);
     $_sql = "SELECT `Module_Class`, `Module_Path`, `Module_Namespace`, `Enabled` " .
@@ -125,27 +159,29 @@ class xenoPMT
         {
           pmtDebug("Module is not enabled. Display prompt to user");
 
+          // TODO: Fix this - Return back error message as to why we can't load (ERROR_TYPE_MODULE_DISABLED)
           // FOR NOW we will allow it
 
           $modPth = $ret["Module_Path"] . "/" . $ret["Module_Class"] . ".main.php";
-          require($modPth);
           $module = $ret["Module_Class"];
           $moduleNS = $ret["Module_Namespace"] . "\\" . $module;  // Module Namespace + Class
+          require($modPth);
         }
         else
         {
           $modPth = $ret["Module_Path"] . "/" . $ret["Module_Class"] . ".main.php";
-          //pmtDebug("xenoPMT::LoadModule() Module_Path: '$modPth'");
-          require($modPth);
           $module = $ret["Module_Class"];
           $moduleNS = $ret["Module_Namespace"] . "\\" . $module;  // Module Namespace + Class
+          //pmtDebug("xenoPMT::LoadModule() Module_Path: '$modPth'");
+          require($modPth);
         }
       }
       // elseif (... )
       // { require module path from $xpmtModule[][];  /* as a fail safe */ }
       else
       {
-        // ToDo:
+        // ToDo: Return error message ERROR_TYPE_MODULE_BAD_UUID
+        //
         // Return back error message in PAGE["HTDATA"] so that we do not create a redirect loop (ex: dashboard mod)
         pmtDebug("xenoPMT::LoadModule() - Step1 - Module UUID Found but path is missing. " .
           "Check TBL_CORE_MODULE.Module_Path settings.");
@@ -171,7 +207,7 @@ class xenoPMT
     if (file_exists(PMT_PATH . "xpmt/themes/" . $theme))
     { // use custom theme
       $skin_path = PMT_PATH . "xpmt/themes/" . $theme . "/";
-      $relpath = "xpmt/themes/" . $theme . "/";
+      $relpath = "xpmt/themes/" . $theme . "/";                         // Reletive path to theme
     }
     else
     {
@@ -198,9 +234,9 @@ class xenoPMT
     //pmtDebug("xenoPMT::LoadMod() Theme Loaded");
 
 
-    /* ************************************ *
-     * Step 3 - Setup $xpmtPage[] variables *
-     * ************************************ */
+    /* ******************************************************* *
+     * Step 3 - Execute module and setup $xpmtPage[] variables *
+     * ******************************************************* */
 
     // Most of these settings are being set/modified from within the modules on the fly
     // so there is no need to mess with most of them here. Lets safely access the module
@@ -219,6 +255,7 @@ class xenoPMT
       catch (Exception $e)
       {
         pmtDebug("xenoPMT::LoadModule() [step3] Try Namespace: fail (no NS specified)");
+        // ERROR_TYPE_MODULE_INVALID_NAMESPACE
         $obj = new $module();
       }
 
@@ -248,7 +285,7 @@ class xenoPMT
         $xpmtPage["htdata"]     = $obj->PageData();             // Main page html data
 
         $xpmtPage["path"]       = "";                           // Relative path to theme currently in use
-        $xpmtPage["path"]       = $xpmtConf["general"]["base_url"] . $relpath; // just use something for now
+        $xpmtPage["path"]       = $xpmtConf["general"]["base_url"] . $relpath; // Reletive path to theme (just use something for now)
 
         $xpmtPage["footer"]     = "";                           // Footer
 
@@ -273,6 +310,7 @@ class xenoPMT
       //require($page);
       //require($page);
     }
+    return $errRet; // default = ERROR_TYPE_NONE
   }
 
   /**
@@ -290,6 +328,9 @@ class xenoPMT
 
     global $xpmtPage, $pmtDB;
     global $xpmtPageObj; // obj of Page Properties
+
+    // Setup error handling (added 2014-0129)
+    $errRet = \xenoPMT\Core\Error::ERROR_TYPE_NONE;
 
     /* ************************* *
      * Step 1 - Initialize Theme *
@@ -333,8 +374,12 @@ class xenoPMT
 
     //pmtDebug("xenoPMT::LoadTheme() - Page: $page");
     require($page);
+    return $errRet;
   }
 
+  //</editor-fold>
+
+  //<editor-fold defaultstate="collapsed" desc="Misc functions">
   /**
    * Stage 1) Generate toolbar via static code
    * Stage 2) Generate toolbar items from databsae settings
@@ -505,5 +550,7 @@ class xenoPMT
     }
     return $modHeader;
   }
+
+  //</editor-fold>
 }
 ?>

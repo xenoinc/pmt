@@ -19,6 +19,7 @@
  *  setcookie('xenopmt_remember',0,0,'/');
  *
  * To Do:
+ *  [ ] Replace PMT_TBL with $xpmtConf["db"]["prefix"] (2014-0129)
  *  [/] Constructor - UNTESTED
  *  [X] Login       - UNTESTED
  *  [X] Logoff      - UNTESTED
@@ -108,7 +109,7 @@ class Member
     if(!isset($_COOKIE["xenopmt_hash"])) $_COOKIE["xenopmt_hash"] = "";
 
 
-    $t__tbl = PMT_TBL;
+    $t__tbl = PMT_TBL;                                            // TODO: consider using $xpmtConf["db"]["prefix"] (2014-0129)
     $t__usr = $pmtDB->FixString($_COOKIE['xenopmt_user']);
     $t__pas = $pmtDB->FixString($_COOKIE['xenopmt_hash']);
     //pmtDebug("usr: " . $__usr);
@@ -181,7 +182,7 @@ QUERY;
         // First, mod TBL_USER to work in the absence of TBL_USER.Group_Id
         // and to rely on TBL_User_Group.Group_Id
 
-        $dbPrefix = PMT_TBL;
+        $dbPrefix = PMT_TBL;                                // TODO: consider using $xpmtConf["db"]["prefix"] (2014-0129)
         $uid = $this->UserInfo["User_Id"];
         $tmp = <<<"EOT"
   SELECT `g`.`Group_Id`, `g`.`Group_Name`
@@ -222,13 +223,13 @@ EOT;
   {
     global $pmtDB;
 
-    $q =  "SELECT * FROM ".PMT_TBL."USER ".
+    $q =  "SELECT * FROM ".PMT_TBL."USER ".                               // TODO: consider using $xpmtConf["db"]["prefix"] (2014-0129)
           "WHERE User_Name='".$pmtDB->FixString($user)."' AND ".
           "Password='".sha1($pmtDB->FixString($pass))."' LIMIT 1;";
     $login = $pmtDB->Query($q);
     if($pmtDB->NumRows($login))
     {
-      $q =  "UPDATE ".PMT_TBL."USER ".
+      $q =  "UPDATE ".PMT_TBL."USER ".                                    // TODO: consider using $xpmtConf["db"]["prefix"] (2014-0129)
             "SET Session_Hash='".$pmtDB->FixString(sha1($user.$pass.time()))."' ".
             "WHERE User_Name='".$pmtDB->FixString($user)."' LIMIT 1;";
       $pmtDB->Query($q);
@@ -271,7 +272,7 @@ EOT;
   {
     global $pmtDB;
 
-    $q =  "SELECT * FROM ".PMT_TBL."USER ".
+    $q =  "SELECT * FROM ".PMT_TBL."USER ".                           // TODO: consider using $xpmtConf["db"]["prefix"] (2014-0129)
           "WHERE User_Name='".$pmtDB->FixString($user)."' AND ".
           "Password='".sha1($pmtDB->FixString($pass))."' LIMIT 1;";
     $login = $pmtDB->Query($q);
@@ -308,7 +309,7 @@ EOT;
 
     // Test for errors
     $q =
-      "SELECT User_Name FROM ".PMT_TBL."USER WHERE " .
+      "SELECT User_Name FROM ".PMT_TBL."USER WHERE " .                    // TODO: consider using $xpmtConf["db"]["prefix"] (2014-0129)
       "User_Name='".$pmtDB->FixString($nfo['username'])."' LIMIT 1;";
     if($pmtDB->NumRows($pmtDB->Query($q)))
       $arrErr["Username"] = Locale("error_username_taken");
@@ -339,7 +340,7 @@ EOT;
     // TODO: REMOVE THIS TEST USER!!
     //$colm = "User_Name, Password, Email, Name";
     //$vals = "'admin', 'admin', 'test@email.com', 'Test User'";
-    $pmtDB->Query("INSERT INTO ".PMT_TBL."USER ($fields) VALUES($values);");
+    $pmtDB->Query("INSERT INTO ".PMT_TBL."USER ($fields) VALUES($values);");   // TODO: consider using $xpmtConf["db"]["prefix"] (2014-0129)
 
     return true;
   }
@@ -369,7 +370,7 @@ EOT;
   {
     global $pmtDB;
     $arrUsers = array();
-    $q= "SELECT User_Id, User_Name, FROM ".PMT_TBL."USER ORDER BY User_Name ASC;";
+    $q= "SELECT User_Id, User_Name, FROM ".PMT_TBL."USER ORDER BY User_Name ASC;";      // TODO: consider using $xpmtConf["db"]["prefix"] (2014-0129)
     $ret = $pmtDB->Query($q);
     while($nfo = $pmtDB->FetchArray($ret))
       $arrUsers[] = $nfo;
