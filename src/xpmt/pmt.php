@@ -1,73 +1,73 @@
 <?php
-/************************************************************
+/* ***********************************************************
  * pmTrack (xiPMT, xiPMTrack)
  * Copyright 2010-2012 (C) Xeno Innovations, Inc.
  * ALL RIGHTS RESERVED
  * Author:       Damian J. Suess
- * Document:     pmtentry.hpp
+ * Document:     core.php (OLD: pmt.php)
  * Created Date: 2012-01-12
  *
  * Description:
  * Core-Entry point.
  *
  * To Do:
+ * [ ] MOVE ParseAndLoad() to "./Core/xenopmt.php" (2014-0129)
+ * [ ] ParseAndLoad() - Create DB setting for 404 handler message when module could not be found (2014-0129)
+ * [ ] Step 4.1.1 + Make sure tables / tbl_ver match up in TBL_CORE_SETTINGS
  * [ ] Handle Plugins (Milestone 0.5)
+ * [ ] Change "$PAGE_TITLE" to use associatve array $xpmtPage[] or $xpmtCore["page"][]
  * [ ] Include langauge pack (Milestone 0.5)
  * [ ] Call "config.default.php" before calling "config.php" to ensure
  *      that our system handles the default settings.
  *
  * Change Log:
- * 2012-1029 + Added "PmtParseURL2()" as a suggestion for the NEW dynamic Core-005 Module Loader
- *           + PmtParseURL() - Changed load $uri->seg[0] by default
- * 2012-0716 + Added "config.default.php" to be accessed before user custom file is accessed
- * 2012-0709 + Added 'iModule.php' interface to {required} list. (old pmtModule interface) [DJS]
- * 2012-0112 - Initial Creation [DJS]
+ *  2012-1204 + Added static core class, xenoPMT
+ *  2012-1203 * Changed global variables to associative arrays like $xpmtCore[][];
+ *            + $xpmtCore["uri"] = $uri; Testing to see if it's worth it to consolidate into xpmtCore ass array.
+ *  2012-0716 + Added "config.default.php" to be accessed before user custom file is accessed
+ *  2012-0709 + Added 'iModule.php' interface to {required} list. (old pmtModule interface) [DJS]
+ *  2012-0112 - Initial Creation [DJS]
  */
 
 /* Step 1 - Make sure system is configured & db installed */
 
 // i) Set version (should be in array)
-$pmt_version = "0.0.3";
-$pmt_version_ex = "000003";
-$pmt_db_version = 0.2;
-define("PMT_VER",$pmt_version);
 
-// ii) Setup debugging
-require "phpConsole.php";
-PhpConsole::start(true, true, dirname(__FILE__));
-//if (DebugMode == true)
-//  debug("Debug Mode ON!");
+// Added 2012-1019 - to replace old crap
+$xpmtCore["info"]["version"]     = "0.0.5";       // Core Version      (maj.min.rev)
+$xpmtCore["info"]["version_ex"]  = 000005;        // Integer friendly  (00 00 05)
+$xpmtCore["info"]["version_ex2"] = "000005";      // String  friendly  (00 00 05)
+$xpmtCore["info"]["db_version"]  = 0.2;           // Minimum Database version accepted
+define("PMT_VER", $xpmtCore["info"]["version"]);
+
 
 // iii) no config.php? then goto installer
-if(!file_exists(PMT_PATH."xpmt/config.php"))
-{
-  header("Location: install/");
-  exit; // suppress from falling through
-}
-// else { [verify settings are valid] }
+///  ** Moved to index.php (2012-0805 - djs)
 
 
 /* Step 2 - Minor Init */
 // 1) set breadcrumbs
 // 2) strip magic quotes
-$CACHE = array("setting"=>array());
-$BREADCRUMB = array();
+// Added 2012-1019 - keep one home for many variables
+$xpmtCore["page"]["cache"]      = array("setting"=>array());
+$xpmtCore["page"]["breadcrumb"] = array();
 
 
 /* Step 3 - Include the required classes */
 
 // Since the system is "configured" include the class now
-require(PMT_PATH."xpmt/config.default.php");      // Default configuration script
-require(PMT_PATH."xpmt/config.php");              // Configuration Script
+//require(PMT_PATH."xpmt/config.default.php");      // Default configuration script
+//require(PMT_PATH."xpmt/config.php");              // Configuration Script
 
 // Require the core PMT files
-//require(PMT_PATH."xpmt/common/pmt.user.php");   // User Class
-require(PMT_PATH."xpmt/core/pmt.db.php");         // Database Class
-require(PMT_PATH."xpmt/core/pmt.member.php");     // Member (User) class
-require(PMT_PATH."xpmt/core/pmt.uri.php");        // URI Parsing class
-require(PMT_PATH."xpmt/core/pmt.i.module.php");   // module interface
-require(PMT_PATH."xpmt/pmt-functions.php");       // Common functions in system
-require(PMT_PATH."xpmt/modcontroller.php");       // module controller
+//require_once(PMT_PATH."xpmt/common/pmt.user.php");     // User Class
+require_once(PMT_PATH."xpmt/core/xenopmt.php");        // Static class to core functions
+require_once(PMT_PATH."xpmt/core/pmt.db.php");         // Database Class
+require_once(PMT_PATH."xpmt/core/pmt.member.php");     // Member (User) class
+require_once(PMT_PATH."xpmt/core/pmt.uri.php");        // URI Parsing class
+require_once(PMT_PATH."xpmt/core/pmt.i.module.php");   // module interface
+require_once(PMT_PATH."xpmt/pmt-functions.php");       // Common functions in system
+require_once(PMT_PATH."xpmt/modcontroller.php");       // module controller
 
 /* Step 4) - Initialize the classes
  * 1. Connect to database
@@ -75,26 +75,53 @@ require(PMT_PATH."xpmt/modcontroller.php");       // module controller
  * 3. If cashed user verify in database and set PMT_LOGGED_ID
  */
 
-// Add error handling to ensure that $pmtConf[][] is configured
-$pmtDB = new Database($pmtConf["db"]["server"],
-                      $pmtConf["db"]["user"],
-                      $pmtConf["db"]["pass"],
-                      $pmtConf["db"]["dbname"]);
-define("PMT_TBL", $pmtConf["db"]["prefix"]);     // This may be removed
+// Add error handling to ensure that $xpmtConf[][] is configured
+// Change $pmtDB to $xpmtCore["db"]
+$pmtDB = new Database($xpmtConf["db"]["server"],
+                      $xpmtConf["db"]["user"],
+                      $xpmtConf["db"]["pass"],
+                      $xpmtConf["db"]["dbname"]);
+define("PMT_TBL", $xpmtConf["db"]["prefix"]);     // This SHOULD be removed, just use $xpmtConf for optimization (2014-0129)
 
-$user = new Member;   // $user = new User;
-$uri = new URI;
+// TODO: Step 4.1.1:
+//  Perform quick test to make sure {PMT_TBL."CORE_SETTINGS"} and version match!! else
+//  send the user to the Installer / Upgrade system / Version Mismatch page!!
+
+
+$xenoPMT = new xenoPMT;       // Core system Class
+$user = new Member;           // User Class - IsOnline/Group,Login, etc.  $user = new User;
+$uri = new URI;               // URI Parsing class
+$xpmtCore["uri"] = $uri;      // 2012-1203  + Testing to see if it's worth it to consolidate into xpmtCore ass array.
+$xpmtCore["user"] = $user;    // 2012-1203  + Eliminate class variables & place into associative array!
+
+
+
+/**********************************************
+ *  Step 5 - Get theme to use
+ * 0) Pull theme from system settings
+ * 1) Future: Pull theme from user's settings
+ ******************************************* */
 
 // undefined GetSetting
-define("THEME", $uri->Anchor("xpmt/themes", GetSetting("theme"))); // Set theme
+//define("THEME", $uri->Anchor("xpmt/themes", GetSetting("theme"))); // Set theme
+define("THEME", $xpmtCore["uri"]->Anchor("xpmt/themes", GetSetting("theme"))); // Set theme
+
+
+
+/****************************
+ * Step 6 - Language Pack
+ ************************* */
 
 /* Include language pack (v0.5) */
 // require(PMT_PATH."xpmt/lang/" . GetSetting("lang"));   // Setup language
 
 
+
+/*********************************
+ * Step 7 - Initialize Page data
+ ****************************** */
+
 // Used to generate the body of our skin
-
-
 $PAGE_TITLE="";     // Page title
 $PAGE_LOGO="";      // Site image path  ** not used yet.
 $PAGE_METABAR="";   // User (login/usr-pref)/settings/logout/about
@@ -105,44 +132,147 @@ $PAGE_HTDATA="";    // Main page html data
 $PAGE_PATH="";      // Relative path to theme currently in use
 
 
+// Proposal 2012-1019 - keep one home for many variables
+//
+//  $xpmtCore["page"]["title"]="";
+//  or
+//  $xpmtPage["title"]="";      <<<< use this
+
+// Used to generate the body of our skin
+// TODO: Possibly place $xpmtPage into its own Property Class ($xpmtPage->Icon)
+$xpmtPage["icon"]="";         // Path to Icon file
+$xpmtPage["title"]="";        // Page Title
+$xpmtPage["ex_header"]="";    // Extra Header Information
+$xpmtPage["logo"]="";         // Site image path
+$xpmtPage["metabar"]="";      // User (login/usr-pref)/settings/logout/about
+$xpmtPage["toolbar"]="";      // Main toolbar
+$xpmtPage["minileft"]="";     // Mini-bar Left aligned (bread crumbs)
+$xpmtPage["miniright"]="";    // Mini-bar Right aligned (module node options)
+$xpmtPage["htdata"]="";       // Main page html data
+$xpmtPage["path"]="";         // Relative path to theme currently in use
+$xpmtPage["footer"]="";       // Footer
+
+require_once("core2/properties/Page.php");
+$xpmtPageObj = new \xenoPMT\Core\Properties\Page();
+
 
 /* ################################################################################ */
 
-/**
- * Parse URL and load module (core-005)
- * @global URI $uri
- *
- * Created: 2012-10-29
- *
- */
-function PmtParseURL2()
-{
-  global $uri;
 
-  if (count($uri->seg) == 0)
+/**
+ * Parse URI and Load Module
+ *
+ * @since v0.0.5
+ *
+ * @global URI $uri
+ * @global type $xpmtModule
+ * @global array $xpmtCore
+ */
+function ParseAndLoad()
+{
+  global $xpmtCore, $xpmtModule, $xpmtPage, $PAGE_HTDATA;    // , $xpmtConf;
+  global $xenoPMT;
+
+  /* ToDo:
+   *  [ ] Create DB setting for 404 handler message when module could not be found
+   */
+
+  // Step 1 - Cleanup segment data ]-------------
+  if (count($xpmtCore["uri"]->Count) == 0) {  // if (count($uri->seg) == 0)
+    $uRoot = "";                              // pmtDebug("URI Count: 0");
+  } else {
+    $uRoot = $xpmtCore["uri"]->Segment(0);    // pmtDebug("URI Count: " . count($xpmtCore["uri"]->Count));
+  }
+  //$uRoot = $xpmtCore["uri"]->seg[0];
+  //pmtDebug("uri.seg[0]: '" . $uRoot . "'");
+
+  /* *************** */
+
+  // Debugging ]-------------
+  /*
+  echo("<small>" );
+  //echo("<p><b>2-Segments:</b> <br />"); print_r($xpmtCore["uri"]->seg);   echo("</p>");
+  //echo("<p><b>2-Full:</b><br />");      print_r($xpmtCore["uri"]);        echo("</p>");
+  echo("<p><b>Modules:</b><br /> '");   print_r($xpmtModule); echo("'</p>");
+  echo("</small><hr>");
+  */
+
+  // Step 2 (FUTURE-v0.0.7) - Load the module ]-------------
+  /*
+  // ** In 0.0.7, load modules from DB and not just config file
+  $matchFound = false;    // Did we find a module match?
+  $modHeader = array();      // Prepare a blank Module header
+  foreach( $xpmtModule["info"] as $ndx => $tmpModHeader)
   {
-    LoadModule("dashboard", $uri->seg);
+    //echo($tmpModHeader["urn"]);
+    if ($xpmtCore["uri"]->Count > 0 && $xpmtCore["uri"]->Segment(0) == $tmpModHeader["urn"])
+    {
+      $matchFound = true;   // We found a match!
+      $modHeader = $tmpModHeader;   // Use this module header!
+      break;
+    }
+  }
+  */
+
+  // Step 2 (v0.0.5) - Get Module Info from URN ]-------------------
+  // Autoconvert URI->Segment(0) to <blank> if = "index.php"
+  //if ($xpmtCore["uri"]->Segment(0) == "index.php")
+  //  $xpmtCore["uri"]->Segment(0) = "";
+
+  $tmpURI = $xpmtCore["uri"]->Segment(0);
+  //pmtDebug("pmt.ParseAndLoad() Module: seg='".$tmpURI."'");
+
+  $matchFound = false;  // Was a matching Module from the provided URI found?
+  $modHeader = $xenoPMT->GetModuleHeaderFromURN($tmpURI, $matchFound);
+
+
+  // Step 3 (v0.0.5) - Attempt to LoadModule using UUID ]--------------------------
+  // pmtDebug("pmt.ParseAndLoad() modHeader: " . print_r($modHeader, true));
+  if ($matchFound)
+  { // Load the module
+
+    // Step 3.1 - Load Module
+    // pmtDebug("pmt.ParseAndLoad() MatchFound: ". $matchFound);
+    // pmtDebug("pmt.ParseAndLoad() UUID: " . $modHeader["uuid"]);
+    $xenoPMT::LoadModule($modHeader["uuid"]);
+
+    // Step 3.2  - Load Theme?? - Not HERE, this should be Step3
+    //echo("--pmt.ParseAndLoad().done--");
   }
   else
   {
+    // Unknown Module URN / Module not loaded
+    pmtDebug("pmt.ParseAndLoad() Unknown Module: seg='{$tmpURI}'");
 
-    $urn = $uri->seg[0];
-
-    // 1) Get UUID info from database using URN
-
-    // 2) Does URN exist?
-
-    // 3) Is UUID pre-loaded from config file?
-
-    // 4) Using UUID, is module enabled?
-
-    // 5) Load Module passing UUID and URI segments
-    //LoadModule2($UUID, $uri->seg);
+    // TODO: Reroute to "dashboard/unknown". Get 404 handler from Database setting!! (this needs created yet)
+    $html = "Unknown URN or Module is not installed! URN segment provided: '". $tmpURI ."'.";
+    $xpmtPage["htdata"]=$html;
+    $PAGE_HTDATA=$html;
+    echo("[[Test[pmt.php's ParseAndLoad()] NO Namespace]] <br />" . $html);
   }
+
+  // Step 4 - Load Theme Layer ]---------------------
+
+  // Load HTDATA into theme
+  $xenoPMT::LoadTheme();
+
+  // pmtDebug("[pmt.php] ParseAndLoad() Check: .done.");
 }
 
 
-function PmtParseURL()
+
+/**
+ * @deprecated since version Core-0.0.5 - 2012-1203 [djs]
+ *
+ * Backup from old Core-0.0.4
+ * Retained for legacy and documentation values
+ *
+ *
+ * @global URI $uri
+ * @global type $xpmtModule
+ * @global array $xpmtCore
+ */
+function OLD__PmtParseURL()
 {
   /**
    * Possible Paths:
@@ -155,24 +285,32 @@ function PmtParseURL()
    * /admin/                      System admin page
    */
 
-  global $uri;
+  global $uri, $xpmtModule,$xpmtCore; // , $xpmtConf, $xpmtCore;
   //$param = array();
 
-  // Cleanup
-  if (count($uri->seg) == 0) $uRoot = ""; else $uRoot = $uri->seg[0];
+  // Cleanup ]-------------
+  if (count($xpmtCore["uri"]->Count) == 0)      // if (count($uri->seg) == 0)
+    $uRoot = "";
+  else
+    $uRoot = $xpmtCore["uri"]->Segment(0);  //$uRoot = $xpmtCore["uri"]->seg[0];
 
   /* *************** */
 
-  // Debugging
-  /*
-    print("<small>" );
-    print("<p><b>Segments:</b> <br />"); print_r($uri->seg); print("</p>");
-    print("<p><b>Full:</b><br />"); print_r($uri); print("</p>");
-    print("</small><hr>");
-    //pmtDebug("uri.seg[0]: '" . $uRoot . "'");
-  */
+  // Debugging ]-------------
+
+  echo("<small>" );
+  echo("<p><b>Segments:</b> <br />");   print_r($uri->seg);   echo("</p>");
+  echo("<p><b>Full:</b><br />");        print_r($uri);        echo("</p>");
+  echo("<p><b>2-Segments:</b> <br />"); print_r($xpmtCore["uri"]->seg);   echo("</p>");
+  echo("<p><b>2-Full:</b><br />");      print_r($xpmtCore["uri"]);        echo("</p>");
+  echo("<p><b>Modules:</b><br /> '");   print_r($xpmtModule); echo("'</p>");
+  echo("</small><hr>");
+  //pmtDebug("uri.seg[0]: '" . $uRoot . "'");
 
 
+
+
+  // Load the module ]-------------
   /*
    * Filter out the modules with ones that are known
    * In the future, don't use this.. just rely on LoadModule()
@@ -182,7 +320,7 @@ function PmtParseURL()
   {
     case '':
       //pmtDebug("Module: 'dashboard'");
-      LoadModule("dashboard", $uri->seg);
+      LoadModule("dashboard", $xpmtCore["uri"]->SegmentArray()); //LoadModule("dashboard", $uri->seg);
       break;
 
     case 'kb':
@@ -260,19 +398,15 @@ function PmtParseURL()
        */
 
       // Option A
-      //LoadModule("dashboard", $uri->seg);
+      LoadModule("dashboard", $uri->seg);
 
-      // Option B - [Added 2012-1029 as a quick patch until PmtParseURL can be rewritten]
-      LoadModule($uri->seg[0], $uri->seg);
+      // Option B
+      //header("Location: " . $xpmtConf["general"]["base_url"] );  exit;
 
-      // Option C
-      //header("Location: " . $pmtConf["general"]["base_url"] );  exit;
-
-      // Option D - (TEST) Allow virtually anything
+      // Option C - (TEST) Allow virtually anything
       //LoadModule($uRoot, $uri->seg);
       break;
   }
-
 }
 
 ?>

@@ -1,4 +1,3 @@
-
 <?php
 
 /* * **********************************************************
@@ -46,6 +45,7 @@ function ModRedirect($module)
       $rename = "project";
       break;
   }
+
   return $rename;
 }
 
@@ -54,7 +54,7 @@ function ModRedirect($module)
  * @param string $module Template Node (project, user, customer, ..)
  * @param array $arrParams Module Parameter Array
  */
-function LoadModule($module, $arrParams)
+function OLD__LoadModule($module, $arrParams)
 {
   /** [Change Log]
    *  2012-0402 + Added convert of $module="p" >> "project".
@@ -78,7 +78,7 @@ function LoadModule($module, $arrParams)
   global $PAGE_HTDATA;    // Main page html data
   global $PAGE_PATH;      // Relative path to theme currently in use
 
-  global $pmtConf;
+  global $xpmtConf;
   global $uri;
   // if (count($arrParams) == 0)
 
@@ -104,8 +104,6 @@ function LoadModule($module, $arrParams)
   $skin_file = "main.php";
   $page = $skin_path . $skin_file;
 
-
-
   /* ** Prepare Module ** */
 
   if (file_exists(PMT_PATH."xpmt/modules/".$module.".php"))
@@ -119,7 +117,7 @@ function LoadModule($module, $arrParams)
   {
     $module="dashboard";
     //require(PMT_PATH."xpmt/modules/dashboard.php");              // Option A
-    header("Location: " . $pmtConf["general"]["base_url"] );    // Option B
+    header("Location: " . $xpmtConf["general"]["base_url"] );    // Option B
     exit;
   }
 
@@ -131,7 +129,6 @@ function LoadModule($module, $arrParams)
     $page = $skin_path . $skin_file;
   }
 
-
   //pmtDebug( "mod: '" .$module .  "' relPath: " . $relpath);
   //pmtDebug( "relPath: " . $relpath);
   //pmtDebug( "page: " . $page);
@@ -139,7 +136,7 @@ function LoadModule($module, $arrParams)
   //pmtDebug( "skin_file: " . $skin_file);
 
   $obj = new $module();
-  $PAGE_PATH = $pmtConf["general"]["base_url"] . $relpath;
+  $PAGE_PATH = $xpmtConf["general"]["base_url"] . $relpath;
   //$PAGE_PATH = $relpath;      // OLD METHOD
   //$PAGE_PATH = $skin_path;    // NOOO
   $PAGE_TITLE = $obj->Title();
@@ -156,9 +153,15 @@ function LoadModule($module, $arrParams)
   $PAGE_HTDATA = $obj->PageData();
 
   require($page);
-
 }
 
+/**
+ * Add list item
+ *
+ * @param type $buff
+ * @param type $class
+ * @return type
+ */
 function AddLI($buff, $class="")
 {
   if($class=="")
@@ -167,19 +170,18 @@ function AddLI($buff, $class="")
   return "<li$c>" . $buff . "</li>";
 }
 
-  /**
-   * Generates simple link based upon PMT's installed location
-   * @param string $module Module name to go to
-   * @param string $text Link caption
-   * @param string $extLink Link URL Extended
-   * @return string
-   */
-  function AddLink($module, $text, $extLink = "")
-  {
-    global $pmtConf;
-    return '<a href="'. $pmtConf["general"]["base_url"].$module.$extLink.'">'.$text.'</a>';
-  }
-
+/**
+ * Generates simple link based upon PMT's installed location
+ * @param string $module Module name to go to
+ * @param string $text Link caption
+ * @param string $extLink Link URL Extended
+ * @return string
+ */
+function AddLink($module, $text, $extLink = "")
+{
+  global $xpmtConf;
+  return '<a href="'. $xpmtConf["general"]["base_url"].$module.$extLink.'">'.$text.'</a>';
+}
 
 function GenerateMetabar($module)
 {
@@ -194,7 +196,7 @@ function GenerateMetabar($module)
    * 4) "Log off"
    */
 
-  global $user;
+  global $xpmtCore;
 
   /* I) Get online status & user name */
   //$user_online = true;
@@ -202,18 +204,17 @@ function GenerateMetabar($module)
 
   //if ($user->UserInfo["Online"]  == true)
 
-
   /* II) Generate page */
   $t = "        ";
   //$ret = $t . "<ul>" . PHP_EOL;
   $ret = $t . "<ul>" . PHP_EOL;
-  if ($user->Online)
+  if ($xpmtCore["user"]->online)    //if ($user->online)
   {
     $ret .= $t . "  ";
     // ONLINE
     // Login / Welcome, %USER%.   <-- Welcome screen take to user stats page
     //$ret .= AddLI('Welcome, <a href="/user" alt="User\'s Dashboard">' .$user->UserInfo["username"] . '</a>', "first");
-    $ret .= AddLI('Welcome, <a href="/user" alt="User\'s Dashboard">' .$user->UserInfo["Display_Name"] . '</a>', "first");
+    $ret .= AddLI('Welcome, <a href="/user" alt="User\'s Dashboard">' .$xpmtCore["user"]->UserInfo["Display_Name"] . '</a>', "first");
     // $ret .= AddLI('Welcome, <a href="/user" alt="User\'s Dashboard">' .$user->UserInfo["User_Name"] . '</a>', "first");
     $ret .= AddLI("Preferences");         //
     $ret .= AddLI("About xenoPMT");       // "pmt/wiki/about"
@@ -233,22 +234,20 @@ function GenerateMetabar($module)
     //$ret .= AddLI("About xenoPMT", "last");
 
   }
-    $ret .= PHP_EOL . $t . "</ul>" . PHP_EOL;
+
+  $ret .= PHP_EOL . $t . "</ul>" . PHP_EOL;
 
   /*
   if(
       isset($conf['general']['authorized_only'])
       && $conf['general']['authorized_only'] == true
       && !$user->loggedin && @$_POST['action'] != 'login'
-      && ($uri->seg[0] != 'user' && $uri->seg[1] != 'register'))
+      && ($xpmtCore["uri"]->seg[0] != 'user' && $xpmtCore["uri"]->seg[1] != 'register'))
   {
       include(template('user/login'));
       exit;
   }
   */
-
-
-
 
   return $ret;
 }
@@ -258,17 +257,13 @@ function MakeToolbar($module)
 {
   // pmtDebug("Module: " . $module);
   /* Steps:
-  * 1) Get user profile permissions to see what items we can draw on the screen.
+  * 1) [deprecated] Get user profile permissions to see what items we can draw on the screen.
   * 2) Generate toolbar
   */
 
   /* Step 1 - Get user permissions */
   // This should possibly be handled by the module itself considering
   // that the modules will be dynamic plug-ins in future versions.
-
-  // (currently not in use)
-
-  
 
   /* Step 2 - Generate Toolbar */
   // List of all the available modules
@@ -295,7 +290,6 @@ function MakeToolbar($module)
   }
   else
   {
-
     $tab = "        ";
     $ret = $tab . "<ul>". PHP_EOL;
     $ndxCount = 0;
@@ -326,8 +320,6 @@ function MakeToolbar($module)
 
   return $ret;
 }
-
-
 
 /**
  * Generate the page's toolbar
@@ -361,7 +353,6 @@ function MakeToolbar_OLD($module)
   //$tmod = array("dashboard", "project", "ticket", "product", "customer", "admin");
   //$tbar = array("dashboard", "project", "ticket", "product", "customer", "admin");
 
-
   $ret = $t . "<ul>". PHP_EOL;
   for ($ndx = 0; $ndx < count($tmod); $ndx++)
   {
@@ -371,7 +362,6 @@ function MakeToolbar_OLD($module)
       $active = true;
     else
       $active = false;
-
 
     // Draw toolbar and set the active item
     if ($ndx == 0)
@@ -386,8 +376,8 @@ function MakeToolbar_OLD($module)
     {
       if($active) $cls = ' class="active"'; else $cls = '';
     }
-    $ret .= $t . "  <li" . $cls. ">" . $tbar[$ndx] . "</li>" . PHP_EOL;
 
+    $ret .= $t . "  <li" . $cls. ">" . $tbar[$ndx] . "</li>" . PHP_EOL;
   }
 
   $ret .= $t . "</ul>". PHP_EOL;
@@ -395,6 +385,3 @@ function MakeToolbar_OLD($module)
 
   return $ret;
 }
-
-
-?>
