@@ -1,9 +1,12 @@
+# Archived
 The Xeno Project Management and Tracking project has been archived for historical purposes.
 
 At the time of its creation, the open source ommunity for issue tracking systems
 was very limited - yes, pre-Trello and GitHub was still a toddler with little features.
 
 -=-=-=-=-=-=-=-=-=-
+
+# Legacy Header
 
 About xenoPMT - Project Management & Tracking
 Copyright 2010-2012 (C) Xeno Innovations, Inc.
